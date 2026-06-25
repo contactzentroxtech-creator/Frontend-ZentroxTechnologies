@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Menu,
@@ -56,7 +57,7 @@ export default function Navbar() {
       { label: t("nav.about"), href: "/about" },
       { label: t("nav.contact"), href: "/contact" },
     ],
-    [t]
+    [t],
   );
 
   useEffect(() => {
@@ -88,9 +89,13 @@ export default function Navbar() {
       <nav className="max-w-7xl mx-auto px-4 md:px-6 flex items-center justify-between h-16 md:h-[68px]">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group flex-shrink-0">
-          <div className="w-8 h-8 rounded-lg bg-z-accent flex items-center justify-center text-white font-bold text-sm shadow-glow-sm group-hover:shadow-glow-accent transition-all duration-300">
-            ZT
-          </div>
+          <Image
+            src="/zentroxLogo.png"
+            alt="Zentrox Logo"
+            width={32}
+            height={32}
+            className="rounded-lg shadow-glow-sm group-hover:shadow-glow-accent transition-all duration-300 object-contain"
+          />
           <span className="font-extrabold text-lg tracking-tight">
             <span className="text-z-text">Zentrox</span>
             <span className="text-z-accent">.</span>
@@ -149,7 +154,7 @@ export default function Navbar() {
               >
                 {link.label}
               </Link>
-            )
+            ),
           )}
         </div>
 
