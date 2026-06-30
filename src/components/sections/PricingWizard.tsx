@@ -65,6 +65,7 @@ const BUSINESS_TYPES = {
     "ਫ੍ਰੀਲਾਂਸਰ",
   ],
 };
+
 const TIMELINES = {
   en: [
     { key: "rush", label: "ASAP (Rush)" },
@@ -82,6 +83,7 @@ const TIMELINES = {
     { key: "flexible", label: "ਲਚਕਦਾਰ" },
   ],
 };
+
 const COMPLEXITY = {
   en: [
     { key: "basic", label: "Basic" },
@@ -131,7 +133,6 @@ export default function PricingWizard() {
         const { data } = await api.get("/pricing/services");
         setServices(data.data);
       } catch {
-        // Use static fallback services
         setServices([
           {
             id: "business-website",
@@ -260,7 +261,7 @@ export default function PricingWizard() {
   return (
     <section
       id="pricing"
-      className="relative z-10 py-24 px-4 md:px-6 bg-[#080c15]"
+      className="relative z-10 py-24 px-4 md:px-6 bg-slate-50 dark:bg-z-dark2 transition-colors duration-300"
     >
       <div className="max-w-7xl mx-auto">
         <motion.div
@@ -270,11 +271,13 @@ export default function PricingWizard() {
           viewport={{ once: true }}
           className="mb-10"
         >
-          <div className="z-badge mb-4">{t("pricing.badge")}</div>
-          <h2 className="text-3xl md:text-5xl font-extrabold text-white leading-tight tracking-tight mb-4">
+          <div className="mb-4 inline-block px-3 py-1 text-xs font-semibold rounded-full bg-z-accent/10 text-z-accent border border-z-border">
+            {t("pricing.badge")}
+          </div>
+          <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-z-text leading-tight tracking-tight mb-4">
             {t("pricing.title")}
           </h2>
-          <p className="text-base text-z-muted max-w-xl leading-relaxed">
+          <p className="text-base text-slate-600 dark:text-z-muted max-w-xl leading-relaxed">
             {t("pricing.sub")}
           </p>
         </motion.div>
@@ -284,10 +287,10 @@ export default function PricingWizard() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
           viewport={{ once: true }}
-          className="glass-card p-6 md:p-10 max-w-3xl"
+          className="bg-white dark:bg-z-dark3/60 border border-slate-200 dark:border-z-border backdrop-blur-xl shadow-xl dark:shadow-card p-6 md:p-10 max-w-3xl rounded-3xl"
         >
           {/* Step tabs */}
-          <div className="flex border-b border-z-border mb-8">
+          <div className="flex border-b border-slate-200 dark:border-z-border mb-8">
             {steps.map((s, i) => (
               <button
                 key={s}
@@ -296,8 +299,8 @@ export default function PricingWizard() {
                   step === i
                     ? "border-z-accent text-z-accent"
                     : i < step
-                    ? "border-transparent text-white cursor-pointer"
-                    : "border-transparent text-z-muted cursor-not-allowed"
+                    ? "border-transparent text-slate-800 dark:text-z-text cursor-pointer"
+                    : "border-transparent text-slate-400 dark:text-z-muted cursor-not-allowed"
                 }`}
               >
                 {s}
@@ -330,8 +333,8 @@ export default function PricingWizard() {
                         }}
                         className={`p-4 rounded-xl border text-sm font-medium transition-all duration-200 text-left flex flex-col gap-2 ${
                           selectedServiceId === s.id
-                            ? "border-z-accent bg-z-accent/10 text-white"
-                            : "border-z-border text-z-muted hover:border-z-accent/50 hover:text-white"
+                            ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
+                            : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent/50 hover:text-slate-900 dark:hover:text-z-text"
                         }`}
                       >
                         <span className="text-xl">{s.icon}</span>
@@ -339,7 +342,7 @@ export default function PricingWizard() {
                           {getLabel(s.label)}
                         </span>
                         {selectedServiceId === s.id && (
-                          <span className="text-[10px] text-z-accent3">
+                          <span className="text-[10px] text-z-accent font-bold">
                             {formatPrice(s.baseMin)} — {formatPrice(s.baseMax)}
                           </span>
                         )}
@@ -359,7 +362,9 @@ export default function PricingWizard() {
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.25 }}
               >
-                <p className="text-sm text-z-muted mb-3">Business Type</p>
+                <p className="text-sm font-medium text-slate-700 dark:text-z-muted mb-3">
+                  Business Type
+                </p>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-5">
                   {businessTypes.map((b) => (
                     <button
@@ -367,8 +372,8 @@ export default function PricingWizard() {
                       onClick={() => setBizType(b)}
                       className={`p-3 rounded-xl border text-sm font-medium transition-all duration-200 text-left ${
                         bizType === b
-                          ? "border-z-accent bg-z-accent/10 text-white"
-                          : "border-z-border text-z-muted hover:border-z-accent/50 hover:text-white"
+                          ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
+                          : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent/50 hover:text-slate-900 dark:hover:text-z-text"
                       }`}
                     >
                       {bizType === b && (
@@ -381,7 +386,9 @@ export default function PricingWizard() {
                     </button>
                   ))}
                 </div>
-                <p className="text-sm text-z-muted mb-3">Project Complexity</p>
+                <p className="text-sm font-medium text-slate-700 dark:text-z-muted mb-3">
+                  Project Complexity
+                </p>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {complexities.map((c) => (
                     <button
@@ -389,8 +396,8 @@ export default function PricingWizard() {
                       onClick={() => setComplexity(c.key)}
                       className={`p-3 rounded-xl border text-xs font-semibold transition-all duration-200 text-center ${
                         complexity === c.key
-                          ? "border-z-accent bg-z-accent/10 text-white"
-                          : "border-z-border text-z-muted hover:border-z-accent/50 hover:text-white"
+                          ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
+                          : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent/50 hover:text-slate-900 dark:hover:text-z-text"
                       }`}
                     >
                       {complexity === c.key && (
@@ -406,7 +413,7 @@ export default function PricingWizard() {
                   selectedService.features &&
                   selectedService?.features?.length > 0 && (
                     <>
-                      <p className="text-sm text-z-muted mb-3 mt-5">
+                      <p className="text-sm font-medium text-slate-700 dark:text-z-muted mb-3 mt-5">
                         Add-on Features
                       </p>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -416,12 +423,12 @@ export default function PricingWizard() {
                             onClick={() => toggleFeature(f.id)}
                             className={`p-3 rounded-xl border text-xs font-medium transition-all text-left flex items-center justify-between ${
                               selectedFeatures.includes(f.id)
-                                ? "border-z-accent3 bg-z-accent3/10 text-white"
-                                : "border-z-border text-z-muted hover:border-z-accent3/40 hover:text-white"
+                                ? "border-z-accent3 bg-z-accent3/10 text-slate-900 dark:text-z-text"
+                                : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent3/40 hover:text-slate-900 dark:hover:text-z-text"
                             }`}
                           >
                             <span>{getLabel(f.label)}</span>
-                            <span className="text-[10px] text-z-accent3">
+                            <span className="text-[10px] text-z-accent3 font-bold">
                               +{formatPrice(f.flatAdd)}
                             </span>
                           </button>
@@ -441,7 +448,7 @@ export default function PricingWizard() {
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.25 }}
               >
-                <p className="text-sm text-z-muted mb-2">
+                <p className="text-sm font-medium text-slate-700 dark:text-z-muted mb-2">
                   Monthly budget range
                 </p>
                 <div className="text-4xl font-extrabold text-z-accent text-center mb-4">
@@ -454,13 +461,15 @@ export default function PricingWizard() {
                   step="5000"
                   value={budget}
                   onChange={(e) => setBudget(Number(e.target.value))}
-                  className="w-full accent-z-accent mb-1"
+                  className="w-full accent-z-accent mb-1 cursor-pointer"
                 />
-                <div className="flex justify-between text-xs text-z-muted mb-6">
+                <div className="flex justify-between text-xs text-slate-500 dark:text-z-muted mb-6">
                   <span>₹5,000</span>
-                  <span>₹5,00,000+</span>
+                  <span>₹5,0,000+</span>
                 </div>
-                <p className="text-sm text-z-muted mb-3">Timeline</p>
+                <p className="text-sm font-medium text-slate-700 dark:text-z-muted mb-3">
+                  Timeline
+                </p>
                 <div className="grid grid-cols-3 gap-3">
                   {timelines.map((tl) => (
                     <button
@@ -468,8 +477,8 @@ export default function PricingWizard() {
                       onClick={() => setTimeline(tl.key)}
                       className={`p-3 rounded-xl border text-xs font-semibold transition-all text-center ${
                         timeline === tl.key
-                          ? "border-z-accent bg-z-accent/10 text-white"
-                          : "border-z-border text-z-muted hover:border-z-accent/50 hover:text-white"
+                          ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
+                          : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent/50 hover:text-slate-900 dark:hover:text-z-text"
                       }`}
                     >
                       {timeline === tl.key && (
@@ -496,14 +505,14 @@ export default function PricingWizard() {
                     <Loader2 size={24} className="animate-spin text-z-accent" />
                   </div>
                 ) : (
-                  <div className="rounded-2xl border border-z-accent/25 bg-z-accent/5 p-6">
-                    <div className="text-lg font-bold text-white mb-1">
+                  <div className="rounded-2xl border border-z-accent/20 bg-z-accent/5 p-6">
+                    <div className="text-lg font-bold text-slate-900 dark:text-z-text mb-1">
                       {quote?.service?.icon}{" "}
                       {getLabel(quote?.service?.label as any) ||
                         selectedService?.label?.[lang as "en"] ||
                         "Your Project"}
                     </div>
-                    <div className="text-sm text-z-muted mb-4">
+                    <div className="text-sm text-slate-600 dark:text-z-muted mb-4">
                       {quote?.recommendedPackage
                         ? getLabel(quote.recommendedPackage.name as any)
                         : "Custom Package"}{" "}
@@ -521,9 +530,9 @@ export default function PricingWizard() {
                         ))}
                       </div>
                     )}
-                    <div className="flex justify-between items-center pt-4 border-t border-z-border">
+                    <div className="flex justify-between items-center pt-4 border-t border-slate-200 dark:border-z-border">
                       <div>
-                        <div className="text-xs text-z-muted uppercase tracking-wide mb-1">
+                        <div className="text-xs text-slate-500 dark:text-z-muted uppercase tracking-wide mb-1">
                           Estimated Investment
                         </div>
                         <div className="text-2xl font-extrabold text-z-accent">
@@ -537,10 +546,10 @@ export default function PricingWizard() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-xs text-z-muted uppercase tracking-wide mb-1">
+                        <div className="text-xs text-slate-500 dark:text-z-muted uppercase tracking-wide mb-1">
                           Delivery
                         </div>
-                        <div className="text-base font-bold text-white">
+                        <div className="text-base font-bold text-slate-900 dark:text-z-text">
                           {quote?.delivery || "4-8 Weeks"}
                         </div>
                       </div>
@@ -549,7 +558,7 @@ export default function PricingWizard() {
                 )}
                 <Link
                   href="/contact"
-                  className="mt-5 w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-z-accent text-white font-semibold text-sm hover:bg-blue-500 transition-all duration-300 shadow-glow-sm"
+                  className="mt-5 w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-z-accent text-white font-semibold text-sm hover:opacity-90 transition-all duration-300 shadow-glow-sm"
                 >
                   {t("pricing.consultation")} <ArrowRight size={15} />
                 </Link>
@@ -562,7 +571,7 @@ export default function PricingWizard() {
             <button
               onClick={() => setStep(Math.max(0, step - 1))}
               disabled={step === 0}
-              className="px-5 py-2.5 rounded-full text-sm font-semibold border border-z-border text-z-muted hover:text-white disabled:opacity-30 transition-all duration-200"
+              className="px-5 py-2.5 rounded-full text-sm font-semibold border border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:text-slate-900 dark:hover:text-z-text disabled:opacity-30 transition-all duration-200"
             >
               {t("pricing.back")}
             </button>
@@ -573,11 +582,9 @@ export default function PricingWizard() {
                   else setStep(Math.min(3, step + 1));
                 }}
                 disabled={step === 0 && !selectedServiceId}
-                className="px-6 py-2.5 rounded-full text-sm font-semibold bg-z-accent text-white hover:bg-blue-500 disabled:opacity-40 transition-all duration-200 flex items-center gap-2"
+                className="px-6 py-2.5 rounded-full text-sm font-semibold bg-z-accent text-white hover:opacity-90 disabled:opacity-40 transition-all duration-200 flex items-center gap-2"
               >
-                {loadingQuote ? (
-                  <Loader2 size={14} className="animate-spin" />
-                ) : null}
+                {loadingQuote && <Loader2 size={14} className="animate-spin" />}
                 {step === 2 ? t("pricing.get_quote") : t("pricing.next")}{" "}
                 <ArrowRight size={14} />
               </button>

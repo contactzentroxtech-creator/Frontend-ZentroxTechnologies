@@ -48,10 +48,10 @@ function useCountdown() {
       next.setHours(10, 0, 0, 0);
       const diff = next.getTime() - now.getTime();
       setTime({
-        d: Math.floor(diff / 86400000),
-        h: Math.floor((diff % 86400000) / 3600000),
-        m: Math.floor((diff % 3600000) / 60000),
-        s: Math.floor((diff % 60000) / 1000),
+        d: Math.max(0, Math.floor(diff / 86400000)),
+        h: Math.max(0, Math.floor((diff % 86400000) / 3600000)),
+        m: Math.max(0, Math.floor((diff % 3600000) / 60000)),
+        s: Math.max(0, Math.floor((diff % 60000) / 1000)),
       });
     };
     calc();
@@ -64,10 +64,11 @@ function useCountdown() {
 function CountdownUnit({ value, label }: { value: number; label: string }) {
   return (
     <div className="text-center">
-      <div className="w-16 h-16 glass-card flex items-center justify-center text-2xl font-extrabold text-white mb-1.5">
+      {/* Replaced hardcoded glass-card class with standard light/dark utilities */}
+      <div className="w-16 h-16 flex items-center justify-center text-2xl font-extrabold rounded-2xl border bg-white dark:bg-z-dark3 border-slate-200 dark:border-z-border shadow-md dark:shadow-glow-sm text-slate-900 dark:text-z-text mb-1.5 transition-colors duration-300">
         {String(value).padStart(2, "0")}
       </div>
-      <div className="text-[10px] text-z-muted uppercase tracking-widest">
+      <div className="text-[10px] text-slate-500 dark:text-z-muted uppercase tracking-widest font-semibold">
         {label}
       </div>
     </div>
@@ -88,7 +89,7 @@ export default function ClassesSection() {
   return (
     <section
       id="classes"
-      className="relative z-10 py-24 px-4 md:px-6 bg-[#080c15]"
+      className="relative z-10 py-24 px-4 md:px-6 bg-slate-50 dark:bg-z-dark2 transition-colors duration-300"
     >
       <div className="max-w-7xl mx-auto">
         <motion.div
@@ -98,13 +99,13 @@ export default function ClassesSection() {
           viewport={{ once: true }}
           className="mb-12"
         >
-          <div className="z-badge mb-4">
+          <div className="mb-4 inline-block px-3 py-1 text-xs font-semibold rounded-full bg-z-accent/10 text-z-accent border border-z-border">
             {t("classes.badge", "Learn with Zentrox Technologies")}
           </div>
-          <h2 className="text-3xl md:text-5xl font-extrabold text-white leading-tight tracking-tight mb-4">
+          <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-z-text leading-tight tracking-tight mb-4">
             {t("classes.title", "Live Saturday Classes — Every Week")}
           </h2>
-          <p className="text-base text-z-muted max-w-xl leading-relaxed">
+          <p className="text-base text-slate-600 dark:text-z-muted max-w-xl leading-relaxed">
             {t(
               "classes.sub",
               "Master modern web development with weekly live sessions. Interactive, practical, and industry-focused."
@@ -113,15 +114,15 @@ export default function ClassesSection() {
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Countdown */}
+          {/* Countdown Card */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="glass-card p-8"
+            className="p-8 rounded-3xl bg-white dark:bg-z-dark3/60 border border-slate-200 dark:border-z-border shadow-xl dark:shadow-card backdrop-blur-xl transition-colors duration-300"
           >
-            <div className="z-badge mb-6">
+            <div className="mb-6 inline-block px-3 py-1 text-xs font-semibold rounded-full bg-z-accent/10 text-z-accent border border-z-accent/20">
               {t("classes.next_session", "Next Live Session")}
             </div>
             <div className="flex gap-4 justify-center mb-6">
@@ -130,7 +131,7 @@ export default function ClassesSection() {
               <CountdownUnit value={m} label={cd_labels.mins} />
               <CountdownUnit value={s} label={cd_labels.secs} />
             </div>
-            <div className="flex items-center justify-center gap-2 text-sm text-z-muted mb-6">
+            <div className="flex items-center justify-center gap-2 text-sm text-slate-600 dark:text-z-muted mb-6">
               <Clock size={14} className="text-z-accent" />
               {t("classes.every_saturday", "Every Saturday — 10:00 AM IST")}
             </div>
@@ -151,25 +152,27 @@ export default function ClassesSection() {
               ].map(([title, sub]) => (
                 <div
                   key={title}
-                  className="text-center p-3 rounded-xl bg-white/5 border border-z-border"
+                  className="text-center p-3 rounded-xl bg-slate-100/70 dark:bg-white/5 border border-slate-200 dark:border-z-border transition-colors duration-300"
                 >
-                  <div className="text-xs font-semibold text-white mb-0.5">
+                  <div className="text-xs font-bold text-slate-800 dark:text-z-text mb-0.5">
                     {title}
                   </div>
-                  <div className="text-[10px] text-z-muted">{sub}</div>
+                  <div className="text-[10px] text-slate-500 dark:text-z-muted">
+                    {sub}
+                  </div>
                 </div>
               ))}
             </div>
             <Link
               href="/courses"
-              className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-z-accent text-white font-semibold text-sm hover:bg-blue-500 transition-all duration-300 shadow-glow-sm"
+              className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-z-accent text-white font-semibold text-sm hover:opacity-95 transition-all duration-300 shadow-glow-sm"
             >
               <Zap size={15} />{" "}
               {t("classes.enroll", "Enroll Free — Saturday Classes")}
             </Link>
           </motion.div>
 
-          {/* Sessions */}
+          {/* Sessions List */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -184,27 +187,32 @@ export default function ClassesSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: i * 0.1 }}
                 viewport={{ once: true }}
-                className="glass-card p-4 flex items-center gap-4 hover:-translate-y-0.5 transition-transform duration-200"
+                className="p-4 flex items-center gap-4 rounded-2xl bg-white dark:bg-z-dark3/60 border border-slate-200 dark:border-z-border shadow-md dark:shadow-card hover:-translate-y-0.5 transition-all duration-200 backdrop-blur-xl"
               >
                 <div className="min-w-[52px] h-14 rounded-xl bg-z-accent/10 border border-z-accent/20 flex flex-col items-center justify-center flex-shrink-0">
                   <span className="text-lg font-extrabold text-z-accent leading-none">
                     {session.day}
                   </span>
-                  <span className="text-[10px] text-z-muted uppercase tracking-widest">
+                  <span className="text-[10px] text-z-accent/70 dark:text-z-muted uppercase tracking-widest font-semibold mt-0.5">
                     {session.month}
                   </span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-semibold text-white truncate">
+                  <div className="text-sm font-bold text-slate-900 dark:text-z-text truncate">
                     {session.topic}
                   </div>
                   <div className="flex items-center gap-1.5 mt-1">
-                    <Clock size={11} className="text-z-muted flex-shrink-0" />
-                    <span className="text-xs text-z-muted">{session.time}</span>
+                    <Clock
+                      size={11}
+                      className="text-slate-400 dark:text-z-muted flex-shrink-0"
+                    />
+                    <span className="text-xs text-slate-500 dark:text-z-muted">
+                      {session.time}
+                    </span>
                   </div>
                 </div>
                 {session.status === "live" ? (
-                  <span className="flex-shrink-0 text-[10px] font-bold px-2.5 py-1 rounded-full bg-red-500/15 text-red-400 border border-red-500/20">
+                  <span className="flex-shrink-0 text-[10px] font-bold px-2.5 py-1 rounded-full bg-red-500/15 text-red-500 dark:text-red-400 border border-red-500/20">
                     LIVE
                   </span>
                 ) : (

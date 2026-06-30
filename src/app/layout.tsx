@@ -22,11 +22,10 @@ export const metadata: Metadata = {
     "SaaS development",
     "Zentrox Technologies",
   ],
-  // ─── ICON METADATA CONFIGURATION (FIXES YOUR ISSUE) ───
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
-      { url: "/zentroxLogo.png", type: "image/png" }, // Fallback to ensure png displays safely
+      { url: "/zentroxLogo.png", type: "image/png" },
     ],
     apple: "/apple-touch-icon.png",
   },
@@ -82,7 +81,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Manual icon link tags safely removed — handled by Next.js metadata above */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
@@ -123,8 +121,14 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body>
-        <div className="grid-bg" aria-hidden="true" />
+      {/* FIXED BODY WRAPPER: Explicitly controls the theme transition background colors globally */}
+      <body className="bg-white dark:bg-[#04050a] text-slate-900 dark:text-white transition-colors duration-300 min-h-screen relative">
+        {/* FIXED GRID: We add opacity adjustments so your grid lines blend softly in Light mode */}
+        <div
+          className="grid-bg opacity-[0.03] dark:opacity-100 pointer-events-none"
+          aria-hidden="true"
+        />
+
         <AppProviders>
           {children}
           <Toaster
