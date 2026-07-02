@@ -35,12 +35,6 @@ const CATEGORIES = [
   { value: "seo", label: "SEO" },
   { value: "design", label: "Design" },
 ];
-const LEVELS = [
-  { value: "", label: "All Levels" },
-  { value: "beginner", label: "Beginner" },
-  { value: "intermediate", label: "Intermediate" },
-  { value: "advanced", label: "Advanced" },
-];
 
 interface YouTubeLecture {
   id: string;
@@ -70,7 +64,7 @@ const getNextSaturdayTarget = () => {
 
   // Create an explicit timestamp instance context bound strictly to Indian Standard Time (UTC +5:30)
   const target = new Date(
-    now.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
+    now.toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
   );
 
   const currentDay = target.getDay(); // 0 = Sunday, 6 = Saturday
@@ -91,7 +85,7 @@ const getNextSaturdayTarget = () => {
   const tzOffsetDiff =
     new Date().getTime() -
     new Date(
-      now.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
+      now.toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
     ).getTime();
 
   return localTargetEpoch + tzOffsetDiff;
@@ -140,7 +134,7 @@ function CourseCard({ course }: { course: Course }) {
       <div className="p-5 flex flex-col flex-1">
         <div className="flex items-center gap-2 mb-2">
           <span className="text-[10px] font-semibold uppercase tracking-widest text-z-accent px-2 py-0.5 rounded-full bg-z-accent/10 border border-z-accent/20">
-            {course.category.replace("-", " ")}
+            {course.category?.replace("-", " ")}
           </span>
           <span className="text-[10px] text-z-muted capitalize">
             {course.level}
@@ -178,7 +172,7 @@ function CourseCard({ course }: { course: Course }) {
                 <span className="text-lg font-extrabold text-white">
                   ₹
                   {(course.discountPrice || course.price).toLocaleString(
-                    "en-IN",
+                    "en-IN"
                   )}
                 </span>
                 {course.discountPrice &&
@@ -202,90 +196,6 @@ function CourseCard({ course }: { course: Course }) {
   );
 }
 
-function YouTubeCard({
-  lecture,
-  onPlay,
-}: {
-  lecture: YouTubeLecture;
-  onPlay: () => void;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.4 }}
-      className="glass-card overflow-hidden hover:-translate-y-1 transition-all duration-300 group flex flex-col cursor-pointer"
-      onClick={onPlay}
-    >
-      <div className="relative h-44 bg-z-dark overflow-hidden border-b border-white/5">
-        <img
-          src={lecture.thumbnail}
-          alt={lecture.title}
-          className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300"
-        />
-        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <div className="w-12 h-12 rounded-full bg-red-500 flex items-center justify-center shadow-lg">
-            <Play size={18} className="text-white fill-white ml-0.5" />
-          </div>
-        </div>
-        <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-500/90 text-white text-[10px] font-bold">
-          <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />{" "}
-          VIDEO LECTURE
-        </div>
-        <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-z-accent3/90 text-z-dark text-[10px] font-extrabold">
-          FREE STREAM
-        </div>
-      </div>
-
-      <div className="p-5 flex flex-col flex-1">
-        <div className="flex items-center gap-2 mb-2">
-          <span className="text-[10px] font-semibold uppercase tracking-widest text-red-400 px-2 py-0.5 rounded-full bg-red-500/10 border border-red-500/20">
-            Recorded Stream
-          </span>
-          <span className="text-[10px] text-z-muted">
-            {new Date(lecture.publishedAt).toLocaleDateString("en-IN", {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-            })}
-          </span>
-        </div>
-        <h3 className="font-bold text-white mb-2 leading-snug line-clamp-2 flex-1 group-hover:text-z-accent transition-colors">
-          {lecture.title}
-        </h3>
-        <p className="text-xs text-z-muted leading-relaxed mb-4 line-clamp-2">
-          {lecture.description ||
-            "Streamed archive workshop lecture session from Zentrox workspace."}
-        </p>
-
-        <div className="flex items-center justify-between mt-auto pt-2 border-t border-white/5">
-          <span className="text-xs text-z-accent3 font-bold">
-            No Enrollment Needed
-          </span>
-          <span className="flex items-center gap-1 text-xs font-semibold text-z-accent group-hover:gap-2 transition-all">
-            Watch Now <Play size={11} className="fill-z-accent" />
-          </span>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
-function CourseCardSkeleton() {
-  return (
-    <div className="glass-card overflow-hidden animate-pulse">
-      <div className="h-44 bg-white/5" />
-      <div className="p-5 flex flex-col gap-3">
-        <div className="h-3 bg-white/5 rounded w-1/3" />
-        <div className="h-5 bg-white/5 rounded" />
-        <div className="h-3 bg-white/5 rounded w-3/4" />
-        <div className="h-8 bg-white/5 rounded mt-auto" />
-      </div>
-    </div>
-  );
-}
-
 export default function CoursesClient() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
@@ -305,7 +215,7 @@ export default function CoursesClient() {
   const [selectedLiveClass, setSelectedLiveClass] =
     useState<LiveSaturdayClass | null>(null);
   const [expandedSyllabusId, setExpandedSyllabusId] = useState<string | null>(
-    null,
+    null
   );
 
   // Mounted flag to protect code execution from NextJS server-hydration gaps
@@ -362,7 +272,7 @@ export default function CoursesClient() {
 
       const d = Math.floor(difference / (1000 * 60 * 60 * 24));
       const h = Math.floor(
-        (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+        (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
       );
       const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
       const s = Math.floor((difference % (1000 * 60)) / 1000);
@@ -402,47 +312,6 @@ export default function CoursesClient() {
     fetchCourses();
   }, [debouncedSearch, category, level, freeOnly]);
 
-  // Fetch YouTube Playlist Feeds
-  useEffect(() => {
-    const fetchYtPlaylist = async () => {
-      const apiKey = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
-      const playlistId = process.env.NEXT_PUBLIC_YOUTUBE_PLAYLIST_ID;
-
-      if (!apiKey || !playlistId) {
-        setYtLoading(false);
-        return;
-      }
-
-      try {
-        const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=6&playlistId=${playlistId}&key=${apiKey}`;
-        const res = await fetch(url);
-        if (res.ok) {
-          const data = await res.json();
-          const formatted = (data.items || []).map((item: any) => {
-            const snippet = item.snippet;
-            return {
-              id: snippet.resourceId?.videoId,
-              title: snippet.title,
-              description: snippet.description,
-              thumbnail:
-                snippet.thumbnails?.high?.url ||
-                snippet.thumbnails?.medium?.url ||
-                `https://img.youtube.com/vi/${snippet.resourceId?.videoId}/mqdefault.jpg`,
-              publishedAt: snippet.publishedAt,
-            };
-          });
-          setYtLectures(formatted);
-        }
-      } catch (err) {
-        console.error("YouTube Playlist Sync Failure:", err);
-      } finally {
-        setYtLoading(false);
-      }
-    };
-
-    fetchYtPlaylist();
-  }, []);
-
   // Direct Backend API Entry submission
   const handleSeatBookingSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -465,7 +334,7 @@ export default function CoursesClient() {
       console.error("Booking handler network exception:", err);
       setFormError(
         err.response?.data?.message ||
-          "Something went wrong. Please check your data.",
+          "Something went wrong. Please check your data."
       );
     } finally {
       setFormSubmitting(false);
@@ -473,22 +342,22 @@ export default function CoursesClient() {
   };
 
   return (
-    <div className="relative z-10">
+    <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Hero */}
-      <section className="py-20 px-4 md:px-6 text-center">
+      <section className="py-12 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <div className="z-badge mx-auto mb-4">
-            <span className="w-1.5 h-1.5 rounded-full bg-z-accent3 animate-pulse-glow" />{" "}
+          <div className="z-badge mx-auto mb-4 inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-1.5 rounded-full text-xs text-white">
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />{" "}
             Every Saturday 10:00 AM IST
           </div>
           <h1 className="text-4xl md:text-6xl font-extrabold text-white tracking-tight mb-4">
             Live Saturday Classes — Every Week
           </h1>
-          <p className="text-z-muted text-base max-w-xl mx-auto leading-relaxed mb-8">
+          <p className="text-z-muted text-base max-w-xl mx-auto leading-relaxed mb-8 text-gray-400">
             Master modern web development with weekly live sessions.
             Interactive, practical, and industry-focused.
           </p>
@@ -496,23 +365,23 @@ export default function CoursesClient() {
           <div className="max-w-lg mx-auto relative">
             <Search
               size={16}
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-z-muted pointer-events-none"
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
             />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search courses..."
-              className="z-input pl-10 py-3.5 text-sm"
+              className="w-full bg-slate-900 border border-white/10 text-white pl-10 pr-4 py-3 rounded-xl text-sm placeholder:text-gray-500 focus:outline-none focus:border-blue-500 transition"
             />
           </div>
         </motion.div>
       </section>
 
       {/* Live Classes Module */}
-      <section className="px-4 md:px-6 mb-16">
-        <div className="max-w-7xl mx-auto space-y-6">
+      <section className="mb-16">
+        <div className="space-y-6">
           {/* Main Selected Live Class Info Box Row */}
-          <div className="bg-slate-950/40 border border-white/5 rounded-2xl p-6 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="bg-slate-950/40 border border-white/5 rounded-2xl p-6 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 backdrop-blur-sm">
             {/* LEFT SIDE: Topic Text Descriptions and Countdown matrix elements */}
             <div className="lg:col-span-7 flex flex-col justify-between space-y-6 lg:space-y-0">
               <div>
@@ -524,7 +393,7 @@ export default function CoursesClient() {
                     ? selectedLiveClass.title
                     : "React Fundamentals + Hooks Deep Dive"}
                 </h2>
-                <p className="text-xs md:text-sm text-z-muted mb-6">
+                <p className="text-xs md:text-sm text-gray-400 mb-6">
                   Topic Focus:{" "}
                   {selectedLiveClass
                     ? selectedLiveClass.topic
@@ -547,15 +416,15 @@ export default function CoursesClient() {
                     <div className="text-2xl md:text-3xl font-extrabold font-mono tracking-tight text-white">
                       {t.val}
                     </div>
-                    <div className="text-[9px] font-medium text-z-muted mt-1 tracking-wider">
+                    <div className="text-[9px] font-medium text-gray-400 mt-1 tracking-wider">
                       {t.label}
                     </div>
                   </div>
                 ))}
               </div>
 
-              <div className="text-xs text-z-muted flex items-center gap-2 pt-4">
-                <Clock size={14} className="text-z-accent" />
+              <div className="text-xs text-gray-400 flex items-center gap-2 pt-4">
+                <Clock size={14} className="text-blue-400" />
                 <span>Every Saturday — 10:00 AM IST</span>
               </div>
 
@@ -569,10 +438,10 @@ export default function CoursesClient() {
                           setExpandedSyllabusId(
                             expandedSyllabusId === selectedLiveClass._id
                               ? null
-                              : selectedLiveClass._id,
+                              : selectedLiveClass._id
                           )
                         }
-                        className="flex items-center justify-between w-full text-xs text-z-muted hover:text-white transition"
+                        className="flex items-center justify-between w-full text-xs text-gray-400 hover:text-white transition"
                       >
                         <span>Show Syllabus Breakdown Curriculum</span>
                         {expandedSyllabusId === selectedLiveClass._id ? (
@@ -582,22 +451,24 @@ export default function CoursesClient() {
                         )}
                       </button>
                       {expandedSyllabusId === selectedLiveClass._id && (
-                        <motion.ul
+                        <motion.div
                           initial={{ opacity: 0, height: 0 }}
                           animate={{ opacity: 1, height: "auto" }}
                           exit={{ opacity: 0, height: 0 }}
-                          className="mt-3 space-y-2 pl-1"
+                          className="overflow-hidden"
                         >
-                          {selectedLiveClass.syllabus.map((s, idx) => (
-                            <li
-                              key={idx}
-                              className="text-xs text-z-muted flex items-center gap-2"
-                            >
-                              <span className="w-1 h-1 bg-z-accent rounded-full shrink-0" />
-                              {s}
-                            </li>
-                          ))}
-                        </motion.ul>
+                          <ul className="mt-3 space-y-2 pl-1">
+                            {selectedLiveClass.syllabus.map((s, idx) => (
+                              <li
+                                key={idx}
+                                className="text-xs text-gray-400 flex items-center gap-2"
+                              >
+                                <span className="w-1 h-1 bg-blue-500 rounded-full shrink-0" />
+                                {s}
+                              </li>
+                            ))}
+                          </ul>
+                        </motion.div>
                       )}
                     </div>
                   )}
@@ -623,7 +494,7 @@ export default function CoursesClient() {
                       <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
                       Claim Free Seat
                     </h4>
-                    <p className="text-[11px] text-z-muted mb-4">
+                    <p className="text-[11px] text-gray-400 mb-4">
                       Enter your data to secure live access coordinates
                       instantly.
                     </p>
@@ -662,7 +533,7 @@ export default function CoursesClient() {
                         <div className="relative">
                           <User
                             size={13}
-                            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-z-muted"
+                            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"
                           />
                           <input
                             type="text"
@@ -672,19 +543,18 @@ export default function CoursesClient() {
                             onChange={(e) =>
                               setFormData({ ...formData, name: e.target.value })
                             }
-                            className="w-full bg-slate-950/60 border border-white/5 text-white rounded-lg pl-9 pr-3 py-2 text-xs placeholder:text-z-muted focus:outline-none focus:border-blue-500/40 transition"
+                            className="w-full bg-slate-950/60 border border-white/5 text-white rounded-lg pl-9 pr-3 py-2 text-xs placeholder:text-gray-500 focus:outline-none focus:border-blue-500 transition"
                           />
                         </div>
 
                         <div className="relative">
                           <Phone
                             size={13}
-                            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-z-muted"
+                            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"
                           />
                           <input
-                            type="tel"
+                            type="text"
                             required
-                            pattern="[0-9]{10,12}"
                             placeholder="WhatsApp Number (10 digits)"
                             value={formData.whatsapp}
                             onChange={(e) =>
@@ -693,14 +563,14 @@ export default function CoursesClient() {
                                 whatsapp: e.target.value,
                               })
                             }
-                            className="w-full bg-slate-950/60 border border-white/5 text-white rounded-lg pl-9 pr-3 py-2 text-xs placeholder:text-z-muted focus:outline-none focus:border-blue-500/40 transition"
+                            className="w-full bg-slate-950/60 border border-white/5 text-white rounded-lg pl-9 pr-3 py-2 text-xs placeholder:text-gray-500 focus:outline-none focus:border-blue-500 transition"
                           />
                         </div>
 
                         <div className="relative">
                           <Mail
                             size={13}
-                            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-z-muted"
+                            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"
                           />
                           <input
                             type="email"
@@ -712,7 +582,7 @@ export default function CoursesClient() {
                                 email: e.target.value,
                               })
                             }
-                            className="w-full bg-slate-950/60 border border-white/5 text-white rounded-lg pl-9 pr-3 py-2 text-xs placeholder:text-z-muted focus:outline-none focus:border-blue-500/40 transition"
+                            className="w-full bg-slate-950/60 border border-white/5 text-white rounded-lg pl-9 pr-3 py-2 text-xs placeholder:text-gray-500 focus:outline-none focus:border-blue-500 transition"
                           />
                         </div>
 
@@ -758,18 +628,18 @@ export default function CoursesClient() {
               >
                 <div className="flex items-center gap-4">
                   <div className="bg-slate-950 border border-white/5 px-3 py-2 rounded-lg text-center min-w-[60px]">
-                    <div className="text-xs font-bold text-z-accent tracking-wide">
-                      {item.dateString.split(" ")[1] || "MAY"}
+                    <div className="text-xs font-bold text-blue-400 tracking-wide">
+                      {item.dateString?.split(" ")?.[1] || "MAY"}
                     </div>
                     <div className="text-xl font-extrabold text-white leading-none mt-0.5">
-                      {item.dateString.split(" ")[0] || "17"}
+                      {item.dateString?.split(" ")?.[0] || "17"}
                     </div>
                   </div>
                   <div>
                     <h4 className="font-bold text-sm text-white line-clamp-1">
                       {item.title}
                     </h4>
-                    <div className="flex items-center gap-3 text-xs text-z-muted mt-1">
+                    <div className="flex items-center gap-3 text-xs text-gray-400 mt-1">
                       <span className="flex items-center gap-1">
                         <Clock size={11} /> {item.timeString || "10:00 AM IST"}
                       </span>
@@ -792,153 +662,54 @@ export default function CoursesClient() {
       </section>
 
       {/* Filters Area Rows */}
-      <section className="px-4 md:px-6 mb-12">
-        <div className="max-w-7xl mx-auto flex flex-wrap items-center gap-3">
+      <section className="mb-12">
+        <div className="flex flex-wrap items-center gap-3">
           {CATEGORIES.map((c) => (
             <button
               key={c.value}
               onClick={() => setCategory(c.value)}
               className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${
                 category === c.value
-                  ? "bg-z-accent text-white"
-                  : "glass-card text-z-muted hover:text-white"
+                  ? "bg-blue-600 text-white"
+                  : "bg-slate-900 text-gray-400 border border-white/5 hover:text-white"
               }`}
             >
               {c.label}
             </button>
           ))}
-          <div className="w-px h-5 bg-z-border mx-1 hidden md:block" />
-          {LEVELS.map((l) => (
-            <button
-              key={l.value}
-              onClick={() => setLevel(l.value)}
-              className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${
-                level === l.value
-                  ? "bg-z-accent2 text-white"
-                  : "glass-card text-z-muted hover:text-white"
-              }`}
-            >
-              {l.label}
-            </button>
-          ))}
-          <button
-            onClick={() => setFreeOnly(!freeOnly)}
-            className={`px-4 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all duration-200 ${
-              freeOnly
-                ? "bg-z-accent3 text-z-dark font-bold"
-                : "glass-card text-z-muted hover:text-white"
-            }`}
-          >
-            <Zap size={11} /> Free Only
-          </button>
         </div>
       </section>
 
-      {/* Main Course Cards Grid Catalogue */}
-      <section className="px-4 md:px-6 mb-24">
-        <div className="max-w-7xl mx-auto">
-          {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[...Array(6)].map((_, i) => (
-                <CourseCardSkeleton key={i} />
-              ))}
-            </div>
-          ) : courses.length === 0 ? (
-            <div className="text-center py-16 glass-card rounded-2xl max-w-md mx-auto">
-              <BookOpen size={40} className="mx-auto text-z-muted mb-3" />
-              <p className="text-sm text-z-muted">
-                No matching courses found in catalog indexes.
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {courses.map((course) => (
-                <CourseCard key={course._id} course={course} />
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* YouTube Lectures Stream Matrix Shelf */}
-      {ytLectures.length > 0 && (
-        <section className="px-4 md:px-6 py-16 border-t border-white/5 bg-slate-950/20">
-          <div className="max-w-7xl mx-auto space-y-8">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-              <div>
-                <div className="text-xs text-red-400 font-extrabold tracking-widest uppercase mb-1 flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping" />
-                  YouTube Archives Feed
-                </div>
-                <h2 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
-                  Free Recorded Workshops
-                </h2>
-              </div>
-              <a
-                href={`https://www.youtube.com/playlist?list=${process.env.NEXT_PUBLIC_YOUTUBE_PLAYLIST_ID}`}
-                target="_blank"
-                rel="noreferrer"
-                className="text-xs font-semibold text-z-muted hover:text-white flex items-center gap-1.5 transition"
-              >
-                View Playlist on YouTube <ArrowRight size={13} />
-              </a>
-            </div>
-
-            {ytLoading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[...Array(3)].map((_, i) => (
-                  <CourseCardSkeleton key={i} />
-                ))}
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {ytLectures.map((lecture) => (
-                  <YouTubeCard
-                    key={lecture.id}
-                    lecture={lecture}
-                    onPlay={() => setActiveVideoId(lecture.id)}
-                  />
-                ))}
-              </div>
-            )}
+      {/* Main Course Catalog Grid Grid System */}
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {loading ? (
+          Array.from({ length: 6 }).map((_, idx) => (
+            <CourseCardSkeleton key={idx} />
+          ))
+        ) : courses.length > 0 ? (
+          courses.map((course) => (
+            <CourseCard key={course._id} course={course} />
+          ))
+        ) : (
+          <div className="col-span-full py-12 text-center text-gray-400 text-sm">
+            No courses matching the selected workspace filters were found.
           </div>
-        </section>
-      )}
-
-      {/* Video Modal Player Screen Overlay Loop */}
-      <AnimatePresence>
-        {activeVideoId && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 md:p-10"
-            onClick={() => setActiveVideoId(null)}
-          >
-            <motion.div
-              initial={{ scale: 0.95, y: 15 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.95, y: 15 }}
-              className="w-full max-w-4xl aspect-video bg-z-dark rounded-xl overflow-hidden border border-white/10 shadow-2xl relative"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <iframe
-                src={`https://www.youtube.com/embed/${activeVideoId}?autoplay=1&modestbranding=1`}
-                title="YouTube Video Player Workspace Frame"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-full border-none"
-              />
-              <button
-                onClick={() => setActiveVideoId(null)}
-                className="absolute -top-12 right-0 md:-right-10 text-xs font-bold text-z-muted hover:text-white transition uppercase tracking-widest flex items-center gap-1"
-              >
-                ✕ Close
-              </button>
-            </motion.div>
-          </motion.div>
         )}
-      </AnimatePresence>
+      </section>
+    </div>
+  );
+}
+
+function CourseCardSkeleton() {
+  return (
+    <div className="bg-slate-900 border border-white/5 rounded-xl overflow-hidden animate-pulse">
+      <div className="h-44 bg-white/5" />
+      <div className="p-5 flex flex-col gap-3">
+        <div className="h-3 bg-white/5 rounded w-1/3" />
+        <div className="h-5 bg-white/5 rounded" />
+        <div className="h-3 bg-white/5 rounded w-3/4" />
+        <div className="h-8 bg-white/5 rounded mt-auto" />
+      </div>
     </div>
   );
 }

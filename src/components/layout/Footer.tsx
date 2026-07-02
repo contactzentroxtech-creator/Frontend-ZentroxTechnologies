@@ -70,7 +70,7 @@ export default function Footer() {
                 />
               </div>
               <span className="font-extrabold text-lg text-z-text">
-                Zentrox<span className="text-z-accent">.</span>
+                Zentrox<span className="text-z-accent"> Tech.</span>
               </span>
             </div>
             <p className="text-sm text-z-muted leading-relaxed mb-4">
