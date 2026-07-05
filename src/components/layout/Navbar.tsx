@@ -261,7 +261,7 @@ export default function Navbar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25 }}
-            className="md:hidden overflow-hidden bg-white/98 dark:bg-z-dark3/98 border-b border-slate-200 dark:border-z-border shadow-lg"
+            className="md:hidden overflow-hidden bg-white dark:bg-z-dark3 border-b border-slate-200 dark:border-z-border shadow-lg"
           >
             <div className="px-4 py-4 flex flex-col gap-1">
               {navLinks.map((link) => (
