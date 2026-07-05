@@ -100,7 +100,7 @@ function CourseCard({ course }: { course: Course }) {
       transition={{ duration: 0.4 }}
       className="glass-card overflow-hidden hover:-translate-y-1 transition-all duration-300 group flex flex-col"
     >
-      <div className="relative h-44 bg-gradient-to-br from-z-dark3 to-z-dark2 overflow-hidden">
+      {/* <div className="relative h-44 bg-gradient-to-br from-z-dark3 to-z-dark2 overflow-hidden">
         {course.thumbnail ? (
           <img
             src={course.thumbnail}
@@ -129,9 +129,9 @@ function CourseCard({ course }: { course: Course }) {
             <Star size={9} fill="white" /> Featured
           </div>
         )}
-      </div>
+      </div> */}
 
-      <div className="p-5 flex flex-col flex-1">
+      {/* <div className="p-5 flex flex-col flex-1">
         <div className="flex items-center gap-2 mb-2">
           <span className="text-[10px] font-semibold uppercase tracking-widest text-z-accent px-2 py-0.5 rounded-full bg-z-accent/10 border border-z-accent/20">
             {course.category?.replace("-", " ")}
@@ -191,7 +191,7 @@ function CourseCard({ course }: { course: Course }) {
             Enroll <ArrowRight size={13} />
           </Link>
         </div>
-      </div>
+      </div> */}
     </motion.div>
   );
 }
