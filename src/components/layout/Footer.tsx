@@ -69,8 +69,8 @@ export default function Footer() {
                   priority // Ensures logo loads immediately without layout shifts
                 />
               </div>
-              <span className="font-extrabold text-lg text-z-text">
-                Zentrox<span className="text-z-accent"> Tech.</span>
+              <span className="font-extrabold text-md text-z-text">
+                Zentrox<span className="text-z-accent"> Technologies</span>
               </span>
             </div>
             <p className="text-sm text-z-muted leading-relaxed mb-4">

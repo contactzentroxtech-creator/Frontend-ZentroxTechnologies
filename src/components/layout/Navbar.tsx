@@ -41,6 +41,7 @@ export default function Navbar() {
 
   const navLinks = useMemo(
     () => [
+      { label: "Home", href: "/" },
       { label: t("nav.services"), href: "/#services" },
       {
         label: t("nav.courses"),
@@ -97,7 +98,7 @@ export default function Navbar() {
           <span className="font-extrabold text-lg tracking-tight">
             {/* Added fallback text colors for light modes */}
             <span className="text-slate-900 dark:text-z-text">Zentrox </span>
-            <span className="text-z-accent">Technologies.</span>
+            <span className="text-z-accent">Technologies</span>
           </span>
         </Link>
 

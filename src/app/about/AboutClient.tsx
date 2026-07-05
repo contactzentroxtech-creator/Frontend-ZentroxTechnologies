@@ -1,169 +1,486 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { ArrowRight, Globe, Shield, Zap, Users, Target, Lightbulb } from 'lucide-react';
+import React, { useState, useEffect, useRef } from "react";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import {
+  ArrowRight,
+  Trophy,
+  Monitor,
+  Megaphone,
+  CheckSquare,
+  Sparkles,
+  MapPin,
+  Mail,
+  Clock,
+  Building2,
+} from "lucide-react";
 
-const TEAM_VALUES = [
-  { icon: Zap, title: 'Innovation First', desc: 'We build with the latest technology stacks, ensuring your product is future-proof from day one.', color: '#3b7bff' },
-  { icon: Shield, title: 'Quality Guaranteed', desc: 'MSME-registered and committed to enterprise-grade quality at every stage of development.', color: '#7c3aed' },
-  { icon: Globe, title: 'Remote-First', desc: 'Serving clients across India — from Mohali to Noida — with seamless remote collaboration.', color: '#06d6a0' },
-  { icon: Users, title: 'Client-Centric', desc: 'Your success is our success. Every solution is crafted specifically for your business goals.', color: '#f59e0b' },
-  { icon: Target, title: 'Results-Driven', desc: 'We focus on measurable outcomes — conversions, traffic, revenue, and growth metrics that matter.', color: '#ec4899' },
-  { icon: Lightbulb, title: 'Continuous Learning', desc: 'Our Saturday live classes and internship programs reflect our passion for growing the tech community.', color: '#3b7bff' },
+// --- DATA DEFINITIONS ---
+
+const stats = [
+  {
+    label: "Years Old",
+    value: "7+",
+    desc: "Founded in 2018, we’ve built depth of experience across multiple tech verticals.",
+  },
+  {
+    label: "Own Products",
+    value: "8+",
+    desc: "We don’t just build for clients; we own and operate software used daily by thousands.",
+  },
+  {
+    label: "Offices",
+    value: "2",
+    desc: "Headquarters in Mohali and a branch office in Barnala, serving all of Punjab.",
+  },
+  {
+    label: "Ambition",
+    value: "∞",
+    desc: "We’re not done growing. New products, new divisions, new markets every year.",
+  },
 ];
 
-const SERVICES_STACK = [
-  { label: 'Frontend', items: ['React', 'Next.js 15', 'TypeScript', 'Tailwind CSS', 'Framer Motion'] },
-  { label: 'Backend', items: ['Node.js', 'Express.js', 'MongoDB Atlas', 'REST APIs', 'JWT Auth'] },
-  { label: 'Mobile', items: ['React Native', 'Android Dev', 'Cross-Platform', 'App Store Ready'] },
-  { label: 'AI & Cloud', items: ['AI Integration', 'Cloudinary', 'Vercel', 'Railway', 'Razorpay'] },
+const journeySteps = [
+  {
+    year: "2018",
+    title: "Zentrox is Founded",
+    desc: "Registered in Mohali, Punjab. Initial focus on web development and basic mobile apps for local businesses.",
+    bullets: ["Company registered in Punjab", "First office in Mohali"],
+  },
+  {
+    year: "2019",
+    title: "First Enterprise Clients",
+    desc: "First major client engagements secured. Builds first POS system and begins developing expertise in retail software.",
+    bullets: ["First POS system delivered", "10+ clients served"],
+  },
+  {
+    year: "2020",
+    title: "Team Grows to 8 People",
+    desc: "Doubled down growing the team and launching custom inventory software, serving businesses across Punjab.",
+    bullets: ["Cloud platforms launched", "Team of 8 engineers & designers"],
+  },
+  {
+    year: "2023",
+    title: "Barnala Office Opened",
+    desc: "Second office opened in Barnala to better serve clients in south Punjab. Team crosses 16 people.",
+    bullets: [
+      "2nd office opened — Barnala",
+      "Advanced AI integrations launched",
+    ],
+  },
+  {
+    year: "2024-26",
+    title: "SaaS Division & Beyond",
+    desc: "Enters the enterprise SaaS space designing and deploying high-scale platforms. Team crosses 20 people.",
+    bullets: [
+      "Enterprise SaaS in production",
+      "20+ team members across 2 offices",
+      "8+ products live and growing",
+    ],
+  },
 ];
 
-const MILESTONES = [
-  { year: '2020', event: 'Zentrox Technologies founded in Mohali, Punjab' },
-  { year: '2021', event: 'MSME registration completed — officially recognized technology company' },
-  { year: '2022', event: 'Launched Saturday live classes — 100+ students enrolled' },
-  { year: '2023', event: 'Expanded to Chandigarh, Haryana, and Himachal Pradesh markets' },
-  { year: '2024', event: 'Remote internship program launched — AI & SaaS focus' },
-  { year: '2025', event: 'Full-stack ecosystem platform launched — LMS + CMS + CRM' },
+const coreValues = [
+  {
+    num: "01",
+    title: "Build Real Things",
+    desc: "We care about products that work in the real world not demos, not prototypes, not excuses. Shipping working software is the only metric that matters.",
+  },
+  {
+    num: "02",
+    title: "Honest Communication",
+    desc: "We say what we mean, deliver what we promise, and flag problems early. No surprises, no hidden costs, no corporate doublespeak.",
+  },
+  {
+    num: "03",
+    title: "Long-Term Thinking",
+    desc: "We build products and relationships designed to last decades. Every decision is made with the long game in mind for our clients and for ourselves.",
+  },
+  {
+    num: "04",
+    title: "Continuous Learning",
+    desc: "Technology changes fast. We invest in our team’s growth new tools, new languages, new frameworks. Zentrox is a place where engineers love to learn.",
+  },
+  {
+    num: "05",
+    title: "Own Your Work",
+    desc: "Every team member owns their domain. Engineers aren’t just code writers they’re product thinkers who take pride in what they ship.",
+  },
+  {
+    num: "06",
+    title: "Punjab First",
+    desc: "We’re proud of where we come from. Our mission is to help build Punjab’s digital economy and prove that world-class technology can come from anywhere.",
+  },
 ];
 
-const fadeUp = { hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0 } };
+const teamDepartments = [
+  {
+    category: "Leadership",
+    icon: <Trophy size={18} className="text-amber-500" />,
+    members: [
+      {
+        name: "Prince Paul Singh",
+        role: "Founder & Director",
+        badge: "DIRECTOR",
+        initials: "PS",
+        isPrimary: true,
+      },
+      { name: "Anita Raikwal", role: "HR Manager", initials: "AR" },
+    ],
+  },
+  {
+    category: "Development",
+    icon: <Monitor size={18} className="text-blue-500" />,
+    members: [
+      { name: "Ameet", role: "Full Stack Developer", initials: "AM" },
+      { name: "Charanpal Singh", role: "MERN Stack Developer", initials: "CS" },
+      {
+        name: "Pratham Trikha",
+        role: "Front End Developer & Designer",
+        initials: "PT",
+      },
+      { name: "Rajiv Tiwari", role: "Mobile App Developer", initials: "RT" },
+      { name: "Samandeep Singh", role: "Backend Engineer", initials: "SS" },
+      { name: "Taranveer Singh", role: "DevOps Engineer", initials: "TS" },
+    ],
+  },
+  {
+    category: "Marketing & Design",
+    icon: <Megaphone size={18} className="text-orange-500" />,
+    members: [
+      { name: "Hitesh Thakur", role: "Marketing Manager", initials: "HT" },
+      { name: "Shashi Panwar", role: "SEO Team Lead", initials: "SP" },
+      { name: "Rajdeep Kaur", role: "UI/UX Designer", initials: "RK" },
+      { name: "Navdeep Singh", role: "Graphic Designer", initials: "NS" },
+      { name: "Meenakshi Gautum", role: "Content Strategist", initials: "MG" },
+    ],
+  },
+  {
+    category: "Quality & Customer Support",
+    icon: <CheckSquare size={18} className="text-emerald-500" />,
+    members: [
+      { name: "Deeksha", role: "QA Lead", initials: "DK" },
+      { name: "Rajat Kuthial", role: "Technical Support", initials: "RK" },
+      { name: "Rajit Patiarch", role: "Client Success", initials: "RP" },
+      { name: "Komal Sharma", role: "Support Specialist", initials: "KS" },
+    ],
+  },
+];
 
-export default function AboutClient() {
+const offices = [
+  {
+    city: "Mohali, Punjab",
+    badge: "HEADQUARTERS · HQ",
+    title: "IT Tower, Mohali",
+    address:
+      "IT Tower, Mohali Tower, E261 Phase 8B, NH 5, Industrial Area, Sector 74, Sahibzada Ajit Singh Nagar, Punjab 140307",
+    email: "contact.zentroxtech@gmail.com",
+    hours: "Mon–Fri: 9:00 AM – 6:30 PM IST",
+    mapLink: "https://maps.google.com",
+  },
+  {
+    city: "Barnala, Punjab",
+    badge: "BRANCH OFFICE",
+    title: "22 Acre, Barnala",
+    address: "Shop No. 41, 22 Acre, Barnala, Punjab 148101",
+    email: "contact.zentroxtech@gmail.com",
+    hours: "Mon–Fri: 9:00 AM – 6:30 PM IST",
+    mapLink: "https://maps.google.com",
+  },
+];
+
+// --- COMPONENT IMPLEMENTATION ---
+
+export default function AboutPageTemplate() {
+  const [activeYear, setActiveYear] = useState(journeySteps[0].year);
+  const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  // Intersection Observer to track active year on scroll
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: "-40% 0px -40% 0px",
+      threshold: 0,
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const year = entry.target.getAttribute("data-year");
+          if (year) setActiveYear(year);
+        }
+      });
+    }, observerOptions);
+
+    stepRefs.current.forEach((ref) => {
+      if (ref) observer.observe(ref);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="relative z-10">
-      {/* Hero */}
-      <section className="py-24 px-4 md:px-6 text-center relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] rounded-full bg-z-accent opacity-[0.05] blur-[120px]" />
-        </div>
-        <div className="max-w-4xl mx-auto relative">
-          <motion.div initial="hidden" animate="show" variants={fadeUp} transition={{ duration: 0.6 }}>
-            <div className="z-badge mx-auto mb-6">About Zentrox Technologies</div>
-            <h1 className="text-5xl md:text-7xl font-extrabold text-white tracking-tight leading-tight mb-6">
-              Building the Digital<br /><span className="gradient-text">Future of Punjab</span>
-            </h1>
-            <p className="text-lg text-z-muted max-w-2xl mx-auto leading-relaxed mb-8">
-              Zentrox Technologies is an MSME-registered, remote-first technology company headquartered in Mohali & Chandigarh.
-              We craft premium web, mobile, AI, and SaaS solutions for businesses across India.
-            </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <div className="flex items-center gap-2 px-4 py-2 glass-card text-sm text-z-muted">
-                <span className="w-2 h-2 rounded-full bg-z-accent3 animate-pulse-glow" />
-                MSME Registered
-              </div>
-              <div className="flex items-center gap-2 px-4 py-2 glass-card text-sm text-z-muted">
-                <span className="w-2 h-2 rounded-full bg-z-accent" />
-                Remote-First
-              </div>
-              <div className="flex items-center gap-2 px-4 py-2 glass-card text-sm text-z-muted">
-                <span className="w-2 h-2 rounded-full bg-z-accent2" />
-                Innovation-Driven
-              </div>
-            </div>
-          </motion.div>
-        </div>
+    <main className="min-h-screen bg-slate-50 dark:bg-[#080c15] text-zinc-900 dark:text-white transition-colors duration-300">
+      {/* 1. TOP HERO BANNER */}
+      <section className="relative pt-12 pb-6 px-4 md:px-8 text-center overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-500/5 via-transparent to-transparent pointer-events-none" />
+
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="max-w-4xl mx-auto space-y-6 relative z-10"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-semibold text-xs tracking-wider uppercase border border-blue-200 dark:border-blue-800">
+            ABOUT ZENTROX TECHNOLOGIES
+          </div>
+
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight text-zinc-900 dark:text-white">
+            Building the Digital <br />
+            <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">
+              Future of Punjab
+            </span>
+          </h1>
+
+          <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto leading-relaxed">
+            Zentrox Technologies is an MSME-registered, remote-first technology
+            company headquartered in Mohali & Barnala. We craft premium web,
+            mobile, AI, and SaaS solutions for businesses across India.
+          </p>
+
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
+            <span className="flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-white/5 border border-zinc-200 dark:border-white/10 text-xs font-medium text-zinc-700 dark:text-zinc-300 shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />{" "}
+              MSME Registered
+            </span>
+            <span className="flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-white/5 border border-zinc-200 dark:border-white/10 text-xs font-medium text-zinc-700 dark:text-zinc-300 shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-indigo-500" />{" "}
+              Remote-First
+            </span>
+            <span className="flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-white/5 border border-zinc-200 dark:border-white/10 text-xs font-medium text-zinc-700 dark:text-zinc-300 shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-purple-500" />{" "}
+              Innovation-Driven
+            </span>
+          </div>
+        </motion.div>
       </section>
 
-      {/* Mission */}
-      <section className="py-20 px-4 md:px-6 bg-[#080c15]">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <motion.div initial="hidden" whileInView="show" variants={fadeUp} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-            <div className="z-badge mb-4">Our Mission</div>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-white leading-tight mb-4">
-              World-Class Technology, Accessible to Every Business
+      {/* 2. WHO WE ARE & STATS SECTION */}
+      <section className="relative pt-4 pb-16 px-4 md:px-8 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="lg:col-span-6 space-y-6"
+          >
+            <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-semibold text-xs tracking-wider uppercase">
+              <span>—</span> WHO WE ARE
+            </div>
+
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-[1.15] text-zinc-900 dark:text-white">
+              More Than a Software Company. A{" "}
+              <span className="text-blue-600 dark:text-blue-500">
+                Technology Partner.
+              </span>
             </h2>
-            <p className="text-z-muted leading-relaxed mb-4">
-              We believe every business — from a Mohali coaching center to a Punjab startup — deserves access to premium digital solutions.
-              Our mission is to bridge the gap between enterprise-grade technology and growing businesses.
+
+            <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
+              Founded in 2018 in Mohali, Punjab, Zentrox Technologies was born
+              with a clear mission: to make enterprise-grade technology
+              accessible to businesses across India.
             </p>
-            <p className="text-z-muted leading-relaxed mb-6">
-              Beyond building products, we invest in the next generation of developers through our live Saturday classes
-              and remote internship program — nurturing talent right here in Punjab.
+
+            <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
+              What started as a specialized development studio has grown into a
+              multi-disciplinary technology company. Today, we design
+              cutting-edge web platforms, build robust enterprise software, and
+              deploy custom MERN stack architectures.
             </p>
-            <Link href="/contact" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-z-accent text-white font-semibold text-sm hover:bg-blue-500 transition-all duration-300 shadow-glow-sm">
-              Work With Us <ArrowRight size={15} />
-            </Link>
-          </motion.div>
-          <motion.div initial="hidden" whileInView="show" variants={fadeUp} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.2 }}>
-            <div className="glass-card p-8 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-48 h-48 rounded-full bg-z-accent opacity-[0.06] blur-[60px] pointer-events-none" />
-              <div className="text-sm font-semibold text-z-muted uppercase tracking-widest mb-5">Founder</div>
-              <div className="flex items-center gap-4 mb-5">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-z-accent to-z-accent2 flex items-center justify-center text-white text-xl font-extrabold">P</div>
-                <div>
-                  <div className="text-lg font-bold text-white">Prince Paul Singh</div>
-                  <div className="text-sm text-z-muted">Founder & CEO, Zentrox Technologies</div>
-                </div>
-              </div>
-              <p className="text-sm text-z-muted leading-relaxed italic">
-                "Our goal is simple — build technology that actually works for real businesses, not just looks good in a pitch deck.
-                Every line of code we write is about creating measurable value for our clients."
-              </p>
-              <div className="mt-5 pt-4 border-t border-z-border flex gap-4">
-                <div className="text-center">
-                  <div className="text-xl font-extrabold text-white">200+</div>
-                  <div className="text-[10px] text-z-muted uppercase tracking-wide">Projects</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-xl font-extrabold text-white">5+</div>
-                  <div className="text-[10px] text-z-muted uppercase tracking-wide">Years</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-xl font-extrabold text-white">150+</div>
-                  <div className="text-[10px] text-z-muted uppercase tracking-wide">Clients</div>
-                </div>
-              </div>
+
+            <div className="pt-2">
+              <Link
+                href="/contact"
+                className="group inline-flex items-center gap-2 px-8 py-4 rounded-full bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-all shadow-lg hover:shadow-blue-500/25"
+              >
+                Work With Us{" "}
+                <ArrowRight
+                  size={16}
+                  className="group-hover:translate-x-1 transition-transform"
+                />
+              </Link>
             </div>
           </motion.div>
-        </div>
-      </section>
 
-      {/* Values */}
-      <section className="py-20 px-4 md:px-6">
-        <div className="max-w-7xl mx-auto">
-          <motion.div initial="hidden" whileInView="show" variants={fadeUp} viewport={{ once: true }} transition={{ duration: 0.6 }} className="mb-12">
-            <div className="z-badge mb-4">Core Values</div>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-4">What Drives Us</h2>
-          </motion.div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {TEAM_VALUES.map((v, i) => {
-              const Icon = v.icon;
-              return (
-                <motion.div key={v.title} initial="hidden" whileInView="show" variants={fadeUp} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.07 }}
-                  className="glass-card p-6 hover:-translate-y-1 transition-transform duration-300">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style={{ background: `${v.color}18`, border: `1px solid ${v.color}30` }}>
-                    <Icon size={20} style={{ color: v.color }} />
-                  </div>
-                  <h3 className="font-bold text-white mb-2">{v.title}</h3>
-                  <p className="text-sm text-z-muted leading-relaxed">{v.desc}</p>
-                </motion.div>
-              );
-            })}
+          <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {stats.map((st, idx) => (
+              <motion.div
+                key={st.label}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                className="bg-white dark:bg-white/5 border border-zinc-200 dark:border-white/10 rounded-2xl p-6 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:border-blue-500 hover:shadow-xl hover:shadow-blue-500/10 cursor-pointer"
+              >
+                <div className="text-4xl font-extrabold text-blue-600 dark:text-blue-500 mb-2">
+                  {st.value}
+                </div>
+                <div className="text-sm font-bold text-zinc-900 dark:text-white mb-2">
+                  {st.label}
+                </div>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                  {st.desc}
+                </p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Tech Stack */}
-      <section className="py-20 px-4 md:px-6 bg-[#080c15]">
-        <div className="max-w-7xl mx-auto">
-          <motion.div initial="hidden" whileInView="show" variants={fadeUp} viewport={{ once: true }} transition={{ duration: 0.6 }} className="mb-12">
-            <div className="z-badge mb-4">Technology Stack</div>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-4">Built with the Best</h2>
-            <p className="text-z-muted max-w-xl">We use modern, production-proven technology stacks to ensure your product is fast, scalable, and maintainable.</p>
-          </motion.div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {SERVICES_STACK.map((stack, i) => (
-              <motion.div key={stack.label} initial="hidden" whileInView="show" variants={fadeUp} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="glass-card p-5">
-                <div className="text-xs font-semibold uppercase tracking-widest text-z-accent mb-3">{stack.label}</div>
-                <div className="flex flex-col gap-2">
-                  {stack.items.map(item => (
-                    <div key={item} className="flex items-center gap-2">
-                      <div className="w-1 h-1 rounded-full bg-z-accent3 flex-shrink-0" />
-                      <span className="text-sm text-z-muted">{item}</span>
+      {/* 3. FOUNDER PROFILE SECTION (THIRD PLACE) */}
+      {/* Enclosed in a sleek high-contrast dark indigo banner box that looks perfect in both Light and Dark themes */}
+      <section className="py-8 px-4 md:px-8 max-w-7xl mx-auto overflow-hidden">
+        <div className="bg-gradient-to-br from-[#0c1633] via-[#111f48] to-[#182b63] border border-blue-500/20 rounded-3xl p-8 sm:p-12 lg:p-16 shadow-2xl text-white">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            {/* Image from Left - Sleek proportioned card */}
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.7, ease: "easeOut" }}
+              className="lg:col-span-4 flex justify-center lg:justify-start"
+            >
+              <div className="relative aspect-[4/5] w-full max-w-[270px] sm:max-w-[300px] rounded-2xl overflow-hidden border-2 border-white/10 shadow-2xl group">
+                <img
+                  src="https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&fit=crop&q=80&w=800"
+                  alt="Founder & Director"
+                  className="object-cover w-full h-full transform transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-5">
+                  <h4 className="font-bold text-base text-white">
+                    Prince Paul Singh
+                  </h4>
+                  <p className="text-xs text-blue-300 font-medium">
+                    Founder & Director
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Content from Right - Explicit high-contrast white/blue text */}
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.7, ease: "easeOut", delay: 0.15 }}
+              className="lg:col-span-8 space-y-6"
+            >
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-tight !text-white tracking-tight">
+                "Technology is the great equalizer — it gives every business,
+                big or small, the tools to compete."
+              </h2>
+
+              <div className="border-l-2 border-blue-400 pl-5 !text-blue-100 text-sm sm:text-base italic leading-relaxed font-normal">
+                "I started Zentrox in 2018 with a simple belief: that businesses
+                in Punjab and across India deserve access to the same quality of
+                technology that the world's best companies have. Seven years
+                later, that mission drives every line of code we write."
+              </div>
+
+              <div className="space-y-4 text-xs sm:text-sm !text-zinc-300 leading-relaxed">
+                <p>
+                  Prince Paul Singh is the Founder and Director of Zentrox
+                  Technologies. With deep roots in Punjab and a passion for
+                  engineering, he has built Zentrox from a two-person web studio
+                  into a company with 20+ team members, 8+ live products, and
+                  clients across India.
+                </p>
+                <p>
+                  Under his leadership, Zentrox has expanded from enterprise
+                  software development into custom SaaS architectures and modern
+                  cloud deployments. He personally oversees product strategy and
+                  client relationships.
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. OUR JOURNEY (TIMELINE) */}
+      <section className="py-20 px-4 md:px-8 max-w-7xl mx-auto border-b border-zinc-200 dark:border-white/10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          <div className="lg:col-span-5 hidden lg:block">
+            <div className="sticky top-32 space-y-6">
+              <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-semibold text-xs tracking-wider uppercase">
+                <span>—</span> OUR JOURNEY
+              </div>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-zinc-900 dark:text-white leading-tight">
+                Seven Years of Building & Growing
+              </h2>
+              <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                From a small office in Mohali to a full-stack technology company
+                operating across Punjab here&apos;s how we grew year by year.
+              </p>
+
+              {/* Dynamic Animated Year Indicator */}
+              <div className="pt-12">
+                <motion.div
+                  key={activeYear}
+                  initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ duration: 0.5, ease: "easeOut" }}
+                  className="text-7xl xl:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-br from-blue-600/20 to-indigo-600/10 dark:from-blue-500/40 dark:to-indigo-500/10 select-none"
+                >
+                  {activeYear}
+                </motion.div>
+              </div>
+            </div>
+          </div>
+
+          <div className="lg:col-span-7 relative pl-6 sm:pl-10 border-l-2 border-zinc-200 dark:border-white/10 space-y-12">
+            <div className="lg:hidden mb-12 space-y-4">
+              <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-semibold text-xs tracking-wider uppercase">
+                <span>—</span> OUR JOURNEY
+              </div>
+              <h2 className="text-3xl font-extrabold text-zinc-900 dark:text-white leading-tight">
+                Seven Years of Building & Growing
+              </h2>
+            </div>
+
+            {journeySteps.map((step, idx) => (
+              <motion.div
+                key={step.year}
+                ref={(el) => {
+                  stepRefs.current[idx] = el;
+                }}
+                data-year={step.year}
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="relative group"
+              >
+                <span className="absolute -left-[31px] sm:-left-[47px] top-1.5 w-4 sm:w-5 h-4 sm:h-5 rounded-full border-4 border-slate-50 dark:border-[#080c15] bg-blue-600 dark:bg-blue-500 group-hover:scale-125 transition-transform" />
+                <div className="text-xs font-bold text-blue-600 dark:text-blue-400 tracking-wider mb-1">
+                  {step.year}
+                </div>
+                <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-white mb-2">
+                  {step.title}
+                </h3>
+                <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">
+                  {step.desc}
+                </p>
+
+                <div className="bg-white dark:bg-white/5 border border-zinc-200 dark:border-white/10 rounded-xl p-4 space-y-2 transition-all duration-300 hover:border-blue-500 hover:shadow-md">
+                  {step.bullets.map((b, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center gap-2 text-xs text-zinc-700 dark:text-zinc-300"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                      <span>{b}</span>
                     </div>
                   ))}
                 </div>
@@ -173,44 +490,200 @@ export default function AboutClient() {
         </div>
       </section>
 
-      {/* Timeline */}
-      <section className="py-20 px-4 md:px-6">
-        <div className="max-w-4xl mx-auto">
-          <motion.div initial="hidden" whileInView="show" variants={fadeUp} viewport={{ once: true }} transition={{ duration: 0.6 }} className="mb-12 text-center">
-            <div className="z-badge mx-auto mb-4">Our Journey</div>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-white">Building Since 2020</h2>
-          </motion.div>
-          <div className="relative">
-            <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-z-border" />
-            {MILESTONES.map((m, i) => (
-              <motion.div key={m.year} initial="hidden" whileInView="show" variants={fadeUp} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.1 }}
-                className={`relative flex items-start gap-6 mb-8 ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} md:gap-0`}>
-                <div className="absolute left-4 md:left-1/2 w-3 h-3 rounded-full bg-z-accent border-2 border-z-dark -translate-x-1/2 mt-1.5 z-10" />
-                <div className={`pl-12 md:pl-0 md:w-1/2 ${i % 2 === 0 ? 'md:pr-10 md:text-right' : 'md:pl-10'}`}>
-                  <div className="text-z-accent font-mono text-sm font-bold mb-1">{m.year}</div>
-                  <div className="text-sm text-z-muted leading-relaxed">{m.event}</div>
-                </div>
-              </motion.div>
-            ))}
+      {/* 5. CORE VALUES SECTION */}
+      <section className="py-20 px-4 md:px-8 max-w-7xl mx-auto border-b border-zinc-200 dark:border-white/10">
+        <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
+          <div className="text-blue-600 dark:text-blue-400 font-semibold text-xs tracking-wider uppercase">
+            — OUR CULTURE
           </div>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
+            The Values That Drive{" "}
+            <span className="text-blue-600 dark:text-blue-500">
+              Everything We Do
+            </span>
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {coreValues.map((val, idx) => (
+            <motion.div
+              key={val.num}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: idx * 0.1 }}
+              className="bg-white dark:bg-white/5 border border-zinc-200 dark:border-white/10 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-2 hover:border-blue-500 hover:shadow-xl hover:shadow-blue-500/10 cursor-pointer"
+            >
+              <div className="text-3xl font-extrabold text-blue-600 dark:text-blue-500 mb-4">
+                {val.num}
+              </div>
+              <h3 className="text-base font-bold text-zinc-900 dark:text-white mb-2">
+                {val.title}
+              </h3>
+              <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                {val.desc}
+              </p>
+            </motion.div>
+          ))}
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-20 px-4 md:px-6 bg-[#080c15] text-center">
-        <motion.div initial="hidden" whileInView="show" variants={fadeUp} viewport={{ once: true }} transition={{ duration: 0.6 }} className="max-w-2xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-4">Ready to Build Something Great?</h2>
-          <p className="text-z-muted mb-8">Let's discuss your project. First consultation is always free.</p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/contact" className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-z-accent text-white font-semibold hover:bg-blue-500 transition-all shadow-glow-sm">
-              Start a Project <ArrowRight size={16} />
+      {/* 6. TEAM DIRECTORY WITH HOVER UPLIFT & BLUE BORDER */}
+      <section className="py-20 px-4 md:px-8 max-w-7xl mx-auto border-b border-zinc-200 dark:border-white/10">
+        <div className="max-w-3xl mb-16 space-y-3">
+          <div className="text-blue-600 dark:text-blue-400 font-semibold text-xs tracking-wider uppercase">
+            — OUR PEOPLE
+          </div>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
+            The Team Powering{" "}
+            <span className="text-blue-600 dark:text-blue-500">Zentrox</span>
+          </h2>
+          <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
+            Dedicated engineers, designers, and web strategists building
+            futuristic solutions together.
+          </p>
+        </div>
+
+        <div className="space-y-12">
+          {teamDepartments.map((dept) => (
+            <div key={dept.category} className="space-y-4">
+              <div className="flex items-center gap-2 border-b border-zinc-200 dark:border-white/10 pb-3">
+                {dept.icon}
+                <h3 className="font-bold text-sm sm:text-base text-zinc-900 dark:text-white">
+                  {dept.category}
+                </h3>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {dept.members.map((member) => (
+                  <motion.div
+                    key={member.name}
+                    className={`p-5 rounded-2xl border text-center transition-all duration-300 hover:-translate-y-2 hover:border-blue-500 hover:shadow-xl hover:shadow-blue-500/10 cursor-pointer ${
+                      member.isPrimary
+                        ? "bg-blue-50/50 dark:bg-blue-950/20 border-blue-300 dark:border-blue-500/40"
+                        : "bg-white dark:bg-white/5 border-zinc-200 dark:border-white/10"
+                    }`}
+                  >
+                    {member.badge && (
+                      <div className="mb-3">
+                        <span className="text-[10px] font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700">
+                          {member.badge}
+                        </span>
+                      </div>
+                    )}
+                    <div className="w-12 h-12 rounded-full bg-blue-600 text-white font-bold text-sm flex items-center justify-center mx-auto mb-3 shadow-md">
+                      {member.initials}
+                    </div>
+                    <h4 className="font-bold text-xs sm:text-sm text-zinc-900 dark:text-white">
+                      {member.name}
+                    </h4>
+                    <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5">
+                      {member.role}
+                    </p>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 7. TWO OFFICES, ONE MISSION SECTION */}
+      <section className="py-20 px-4 md:px-8 max-w-7xl mx-auto">
+        <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
+          <div className="text-blue-600 dark:text-blue-400 font-semibold text-xs tracking-wider uppercase">
+            — WHERE WE ARE
+          </div>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
+            Two Offices,{" "}
+            <span className="text-blue-600 dark:text-blue-500">
+              One Mission
+            </span>
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {offices.map((office) => (
+            <div
+              key={office.city}
+              className="bg-white dark:bg-white/5 border border-zinc-200 dark:border-white/10 rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:border-blue-500 hover:shadow-xl hover:shadow-blue-500/10 flex flex-col justify-between"
+            >
+              <div className="bg-[#14234b] dark:bg-[#0c1633] p-8 text-center relative border-b border-zinc-200 dark:border-white/10">
+                <div className="w-12 h-12 rounded-2xl bg-blue-600/20 border border-blue-400/30 flex items-center justify-center mx-auto mb-4 text-blue-400">
+                  <Building2 size={24} />
+                </div>
+                <span className="inline-block px-4 py-1 rounded-full bg-white text-zinc-900 font-bold text-xs shadow-sm">
+                  {office.city}
+                </span>
+              </div>
+
+              <div className="p-8 space-y-5 flex-1 flex flex-col justify-between">
+                <div className="space-y-4">
+                  <div className="text-[10px] font-bold tracking-widest text-blue-600 dark:text-blue-400 uppercase">
+                    {office.badge}
+                  </div>
+                  <h3 className="text-xl font-extrabold text-zinc-900 dark:text-white">
+                    {office.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed flex items-start gap-2.5">
+                    <MapPin
+                      size={16}
+                      className="text-blue-500 flex-shrink-0 mt-0.5"
+                    />
+                    <span>{office.address}</span>
+                  </p>
+                  <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 flex items-center gap-2.5">
+                    <Mail size={16} className="text-blue-500 flex-shrink-0" />
+                    <span>{office.email}</span>
+                  </p>
+                  <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 flex items-center gap-2.5">
+                    <Clock size={16} className="text-blue-500 flex-shrink-0" />
+                    <span>{office.hours}</span>
+                  </p>
+                </div>
+
+                <div className="pt-4">
+                  <a
+                    href={office.mapLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-zinc-300 dark:border-white/20 text-xs font-semibold text-zinc-900 dark:text-white hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all"
+                  >
+                    View on Maps <ArrowRight size={14} />
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 8. BOTTOM CTA BANNER */}
+      <section className="relative py-20 px-4 md:px-8 bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800 text-white text-center overflow-hidden">
+        <div className="max-w-4xl mx-auto space-y-6 relative z-10">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">
+            Want to Work with Us?
+          </h2>
+          <p className="text-sm sm:text-base text-blue-100 max-w-xl mx-auto leading-relaxed">
+            Whether you&apos;re a client, potential partner, or looking to join
+            our growing team let&apos;s connect.
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+            <Link
+              href="/contact"
+              className="px-8 py-3.5 rounded-full bg-white text-zinc-900 font-bold text-xs sm:text-sm hover:bg-blue-50 transition-all shadow-lg hover:shadow-xl hover:scale-105 transform duration-200 inline-flex items-center gap-2"
+            >
+              Start a Project <ArrowRight size={14} />
             </Link>
-            <Link href="/courses" className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full border border-z-border text-z-muted hover:text-white hover:border-z-accent transition-all">
-              Join Our Courses
+            <Link
+              href="/contact"
+              className="px-8 py-3.5 rounded-full border-2 border-white/40 text-white font-bold text-xs sm:text-sm hover:bg-white/10 hover:border-white transition-all duration-200"
+            >
+              Join the Team
             </Link>
           </div>
-        </motion.div>
+        </div>
       </section>
-    </div>
+    </main>
   );
 }

@@ -68,11 +68,14 @@ function LoginForm() {
       >
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-6">
-            <div className="w-9 h-9 rounded-xl bg-z-accent flex items-center justify-center text-white font-bold text-sm">
-              ZT
-            </div>
+            {/* Replaced ZT box with Logo Image */}
+            <img
+              src="/Zentrox-Logo1.png " /* Replace with your actual image path */
+              alt="Zentrox Technologies Logo"
+              className="w-11 h-11 object-contain rounded-xl"
+            />
             <span className="font-extrabold text-lg text-z-text">
-              Zentrox<span className="text-z-accent">.</span>
+              Zentrox<span className="text-z-accent"> Technologies</span>
             </span>
           </Link>
           <h1 className="text-2xl font-extrabold text-z-text mb-1">

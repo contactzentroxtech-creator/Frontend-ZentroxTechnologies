@@ -1,14 +1,14 @@
 /* ─── LIGHT THEME OVERRIDES ─────────────────────────────────────────────────── */
 
 :root.light {
-  --z-dark:   #f4f6fc;
-  --z-dark2:  #eaecf5;
-  --z-dark3:  #dde0f0;
-  --z-dark4:  #d0d4eb;
-  --z-text:   #1a1d2e;
-  --z-muted:  #4a5170;
-  --z-border: rgba(59,123,255,0.18);
-  --z-glow:   rgba(59,123,255,0.15);
+  --z-dark: #f4f6fc;
+  --z-dark2: #eaecf5;
+  --z-dark3: #dde0f0;
+  --z-dark4: #d0d4eb;
+  --z-text: #1a1d2e;
+  --z-muted: #4a5170;
+  --z-border: rgba(59, 123, 255, 0.18);
+  --z-glow: rgba(59, 123, 255, 0.15);
 }
 
 /* ── body ── */
@@ -24,32 +24,39 @@
 
 /* ── grid background ── */
 :root.light .grid-bg {
-  background-image:
-    linear-gradient(rgba(59,123,255,0.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(59,123,255,0.07) 1px, transparent 1px);
+  background-image: linear-gradient(
+      rgba(59, 123, 255, 0.07) 1px,
+      transparent 1px
+    ),
+    linear-gradient(90deg, rgba(59, 123, 255, 0.07) 1px, transparent 1px);
 }
 
 :root.light .grid-bg::after {
-  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(59,123,255,0.07) 0%, transparent 70%);
+  background: radial-gradient(
+    ellipse 80% 60% at 50% 0%,
+    rgba(59, 123, 255, 0.07) 0%,
+    transparent 70%
+  );
 }
 
 /* ── glass cards ── */
 :root.light .glass-card {
-  background: rgba(255,255,255,0.92);
-  border-color: rgba(59,123,255,0.15);
-  box-shadow: 0 4px 24px rgba(26,29,46,0.08), inset 0 1px 0 rgba(255,255,255,0.9);
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(59, 123, 255, 0.15);
+  box-shadow: 0 4px 24px rgba(26, 29, 46, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 /* ── form inputs ── */
 :root.light .z-input {
-  background: rgba(255,255,255,0.95);
+  background: rgba(255, 255, 255, 0.95);
   color: #1a1d2e;
-  border-color: rgba(59,123,255,0.2);
-  box-shadow: 0 1px 4px rgba(26,29,46,0.06);
+  border-color: rgba(59, 123, 255, 0.2);
+  box-shadow: 0 1px 4px rgba(26, 29, 46, 0.06);
 }
 :root.light .z-input:focus {
   border-color: #3b7bff;
-  box-shadow: 0 0 0 3px rgba(59,123,255,0.12);
+  box-shadow: 0 0 0 3px rgba(59, 123, 255, 0.12);
 }
 :root.light .z-input::placeholder {
   color: #6b7399;
@@ -57,15 +64,15 @@
 
 /* ── badges ── */
 :root.light .z-badge {
-  background: rgba(59,123,255,0.1);
-  border-color: rgba(59,123,255,0.25);
+  background: rgba(59, 123, 255, 0.1);
+  border-color: rgba(59, 123, 255, 0.25);
   color: #2563eb;
 }
 
 /* ── admin sidebar ── */
 :root.light .admin-sidebar-link.active {
-  background: rgba(59,123,255,0.1);
-  border-color: rgba(59,123,255,0.25);
+  background: rgba(59, 123, 255, 0.1);
+  border-color: rgba(59, 123, 255, 0.25);
 }
 
 /* ── scrollbar ── */
@@ -73,47 +80,67 @@
   background: #eaecf5;
 }
 :root.light ::-webkit-scrollbar-thumb {
-  background: rgba(59,123,255,0.3);
+  background: rgba(59, 123, 255, 0.3);
 }
 
 /* ── Tailwind color overrides for light mode ── */
 /* bg-z-dark  → white/near-white backgrounds */
-:root.light .bg-z-dark  { background-color: #f4f6fc !important; }
-:root.light .bg-z-dark2 { background-color: #eaecf5 !important; }
-:root.light .bg-z-dark3 { background-color: #dde0f0 !important; }
-:root.light .bg-z-dark4 { background-color: #d0d4eb !important; }
+:root.light .bg-z-dark {
+  background-color: #f4f6fc !important;
+}
+:root.light .bg-z-dark2 {
+  background-color: #eaecf5 !important;
+}
+:root.light .bg-z-dark3 {
+  background-color: #dde0f0 !important;
+}
+:root.light .bg-z-dark4 {
+  background-color: #d0d4eb !important;
+}
 
 /* text colors */
-:root.light .text-z-text   { color: #1a1d2e !important; }
-:root.light .text-z-muted  { color: #4a5170 !important; }
-:root.light .text-white    { color: #1a1d2e !important; }
+:root.light .text-z-text {
+  color: #1a1d2e !important;
+}
+:root.light .text-z-muted {
+  color: #4a5170 !important;
+}
+:root.light .text-white {
+  color: #1a1d2e !important;
+}
 
 /* borders */
-:root.light .border-z-border { border-color: rgba(59,123,255,0.18) !important; }
+:root.light .border-z-border {
+  border-color: rgba(59, 123, 255, 0.18) !important;
+}
 
 /* ── hero ambient blobs ── */
-:root.light .bg-z-accent   { opacity: 0.04 !important; }
-:root.light .bg-z-accent2  { opacity: 0.03 !important; }
-:root.light .bg-z-accent3  { opacity: 0.03 !important; }
+/* :root.light .bg-z-accent   { opacity: 0.04 !important; } */
+:root.light .bg-z-accent2 {
+  opacity: 0.03 !important;
+}
+:root.light .bg-z-accent3 {
+  opacity: 0.03 !important;
+}
 
 /* ── button readability ── */
 :root.light button.bg-z-dark3,
 :root.light a.bg-z-dark3 {
-  background: rgba(255,255,255,0.8) !important;
+  background: rgba(255, 255, 255, 0.8) !important;
   color: #1a1d2e !important;
-  border-color: rgba(59,123,255,0.2) !important;
+  border-color: rgba(59, 123, 255, 0.2) !important;
 }
 
 /* ── footer ── */
 :root.light footer {
   background: #eaecf5;
-  border-top-color: rgba(59,123,255,0.15);
+  border-top-color: rgba(59, 123, 255, 0.15);
 }
 
 /* ── navbar ── */
 :root.light nav {
-  background: rgba(244,246,252,0.95) !important;
-  border-bottom-color: rgba(59,123,255,0.12) !important;
+  background: rgba(244, 246, 252, 0.95) !important;
+  border-bottom-color: rgba(59, 123, 255, 0.12) !important;
 }
 
 /* ── theme toggle ── */
@@ -124,7 +151,7 @@
   padding: 5px 12px;
   border-radius: 100px;
   border: 1px solid var(--z-border);
-  background: rgba(59,123,255,0.06);
+  background: rgba(59, 123, 255, 0.06);
   cursor: pointer;
   transition: all 0.2s;
   font-size: 12px;
@@ -143,5 +170,6 @@ footer,
 .glass-card,
 .z-input,
 .z-badge {
-  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
