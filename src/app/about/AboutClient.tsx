@@ -172,18 +172,17 @@ const offices = [
   {
     city: "Mohali, Punjab",
     badge: "HEADQUARTERS · HQ",
-    title: "IT Tower, Mohali",
-    address:
-      "IT Tower, Mohali Tower, E261 Phase 8B, NH 5, Industrial Area, Sector 74, Sahibzada Ajit Singh Nagar, Punjab 140307",
+    title: "Himachal Pradesh",
+    address: "Hamirpur, Himachal Pradesh",
     email: "contact.zentroxtech@gmail.com",
     hours: "Mon–Fri: 9:00 AM – 6:30 PM IST",
     mapLink: "https://maps.google.com",
   },
   {
-    city: "Barnala, Punjab",
+    city: "Mohali, Punjab",
     badge: "BRANCH OFFICE",
-    title: "22 Acre, Barnala",
-    address: "Shop No. 41, 22 Acre, Barnala, Punjab 148101",
+    title: "SAS Nagar (Mohali)",
+    address: "Mohali, Punjab",
     email: "contact.zentroxtech@gmail.com",
     hours: "Mon–Fri: 9:00 AM – 6:30 PM IST",
     mapLink: "https://maps.google.com",
@@ -353,12 +352,12 @@ export default function AboutPageTemplate() {
             >
               <div className="relative aspect-[4/5] w-full max-w-[270px] sm:max-w-[300px] rounded-2xl overflow-hidden border-2 border-white/10 shadow-2xl group">
                 <img
-                  src="https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&fit=crop&q=80&w=800"
+                  src="/princepaulphoto.jpeg"
                   alt="Founder & Director"
                   className="object-cover w-full h-full transform transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-5">
-                  <h4 className="font-bold text-base text-white">
+                  <h4 className="font-bold text-base !text-white">
                     Prince Paul Singh
                   </h4>
                   <p className="text-xs text-blue-300 font-medium">
