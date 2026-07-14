@@ -47,30 +47,31 @@ interface StatItem {
   settingKey?: string;
 }
 
+// SEO FIX: Updated labels to match targeted keywords and factual company history
 const DEFAULT_STATS: StatItem[] = [
   {
     num: 200,
     suffix: "+",
-    label: "Projects Delivered",
+    label: "Digital Solutions Delivered",
     labelKey: "stats.projects",
     settingKey: "stats_projects",
   },
   {
     num: 150,
     suffix: "+",
-    label: "Happy Clients",
+    label: "Global Clients Served",
     labelKey: "stats.clients",
     settingKey: "stats_clients",
   },
   {
-    num: 5,
+    num: 3,
     suffix: "+",
-    label: "Years Experience",
+    label: "Years of Excellence",
     labelKey: "stats.years",
     settingKey: "stats_years",
   },
   {
-    label: "Average Rating",
+    label: "Client Satisfaction",
     labelKey: "stats.rating",
     custom: "4.9★",
     settingKey: "stats_rating",

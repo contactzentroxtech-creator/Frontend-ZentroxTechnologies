@@ -12,9 +12,10 @@ export default function HeroSection() {
   const [isMounted, setIsMounted] = useState(false);
   const { t, lang } = useLang();
 
+  // SEO FIX: Exact rotating words matched to the "Homepage Content – Zentrox Technologies" section
   const heroWords = t(
     "hero.words",
-    "Digital Futures|Web Excellence|AI Solutions|Punjab Growth|SaaS Platforms",
+    "Website Development|Mobile Application Development|Software Development|UI/UX Design|SEO Services|Digital Marketing"
   )
     .split("|")
     .filter(Boolean);
@@ -39,18 +40,23 @@ export default function HeroSection() {
     setWordVisible(true);
   }, [lang]);
 
-  // Premium, weighted spring configuration for the hover effect
   const hoverTransition = {
     type: "spring",
-    stiffness: 70, // Lower stiffness for a more relaxed, deliberate motion
-    damping: 18, // Smoothly brings the animation to a stop without sudden snaps
-    mass: 1.4, // Adds a touch of realistic weight to the slide/scale effect
+    stiffness: 70,
+    damping: 18,
+    mass: 1.4,
   };
 
   return (
-    <section className="relative w-full flex flex-col items-center justify-start pt-32 pb-24 px-4 md:px-6 text-center overflow-hidden">
-      {/* ── Giant Ambient Backdrop Blurs ── */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+    <section
+      aria-label="Hero Introduction"
+      className="relative w-full flex flex-col items-center justify-start pt-32 pb-24 px-4 md:px-6 text-center overflow-hidden"
+    >
+      {/* ── Ambient Backdrop Blurs ── */}
+      <div
+        className="absolute inset-0 pointer-events-none overflow-hidden"
+        aria-hidden="true"
+      >
         <motion.div
           initial={{ opacity: 0, scale: 0.7 }}
           animate={{ opacity: 0.12, scale: 1 }}
@@ -98,7 +104,7 @@ export default function HeroSection() {
           ))}
       </div>
 
-      {/* ── Hero Copy (Fixed: Removed scroll opacity constraint) ── */}
+      {/* ── Hero Copy ── */}
       <div className="flex flex-col items-center justify-center w-full max-w-5xl z-10">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -107,7 +113,7 @@ export default function HeroSection() {
           className="z-badge mb-6"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-z-accent3" />
-          {t("hero.badge")}
+          {t("hero.badge", "Zentrox Technologies")}
         </motion.div>
 
         <motion.h1
@@ -116,7 +122,10 @@ export default function HeroSection() {
           transition={{ duration: 0.7, delay: 0.1 }}
           className="text-5xl md:text-7xl lg:text-8xl font-extrabold leading-[1.02] tracking-tight mb-6 max-w-5xl"
         >
-          <span className="block text-z-text">{t("hero.line1")}</span>
+          {/* SEO FIX: Added exact H1 phrasing from document */}
+          <span className="block text-z-text">
+            {t("hero.line1", "One Partner for")}
+          </span>
           <span
             className="block gradient-text"
             style={{
@@ -127,16 +136,23 @@ export default function HeroSection() {
           >
             {heroWords[wordIdx] || heroWords[0]}
           </span>
+          <span className="block text-z-text mt-2 text-4xl md:text-6xl lg:text-7xl">
+            {t("hero.line2", "For Your Business")}
+          </span>
         </motion.h1>
 
-        <motion.p
+        {/* SEO FIX: Exact SEO Hero Subheading */}
+        <motion.h2
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="text-base md:text-lg text-z-muted max-w-2xl leading-relaxed mb-8"
+          className="text-base md:text-lg text-z-muted max-w-3xl leading-relaxed mb-8 font-normal"
         >
-          {t("hero.sub")}
-        </motion.p>
+          {t(
+            "hero.sub",
+            "Helping startups, small businesses, and enterprises grow with professional website development, mobile application development, SEO, UI/UX design, software development, AI integration, and digital marketing services—all under one roof."
+          )}
+        </motion.h2>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -144,31 +160,40 @@ export default function HeroSection() {
           transition={{ duration: 0.7, delay: 0.3 }}
           className="flex flex-col sm:flex-row gap-4 mb-20"
         >
+          {/* SEO FIX: Exact Primary CTA */}
           <Link
             href="/contact"
+            title="Contact Us"
             className="group flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-[#3b7bff] text-white font-semibold text-sm hover:bg-blue-500 transition-all duration-300 z-20"
           >
-            {t("hero.cta_primary")}
+            {t("hero.cta_primary", "Get Free Consultation")}
             <ArrowRight
               size={16}
               className="group-hover:translate-x-1 transition-transform"
+              aria-hidden="true"
             />
           </Link>
+          {/* SEO FIX: Exact Secondary CTA */}
           <Link
-            href="/#classes"
+            href="/quote"
+            title="Request a Quote"
             className="group flex items-center justify-center gap-2 px-8 py-4 rounded-full border border-z-border text-z-text font-semibold text-sm hover:border-z-accent hover:text-z-accent transition-all duration-300 z-20"
           >
             <Play
               size={14}
               className="group-hover:text-z-accent transition-colors"
+              aria-hidden="true"
             />
-            {t("hero.cta_secondary")}
+            {t("hero.cta_secondary", "Request a Quote")}
           </Link>
         </motion.div>
 
         {/* ── Interactive Showcase Canvas ── */}
-        <div className="relative w-full max-w-5xl h-[340px] mx-auto z-20">
-          {/* Card 1: Code Window */}
+        <div
+          className="relative w-full max-w-5xl h-[340px] mx-auto z-20"
+          aria-hidden="true"
+        >
+          {/* Card 1: Code Window - Updated for Software/Web Dev Services */}
           <motion.div
             initial={{ opacity: 0, x: -60, y: 20, rotate: -4 }}
             animate={{ opacity: 1, x: 0, y: [0, -12, 0] }}
@@ -190,23 +215,28 @@ export default function HeroSection() {
             </div>
             <div className="font-mono text-[11px] leading-relaxed text-left opacity-90">
               <div>
-                <span className="code-kw">const</span> zentrox ={" "}
-                <span className="code-fn">buildFuture</span>
+                <span className="code-kw">const</span> project ={" "}
+                <span className="code-fn">initZentrox</span>
                 {"({"}
               </div>
               <div>
-                &nbsp;&nbsp;<span className="code-str">&quot;client&quot;</span>
-                : <span className="code-str">&quot;YourBiz&quot;</span>,
+                &nbsp;&nbsp;
+                <span className="code-str">&quot;solution&quot;</span>:{" "}
+                <span className="code-str">
+                  &quot;Software Development&quot;
+                </span>
+                ,
               </div>
               <div>
-                &nbsp;&nbsp;<span className="code-str">&quot;stack&quot;</span>:
-                [<span className="code-str">&quot;Next.js&quot;</span>]
+                &nbsp;&nbsp;
+                <span className="code-str">&quot;platform&quot;</span>: [
+                <span className="code-str">&quot;SaaS&quot;</span>]
               </div>
               <div>{"}"});</div>
             </div>
           </motion.div>
 
-          {/* Card 2: Dashboard Metric */}
+          {/* Card 2: Dashboard Metric - Updated for Digital Marketing */}
           <motion.div
             initial={{ opacity: 0, x: 60, y: -10, rotate: 3 }}
             animate={{ opacity: 1, x: 0, y: [0, 14, 0] }}
@@ -223,14 +253,14 @@ export default function HeroSection() {
             <div className="absolute inset-0 bg-z-accent3 opacity-0 group-hover:opacity-25 blur-[45px] transition-opacity duration-500 rounded-2xl -z-10" />
             <div className="flex justify-between items-center mb-2">
               <span className="text-[10px] text-z-muted uppercase tracking-widest">
-                Revenue
+                Traffic Growth
               </span>
               <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-z-accent3/15 text-z-accent3">
-                +34%
+                SEO
               </span>
             </div>
             <div className="text-xl font-bold text-z-text mb-3 text-left">
-              ₹4.2L
+              +140%
             </div>
             <div className="flex items-end gap-1 h-12">
               {[40, 65, 50, 85, 70, 100].map((h, i) => (
@@ -248,7 +278,7 @@ export default function HeroSection() {
             </div>
           </motion.div>
 
-          {/* Card 3: Full Stack Service Profile */}
+          {/* Card 3: Service Profile - Updated for Mobile Apps */}
           <motion.div
             initial={{ opacity: 0, y: 50, rotate: 1 }}
             animate={{ opacity: 1, y: [0, -10, 0] }}
@@ -266,14 +296,14 @@ export default function HeroSection() {
               <Zap size={16} className="text-z-accent2" />
             </div>
             <div className="text-sm font-semibold text-z-text mb-1">
-              Full-Stack Dev
+              Mobile App Dev
             </div>
             <div className="text-[11px] text-z-muted leading-relaxed">
-              Modern, scalable web apps built for performance.
+              High-performance Android & iOS applications.
             </div>
           </motion.div>
 
-          {/* Card 4: System Performance Check */}
+          {/* Card 4: System Performance Check - Updated for SEO Services */}
           <motion.div
             initial={{ opacity: 0, x: -40, y: 80, rotate: -6 }}
             animate={{ opacity: 1, x: 0, y: [0, 8, 0] }}
@@ -289,17 +319,17 @@ export default function HeroSection() {
             <div className="absolute inset-0 bg-emerald-500 opacity-0 group-hover:opacity-25 blur-[40px] transition-opacity duration-500 rounded-2xl -z-10" />
             <div className="flex items-center gap-2 text-emerald-400 font-mono text-[10px] mb-1.5">
               <Activity size={12} className="animate-pulse" />
-              <span>OPTIMIZED 99%</span>
+              <span>RANKING #1</span>
             </div>
             <div className="text-xs font-medium text-z-text">
-              Server Response Time
+              Best SEO Company
             </div>
             <div className="text-[10px] text-z-muted mt-0.5">
-              Global edge distribution.
+              Data-driven organic growth.
             </div>
           </motion.div>
 
-          {/* Card 5: AI Status Flag */}
+          {/* Card 5: AI Status Flag - Updated for AI Integration */}
           <motion.div
             initial={{ opacity: 0, x: 40, y: 100, rotate: 5 }}
             animate={{ opacity: 1, x: 0, y: [0, -12, 0] }}
@@ -317,20 +347,20 @@ export default function HeroSection() {
               <div className="flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-purple-500 animate-ping" />
                 <span className="text-[10px] font-semibold text-purple-400 tracking-wider">
-                  AI AGENT
+                  SMART TECH
                 </span>
               </div>
               <Sparkles size={12} className="text-purple-400" />
             </div>
             <div className="text-xs font-semibold text-z-text">
-              Intelligent Systems
+              AI Integration
             </div>
             <div className="text-[10px] text-z-muted mt-0.5">
               Automating workflows securely.
             </div>
           </motion.div>
 
-          {/* AI Mascot Core Center Graphic */}
+          {/* Core Graphic */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1, y: [0, -14, 0] }}

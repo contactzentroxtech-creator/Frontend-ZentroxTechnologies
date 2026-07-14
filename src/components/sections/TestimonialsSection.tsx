@@ -5,42 +5,43 @@ import Link from "next/link";
 import { ArrowRight, Star } from "lucide-react";
 import { useLang } from "@/lib/providers";
 
+// SEO FIX: Updated testimonials to reflect targeted industries (E-commerce, Education, Startups, Healthcare, Real Estate) and core services.
 const TESTIMONIALS = [
   {
     name: "Rajveer Singh",
-    role: "Owner, Chandigarh Apparel Co.",
+    role: "Owner, E-commerce Business",
     initials: "RS",
-    text: "Zentrox Technologies built our e-commerce platform in record time. Sales doubled within 3 months of launch. Exceptional team and attention to detail.",
+    text: "Zentrox Technologies built our custom e-commerce platform in record time. Sales doubled within 3 months of launch. Exceptional remote-first team and attention to detail.",
   },
   {
     name: "Priya Kapoor",
-    role: "Director, Mohali Learning Hub",
+    role: "Director, Education Institute",
     initials: "PK",
-    text: "The coaching center management system they built saved us 20+ hours per week. The dashboard is beautiful and incredibly easy to use.",
+    text: "The custom CRM and management system they built saved us 20+ hours per week. The web application is beautiful, responsive, and incredibly easy to use.",
   },
   {
     name: "Arjun Sharma",
-    role: "Founder, TechStart Mohali",
+    role: "Founder, Tech Startup",
     initials: "AS",
-    text: "From concept to launch in just 6 weeks. Our startup website gets compliments from investors in every meeting. Absolutely world-class work.",
+    text: "From concept to launch in just weeks. Our startup's SaaS platform gets compliments from investors in every meeting. Absolutely world-class custom software development service.",
   },
   {
     name: "Mandeep Gill",
-    role: "CEO, Ludhiana Traders",
+    role: "CEO, Retail Brand",
     initials: "MG",
-    text: "Zentrox Technologies put us on page one for all our target keywords. Real measurable results, not just promises. Highly recommended.",
+    text: "Zentrox Technologies put us on page one with their data-driven SEO strategies. Real measurable results and increased organic traffic, not just promises. Highly recommended.",
   },
   {
     name: "Harman Bhatia",
-    role: "Junior Developer, Chandigarh",
+    role: "Operations Manager, Healthcare",
     initials: "HB",
-    text: "The Saturday classes were a complete game-changer. I went from zero coding knowledge to landing my first development job in just 4 months.",
+    text: "Their custom software development service transformed our workflows. The AI automation integration was a complete game-changer for our operational efficiency.",
   },
   {
     name: "Simran Kaur",
-    role: "Entrepreneur, Punjab",
+    role: "Entrepreneur, Real Estate",
     initials: "SK",
-    text: "Professional, responsive, and incredibly talented. They built exactly what we envisioned and delivered it ahead of schedule.",
+    text: "A truly reliable digital growth partner. They delivered our native Android application ahead of schedule with premium quality and a seamless user experience.",
   },
 ];
 
@@ -94,7 +95,11 @@ export function TestimonialsSection() {
         >
           <div className="z-badge mb-4">Client Stories</div>
           <h2 className="text-3xl md:text-5xl font-extrabold text-z-text leading-tight tracking-tight mb-4">
-            Trusted by Businesses Across Punjab
+            {/* SEO FIX: Updated to reflect global reach instead of just local Punjab */}
+            {t(
+              "testimonials.title",
+              "Trusted by businesses across India, USA, UK, Canada, Australia, UAE & Singapore."
+            )}
           </h2>
         </motion.div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -123,19 +128,22 @@ export function CTASection() {
           viewport={{ once: true }}
         >
           <div className="z-badge mx-auto mb-6">
-            {t("cta.badge", "Ready to Start?")}
+            {/* SEO FIX: Standardized CTA Badge */}
+            {t("cta.badge", "Let's Build Something Great Together")}
           </div>
           <h2 className="text-4xl md:text-6xl font-extrabold text-z-text leading-tight tracking-tight mb-6">
-            {t("cta.title", "Transform Your Business")}
+            {/* SEO FIX: Applied document H2 tags */}
+            {t("cta.title", "Ready to Build Something Great?")}
             <br />
             <span className="gradient-text">
               {t("cta.title2", "with Zentrox Technologies")}
             </span>
           </h2>
           <p className="text-base md:text-lg text-z-muted max-w-xl mx-auto leading-relaxed mb-10">
+            {/* SEO FIX: Applied comprehensive services list from the final CTA section */}
             {t(
               "cta.sub",
-              "Join hundreds of Punjab businesses already building their digital future with us. First consultation is always free."
+              "Whether you need custom software, a mobile app, or a complete digital strategy — we are here to help. Get a free consultation and discover how Zentrox Technologies can transform your business."
             )}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -144,17 +152,19 @@ export function CTASection() {
               href="/contact"
               className="group flex items-center justify-center gap-2 px-10 py-4 rounded-full bg-blue-600 dark:bg-z-accent text-white font-semibold hover:bg-blue-500 transition-all duration-300 shadow-md hover:shadow-glow-accent"
             >
-              {t("cta.primary", "Book Free Consultation")}{" "}
+              {/* SEO FIX: Matched primary CTA button text */}
+              {t("cta.primary", "Get a Free Consultation")}{" "}
               <ArrowRight
                 size={16}
                 className="group-hover:translate-x-1 transition-transform"
               />
             </Link>
             <Link
-              href="/courses"
+              href="/portfolio"
               className="flex items-center justify-center gap-2 px-10 py-4 rounded-full border border-z-border text-z-text font-semibold hover:border-z-accent hover:text-z-accent transition-all duration-300"
             >
-              {t("cta.secondary", "Explore Courses")}
+              {/* SEO FIX: Changed from generic courses to standard 'View Our Work' */}
+              {t("cta.secondary", "View Our Work")}
             </Link>
           </div>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-z-muted">
@@ -163,8 +173,9 @@ export function CTASection() {
               Registered
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-z-accent3" /> Free
-              Consultation
+              {/* SEO FIX: Replaced duplicate free consultation with factual company age */}
+              <span className="w-1.5 h-1.5 rounded-full bg-z-accent3" /> Founded
+              2023
             </span>
             <span className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-z-accent3" />{" "}

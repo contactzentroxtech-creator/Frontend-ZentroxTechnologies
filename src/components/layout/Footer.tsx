@@ -2,19 +2,30 @@
 
 import Link from "next/link";
 import Image from "next/image"; // 1. Imported Next.js Image component
-import { Mail, Phone, MapPin, ArrowUpRight } from "lucide-react";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  ArrowUpRight,
+  Instagram,
+  Facebook,
+  Youtube,
+  Linkedin,
+  Twitter,
+} from "lucide-react";
 import { useLang } from "@/lib/providers";
 
 const services = [
-  "Web Development",
+  "website development",
   "Mobile Apps",
   "SaaS Development",
   "AI Integration",
   "SEO Services",
-  "Digital Marketing",
+  "Digital Marketing Services",
   "UI/UX Design",
-  "Software Development",
+  "software development service",
 ];
+
 const company = [
   { label: "About Us", href: "/about" },
   { label: "Blog", href: "/blog" },
@@ -22,6 +33,7 @@ const company = [
   { label: "Privacy Policy", href: "/privacy" },
   { label: "Terms of Service", href: "/terms" },
 ];
+
 const learning = [
   { label: "All Courses", href: "/courses" },
   { label: "Saturday Live Classes", href: "/#classes" },
@@ -29,9 +41,10 @@ const learning = [
   { label: "Student Dashboard", href: "/dashboard" },
   { label: "Verify Certificate", href: "/verify" },
 ];
+
 const locations = [
   {
-    label: "Web Development — Mohali",
+    label: "website development — Mohali",
     href: "/locations/web-development-mohali",
   },
   { label: "SEO Company — Chandigarh", href: "/locations/seo-chandigarh" },
@@ -40,7 +53,7 @@ const locations = [
     href: "/locations/software-himachal",
   },
   {
-    label: "Digital Marketing — Haryana",
+    label: "Digital Marketing Services — Haryana",
     href: "/locations/digital-marketing-haryana",
   },
   {
@@ -49,8 +62,18 @@ const locations = [
   },
 ];
 
+// Added social media links array (Replace # with your actual URLs)
+const socialLinks = [
+  { label: "Instagram", icon: Instagram, href: "#" },
+  { label: "LinkedIn", icon: Linkedin, href: "#" },
+  { label: "Facebook", icon: Facebook, href: "#" },
+  { label: "YouTube", icon: Youtube, href: "#" },
+  { label: "Twitter / Discord", icon: Twitter, href: "#" },
+];
+
 export default function Footer() {
   const { t } = useLang();
+
   return (
     <footer className="relative z-10 border-t border-z-border bg-[rgba(4,5,10,0.95)]">
       <div className="max-w-7xl mx-auto px-4 md:px-6 pt-16 pb-8">
@@ -73,11 +96,13 @@ export default function Footer() {
                 Zentrox<span className="text-z-accent"> Technologies</span>
               </span>
             </div>
+
             <p className="text-sm text-z-muted leading-relaxed mb-4">
               MSME-registered technology company building futuristic digital
               solutions for growing businesses.
             </p>
-            <div className="flex flex-col gap-2">
+
+            <div className="flex flex-col gap-2 mb-6">
               <a
                 href="mailto:contact.zentroxtech@gmail.com"
                 className="flex items-center gap-2 text-xs text-z-muted hover:text-z-text transition-colors"
@@ -96,6 +121,25 @@ export default function Footer() {
                 <MapPin size={13} className="text-z-accent" />
                 Mohali & Chandigarh, Punjab
               </span>
+            </div>
+
+            {/* Added Social Media Section */}
+            <div className="flex items-center gap-3">
+              {socialLinks.map((social) => {
+                const Icon = social.icon;
+                return (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={social.label}
+                    className="w-8 h-8 rounded-full border border-z-border flex items-center justify-center text-z-muted hover:text-z-accent hover:border-z-accent transition-all duration-300"
+                  >
+                    <Icon size={14} />
+                  </a>
+                );
+              })}
             </div>
           </div>
 

@@ -30,7 +30,7 @@ export default function AppDevNoidaPage() {
           service="App Development"
           serviceSlug="mobile"
           headline="App Development Company in Noida"
-          subheadline="We build high-performance iOS, Android, and cross-platform mobile applications for Noida startups, enterprises, and businesses of all sizes."
+          subheadline="We build high-performance iOS, Android, and cross-platform Mobile Application services for Noida startups, enterprises, and businesses of all sizes."
           ctaText="Get Free App Quote — Noida"
           stats={[
             { label: "Apps Delivered", value: "60+" },

@@ -67,7 +67,7 @@ const STATIC_FALLBACKS: Record<Lang, Record<string, string>> = {
     "classes.badge": "Learn with Zentrox Technologies",
     "classes.title": "Live Saturday Classes — Every Week",
     "classes.sub":
-      "Master modern web development with weekly live sessions. Interactive, practical, and industry-focused.",
+      "Master modern website development with weekly live sessions. Interactive, practical, and industry-focused.",
     "classes.enroll": "Enroll Free — Saturday Classes",
     "classes.every_saturday": "Every Saturday — 10:00 AM IST",
     "cta.badge": "Ready to Start?",
@@ -117,10 +117,10 @@ const STATIC_FALLBACKS: Record<Lang, Record<string, string>> = {
     "local.card3.desc":
       "Complete digital presence — website, branding, and growth strategy to launch right.",
     // Services
-    "service.web.title": "Web Development",
+    "service.web.title": "website development",
     "service.web.desc":
       "Stunning, fast, conversion-optimized websites built with Next.js, React, and modern stacks.",
-    "service.mobile.title": "Mobile Applications",
+    "service.mobile.title": "Mobile Application services",
     "service.mobile.desc":
       "Cross-platform mobile apps for iOS and Android that engage users and drive business growth.",
     "service.ai.title": "AI Integration",
@@ -138,7 +138,7 @@ const STATIC_FALLBACKS: Record<Lang, Record<string, string>> = {
     "service.design.title": "UI/UX Design",
     "service.design.desc":
       "Cinematic, premium interfaces designed to convert — from wireframe to pixel-perfect delivery.",
-    "service.software.title": "Software Development",
+    "service.software.title": "software development service",
     "service.software.desc":
       "Scalable custom software solutions tailored to your specific business processes and workflows.",
     // Classes countdown

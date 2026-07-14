@@ -267,7 +267,7 @@ function BlogModal({
                   setForm((p) => ({ ...p, category: e.target.value }))
                 }
                 className="z-input"
-                placeholder="e.g. Web Development"
+                placeholder="e.g. website development"
               />
             </div>
             <div>

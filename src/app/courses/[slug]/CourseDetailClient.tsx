@@ -231,7 +231,7 @@ export default function CourseDetailClient({ slug }: { slug: string }) {
                                 Stream Archive
                               </span>
                               <h4 className="text-sm font-semibold text-white truncate mt-0.5">
-                                web development
+                                website development
                               </h4>
                               <p className="text-xs text-z-muted mt-1">
                                 Uploaded on 14 Jun 2026 • Missed the latest

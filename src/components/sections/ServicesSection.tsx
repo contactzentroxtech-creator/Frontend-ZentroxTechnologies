@@ -12,30 +12,83 @@ import {
   Cloud,
   Palette,
   Code2,
+  Users,
+  Cable,
 } from "lucide-react";
 import Link from "next/link";
 import { useLang } from "@/lib/providers";
 
+// Exactly 10 services matching "Section 3: What We Do (H2) - Services Grid"
 const SERVICES = [
   {
-    icon: Globe,
+    icon: Code2,
     color: "#3b7bff",
+    href: "/services#software",
+    titleKey: "service.software.title",
+    descKey: "service.software.desc",
+    titleFB: "Custom Software Development",
+    descFB:
+      "Tailored solutions that solve your specific business challenges. From enterprise systems to niche applications, built to scale.",
+  },
+  {
+    icon: Globe,
+    color: "#7c3aed",
     href: "/services#web",
     titleKey: "service.web.title",
     descKey: "service.web.desc",
-    titleFB: "Web Development",
+    titleFB: "Web Application Development",
     descFB:
-      "Stunning, fast, conversion-optimized websites built with Next.js, React, and modern stacks.",
+      "High-performance web applications with modern architectures that deliver exceptional user experiences and business results.",
+  },
+  {
+    icon: Cloud,
+    color: "#06d6a0",
+    href: "/services#saas",
+    titleKey: "service.saas.title",
+    descKey: "service.saas.desc",
+    titleFB: "SaaS Development",
+    descFB:
+      "Build, launch, and scale software-as-a-service products. From MVP to enterprise-grade platforms with multi-tenant architectures.",
   },
   {
     icon: Smartphone,
-    color: "#7c3aed",
-    href: "/services#mobile",
-    titleKey: "service.mobile.title",
-    descKey: "service.mobile.desc",
-    titleFB: "Mobile Applications",
+    color: "#f59e0b",
+    href: "/services#android",
+    titleKey: "service.android.title",
+    descKey: "service.android.desc",
+    titleFB: "Android App Development",
     descFB:
-      "Cross-platform mobile apps for iOS and Android that engage users and drive business growth.",
+      "Native Android applications with intuitive interfaces, robust architecture, and seamless performance.",
+  },
+  {
+    icon: Palette,
+    color: "#ec4899",
+    href: "/services#design",
+    titleKey: "service.design.title",
+    descKey: "service.design.desc",
+    titleFB: "UI/UX Design",
+    descFB:
+      "Research-driven, user-centered design that creates products people love to use.",
+  },
+  {
+    icon: BarChart3,
+    color: "#3b7bff",
+    href: "/services#seo",
+    titleKey: "service.seo.title",
+    descKey: "service.seo.desc",
+    titleFB: "SEO & Local SEO",
+    descFB:
+      "Drive organic traffic and generate qualified leads with data-driven SEO strategies for Indian and international markets.",
+  },
+  {
+    icon: ShoppingCart,
+    color: "#7c3aed",
+    href: "/services#marketing",
+    titleKey: "service.marketing.title",
+    descKey: "service.marketing.desc",
+    titleFB: "Digital Marketing",
+    descFB:
+      "Comprehensive digital marketing that builds brand awareness, generates leads, and drives revenue.",
   },
   {
     icon: Bot,
@@ -43,59 +96,29 @@ const SERVICES = [
     href: "/services#ai",
     titleKey: "service.ai.title",
     descKey: "service.ai.desc",
-    titleFB: "AI Integration",
+    titleFB: "AI Automation",
     descFB:
-      "Smart automation, AI chatbots, and ML features that give your business an intelligent edge.",
+      "Transform your business with AI-powered automation, intelligent workflows, and smart decision-making systems.",
   },
   {
-    icon: BarChart3,
+    icon: Users,
     color: "#f59e0b",
-    href: "/services#seo",
-    titleKey: "service.seo.title",
-    descKey: "service.seo.desc",
-    titleFB: "SEO & Digital Growth",
+    href: "/services#crm",
+    titleKey: "service.crm.title",
+    descKey: "service.crm.desc",
+    titleFB: "CRM Development",
     descFB:
-      "Data-driven SEO, performance marketing, and content strategy to dominate search rankings.",
+      "Custom CRM solutions that streamline sales, improve customer relationships, and drive growth.",
   },
   {
-    icon: ShoppingCart,
+    icon: Cable,
     color: "#ec4899",
-    href: "/services#ecommerce",
-    titleKey: "service.ecommerce.title",
-    descKey: "service.ecommerce.desc",
-    titleFB: "E-Commerce Solutions",
+    href: "/services#api",
+    titleKey: "service.api.title",
+    descKey: "service.api.desc",
+    titleFB: "API Integration",
     descFB:
-      "Full-featured online stores with payment gateways, inventory systems, and customer portals.",
-  },
-  {
-    icon: Cloud,
-    color: "#3b7bff",
-    href: "/services#saas",
-    titleKey: "service.saas.title",
-    descKey: "service.saas.desc",
-    titleFB: "SaaS Development",
-    descFB:
-      "Custom SaaS platforms built for scale — subscription models, dashboards, cloud-native.",
-  },
-  {
-    icon: Palette,
-    color: "#7c3aed",
-    href: "/services#design",
-    titleKey: "service.design.title",
-    descKey: "service.design.desc",
-    titleFB: "UI/UX Design",
-    descFB:
-      "Cinematic, premium interfaces designed to convert — from wireframe to pixel-perfect delivery.",
-  },
-  {
-    icon: Code2,
-    color: "#06d6a0",
-    href: "/services#software",
-    titleKey: "service.software.title",
-    descKey: "service.software.desc",
-    titleFB: "Software Development",
-    descFB:
-      "Scalable custom software solutions tailored to your specific business processes and workflows.",
+      "Seamless system integration that connects your tools, data, and workflows for optimal efficiency.",
   },
 ];
 
@@ -125,7 +148,7 @@ function ServiceCard({
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.07 }}
+      transition={{ duration: 0.5, delay: index * 0.05 }}
       viewport={{ once: true }}
       onMouseMove={handleMouseMove}
       className="group tile-glow glass-card p-6 hover:border-z-accent/40 hover:-translate-y-1 transition-all duration-300 cursor-default flex flex-col"
@@ -170,24 +193,27 @@ export default function ServicesSection() {
           transition={{ duration: 0.6 }}
           className="mb-12"
         >
+          {/* Badge text updated */}
           <div className="z-badge mb-4">
-            {t("services.badge", "What We Build")}
+            {t("services.badge", "Your Digital Growth Partner")}
           </div>
+
+          {/* Heading updated to match doc exactly */}
           <h2 className="text-3xl md:text-5xl font-extrabold text-white leading-tight tracking-tight mb-4 max-w-2xl">
-            {t(
-              "services.title",
-              "Premium Digital Services for Growing Businesses"
-            )}
+            {t("services.title", "What We Do")}
           </h2>
-          <p className="text-base text-z-muted max-w-xl leading-relaxed">
+
+          {/* Section 2 Paragraph included verbatim */}
+          <p className="text-base text-z-muted max-w-3xl leading-relaxed">
             {t(
               "services.sub",
-              "From local startups in Mohali to scaling enterprises — world-class technology at accessible prices."
+              "At Zentrox Technologies, we don't just build software — we build growth engines. Whether you are a startup in Chandigarh, an enterprise in Delhi, or a business in the United States or UK, we create technology solutions that solve real problems and deliver measurable results. Founded in 2023 by Prince Paul Singh, our remote-first team brings together expertise in custom development, SaaS, mobile apps, AI, and digital marketing."
             )}
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Adjusted grid to cleanly map all 10 items */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {SERVICES.map((service, i) => (
             <ServiceCard key={service.titleKey} service={service} index={i} />
           ))}

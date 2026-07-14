@@ -108,7 +108,7 @@ export default function ClassesSection() {
           <p className="text-base text-slate-600 dark:text-z-muted max-w-xl leading-relaxed">
             {t(
               "classes.sub",
-              "Master modern web development with weekly live sessions. Interactive, practical, and industry-focused."
+              "Master modern website development with weekly live sessions. Interactive, practical, and industry-focused."
             )}
           </p>
         </motion.div>

@@ -1,12 +1,14 @@
-import type { Metadata } from 'next';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
-import BlogClient from './BlogClient';
+import type { Metadata } from "next";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import BlogClient from "./BlogClient";
 
 export const metadata: Metadata = {
-  title: 'Blog — Zentrox Technologies | Web Dev, AI & Digital Marketing Insights',
-  description: 'Read articles on web development, AI, SEO, digital marketing, and tech entrepreneurship from the Zentrox Technologies team.',
-  alternates: { canonical: 'https://zentroxtech.com/blog' },
+  title:
+    "Blog — Zentrox Technologies | Web Dev, AI & Digital Marketing Services Insights",
+  description:
+    "Read articles on website development, AI, SEO, Digital Marketing Services, and tech entrepreneurship from the Zentrox Technologies team.",
+  alternates: { canonical: "https://zentroxtech.com/blog" },
 };
 
 export default function BlogPage() {

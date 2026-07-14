@@ -2,22 +2,24 @@ import type { Metadata, Viewport } from "next";
 import { Toaster } from "react-hot-toast";
 import { Analytics } from "@vercel/analytics/react";
 import { AppProviders } from "@/lib/providers";
+import Script from "next/script";
 import "../styles/globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://zentroxtech.com"),
   title: {
-    default: "Zentrox Technologies — Premium Web Development & AI Solutions",
+    default:
+      "Zentrox Technologies — Premium website development & AI Solutions",
     template: "%s | Zentrox Technologies",
   },
   description:
     "Zentrox Technologies — MSME-registered technology company in Mohali & Chandigarh. We build premium websites, mobile apps, SaaS platforms, and AI solutions for growing businesses across Punjab.",
   keywords: [
-    "web development company Mohali",
+    "website development company Mohali",
     "software company Chandigarh",
     "app development Punjab",
     "SEO company Chandigarh",
-    "digital marketing Haryana",
+    "Digital Marketing Services Haryana",
     "AI automation India",
     "SaaS development",
     "Zentrox Technologies",
@@ -35,7 +37,11 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
-    googleBot: { index: true, follow: true, "max-image-preview": "large" },
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+    },
   },
   openGraph: {
     type: "website",
@@ -58,12 +64,14 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Zentrox Technologies",
     description:
-      "Premium Web Development, AI & SaaS Solutions — Mohali & Chandigarh",
+      "Premium website development, AI & SaaS Solutions — Mohali & Chandigarh",
     images: ["/og-image.png"],
   },
-  alternates: { canonical: "https://zentroxtech.com" },
+  alternates: {
+    canonical: "https://zentroxtech.com",
+  },
   verification: {
-    google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION ?? "",
+    google: "YyKjsbz3GhRqz0h09_nEslhvmpeInev20hILYpun6eU",
   },
 };
 
@@ -87,6 +95,8 @@ export default function RootLayout({
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
+
+        {/* Structured Data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -110,20 +120,79 @@ export default function RootLayout({
                 addressCountry: "IN",
               },
               description:
-                "MSME-registered technology startup offering web development, AI solutions, SaaS development, SEO, and digital marketing.",
+                "MSME-registered technology startup offering website development, AI solutions, SaaS development, SEO, and Digital Marketing Services.",
               foundingDate: "2023",
             }),
           }}
         />
+
+        {/* Theme */}
         <script
           dangerouslySetInnerHTML={{
             __html: `try{var t=localStorage.getItem('zt_theme')||'dark';document.documentElement.className=t;}catch(e){}`,
           }}
         />
+
+        {/* Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-14KYPQYTNB"
+          strategy="afterInteractive"
+        />
+
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-14KYPQYTNB');
+          `}
+        </Script>
+
+        {/* Google Tag Manager */}
+        <Script id="google-tag-manager" strategy="afterInteractive">
+          {`
+            (function(w,d,s,l,i){w[l]=w[l]||[];
+            w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});
+            var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+            j.async=true;
+            j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+            f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-WD9DPB8R');
+          `}
+        </Script>
+
+        {/* Microsoft Clarity */}
+        <Script id="microsoft-clarity" strategy="afterInteractive">
+          {`
+            (function(c,l,a,r,i,t,y){
+              c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+              t=l.createElement(r);
+              t.async=1;
+              t.src="https://www.clarity.ms/tag/"+i;
+              y=l.getElementsByTagName(r)[0];
+              y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script", "xb0gh2ipu2");
+          `}
+        </Script>
       </head>
-      {/* FIXED BODY WRAPPER: Explicitly controls the theme transition background colors globally */}
+
       <body className="bg-white dark:bg-[#04050a] text-slate-900 dark:text-white transition-colors duration-300 min-h-screen relative">
-        {/* FIXED GRID: We add opacity adjustments so your grid lines blend softly in Light mode */}
+        {/* Google Tag Manager (noscript) */}
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-WD9DPB8R"
+            height="0"
+            width="0"
+            style={{
+              display: "none",
+              visibility: "hidden",
+            }}
+          />
+        </noscript>
+
+        {/* FIXED GRID */}
         <div
           className="grid-bg opacity-[0.03] dark:opacity-100 pointer-events-none"
           aria-hidden="true"
@@ -144,6 +213,7 @@ export default function RootLayout({
             }}
           />
         </AppProviders>
+
         <Analytics />
       </body>
     </html>

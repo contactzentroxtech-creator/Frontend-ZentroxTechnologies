@@ -70,63 +70,65 @@ function Card({ card, index }: { card: any; index: number }) {
 export default function LocalSection() {
   const { t, lang } = useLang();
 
+  // SEO FIX: Updated target locations to match the documented service areas
   const CITIES_EN = [
     "Mohali",
     "Chandigarh",
-    "Panchkula",
-    "Ludhiana",
-    "Amritsar",
-    "Jalandhar",
-    "Noida",
-    "Haryana",
+    "Punjab",
     "Himachal Pradesh",
+    "Delhi NCR",
+    "India",
+    "United States",
+    "United Kingdom",
+    "Australia",
   ];
   const CITIES_HI = [
     "मोहाली",
     "चंडीगढ़",
-    "पंचकूला",
-    "लुधियाना",
-    "अमृतसर",
-    "जालंधर",
-    "नोएडा",
-    "हरियाणा",
+    "पंजाब",
     "हिमाचल प्रदेश",
+    "दिल्ली एनसीआर",
+    "भारत",
+    "संयुक्त राज्य",
+    "यूनाइटेड किंगडम",
+    "ऑस्ट्रेलिया",
   ];
   const CITIES_PA = [
     "ਮੋਹਾਲੀ",
     "ਚੰਡੀਗੜ੍ਹ",
-    "ਪੰਚਕੂਲਾ",
-    "ਲੁਧਿਆਣਾ",
-    "ਅੰਮ੍ਰਿਤਸਰ",
-    "ਜਲੰਧਰ",
-    "ਨੋਇਡਾ",
-    "ਹਰਿਆਣਾ",
+    "ਪੰਜਾਬ",
     "ਹਿਮਾਚਲ ਪ੍ਰਦੇਸ਼",
+    "ਦਿੱਲੀ ਐਨਸੀਆਰ",
+    "ਭਾਰਤ",
+    "ਸੰਯੁਕਤ ਰਾਜ",
+    "ਯੂਨਾਈਟਿਡ ਕਿੰਗਡਮ",
+    "ਆਸਟ੍ਰੇਲੀਆ",
   ];
 
+  // SEO FIX: Updated business types to match the documented industries served
   const BIZ_EN = [
-    "Coaching Centers",
-    "Local Shops",
+    "Healthcare",
+    "Real Estate",
+    "Education",
     "Startups",
-    "Service Providers",
-    "Freelancers",
-    "Enterprises",
+    "Manufacturing",
+    "E-commerce",
   ];
   const BIZ_HI = [
-    "कोचिंग सेंटर",
-    "लोकल शॉप",
+    "स्वास्थ्य सेवा",
+    "रियल एस्टेट",
+    "शिक्षा",
     "स्टार्टअप",
-    "सर्विस प्रोवाइडर",
-    "फ्रीलांसर",
-    "एंटरप्राइज़",
+    "विनिर्माण",
+    "ई-कॉमर्स",
   ];
   const BIZ_PA = [
-    "ਕੋਚਿੰਗ ਸੈਂਟਰ",
-    "ਲੋਕਲ ਸ਼ਾਪ",
+    "ਸਿਹਤ ਸੰਭਾਲ",
+    "ਰੀਅਲ ਅਸਟੇਟ",
+    "ਸਿੱਖਿਆ",
     "ਸਟਾਰਟਅੱਪ",
-    "ਸਰਵਿਸ ਪ੍ਰੋਵਾਈਡਰ",
-    "ਫ੍ਰੀਲਾਂਸਰ",
-    "ਐਂਟਰਪ੍ਰਾਈਜ਼",
+    "ਨਿਰਮਾਣ",
+    "ਈ-ਕਾਮਰਸ",
   ];
 
   const cities =
@@ -136,32 +138,33 @@ export default function LocalSection() {
   const marqueeItems = [...cities, ...bizTypes];
   const doubledMarqueeItems = [...marqueeItems, ...marqueeItems];
 
+  // SEO FIX: Replaced generic card content with core high-intent commercial services
   const LOCAL_CARDS = [
     {
       icon: Users,
       color: "#3b7bff",
-      title: t("local.card1.title", "Affordable Business Websites"),
+      title: t("local.card1.title", "Professional Website Development"),
       desc: t(
         "local.card1.desc",
-        "Professional websites at competitive prices — no compromise on quality or performance."
+        "Responsive, fast, and scalable websites tailored to represent your brand and convert visitors into customers."
       ),
     },
     {
       icon: BookOpen,
       color: "#7c3aed",
-      title: t("local.card2.title", "Coaching Center Platforms"),
+      title: t("local.card2.title", "Custom Software & Mobile Apps"),
       desc: t(
         "local.card2.desc",
-        "Student management, online classes, attendance systems for education institutes."
+        "Tailored enterprise software, robust SaaS platforms, and native Mobile Application services that improve efficiency."
       ),
     },
     {
       icon: Award,
       color: "#06d6a0",
-      title: t("local.card3.title", "Startup Launch Packages"),
+      title: t("local.card3.title", "SEO & Digital Marketing Services"),
       desc: t(
         "local.card3.desc",
-        "Complete digital presence — website, branding, and growth strategy to launch right."
+        "Data-driven SEO strategies and comprehensive Digital Marketing Services campaigns to increase online visibility and generate leads."
       ),
     },
   ];
@@ -184,15 +187,21 @@ export default function LocalSection() {
             whileHover={{ scale: 1.05 }}
             className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider mb-4 bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-900/30 cursor-default"
           >
-            {t("local.badge", "Serving Punjab")}
+            {/* SEO FIX: Replaced 'Serving Punjab' with remote-first positioning */}
+            {t("local.badge", "Remote-First Excellence")}
           </motion.div>
           <h2 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white leading-tight tracking-tight mb-5 max-w-2xl">
-            {t("local.title", "Built for Mohali, Chandigarh & All of Punjab")}
+            {/* SEO FIX: Uses Location H2 Strategy */}
+            {t(
+              "local.title",
+              "Your Digital Growth Partner in Mohali, Chandigarh & Beyond"
+            )}
           </h2>
           <p className="text-base md:text-lg text-slate-600 dark:text-gray-400 max-w-xl leading-relaxed">
+            {/* SEO FIX: Updated to match company positioning */}
             {t(
               "local.sub",
-              "We understand the local market. Affordable, world-quality solutions tailored for Punjab's businesses and entrepreneurs."
+              "Operating as a remote-first company from Mohali, we deliver premium software development service and Digital Marketing Services solutions for businesses in India and worldwide."
             )}
           </p>
         </motion.div>

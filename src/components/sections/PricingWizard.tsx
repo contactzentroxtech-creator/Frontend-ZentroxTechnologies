@@ -39,31 +39,25 @@ interface QuoteResult {
   } | null;
 }
 
+// SEO FIX: Updated default business types to match targeted core industries
 const BUSINESS_TYPES = {
   en: [
-    "Startup",
-    "Local Shop",
-    "Coaching Center",
-    "Service Provider",
-    "Enterprise",
-    "Freelancer",
+    "Startups",
+    "Real Estate",
+    "Education",
+    "Healthcare",
+    "Manufacturing",
+    "E-commerce",
   ],
   hi: [
     "स्टार्टअप",
-    "लोकल शॉप",
-    "कोचिंग सेंटर",
-    "सर्विस प्रोवाइडर",
-    "एंटरप्राइज़",
-    "फ्रीलांसर",
+    "रियल एस्टेट",
+    "शिक्षा",
+    "स्वास्थ्य सेवा",
+    "विनिर्माण",
+    "ई-कॉमर्स",
   ],
-  pa: [
-    "ਸਟਾਰਟਅੱਪ",
-    "ਲੋਕਲ ਸ਼ਾਪ",
-    "ਕੋਚਿੰਗ ਸੈਂਟਰ",
-    "ਸਰਵਿਸ ਪ੍ਰੋਵਾਈਡਰ",
-    "ਐਂਟਰਪ੍ਰਾਈਜ਼",
-    "ਫ੍ਰੀਲਾਂਸਰ",
-  ],
+  pa: ["ਸਟਾਰਟਅੱਪ", "ਰੀਅਲ ਅਸਟੇਟ", "ਸਿੱਖਿਆ", "ਸਿਹਤ ਸੰਭਾਲ", "ਨਿਰਮਾਣ", "ਈ-ਕਾਮਰਸ"],
 };
 
 const TIMELINES = {
@@ -133,13 +127,14 @@ export default function PricingWizard() {
         const { data } = await api.get("/pricing/services");
         setServices(data.data);
       } catch {
+        // SEO FIX: Replaced fallback service names with high-volume search intent keywords
         setServices([
           {
             id: "business-website",
             label: {
-              en: "Business Website",
-              hi: "बिजनेस वेबसाइट",
-              pa: "ਕਾਰੋਬਾਰੀ ਵੈੱਬਸਾਈਟ",
+              en: "Website Development",
+              hi: "वेबसाइट डेवलपमेंट",
+              pa: "ਵੈੱਬਸਾਈਟ ਡਿਵੈਲਪਮੈਂਟ",
             },
             description: { en: "", hi: "", pa: "" },
             icon: "🌐",
@@ -151,9 +146,9 @@ export default function PricingWizard() {
           {
             id: "ecommerce",
             label: {
-              en: "E-Commerce Store",
-              hi: "ई-कॉमर्स स्टोर",
-              pa: "ਈ-ਕਾਮਰਸ ਸਟੋਰ",
+              en: "E-Commerce Solutions",
+              hi: "ई-कॉमर्स समाधान",
+              pa: "ਈ-ਕਾਮਰਸ ਹੱਲ",
             },
             description: { en: "", hi: "", pa: "" },
             icon: "🛒",
@@ -164,7 +159,11 @@ export default function PricingWizard() {
           },
           {
             id: "mobile-app",
-            label: { en: "Mobile App", hi: "मोबाइल ऐप", pa: "ਮੋਬਾਈਲ ਐਪ" },
+            label: {
+              en: "Mobile Application service",
+              hi: "मोबाइल एप्लीकेशन",
+              pa: "ਮੋਬਾਈਲ ਐਪਲੀਕੇਸ਼ਨ",
+            },
             description: { en: "", hi: "", pa: "" },
             icon: "📱",
             baseMin: 50000,
@@ -175,9 +174,9 @@ export default function PricingWizard() {
           {
             id: "saas-platform",
             label: {
-              en: "SaaS Platform",
-              hi: "SaaS प्लेटफॉर्म",
-              pa: "SaaS ਪਲੇਟਫਾਰਮ",
+              en: "SaaS Development",
+              hi: "SaaS डेवलपमेंट",
+              pa: "SaaS ਡਿਵੈਲਪਮੈਂਟ",
             },
             description: { en: "", hi: "", pa: "" },
             icon: "☁️",
@@ -188,7 +187,7 @@ export default function PricingWizard() {
           },
           {
             id: "seo-package",
-            label: { en: "SEO Package", hi: "SEO पैकेज", pa: "SEO ਪੈਕੇਜ" },
+            label: { en: "SEO Services", hi: "SEO सेवाएं", pa: "SEO ਸੇਵਾਵਾਂ" },
             description: { en: "", hi: "", pa: "" },
             icon: "📈",
             baseMin: 5000,
@@ -272,13 +271,17 @@ export default function PricingWizard() {
           className="mb-10"
         >
           <div className="mb-4 inline-block px-3 py-1 text-xs font-semibold rounded-full bg-z-accent/10 text-z-accent border border-z-border">
-            {t("pricing.badge")}
+            {t("pricing.badge", "Transparent Pricing")}
           </div>
           <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-z-text leading-tight tracking-tight mb-4">
-            {t("pricing.title")}
+            {t("pricing.title", "Estimate Your Project")}
           </h2>
           <p className="text-base text-slate-600 dark:text-z-muted max-w-xl leading-relaxed">
-            {t("pricing.sub")}
+            {/* SEO FIX: Replaced generic description with target keywords */}
+            {t(
+              "pricing.sub",
+              "Get a free estimate for website development, mobile apps, custom software, or Digital Marketing Services services."
+            )}
           </p>
         </motion.div>
 
@@ -560,7 +563,9 @@ export default function PricingWizard() {
                   href="/contact"
                   className="mt-5 w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-z-accent text-white font-semibold text-sm hover:opacity-90 transition-all duration-300 shadow-glow-sm"
                 >
-                  {t("pricing.consultation")} <ArrowRight size={15} />
+                  {/* SEO FIX: Standardized CTA text */}
+                  {t("pricing.consultation", "Get Free Consultation")}{" "}
+                  <ArrowRight size={15} />
                 </Link>
               </motion.div>
             )}
@@ -573,7 +578,7 @@ export default function PricingWizard() {
               disabled={step === 0}
               className="px-5 py-2.5 rounded-full text-sm font-semibold border border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:text-slate-900 dark:hover:text-z-text disabled:opacity-30 transition-all duration-200"
             >
-              {t("pricing.back")}
+              {t("pricing.back", "Back")}
             </button>
             {step < 3 && (
               <button
@@ -585,7 +590,9 @@ export default function PricingWizard() {
                 className="px-6 py-2.5 rounded-full text-sm font-semibold bg-z-accent text-white hover:opacity-90 disabled:opacity-40 transition-all duration-200 flex items-center gap-2"
               >
                 {loadingQuote && <Loader2 size={14} className="animate-spin" />}
-                {step === 2 ? t("pricing.get_quote") : t("pricing.next")}{" "}
+                {step === 2
+                  ? t("pricing.get_quote", "Get Quote")
+                  : t("pricing.next", "Next")}{" "}
                 <ArrowRight size={14} />
               </button>
             )}

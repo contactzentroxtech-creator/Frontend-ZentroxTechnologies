@@ -358,7 +358,7 @@ export default function CoursesClient() {
             Live Saturday Classes — Every Week
           </h1>
           <p className="text-z-muted text-base max-w-xl mx-auto leading-relaxed mb-8 text-gray-400">
-            Master modern web development with weekly live sessions.
+            Master modern website development with weekly live sessions.
             Interactive, practical, and industry-focused.
           </p>
           {/* Search Input element row */}

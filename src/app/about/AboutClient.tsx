@@ -45,7 +45,7 @@ const journeySteps = [
   {
     year: "2018",
     title: "Zentrox is Founded",
-    desc: "Registered in Mohali, Punjab. Initial focus on web development and basic mobile apps for local businesses.",
+    desc: "Registered in Mohali, Punjab. Initial focus on website development and basic mobile apps for local businesses.",
     bullets: ["Company registered in Punjab", "First office in Mohali"],
   },
   {
@@ -397,9 +397,9 @@ export default function AboutPageTemplate() {
                 </p>
                 <p>
                   Under his leadership, Zentrox has expanded from enterprise
-                  software development into custom SaaS architectures and modern
-                  cloud deployments. He personally oversees product strategy and
-                  client relationships.
+                  software development service into custom SaaS architectures
+                  and modern cloud deployments. He personally oversees product
+                  strategy and client relationships.
                 </p>
               </div>
             </motion.div>
