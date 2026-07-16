@@ -21,8 +21,8 @@ import {
 const stats = [
   {
     label: "Years Old",
-    value: "7+",
-    desc: "Founded in 2018, we’ve built depth of experience across multiple tech verticals.",
+    value: "3+",
+    desc: "Founded in 2023, we’ve built depth of experience across multiple tech verticals.",
   },
   {
     label: "Own Products",
@@ -286,16 +286,17 @@ export default function AboutPageTemplate() {
             </h2>
 
             <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
-              Founded in 2018 in Mohali, Punjab, Zentrox Technologies was born
-              with a clear mission: to make enterprise-grade technology
-              accessible to businesses across India.
+              Zentrox Technologies was founded in 2023 by Prince Paul Singh with
+              a clear vision: to build a premium software development and
+              digital growth company that embraces the future of
+              work—remote-first
             </p>
 
             <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
-              What started as a specialized development studio has grown into a
-              multi-disciplinary technology company. Today, we design
-              cutting-edge web platforms, build robust enterprise software, and
-              deploy custom MERN stack architectures.
+              Operating fully remote from Mohali, Punjab, we serve clients
+              across India (Chandigarh, Delhi NCR, Himachal Pradesh) and
+              international markets including the United States, United Kingdom,
+              Canada, Australia, UAE, Singapore, and Europe.
             </p>
 
             <div className="pt-2">
@@ -381,25 +382,29 @@ export default function AboutPageTemplate() {
               </h2>
 
               <div className="border-l-2 border-blue-400 pl-5 !text-blue-100 text-sm sm:text-base italic leading-relaxed font-normal">
-                "I started Zentrox in 2018 with a simple belief: that businesses
-                in Punjab and across India deserve access to the same quality of
-                technology that the world's best companies have. Seven years
-                later, that mission drives every line of code we write."
+                "I started Zentrox Technologies in 2023 with a simple belief:
+                that businesses in Punjab and across India deserve access to the
+                same quality of technology that the world's best companies have.
+                Three years later, that mission drives every line of code we
+                write."
               </div>
 
               <div className="space-y-4 text-xs sm:text-sm !text-zinc-300 leading-relaxed">
                 <p>
-                  Prince Paul Singh is the Founder and Director of Zentrox
-                  Technologies. With deep roots in Punjab and a passion for
-                  engineering, he has built Zentrox from a two-person web studio
-                  into a company with 20+ team members, 8+ live products, and
-                  clients across India.
+                  Prince Paul Singh founded Zentrox Technologies in 2023 with a
+                  vision to bridge the gap between premium software development
+                  and accessible, transparent delivery. With deep expertise in
+                  technology and business strategy, Prince leads the company
+                  with a hands-on approach, ensuring every client receives
+                  premium quality and transparent communication. He believes in
+                  building technology that genuinely solves problems.
                 </p>
                 <p>
-                  Under his leadership, Zentrox has expanded from enterprise
-                  software development service into custom SaaS architectures
-                  and modern cloud deployments. He personally oversees product
-                  strategy and client relationships.
+                  We don't need an office to deliver excellence. Our
+                  remote-first model gives us access to the best talent,
+                  flexibility for 24/7 availability, competitive pricing, and a
+                  global perspective. Our team works from Mohali, Punjab,
+                  serving businesses worldwide.
                 </p>
               </div>
             </motion.div>
@@ -672,7 +677,7 @@ export default function AboutPageTemplate() {
               href="/contact"
               className="px-8 py-3.5 rounded-full bg-white text-zinc-900 font-bold text-xs sm:text-sm hover:bg-blue-50 transition-all shadow-lg hover:shadow-xl hover:scale-105 transform duration-200 inline-flex items-center gap-2"
             >
-              Start a Project <ArrowRight size={14} />
+              Start Your Project Today <ArrowRight size={14} />
             </Link>
             <Link
               href="/contact"
