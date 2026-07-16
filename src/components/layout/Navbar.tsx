@@ -42,16 +42,16 @@ export default function Navbar() {
   const navLinks = useMemo(
     () => [
       { label: "Home", href: "/" },
-      { label: t("nav.services"), href: "/#services" },
-      {
-        label: t("nav.courses"),
-        href: "/courses",
-        children: [
-          { label: t("nav.courses"), href: "/courses" },
-          { label: t("classes.title").split("—")[0].trim(), href: "/#classes" },
-          { label: "Student Dashboard", href: "/dashboard" },
-        ],
-      },
+      { label: t("nav.services"), href: "/services" },
+      // {
+      //   label: t("nav.courses"),
+      //   href: "/courses",
+      //   children: [
+      //     { label: t("nav.courses"), href: "/courses" },
+      //     { label: t("classes.title").split("—")[0].trim(), href: "/#classes" },
+      //     { label: "Student Dashboard", href: "/dashboard" },
+      //   ],
+      // },
       { label: t("nav.internship"), href: "/internship" },
       { label: t("nav.blog"), href: "/blog" },
       { label: t("nav.about"), href: "/about" },

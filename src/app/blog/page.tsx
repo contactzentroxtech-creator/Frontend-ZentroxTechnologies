@@ -4,10 +4,9 @@ import Footer from "@/components/layout/Footer";
 import BlogClient from "./BlogClient";
 
 export const metadata: Metadata = {
-  title:
-    "Blog — Zentrox Technologies | Web Dev, AI & Digital Marketing Services Insights",
+  title: "Technology & Business Blog — Zentrox Technologies",
   description:
-    "Read articles on website development, AI, SEO, Digital Marketing Services, and tech entrepreneurship from the Zentrox Technologies team.",
+    "Expert insights on software development, digital marketing, AI, and business growth from the Zentrox Technologies team.",
   alternates: { canonical: "https://zentroxtech.com/blog" },
 };
 

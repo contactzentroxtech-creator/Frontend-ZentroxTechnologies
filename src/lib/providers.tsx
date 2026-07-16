@@ -59,8 +59,8 @@ const STATIC_FALLBACKS: Record<Lang, Record<string, string>> = {
     "hero.sub":
       "Premium web solutions, futuristic SaaS products, and intelligent digital systems — crafted for Punjab's boldest businesses.",
     "hero.cta_primary": "Start Your Project",
-    "hero.cta_secondary": "Saturday Live Classes",
-    "services.badge": "What We Build",
+    "hero.cta_secondary": "View Our Work",
+    "services.badge": "What We Do",
     "services.title": "Premium Digital Services for Growing Businesses",
     "services.sub":
       "From local startups in Mohali to scaling enterprises — world-class technology at accessible prices.",
@@ -70,13 +70,13 @@ const STATIC_FALLBACKS: Record<Lang, Record<string, string>> = {
       "Master modern website development with weekly live sessions. Interactive, practical, and industry-focused.",
     "classes.enroll": "Enroll Free — Saturday Classes",
     "classes.every_saturday": "Every Saturday — 10:00 AM IST",
-    "cta.badge": "Ready to Start?",
+    "cta.badge": "Ready to Build Something Great?",
     "cta.title": "Transform Your Business",
     "cta.title2": "with Zentrox Technologies",
     "cta.sub":
-      "Join hundreds of Punjab businesses already building their digital future with us. First consultation is always free.",
-    "cta.primary": "Book Free Consultation",
-    "cta.secondary": "Explore Courses",
+      "Whether you need custom software, a mobile app, or a complete digital strategy — we are here to help. Get a free consultation and discover how Zentrox Technologies can transform your business.",
+    "cta.primary": "Get a Free Consultation",
+    "cta.secondary": "View our work",
     "contact.badge": "Get In Touch",
     "contact.title": "Start Your Digital Journey",
     "contact.name": "Your Name",
@@ -103,19 +103,19 @@ const STATIC_FALLBACKS: Record<Lang, Record<string, string>> = {
     "footer.msme": "MSME Registered · Remote-First · Innovation-Driven",
     "footer.copy": "All rights reserved. MSME Registered — India.",
     // Local section
-    "local.badge": "Serving Punjab",
+    "local.badge": "Why Choose Zentrox",
     "local.title": "Built for Mohali, Chandigarh & All of Punjab",
     "local.sub":
       "We understand the local market. Affordable, world-quality solutions tailored for Punjab's businesses and entrepreneurs.",
-    "local.card1.title": "Affordable Business Websites",
+    "local.card1.title": "Remote-First Excellence",
     "local.card1.desc":
-      "Professional websites at competitive prices — no compromise on quality or performance.",
-    "local.card2.title": "Coaching Center Platforms",
+      "Access to top talent with competitive pricing and 24/7 availability for global clients.",
+    "local.card2.title": "Quality & Reliability",
     "local.card2.desc":
-      "Student management, online classes, attendance systems for education institutes.",
-    "local.card3.title": "Startup Launch Packages",
+      "Rigorous testing, clean code, and reliable delivery that meets the highest standards.",
+    "local.card3.title": "Transparent Process",
     "local.card3.desc":
-      "Complete digital presence — website, branding, and growth strategy to launch right.",
+      "No surprises. We work with you from discovery to deployment with clear visibility.",
     // Services
     "service.web.title": "website development",
     "service.web.desc":

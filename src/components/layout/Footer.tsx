@@ -36,7 +36,7 @@ const company = [
 
 const learning = [
   { label: "All Courses", href: "/courses" },
-  { label: "Saturday Live Classes", href: "/#classes" },
+  { label: "View Our Work", href: "/#classes" },
   { label: "Remote Internship", href: "/internship" },
   { label: "Student Dashboard", href: "/dashboard" },
   { label: "Verify Certificate", href: "/verify" },

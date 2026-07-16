@@ -275,7 +275,7 @@ export default function AboutPageTemplate() {
             className="lg:col-span-6 space-y-6"
           >
             <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-semibold text-xs tracking-wider uppercase">
-              <span>—</span> WHO WE ARE
+              <span>—</span> Our Story
             </div>
 
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-[1.15] text-zinc-900 dark:text-white">

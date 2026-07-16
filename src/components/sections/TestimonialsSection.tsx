@@ -160,7 +160,7 @@ export function CTASection() {
               />
             </Link>
             <Link
-              href="/portfolio"
+              href="/about"
               className="flex items-center justify-center gap-2 px-10 py-4 rounded-full border border-z-border text-z-text font-semibold hover:border-z-accent hover:text-z-accent transition-all duration-300"
             >
               {/* SEO FIX: Changed from generic courses to standard 'View Our Work' */}

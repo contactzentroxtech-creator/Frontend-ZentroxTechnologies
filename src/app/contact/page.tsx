@@ -4,10 +4,9 @@ import Footer from "@/components/layout/Footer";
 import ContactPageClient from "./ContactPageClient";
 
 export const metadata: Metadata = {
-  title:
-    "Contact Zentrox Technologies — Free Consultation | Mohali & Chandigarh",
+  title: "Contact Us — Zentrox Technologies",
   description:
-    "Contact Zentrox Technologies for website development, AI solutions, SEO, and Digital Marketing Services. Based in Mohali & Chandigarh. MSME registered. Free consultation available.",
+    "Get a free consultation via form, WhatsApp, or Calendly. Remote-first team in Mohali serving worldwide. We respond within 24-48 hours.",
   alternates: { canonical: "https://zentroxtech.com/contact" },
 };
 

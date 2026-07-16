@@ -4,9 +4,9 @@ import Footer from "@/components/layout/Footer";
 import ServicesClient from "./ServicesClient";
 
 export const metadata: Metadata = {
-  title: "Services — Zentrox Technologies | Web, Mobile, AI & SEO Solutions",
+  title: "Software & Digital Services — Zentrox Technologies",
   description:
-    "Zentrox Technologies offers website development, mobile apps, SaaS development, AI integration, SEO, Digital Marketing Services, and UI/UX design — serving Mohali, Chandigarh, and all of India.",
+    "Custom software, web apps, SaaS, Android, SEO, AI automation, and more. Premium technology services for businesses in India and globally.",
   alternates: { canonical: "https://zentroxtech.com/services" },
 };
 

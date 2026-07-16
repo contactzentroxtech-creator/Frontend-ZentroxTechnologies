@@ -12,10 +12,10 @@ export default function HeroSection() {
   const [isMounted, setIsMounted] = useState(false);
   const { t, lang } = useLang();
 
-  // SEO FIX: Exact rotating words matched to the "Homepage Content – Zentrox Technologies" section
+  // Updated to match the specific services mentioned in the document's H2
   const heroWords = t(
     "hero.words",
-    "Website Development|Mobile Application Development|Software Development|UI/UX Design|SEO Services|Digital Marketing"
+    "Custom Software|Web Applications|Mobile Apps|Digital Growth"
   )
     .split("|")
     .filter(Boolean);
@@ -105,7 +105,7 @@ export default function HeroSection() {
       </div>
 
       {/* ── Hero Copy ── */}
-      <div className="flex flex-col items-center justify-center w-full max-w-5xl z-10">
+      <div className="relative flex flex-col items-center justify-center w-full max-w-5xl z-10">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -122,9 +122,9 @@ export default function HeroSection() {
           transition={{ duration: 0.7, delay: 0.1 }}
           className="text-5xl md:text-7xl lg:text-8xl font-extrabold leading-[1.02] tracking-tight mb-6 max-w-5xl"
         >
-          {/* SEO FIX: Added exact H1 phrasing from document */}
+          {/* Updated Line 1 */}
           <span className="block text-z-text">
-            {t("hero.line1", "One Partner for")}
+            {t("hero.line1", "Build Better, Grow Faster")}
           </span>
           <span
             className="block gradient-text"
@@ -136,21 +136,21 @@ export default function HeroSection() {
           >
             {heroWords[wordIdx] || heroWords[0]}
           </span>
+          {/* Updated Line 2 */}
           <span className="block text-z-text mt-2 text-4xl md:text-6xl lg:text-7xl">
-            {t("hero.line2", "For Your Business")}
+            {t("hero.line2", "— With Zentrox Technologies")}
           </span>
         </motion.h1>
 
-        {/* SEO FIX: Exact SEO Hero Subheading */}
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
           className="text-base md:text-lg text-z-muted max-w-3xl leading-relaxed mb-8 font-normal"
         >
+          {/* Updated H2 */}
           {t(
-            "hero.sub",
-            "Helping startups, small businesses, and enterprises grow with professional website development, mobile application development, SEO, UI/UX design, software development, AI integration, and digital marketing services—all under one roof."
+            "Custom software, web applications, mobile apps, and digital growth solutions for Indian and international businesses. Remote-first, premium quality, delivered worldwide from Mohali, India."
           )}
         </motion.h2>
 
@@ -158,34 +158,49 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.3 }}
-          className="flex flex-col sm:flex-row gap-4 mb-20"
+          className="flex flex-col sm:flex-row gap-4 mb-6"
         >
-          {/* SEO FIX: Exact Primary CTA */}
           <Link
             href="/contact"
-            title="Contact Us"
-            className="group flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-[#3b7bff] text-white font-semibold text-sm hover:bg-blue-500 transition-all duration-300 z-20"
+            title="Start Your Project"
+            className="relative group flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-[#3b7bff] text-white font-semibold text-sm hover:bg-blue-500 transition-all duration-100 z-20"
           >
-            {t("hero.cta_primary", "Get Free Consultation")}
+            {/* Updated CTA 1 */}
+            {t("hero.cta_primary", "Start Your Project")}
             <ArrowRight
               size={16}
               className="group-hover:translate-x-1 transition-transform"
               aria-hidden="true"
             />
           </Link>
-          {/* SEO FIX: Exact Secondary CTA */}
           <Link
-            href="/quote"
-            title="Request a Quote"
-            className="group flex items-center justify-center gap-2 px-8 py-4 rounded-full border border-z-border text-z-text font-semibold text-sm hover:border-z-accent hover:text-z-accent transition-all duration-300 z-20"
+            href="/about"
+            title="View Our Work"
+            className=" relative group flex items-center justify-center gap-2 px-8 py-4 rounded-full border border-z-border text-z-text font-semibold text-sm hover:border-z-accent hover:text-z-accent transition-all duration-300 z-20"
           >
             <Play
               size={14}
               className="group-hover:text-z-accent transition-colors"
               aria-hidden="true"
             />
-            {t("hero.cta_secondary", "Request a Quote")}
+            {/* Updated CTA 2 */}
+            {t("View Our Work")}
           </Link>
+        </motion.div>
+
+        {/* Added Trust Line directly below buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.4 }}
+          className="mb-14 z-20 mt-8"
+        >
+          <p className="text-sm text-z-muted font-medium">
+            {t(
+              "hero.trust",
+              "Trusted by businesses across India, USA, UK, Canada, Australia, UAE & Singapore. Founded in 2023."
+            )}
+          </p>
         </motion.div>
 
         {/* ── Interactive Showcase Canvas ── */}
@@ -193,7 +208,7 @@ export default function HeroSection() {
           className="relative w-full max-w-5xl h-[340px] mx-auto z-20"
           aria-hidden="true"
         >
-          {/* Card 1: Code Window - Updated for Software/Web Dev Services */}
+          {/* Card 1: Code Window */}
           <motion.div
             initial={{ opacity: 0, x: -60, y: 20, rotate: -4 }}
             animate={{ opacity: 1, x: 0, y: [0, -12, 0] }}
@@ -236,7 +251,7 @@ export default function HeroSection() {
             </div>
           </motion.div>
 
-          {/* Card 2: Dashboard Metric - Updated for Digital Marketing */}
+          {/* Card 2: Dashboard Metric */}
           <motion.div
             initial={{ opacity: 0, x: 60, y: -10, rotate: 3 }}
             animate={{ opacity: 1, x: 0, y: [0, 14, 0] }}
@@ -278,7 +293,7 @@ export default function HeroSection() {
             </div>
           </motion.div>
 
-          {/* Card 3: Service Profile - Updated for Mobile Apps */}
+          {/* Card 3: Service Profile */}
           <motion.div
             initial={{ opacity: 0, y: 50, rotate: 1 }}
             animate={{ opacity: 1, y: [0, -10, 0] }}
@@ -303,7 +318,7 @@ export default function HeroSection() {
             </div>
           </motion.div>
 
-          {/* Card 4: System Performance Check - Updated for SEO Services */}
+          {/* Card 4: System Performance Check */}
           <motion.div
             initial={{ opacity: 0, x: -40, y: 80, rotate: -6 }}
             animate={{ opacity: 1, x: 0, y: [0, 8, 0] }}
@@ -329,7 +344,7 @@ export default function HeroSection() {
             </div>
           </motion.div>
 
-          {/* Card 5: AI Status Flag - Updated for AI Integration */}
+          {/* Card 5: AI Status Flag */}
           <motion.div
             initial={{ opacity: 0, x: 40, y: 100, rotate: 5 }}
             animate={{ opacity: 1, x: 0, y: [0, -12, 0] }}

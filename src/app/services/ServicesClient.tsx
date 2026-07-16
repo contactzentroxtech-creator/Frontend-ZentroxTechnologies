@@ -195,7 +195,7 @@ export default function ServicesClient() {
             variants={fadeUp}
             transition={{ duration: 0.6 }}
           >
-            <div className="z-badge mx-auto mb-6">What We Build</div>
+            <div className="z-badge mx-auto mb-6">What We Do</div>
             <h1 className="text-5xl md:text-7xl font-extrabold text-white tracking-tight leading-tight mb-6">
               Premium Digital
               <br />

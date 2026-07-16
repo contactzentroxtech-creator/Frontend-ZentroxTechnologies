@@ -14,10 +14,9 @@ import FloatingCTA from "@/components/ui/FloatingCTA";
 import CursorEffect from "@/components/ui/CursorEffect";
 
 export const metadata: Metadata = {
-  title:
-    "Zentrox Technologies — Premium website development & AI Solutions | Mohali, Chandigarh",
+  title: "Zentrox Technologies — Software & Digital Growth Partner",
   description:
-    "Zentrox Technologies is an MSME-registered technology company in Mohali & Chandigarh. We build premium websites, mobile apps, SaaS platforms, AI automation, and Digital Marketing Services solutions.",
+    "Premium software development and digital services for Indian and international businesses. Remote-first custom solutions delivered worldwide. Founded 2023.",
   alternates: { canonical: "https://zentroxtech.com" },
 };
 

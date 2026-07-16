@@ -55,7 +55,7 @@ const SERVICES_EN = [
   "Digital Marketing Services",
   "UI/UX Design",
   "software development service",
-  "Saturday Live Classes",
+  "View our work",
   "Remote Internship",
   "Other",
 ];
