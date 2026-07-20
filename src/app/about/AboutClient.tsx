@@ -170,7 +170,7 @@ const teamDepartments = [
 
 const offices = [
   {
-    city: "Mohali, Punjab",
+    city: "Hamirpur, Himachal Pradesh",
     badge: "HEADQUARTERS · HQ",
     title: "Himachal Pradesh",
     address: "Hamirpur, Himachal Pradesh",
