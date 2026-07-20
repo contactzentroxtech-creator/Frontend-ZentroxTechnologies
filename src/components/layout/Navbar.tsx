@@ -17,6 +17,13 @@ import { ThemeToggle, LangSwitcher } from "@/components/ui/ThemeToggle";
 import { useLang } from "@/lib/providers";
 import { useAuthStore } from "@/store/authStore";
 
+// 1. Define the NavLink type here to fix the TypeScript error
+type NavLink = {
+  label: string;
+  href: string;
+  children?: { label: string; href: string }[];
+};
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -39,7 +46,8 @@ export default function Navbar() {
 
   const isAdmin = user?.role === "admin";
 
-  const navLinks = useMemo(
+  // 2. Explicitly type useMemo as <NavLink[]>
+  const navLinks = useMemo<NavLink[]>(
     () => [
       { label: "Home", href: "/" },
       { label: t("nav.services"), href: "/services" },
