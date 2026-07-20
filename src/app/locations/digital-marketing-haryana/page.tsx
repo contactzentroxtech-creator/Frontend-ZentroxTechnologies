@@ -15,7 +15,8 @@ export const metadata: Metadata = {
     "Google Ads Haryana",
   ],
   alternates: {
-    canonical: "https://zentroxtech.com/locations/digital-marketing-haryana",
+    canonical:
+      "https://zentroxtechnologies.com/locations/digital-marketing-haryana",
   },
 };
 
@@ -90,7 +91,7 @@ export default function DigitalMarketingHaryanaPage() {
             name: "Zentrox Technologies",
             description: "Digital Marketing Services Agency serving Haryana",
             telephone: "+91-8988183513",
-            url: "https://zentroxtech.com",
+            url: "https://zentroxtechnologies.com",
             areaServed: "Haryana",
             address: {
               "@type": "PostalAddress",

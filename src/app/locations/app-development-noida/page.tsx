@@ -15,7 +15,8 @@ export const metadata: Metadata = {
     "app developer Noida",
   ],
   alternates: {
-    canonical: "https://zentroxtech.com/locations/app-development-noida",
+    canonical:
+      "https://zentroxtechnologies.com/locations/app-development-noida",
   },
 };
 
@@ -89,7 +90,7 @@ export default function AppDevNoidaPage() {
             name: "Zentrox Technologies",
             description: "App Development Company in Noida",
             telephone: "+91-8988183513",
-            url: "https://zentroxtech.com",
+            url: "https://zentroxtechnologies.com",
             areaServed: "Noida, Uttar Pradesh",
             address: {
               "@type": "PostalAddress",

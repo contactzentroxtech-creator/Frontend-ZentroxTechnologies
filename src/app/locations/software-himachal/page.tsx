@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     "IT company Himachal",
   ],
   alternates: {
-    canonical: "https://zentroxtech.com/locations/software-himachal",
+    canonical: "https://zentroxtechnologies.com/locations/software-himachal",
   },
 };
 
@@ -92,7 +92,7 @@ export default function SoftwareHimachalPage() {
             description:
               "software development service Company serving Himachal Pradesh",
             telephone: "+91-8988183513",
-            url: "https://zentroxtech.com",
+            url: "https://zentroxtechnologies.com",
             areaServed: "Himachal Pradesh",
             address: {
               "@type": "PostalAddress",

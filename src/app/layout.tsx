@@ -6,7 +6,7 @@ import Script from "next/script";
 import "../styles/globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://zentroxtech.com"),
+  metadataBase: new URL("https://zentroxtechnologies.com"),
   title: {
     default:
       "Zentrox Technologies — Premium website development & AI Solutions",
@@ -31,7 +31,9 @@ export const metadata: Metadata = {
     ],
     apple: "/apple-touch-icon.png",
   },
-  authors: [{ name: "Zentrox Technologies", url: "https://zentroxtech.com" }],
+  authors: [
+    { name: "Zentrox Technologies", url: "https://zentroxtechnologies.com" },
+  ],
   creator: "Zentrox Technologies",
   publisher: "Zentrox Technologies",
   robots: {
@@ -46,7 +48,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_IN",
-    url: "https://zentroxtech.com",
+    url: "https://zentroxtechnologies.com",
     siteName: "Zentrox Technologies",
     title: "Zentrox Technologies — Premium Web & AI Solutions",
     description:
@@ -68,7 +70,7 @@ export const metadata: Metadata = {
     images: ["/og-image.png"],
   },
   alternates: {
-    canonical: "https://zentroxtech.com",
+    canonical: "https://zentroxtechnologies.com",
   },
   verification: {
     google: "YyKjsbz3GhRqz0h09_nEslhvmpeInev20hILYpun6eU",
@@ -104,8 +106,8 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Organization",
               name: "Zentrox Technologies",
-              url: "https://zentroxtech.com",
-              logo: "https://zentroxtech.com/logo.png",
+              url: "https://zentroxtechnologies.com",
+              logo: "https://zentroxtechnologies.com/logo.png",
               contactPoint: {
                 "@type": "ContactPoint",
                 telephone: "+91-8988183513",

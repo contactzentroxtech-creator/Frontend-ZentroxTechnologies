@@ -15,7 +15,8 @@ export const metadata: Metadata = {
     "best website development Mohali",
   ],
   alternates: {
-    canonical: "https://zentroxtech.com/locations/web-development-mohali",
+    canonical:
+      "https://zentroxtechnologies.com/locations/web-development-mohali",
   },
   openGraph: {
     title: "website development Company in Mohali — Zentrox Technologies",
@@ -98,7 +99,7 @@ export default function WebDevMohaliPage() {
               addressCountry: "IN",
             },
             telephone: "+91-8988183513",
-            url: "https://zentroxtech.com",
+            url: "https://zentroxtechnologies.com",
             areaServed: "Mohali, Punjab",
             priceRange: "₹₹",
           }}

@@ -14,7 +14,9 @@ export const metadata: Metadata = {
     "best SEO Chandigarh",
     "Chandigarh SEO agency",
   ],
-  alternates: { canonical: "https://zentroxtech.com/locations/seo-chandigarh" },
+  alternates: {
+    canonical: "https://zentroxtechnologies.com/locations/seo-chandigarh",
+  },
 };
 
 export default function SEOChandigarhPage() {
@@ -85,7 +87,7 @@ export default function SEOChandigarhPage() {
             name: "Zentrox Technologies",
             description: "SEO Company in Chandigarh",
             telephone: "+91-8988183513",
-            url: "https://zentroxtech.com",
+            url: "https://zentroxtechnologies.com",
             areaServed: "Chandigarh",
             address: {
               "@type": "PostalAddress",

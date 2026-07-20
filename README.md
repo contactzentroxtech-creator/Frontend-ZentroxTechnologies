@@ -163,7 +163,7 @@ Access admin panel at: `http://localhost:3000/admin`
 # Server
 NODE_ENV=development
 PORT=5000
-ALLOWED_ORIGINS=http://localhost:3000,https://zentroxtech.com
+ALLOWED_ORIGINS=http://localhost:3000,https://zentroxtechnologies.com
 
 # MongoDB Atlas
 # Get from: https://cloud.mongodb.com → Connect → Drivers

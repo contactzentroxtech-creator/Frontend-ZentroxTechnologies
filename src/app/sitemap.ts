@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next';
 
-const BASE_URL = 'https://zentroxtech.com';
+const BASE_URL = 'https://zentroxtechnologies.com';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();

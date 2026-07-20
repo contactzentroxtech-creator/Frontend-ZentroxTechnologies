@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   title: "Zentrox Technologies — Software & Digital Growth Partner",
   description:
     "Premium software development and digital services for Indian and international businesses. Remote-first custom solutions delivered worldwide. Founded 2023.",
-  alternates: { canonical: "https://zentroxtech.com" },
+  alternates: { canonical: "https://zentroxtechnologies.com" },
 };
 
 export default function HomePage() {

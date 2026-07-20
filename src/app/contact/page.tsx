@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "Contact Us — Zentrox Technologies",
   description:
     "Get a free consultation via form, WhatsApp, or Calendly. Remote-first team in Mohali serving worldwide. We respond within 24-48 hours.",
-  alternates: { canonical: "https://zentroxtech.com/contact" },
+  alternates: { canonical: "https://zentroxtechnologies.com/contact" },
 };
 
 export default function ContactPage() {

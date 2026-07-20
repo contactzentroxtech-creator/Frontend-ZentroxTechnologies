@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "Software & Digital Services — Zentrox Technologies",
   description:
     "Custom software, web apps, SaaS, Android, SEO, AI automation, and more. Premium technology services for businesses in India and globally.",
-  alternates: { canonical: "https://zentroxtech.com/services" },
+  alternates: { canonical: "https://zentroxtechnologies.com/services" },
 };
 
 export default function ServicesPage() {

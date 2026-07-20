@@ -9,7 +9,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/admin/', '/dashboard/', '/auth/', '/api/'],
       },
     ],
-    sitemap: 'https://zentroxtech.com/sitemap.xml',
-    host: 'https://zentroxtech.com',
+    sitemap: 'https://zentroxtechnologies.com/sitemap.xml',
+    host: 'https://zentroxtechnologies.com',
   };
 }
