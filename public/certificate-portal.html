@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
@@ -14,7 +14,7 @@
     <style>
       /* ════════════════════════════════════════════════════
    ZENTROX CERTIFICATE & INTERNSHIP MANAGEMENT SYSTEM
-   Built for Zentrox Technologies — Prince Paul Singh
+   Built for Zentrox Technologies — Yogesh Singh
 ════════════════════════════════════════════════════ */
       :root {
         --bg: #06090d;
@@ -900,7 +900,8 @@
         inset: 12px;
         border: 2px solid transparent;
         border-radius: 8px;
-        background: linear-gradient(#fff, #fff) padding-box,
+        background:
+          linear-gradient(#fff, #fff) padding-box,
           linear-gradient(135deg, #c9973a, #3b82f6, #8b5cf6, #c9973a) border-box;
       }
       .cert-completion .cert-inner {
@@ -1700,7 +1701,7 @@
         <div style="text-align: center; margin-bottom: 1.5rem">
           <div
             style="
-              font-family: 'JetBrains Mono';
+              font-family: &quot;JetBrains Mono&quot;;
               font-size: 1.2rem;
               font-weight: 700;
               color: var(--text);
@@ -1746,7 +1747,7 @@
               type="password"
               placeholder="••••••••"
               value=""
-              onkeypress="if(event.key==='Enter')doLogin()"
+              onkeypress="if (event.key === 'Enter') doLogin();"
             />
           </div>
           <div
@@ -1869,7 +1870,7 @@
           <div class="sb-admin">
             <div class="sb-av">P</div>
             <div>
-              <div class="sb-name">Prince Paul Singh</div>
+              <div class="sb-name">Yogesh Singh</div>
               <div class="sb-role">Super Admin</div>
             </div>
             <button class="sb-out" onclick="doLogout()" title="Logout">
@@ -2013,7 +2014,10 @@
               </button>
               <button
                 class="btn"
-                onclick="nav('internships');openNewIntern();"
+                onclick="
+                  nav('internships');
+                  openNewIntern();
+                "
                 style="justify-content: center; padding: 0.8rem"
               >
                 💼 New Internship
@@ -2050,7 +2054,7 @@
                 <div class="cert-type-grid">
                   <div
                     class="cert-type-card selected"
-                    onclick="selectCertType(this,'course')"
+                    onclick="selectCertType(this, 'course')"
                     data-type="course"
                   >
                     <div class="ctc-ico">🎓</div>
@@ -2059,7 +2063,7 @@
                   </div>
                   <div
                     class="cert-type-card"
-                    onclick="selectCertType(this,'participation')"
+                    onclick="selectCertType(this, 'participation')"
                     data-type="participation"
                   >
                     <div class="ctc-ico">🤝</div>
@@ -2068,7 +2072,7 @@
                   </div>
                   <div
                     class="cert-type-card"
-                    onclick="selectCertType(this,'internship')"
+                    onclick="selectCertType(this, 'internship')"
                     data-type="internship"
                   >
                     <div class="ctc-ico">💼</div>
@@ -2077,7 +2081,7 @@
                   </div>
                   <div
                     class="cert-type-card"
-                    onclick="selectCertType(this,'excellence')"
+                    onclick="selectCertType(this, 'excellence')"
                     data-type="excellence"
                   >
                     <div class="ctc-ico">⭐</div>
@@ -2086,7 +2090,7 @@
                   </div>
                   <div
                     class="cert-type-card"
-                    onclick="selectCertType(this,'offer')"
+                    onclick="selectCertType(this, 'offer')"
                     data-type="offer"
                   >
                     <div class="ctc-ico">📄</div>
@@ -2095,7 +2099,7 @@
                   </div>
                   <div
                     class="cert-type-card"
-                    onclick="selectCertType(this,'recommendation')"
+                    onclick="selectCertType(this, 'recommendation')"
                     data-type="recommendation"
                   >
                     <div class="ctc-ico">💌</div>
@@ -2178,7 +2182,7 @@
                     <label>Signatory Name</label
                     ><input
                       id="cert-signer"
-                      value="Prince Paul Singh"
+                      value="Yogesh Singh"
                       oninput="updatePreview()"
                     />
                   </div>
@@ -2408,14 +2412,14 @@
                     border: 1px solid var(--border);
                     border-radius: var(--r);
                     color: var(--text);
-                    font-family: 'JetBrains Mono';
+                    font-family: &quot;JetBrains Mono&quot;;
                     font-size: 0.85rem;
                     outline: none;
                     letter-spacing: 0.04em;
                   "
                   id="verify-input"
                   placeholder="ZTX-CERT-XXXXXXXX"
-                  onkeypress="if(event.key==='Enter')verifyCert()"
+                  onkeypress="if (event.key === 'Enter') verifyCert();"
                 />
                 <button class="btn primary" onclick="verifyCert()">
                   Verify
@@ -3049,7 +3053,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
                 </div>
                 <div class="fg">
                   <label>Authorized Signatory</label
-                  ><input value="Prince Paul Singh" />
+                  ><input value="Yogesh Singh" />
                 </div>
                 <div class="fg">
                   <label>Designation</label
@@ -3063,7 +3067,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
               <button
                 class="btn primary"
                 style="margin-top: 1rem"
-                onclick="showToast('Settings saved successfully!','success')"
+                onclick="showToast('Settings saved successfully!', 'success')"
               >
                 Save Settings
               </button>
@@ -3094,7 +3098,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
               <button
                 class="btn primary"
                 style="margin-top: 1rem"
-                onclick="showToast('Email settings saved!','success')"
+                onclick="showToast('Email settings saved!', 'success')"
               >
                 Save Email Config
               </button>
@@ -3138,7 +3142,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
               <button
                 class="btn primary"
                 style="margin-top: 1rem"
-                onclick="showToast('Payment config saved!','success')"
+                onclick="showToast('Payment config saved!', 'success')"
               >
                 Save Payment Config
               </button>
@@ -3172,7 +3176,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
               <button
                 class="btn primary"
                 style="margin-top: 1rem"
-                onclick="showToast('Security settings saved!','success')"
+                onclick="showToast('Security settings saved!', 'success')"
               >
                 Save Security Config
               </button>
@@ -3271,7 +3275,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
                     id="bulk-recipients"
                     style="
                       min-height: 140px;
-                      font-family: 'JetBrains Mono';
+                      font-family: &quot;JetBrains Mono&quot;;
                       font-size: 0.76rem;
                     "
                     placeholder="Rahul Kapoor, rahul@email.com, A+&#10;Priya Sharma, priya@email.com, A&#10;Aditya Mehta, aditya@email.com, A+&#10;Nisha Gupta, nisha@email.com"
@@ -3332,7 +3336,10 @@ Zentrox Technologies Pvt. Ltd., India</textarea
                 Email, Grade (Grade is optional)<br />
                 Example:
                 <span
-                  style="font-family: 'JetBrains Mono'; color: var(--accent-h)"
+                  style="
+                    font-family: &quot;JetBrains Mono&quot;;
+                    color: var(--accent-h);
+                  "
                   >Rahul Kapoor,rahul@email.com,A+</span
                 >
               </div>
@@ -3553,8 +3560,15 @@ Zentrox Technologies Pvt. Ltd., India</textarea
                   background: var(--bg-1);
                 "
                 onclick="document.getElementById('media-input').click()"
-                ondragover="event.preventDefault();this.style.borderColor='var(--accent)';this.style.background='rgba(59,130,246,.05)'"
-                ondragleave="this.style.borderColor='var(--border-2)';this.style.background='var(--bg-1)'"
+                ondragover="
+                  event.preventDefault();
+                  this.style.borderColor = 'var(--accent)';
+                  this.style.background = 'rgba(59,130,246,.05)';
+                "
+                ondragleave="
+                  this.style.borderColor = 'var(--border-2)';
+                  this.style.background = 'var(--bg-1)';
+                "
                 ondrop="handleMediaDrop(event)"
               >
                 <div style="font-size: 2rem; margin-bottom: 0.6rem">📤</div>
@@ -3823,7 +3837,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
             <div style="text-align: center; margin-bottom: 2rem">
               <div
                 style="
-                  font-family: 'JetBrains Mono';
+                  font-family: &quot;JetBrains Mono&quot;;
                   font-size: 1.4rem;
                   font-weight: 700;
                   color: var(--text);
@@ -3915,16 +3929,22 @@ Zentrox Technologies Pvt. Ltd., India</textarea
                     border: 1px solid var(--border-2);
                     border-radius: var(--r);
                     color: var(--text);
-                    font-family: 'JetBrains Mono';
+                    font-family: &quot;JetBrains Mono&quot;;
                     font-size: 1rem;
                     outline: none;
                     letter-spacing: 0.05em;
                     transition: all 0.25s;
                   "
                   placeholder="ZTX-CERT-B7F3A2"
-                  onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 3px rgba(59,130,246,.1)'"
-                  onblur="this.style.borderColor='var(--border-2)';this.style.boxShadow='none'"
-                  onkeypress="if(event.key==='Enter')publicVerify()"
+                  onfocus="
+                    this.style.borderColor = 'var(--accent)';
+                    this.style.boxShadow = '0 0 0 3px rgba(59,130,246,.1)';
+                  "
+                  onblur="
+                    this.style.borderColor = 'var(--border-2)';
+                    this.style.boxShadow = 'none';
+                  "
+                  onkeypress="if (event.key === 'Enter') publicVerify();"
                 />
                 <button
                   class="btn primary"
@@ -3944,14 +3964,20 @@ Zentrox Technologies Pvt. Ltd., India</textarea
                 Try:
                 <span
                   class="cert-id"
-                  onclick="document.getElementById('pv-input').value='ZTX-CERT-B7F3A2'"
+                  onclick="
+                    document.getElementById('pv-input').value =
+                      'ZTX-CERT-B7F3A2'
+                  "
                   style="cursor: pointer"
                   >ZTX-CERT-B7F3A2</span
                 >
                 &nbsp;·&nbsp;
                 <span
                   class="cert-id"
-                  onclick="document.getElementById('pv-input').value='ZTX-CERT-A4F8B1'"
+                  onclick="
+                    document.getElementById('pv-input').value =
+                      'ZTX-CERT-A4F8B1'
+                  "
                   style="cursor: pointer"
                   >ZTX-CERT-A4F8B1</span
                 >
@@ -4084,7 +4110,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
                   margin-bottom: 0.2rem;
                 "
               >
-                Prince Paul Singh
+                Yogesh Singh
               </div>
               <div
                 style="
@@ -4130,7 +4156,10 @@ Zentrox Technologies Pvt. Ltd., India</textarea
                 >
                   <span style="color: var(--text-3)">Certificates Issued</span
                   ><span
-                    style="font-family: 'JetBrains Mono'; color: var(--text)"
+                    style="
+                      font-family: &quot;JetBrains Mono&quot;;
+                      color: var(--text);
+                    "
                     id="prof-certs"
                     >—</span
                   >
@@ -4144,7 +4173,10 @@ Zentrox Technologies Pvt. Ltd., India</textarea
                 >
                   <span style="color: var(--text-3)">Internships Managed</span
                   ><span
-                    style="font-family: 'JetBrains Mono'; color: var(--text)"
+                    style="
+                      font-family: &quot;JetBrains Mono&quot;;
+                      color: var(--text);
+                    "
                     >3</span
                   >
                 </div>
@@ -4158,7 +4190,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
                   <span style="color: var(--text-3)">Last Login</span
                   ><span
                     style="
-                      font-family: 'JetBrains Mono';
+                      font-family: &quot;JetBrains Mono&quot;;
                       font-size: 0.68rem;
                       color: var(--text-3);
                     "
@@ -4175,7 +4207,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
                 </div>
                 <div class="form-grid cols-2">
                   <div class="fg">
-                    <label>Full Name</label><input value="Prince Paul Singh" />
+                    <label>Full Name</label><input value="Yogesh Singh" />
                   </div>
                   <div class="fg">
                     <label>Email</label
@@ -4195,7 +4227,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
                 <button
                   class="btn primary"
                   style="margin-top: 1rem"
-                  onclick="showToast('Profile updated!','success')"
+                  onclick="showToast('Profile updated!', 'success')"
                 >
                   Save Profile
                 </button>
@@ -4221,7 +4253,9 @@ Zentrox Technologies Pvt. Ltd., India</textarea
                 <button
                   class="btn primary"
                   style="margin-top: 1rem"
-                  onclick="showToast('Password changed successfully!','success')"
+                  onclick="
+                    showToast('Password changed successfully!', 'success')
+                  "
                 >
                   Update Password
                 </button>
@@ -4261,7 +4295,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
                 <button
                   class="btn primary"
                   style="margin-top: 1rem"
-                  onclick="showToast('API keys saved securely!','success')"
+                  onclick="showToast('API keys saved securely!', 'success')"
                 >
                   Save Keys
                 </button>
@@ -4416,7 +4450,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
           </button>
           <button
             class="btn success"
-            onclick="showToast('Email sent!','success')"
+            onclick="showToast('Email sent!', 'success')"
           >
             ✉ Re-send Email
           </button>
@@ -4436,7 +4470,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
     <script>
       /* ═══════════════════════════════════════════════════════════════
    ZENTROX CERTIFICATE & INTERNSHIP MANAGEMENT SYSTEM
-   Founder: Prince Paul Singh | MSME Registered
+   Founder: Yogesh Singh | MSME Registered
    Full JavaScript Engine — All Features
 ═══════════════════════════════════════════════════════════════ */
 
@@ -4761,11 +4795,11 @@ Zentrox Technologies Pvt. Ltd., India</textarea
       function loadDashboard() {
         animCount(
           "dash-total",
-          DB.certificates.filter((c) => c.status === "issued").length
+          DB.certificates.filter((c) => c.status === "issued").length,
         );
         animCount(
           "dash-intern",
-          DB.internships.filter((i) => i.status === "active").length
+          DB.internships.filter((i) => i.status === "active").length,
         );
         animCount("dash-hardcopy", DB.hardcopyOrders.length);
         animCount("dash-verified", 47);
@@ -4780,12 +4814,12 @@ Zentrox Technologies Pvt. Ltd., India</textarea
       <td><strong>${
         c.name
       }</strong><br><span style="font-size:.62rem;color:var(--text-3);">${
-              c.email
-            }</span></td>
+        c.email
+      }</span></td>
       <td><span class="status-chip chip-${c.type}">${c.type}</span></td>
       <td><span class="status-chip chip-${c.status}">${c.status}</span></td>
       <td>${fmtDate(c.date)}</td>
-    </tr>`
+    </tr>`,
           )
           .join("");
 
@@ -4798,7 +4832,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
       <td><span class="status-chip chip-${
         o.status === "pending" ? "pending" : "completed"
       }">${o.status}</span></td>
-    </tr>`
+    </tr>`,
           )
           .join("");
       }
@@ -4862,8 +4896,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
           grade: document.getElementById("cert-grade")?.value || "",
           duration: document.getElementById("cert-duration")?.value || "",
           signer:
-            document.getElementById("cert-signer")?.value ||
-            "Prince Paul Singh",
+            document.getElementById("cert-signer")?.value || "Yogesh Singh",
           role:
             document.getElementById("cert-role")?.value ||
             "Founder & Chief AI Architect",
@@ -4900,8 +4933,8 @@ Zentrox Technologies Pvt. Ltd., India</textarea
           : "cert-a4 cert-completion";
         return `
   <div class="${certClass}" id="cert-render" style="${
-          isDark ? "background:linear-gradient(135deg,#0a0f1a,#0e1828);" : ""
-        }">
+    isDark ? "background:linear-gradient(135deg,#0a0f1a,#0e1828);" : ""
+  }">
     <div class="cert-holo"></div>
     <div class="cert-border"></div>
     <div class="cert-corner tl"></div>
@@ -4934,8 +4967,8 @@ Zentrox Technologies Pvt. Ltd., India</textarea
         isDark ? "color:#7a9ab8;" : ""
       }">This is proudly presented to</div>
       <div class="cert-name" style="${isDark ? "color:#e2f0ff;" : ""}">${
-          data.name || "Recipient Name"
-        }</div>
+        data.name || "Recipient Name"
+      }</div>
       ${
         data.grade
           ? `<div style="font-size:.7rem;color:${
@@ -4953,8 +4986,8 @@ Zentrox Technologies Pvt. Ltd., India</textarea
         }
       </div>
       <div class="cert-course" style="${isDark ? "color:#60a5fa;" : ""}">${
-          data.course || "Course / Program Name"
-        }</div>
+        data.course || "Course / Program Name"
+      }</div>
       ${
         data.duration
           ? `<div style="font-size:.66rem;color:${
@@ -4970,8 +5003,8 @@ Zentrox Technologies Pvt. Ltd., India</textarea
       <div class="cert-bottom" style="margin-top:auto;">
         <div class="cert-sig-col">
           <div class="cert-sig-img" style="${isDark ? "color:#60a5fa;" : ""}">${
-          data.signer?.split(" ")[0] || "Prince"
-        }</div>
+            data.signer?.split(" ")[0] || "Prince"
+          }</div>
           <div class="cert-sig-line" style="${
             isDark ? "background:rgba(255,255,255,.15);" : ""
           }"></div>
@@ -4996,8 +5029,8 @@ Zentrox Technologies Pvt. Ltd., India</textarea
             isDark ? "color:#5a7a98;" : ""
           }">Certificate ID</div>
           <div class="cert-id-val" style="${isDark ? "color:#60a5fa;" : ""}">${
-          data.id
-        }</div>
+            data.id
+          }</div>
           <div class="cert-date" style="${
             isDark ? "color:#7a9ab8;" : ""
           }">Issued: ${fmtDate(data.date)}</div>
@@ -5057,7 +5090,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
         DB.certificates.unshift({ ...data, status: "issued" });
         showToast(
           `Certificate issued to ${data.name}! ID: ${data.id}`,
-          "success"
+          "success",
         );
         document.getElementById("nb-count").textContent =
           parseInt(document.getElementById("nb-count").textContent || 0) + 1;
@@ -5082,7 +5115,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
       function downloadCertPDF() {
         generateAndDownloadPDF(
           "cert-render",
-          (previewData?.name || "certificate") + "-certificate"
+          (previewData?.name || "certificate") + "-certificate",
         );
       }
       function downloadActiveCert() {
@@ -5126,7 +5159,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
               " CERTIFICATE",
             148.5,
             76,
-            { align: "center" }
+            { align: "center" },
           );
           pdf.setFontSize(11);
           pdf.setTextColor(107, 126, 168);
@@ -5151,7 +5184,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
             "Certificate ID: " + (previewData?.id || "ZTX-CERT-XXXXXXXX"),
             148.5,
             160,
-            { align: "center" }
+            { align: "center" },
           );
           pdf.text("Issued: " + fmtDate(previewData?.date), 148.5, 167, {
             align: "center",
@@ -5161,14 +5194,14 @@ Zentrox Technologies Pvt. Ltd., India</textarea
           });
           pdf.setFontSize(10);
           pdf.setTextColor(26, 46, 74);
-          pdf.text(previewData?.signer || "Prince Paul Singh", 60, 188, {
+          pdf.text(previewData?.signer || "Yogesh Singh", 60, 188, {
             align: "center",
           });
           pdf.text(
             previewData?.role || "Founder & Chief AI Architect",
             60,
             194,
-            { align: "center" }
+            { align: "center" },
           );
           pdf.save((filename || "certificate") + ".pdf");
           showToast("PDF downloaded! ⬇", "success");
@@ -5203,8 +5236,8 @@ Zentrox Technologies Pvt. Ltd., India</textarea
       <td><strong>${
         c.name
       }</strong><br><span style="font-size:.62rem;color:var(--text-3);">${
-                c.email
-              }</span></td>
+        c.email
+      }</span></td>
       <td><span class="status-chip chip-${c.type}">${c.type}</span></td>
       <td>${c.course}</td>
       <td>${fmtDate(c.date)}</td>
@@ -5224,7 +5257,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
           }')">✕</button>
         </div>
       </td>
-    </tr>`
+    </tr>`,
             )
             .join("") ||
           '<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--text-3);">No certificates found</td></tr>';
@@ -5234,9 +5267,8 @@ Zentrox Technologies Pvt. Ltd., India</textarea
         const c = DB.certificates.find((x) => x.id === id);
         if (!c) return;
         previewData = c;
-        document.getElementById(
-          "vcm-title"
-        ).textContent = `${c.name} — ${c.type} Certificate`;
+        document.getElementById("vcm-title").textContent =
+          `${c.name} — ${c.type} Certificate`;
         const html = buildCertHTML(c);
         document.getElementById("vcm-preview").innerHTML = html;
         openModal("view-cert-modal");
@@ -5295,7 +5327,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
         c.course
       }</span></div>
       <div class="vr-field"><span class="vr-key">Issue Date</span><span class="vr-val">${fmtDate(
-        c.date
+        c.date,
       )}</span></div>
       <div class="vr-field"><span class="vr-key">Issued By</span><span class="vr-val">Zentrox Technologies Pvt. Ltd.</span></div>
       <div class="vr-field"><span class="vr-key">MSME Status</span><span class="vr-val" style="color:var(--gold-2);">★ MSME Registered</span></div>
@@ -5370,7 +5402,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
         <span style="font-size:.6rem;color:var(--accent-h);background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.15);border-radius:6px;padding:2px 8px;">A4 Landscape</span>
       </div>
       <button class="btn primary" style="width:100%;justify-content:center;font-size:.75rem;">Use This Template</button>
-    </div>`
+    </div>`,
             )
             .join("");
       }
@@ -5387,7 +5419,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
       function renderInternTable() {
         const f = document.getElementById("intern-filter")?.value || "all";
         const filtered = DB.internships.filter(
-          (i) => f === "all" || i.status === f
+          (i) => f === "all" || i.status === f,
         );
         document.getElementById("intern-table-body").innerHTML =
           filtered
@@ -5409,7 +5441,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
             (s, idx) =>
               `<span style="width:18px;height:5px;border-radius:3px;background:${
                 idx <= i.stage ? "var(--accent)" : "var(--bg-3)"
-              };"></span>`
+              };"></span>`,
           ).join("")}
           <span style="font-size:.62rem;color:var(--text-3);">${
             INTERN_STAGES[i.stage]
@@ -5430,7 +5462,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
           }')">🏆 Certificate</button>
         </div>
       </td>
-    </tr>`
+    </tr>`,
             )
             .join("") ||
           '<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--text-3);">No internships</td></tr>';
@@ -5439,7 +5471,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
       function calcDuration(s, e) {
         if (!s || !e) return "—";
         const diff = Math.round(
-          (new Date(e) - new Date(s)) / (1000 * 60 * 60 * 24 * 30)
+          (new Date(e) - new Date(s)) / (1000 * 60 * 60 * 24 * 30),
         );
         return diff + " months";
       }
@@ -5470,14 +5502,14 @@ Zentrox Technologies Pvt. Ltd., India</textarea
           i.role + " — Zentrox Technologies";
         document.getElementById("cert-duration").value = calcDuration(
           i.start,
-          i.end
+          i.end,
         );
         document.getElementById("cert-date").value =
           i.end || new Date().toISOString().split("T")[0];
         document.getElementById("cert-style").value = "dark";
         selectCertType(
           document.querySelector('[data-type="internship"]'),
-          "internship"
+          "internship",
         );
         showToast("Internship data pre-filled. Review and issue!", "success");
       }
@@ -5548,7 +5580,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
     <p style="margin-bottom:.6rem;"><strong>To: ${n}</strong></p>
     <p style="margin-bottom:.8rem;font-size:.78rem;color:#3e5a78;">Subject: Offer Letter for <strong>${r}</strong> — Zentrox Technologies</p>
     <p style="margin-bottom:.7rem;">Dear <strong>${n}</strong>,</p>
-    <p style="margin-bottom:.7rem;">We are pleased to offer you an internship position at <strong>Zentrox Technologies Pvt. Ltd.</strong>, an MSME-registered AI technology company founded by Prince Paul Singh.</p>
+    <p style="margin-bottom:.7rem;">We are pleased to offer you an internship position at <strong>Zentrox Technologies Pvt. Ltd.</strong>, an MSME-registered AI technology company founded by Yogesh Singh.</p>
     <table style="width:100%;border-collapse:collapse;margin-bottom:1rem;font-size:.75rem;">
       <tr><td style="padding:5px 8px;border:1px solid #e2e8f0;font-weight:600;color:#1a2e4a;background:#f8fafc;">Position</td><td style="padding:5px 8px;border:1px solid #e2e8f0;">${r}</td></tr>
       <tr><td style="padding:5px 8px;border:1px solid #e2e8f0;font-weight:600;color:#1a2e4a;background:#f8fafc;">Department</td><td style="padding:5px 8px;border:1px solid #e2e8f0;">${dept}</td></tr>
@@ -5562,7 +5594,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
     <p style="margin-bottom:1.2rem;font-size:.75rem;">Please confirm your acceptance by replying to this email within 3 working days.</p>
     <div style="margin-top:1.5rem;border-top:1px solid #e2e8f0;padding-top:1rem;">
       <div style="font-family:'Cormorant Garamond';font-size:1.1rem;font-style:italic;color:#3b82f6;">Prince</div>
-      <div style="font-size:.72rem;font-weight:700;color:#1a2e4a;">Prince Paul Singh</div>
+      <div style="font-size:.72rem;font-weight:700;color:#1a2e4a;">Yogesh Singh</div>
       <div style="font-size:.65rem;color:#94a3b8;">Founder & Chief AI Architect · Zentrox Technologies</div>
     </div>`;
       }
@@ -5603,7 +5635,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
     </div>
     <div style="font-size:.8rem;font-weight:700;color:#1a2e4a;margin-bottom:.8rem;">INTERNSHIP COMPLETION CERTIFICATE LETTER</div>
     <p style="margin-bottom:.7rem;">To Whomsoever It May Concern,</p>
-    <p style="margin-bottom:.7rem;">This is to certify that <strong>${n}</strong> has successfully completed a ${dur} internship program as <strong>${r}</strong> at Zentrox Technologies Pvt. Ltd., a remote-first AI technology company (MSME Registered) founded by Prince Paul Singh.</p>
+    <p style="margin-bottom:.7rem;">This is to certify that <strong>${n}</strong> has successfully completed a ${dur} internship program as <strong>${r}</strong> at Zentrox Technologies Pvt. Ltd., a remote-first AI technology company (MSME Registered) founded by Yogesh Singh.</p>
     <p style="margin-bottom:.7rem;"><strong>Skills demonstrated during the internship:</strong></p>
     <p style="margin-bottom:.7rem;font-size:.75rem;color:#3e5a78;padding:.5rem .8rem;background:#f8fafc;border-left:3px solid #3b82f6;border-radius:0 6px 6px 0;">${skills}</p>
     <p style="margin-bottom:.7rem;">${remarks}</p>
@@ -5612,7 +5644,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
     } all the best in their future endeavors and wholeheartedly recommend them for roles aligned with their demonstrated skills.</p>
     <div style="margin-top:1.5rem;border-top:1px solid #e2e8f0;padding-top:1rem;">
       <div style="font-family:'Cormorant Garamond';font-size:1.1rem;font-style:italic;color:#3b82f6;">Prince</div>
-      <div style="font-size:.72rem;font-weight:700;color:#1a2e4a;">Prince Paul Singh</div>
+      <div style="font-size:.72rem;font-weight:700;color:#1a2e4a;">Yogesh Singh</div>
       <div style="font-size:.65rem;color:#94a3b8;">Founder & Chief AI Architect · Zentrox Technologies</div>
       <div style="margin-top:.5rem;padding:.4rem .7rem;background:rgba(201,151,58,.06);border:1px solid rgba(201,151,58,.2);border-radius:6px;display:inline-block;font-size:.6rem;color:#c9973a;font-weight:700;">★ MSME Registered · Govt. of India Verified</div>
     </div>`;
@@ -5669,7 +5701,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
     <p style="font-size:.75rem;color:#6b7ea8;">Please feel free to contact me at <strong>hello@zentroxtech.com</strong> for any further information.</p>
     <div style="margin-top:1.5rem;border-top:1px solid #e2e8f0;padding-top:1rem;">
       <div style="font-family:'Cormorant Garamond';font-size:1.1rem;font-style:italic;color:#8b5cf6;">Prince</div>
-      <div style="font-size:.72rem;font-weight:700;color:#1a2e4a;">Prince Paul Singh</div>
+      <div style="font-size:.72rem;font-weight:700;color:#1a2e4a;">Yogesh Singh</div>
       <div style="font-size:.65rem;color:#94a3b8;">Founder & Chief AI Architect · Zentrox Technologies</div>
     </div>`;
       }
@@ -5713,7 +5745,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
           <button class="btn" style="padding:3px 8px;font-size:.65rem;" onclick="showToast('Tracking sent!','success')">📧 Tracking</button>
         </div>
       </td>
-    </tr>`
+    </tr>`,
             )
             .join("") ||
           '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-3);">No orders</td></tr>';
@@ -5763,7 +5795,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
           (s) =>
             !q ||
             s.name.toLowerCase().includes(q.toLowerCase()) ||
-            s.email.includes(q)
+            s.email.includes(q),
         );
         document.getElementById("student-table-body").innerHTML = filtered
           .map(
@@ -5781,7 +5813,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
           <button class="btn" style="padding:3px 8px;font-size:.65rem;" onclick="showToast('Email sent to '+s.name,'success')">✉</button>
         </div>
       </td>
-    </tr>`
+    </tr>`,
           )
           .join("");
       }
@@ -5811,11 +5843,11 @@ Zentrox Technologies Pvt. Ltd., India</textarea
         d.label
       }</span><span style="font-family:'JetBrains Mono';">${d.val}</span></div>
       <div style="height:6px;background:var(--bg-3);border-radius:3px;overflow:hidden;"><div style="height:100%;width:${Math.round(
-        (d.val / d.max) * 100
+        (d.val / d.max) * 100,
       )}%;background:${
-              d.color
-            };border-radius:3px;transition:width .8s var(--fast);"></div></div>
-    </div>`
+        d.color
+      };border-radius:3px;transition:width .8s var(--fast);"></div></div>
+    </div>`,
           )
           .join("");
         const months = [
@@ -5833,12 +5865,12 @@ Zentrox Technologies Pvt. Ltd., India</textarea
       <div style="display:flex;justify-content:space-between;font-size:.72rem;color:var(--text-2);margin-bottom:.3rem;"><span>${
         m.m
       } 2025</span><span style="font-family:'JetBrains Mono';">${
-              m.v
-            } certs</span></div>
+        m.v
+      } certs</span></div>
       <div style="height:6px;background:var(--bg-3);border-radius:3px;overflow:hidden;"><div style="height:100%;width:${Math.round(
-        (m.v / maxV) * 100
+        (m.v / maxV) * 100,
       )}%;background:linear-gradient(90deg,var(--accent),var(--violet));border-radius:3px;"></div></div>
-    </div>`
+    </div>`,
           )
           .join("");
       }
@@ -5854,7 +5886,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
       <td><span class="status-chip chip-active">${e.type}</span></td>
       <td><span class="status-chip chip-issued">${e.status}</span></td>
       <td style="font-size:.7rem;color:var(--text-3);">${e.time}</td>
-    </tr>`
+    </tr>`,
           )
           .join("");
       }
@@ -5875,7 +5907,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
         <div style="font-size:.72rem;color:var(--text-3);">${n.msg}</div>
       </div>
       <div style="font-size:.62rem;color:var(--text-3);">${n.time}</div>
-    </div>`
+    </div>`,
           )
           .join("");
       }
@@ -6194,7 +6226,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
             .join("\n");
           showToast(
             `CSV loaded — ${lines.length - start} recipients found`,
-            "success"
+            "success",
           );
         };
         reader.readAsText(file);
@@ -6204,14 +6236,14 @@ Zentrox Technologies Pvt. Ltd., India</textarea
         showToast("Preparing ZIP of all certificates...", "info");
         setTimeout(
           () => showToast("All PDFs ready — download started!", "success"),
-          1500
+          1500,
         );
       }
       function emailAllBulk() {
         showToast("Queueing bulk email delivery...", "info");
         setTimeout(
           () => showToast("All certificates emailed!", "success"),
-          1200
+          1200,
         );
       }
       function bulkEmail() {
@@ -6228,10 +6260,10 @@ Zentrox Technologies Pvt. Ltd., India</textarea
           "₹" + total.toLocaleString("en-IN");
         document.getElementById("pay-count").textContent = pays.length;
         document.getElementById("pay-pending").textContent = pays.filter(
-          (p) => p.status === "pending"
+          (p) => p.status === "pending",
         ).length;
         document.getElementById("pay-success").textContent = pays.filter(
-          (p) => p.status === "success"
+          (p) => p.status === "success",
         ).length;
         renderRevenueChart();
         renderPayments();
@@ -6261,14 +6293,14 @@ Zentrox Technologies Pvt. Ltd., India</textarea
       <div style="width:100%;height:${
         Math.round((m.v / max) * 110) + 4
       }px;background:linear-gradient(180deg,var(--gold),rgba(201,151,58,.4));border-radius:6px 6px 0 0;min-height:4px;transition:height .8s cubic-bezier(.16,1,.3,1);"></div>
-    </div>`
+    </div>`,
           )
           .join("");
         if (labels)
           labels.innerHTML = months
             .map(
               (m) =>
-                `<div style="flex:1;text-align:center;font-size:.62rem;color:var(--text-3);">${m.m}</div>`
+                `<div style="flex:1;text-align:center;font-size:.62rem;color:var(--text-3);">${m.m}</div>`,
             )
             .join("");
       }
@@ -6276,7 +6308,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
       function renderPayments() {
         const f = document.getElementById("pay-filter")?.value || "all";
         const filtered = DB.payments.filter(
-          (p) => f === "all" || p.status === f
+          (p) => f === "all" || p.status === f,
         );
         document.getElementById("payments-body").innerHTML =
           filtered
@@ -6299,11 +6331,11 @@ Zentrox Technologies Pvt. Ltd., India</textarea
         p.status === "success"
           ? "issued"
           : p.status === "pending"
-          ? "pending"
-          : "revoked"
+            ? "pending"
+            : "revoked"
       }">${p.status}</span></td>
       <td style="font-size:.7rem;color:var(--text-3);">${fmtDate(p.date)}</td>
-    </tr>`
+    </tr>`,
             )
             .join("") ||
           `<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--text-3);">No payments found</td></tr>`;
@@ -6381,7 +6413,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
           m.id
         }')">✕</button>
       </div>
-    </div>`
+    </div>`,
             )
             .join("") ||
           `<div style="grid-column:1/-1;text-align:center;color:var(--text-3);font-size:.8rem;padding:1.5rem;">No assets in this category</div>`;
@@ -6400,8 +6432,8 @@ Zentrox Technologies Pvt. Ltd., India</textarea
             ? f.name.includes("logo")
               ? "logo"
               : f.name.includes("sig")
-              ? "signature"
-              : "stamp"
+                ? "signature"
+                : "stamp"
             : "template";
           DB.media.push({
             id: "med-" + Date.now(),
@@ -6452,7 +6484,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
             drawing = true;
             [lastX, lastY] = getPos(e);
           },
-          { passive: false }
+          { passive: false },
         );
         canvas.addEventListener("mousemove", (e) => {
           if (!drawing) return;
@@ -6475,7 +6507,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
             ctx.stroke();
             [lastX, lastY] = [x, y];
           },
-          { passive: false }
+          { passive: false },
         );
         canvas.addEventListener("mouseup", () => (drawing = false));
         canvas.addEventListener("touchend", () => (drawing = false));
@@ -6494,7 +6526,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
       function useSigOnCert() {
         showToast(
           "Signature will appear on next certificate preview",
-          "success"
+          "success",
         );
         updatePreview();
       }
@@ -6530,7 +6562,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
             ["Program / Course", c.course],
             ["Issue Date", fmtDate(c.date)],
             ["Grade / Score", c.grade || "—"],
-            ["Issued By", "Prince Paul Singh"],
+            ["Issued By", "Yogesh Singh"],
             ["Authority", "Zentrox Technologies Pvt. Ltd."],
             ["MSME Status", "★ MSME Registered — Govt. of India"],
             ["Validity", "Lifetime"],
@@ -6541,7 +6573,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
                   k.includes("ID") || k.includes("Grade")
                     ? "JetBrains Mono"
                     : "inherit"
-                };">${v}</div></div>`
+                };">${v}</div></div>`,
             )
             .join("")}
         </div>
@@ -6563,7 +6595,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
         const el = document.getElementById("prof-certs");
         if (el)
           el.textContent = DB.certificates.filter(
-            (c) => c.status === "issued"
+            (c) => c.status === "issued",
           ).length;
         const loginEl = document.getElementById("prof-login");
         if (loginEl)
@@ -6780,7 +6812,7 @@ Zentrox Technologies Pvt. Ltd., India</textarea
               <div style="padding:.6rem;background:var(--bg-2);border-radius:8px;">
                 <div style="font-size:.62rem;color:var(--text-3);text-transform:uppercase;margin-bottom:.2rem;">Issued</div>
                 <div style="font-size:.85rem;font-weight:600;color:var(--text);">${new Date(
-                  d.issuedAt
+                  d.issuedAt,
                 ).toLocaleDateString("en-IN", {
                   day: "numeric",
                   month: "long",

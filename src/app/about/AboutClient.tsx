@@ -120,7 +120,7 @@ const teamDepartments = [
     icon: <Trophy size={18} className="text-amber-500" />,
     members: [
       {
-        name: "Prince Paul Singh",
+        name: "Yogesh Singh",
         role: "Founder & Director",
         badge: "DIRECTOR",
         initials: "PS",
@@ -286,10 +286,9 @@ export default function AboutPageTemplate() {
             </h2>
 
             <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
-              Zentrox Technologies was founded in 2023 by Prince Paul Singh with
-              a clear vision: to build a premium software development and
-              digital growth company that embraces the future of
-              work—remote-first
+              Zentrox Technologies was founded in 2023 by Yogesh Singh with a
+              clear vision: to build a premium software development and digital
+              growth company that embraces the future of work—remote-first
             </p>
 
             <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
@@ -353,13 +352,13 @@ export default function AboutPageTemplate() {
             >
               <div className="relative aspect-[4/5] w-full max-w-[270px] sm:max-w-[300px] rounded-2xl overflow-hidden border-2 border-white/10 shadow-2xl group">
                 <img
-                  src="/princepaulphoto.jpeg"
+                  // src="/princepaulphoto.jpeg"
                   alt="Founder & Director"
                   className="object-cover w-full h-full transform transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-5">
                   <h4 className="font-bold text-base !text-white">
-                    Prince Paul Singh
+                    Yogesh Singh
                   </h4>
                   <p className="text-xs text-blue-300 font-medium">
                     Founder & Director
@@ -391,7 +390,7 @@ export default function AboutPageTemplate() {
 
               <div className="space-y-4 text-xs sm:text-sm !text-zinc-300 leading-relaxed">
                 <p>
-                  Prince Paul Singh founded Zentrox Technologies in 2023 with a
+                  Yogesh Singh founded Zentrox Technologies in 2023 with a
                   vision to bridge the gap between premium software development
                   and accessible, transparent delivery. With deep expertise in
                   technology and business strategy, Prince leads the company

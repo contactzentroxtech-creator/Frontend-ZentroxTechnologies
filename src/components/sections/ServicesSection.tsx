@@ -136,11 +136,11 @@ function ServiceCard({
     const rect = e.currentTarget.getBoundingClientRect();
     e.currentTarget.style.setProperty(
       "--mx",
-      `${(((e.clientX - rect.left) / rect.width) * 100).toFixed(1)}%`
+      `${(((e.clientX - rect.left) / rect.width) * 100).toFixed(1)}%`,
     );
     e.currentTarget.style.setProperty(
       "--my",
-      `${(((e.clientY - rect.top) / rect.height) * 100).toFixed(1)}%`
+      `${(((e.clientY - rect.top) / rect.height) * 100).toFixed(1)}%`,
     );
   };
 
@@ -207,7 +207,7 @@ export default function ServicesSection() {
           <p className="text-base text-z-muted max-w-3xl leading-relaxed">
             {t(
               "services.sub",
-              "At Zentrox Technologies, we don't just build software — we build growth engines. Whether you are a startup in Chandigarh, an enterprise in Delhi, or a business in the United States or UK, we create technology solutions that solve real problems and deliver measurable results. Founded in 2023 by Prince Paul Singh, our remote-first team brings together expertise in custom development, SaaS, mobile apps, AI, and digital marketing."
+              "At Zentrox Technologies, we don't just build software — we build growth engines. Whether you are a startup in Chandigarh, an enterprise in Delhi, or a business in the United States or UK, we create technology solutions that solve real problems and deliver measurable results. Founded in 2023 by Yogesh Singh, our remote-first team brings together expertise in custom development, SaaS, mobile apps, AI, and digital marketing.",
             )}
           </p>
         </motion.div>

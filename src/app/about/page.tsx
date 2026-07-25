@@ -6,7 +6,7 @@ import AboutClient from "./AboutClient";
 export const metadata: Metadata = {
   title: "About Zentrox — Remote-First Software Company Founded 2023",
   description:
-    "Founded in 2023 by Prince Paul Singh. Remote-first software and digital growth partner serving India, USA, UK, UAE, Singapore & beyond.",
+    "Founded in 2023 by Yogesh Singh. Remote-first software and digital growth partner serving India, USA, UK, UAE, Singapore & beyond.",
   alternates: { canonical: "https://zentroxtechnologies.com/about" },
   openGraph: {
     title: "About Zentrox Technologies",
