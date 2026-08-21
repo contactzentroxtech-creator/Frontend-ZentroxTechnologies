@@ -131,7 +131,7 @@ export default function AdminLayout({
       <div className="flex items-center gap-3 px-5 py-5 border-b border-z-border">
         {/* Replaced ZT box with Logo Image */}
         <img
-          src="/logo.png" /* Replace with your actual image path */
+          src="/Zentrox-Logo1.png" /* Replace with your actual image path */
           alt="Zentrox Technologies Logo"
           className="w-8 h-8 object-contain rounded-lg flex-shrink-0"
         />
@@ -144,7 +144,7 @@ export default function AdminLayout({
               className="overflow-hidden"
             >
               <div className="font-extrabold text-sm text-z-text whitespace-nowrap">
-                Admin     
+                Admin
               </div>
               <div className="text-[10px] text-z-muted whitespace-nowrap">
                 Zentrox Technologies
