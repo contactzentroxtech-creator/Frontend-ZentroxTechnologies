@@ -158,192 +158,152 @@ const COMPLEXITY: Record<
 const FALLBACK_SERVICES: PricingService[] = [
   {
     id: "business-website",
-
     label: {
       en: "Website Development",
       hi: "वेबसाइट डेवलपमेंट",
       pa: "ਵੈੱਬਸਾਈਟ ਡਿਵੈਲਪਮੈਂਟ",
     },
-
     description: {
       en: "Professional business websites built for growth.",
       hi: "व्यवसाय के विकास के लिए प्रोफेशनल वेबसाइट।",
       pa: "ਬਿਜ਼ਨਸ ਵਿਕਾਸ ਲਈ ਪ੍ਰੋਫੈਸ਼ਨਲ ਵੈੱਬਸਾਈਟਾਂ।",
     },
-
     icon: "🌐",
-
     baseMin: 8000,
     baseMax: 25000,
-
     features: [],
     packages: [],
   },
 
   {
     id: "ecommerce",
-
     label: {
       en: "E-Commerce Solutions",
       hi: "ई-कॉमर्स समाधान",
       pa: "ਈ-ਕਾਮਰਸ ਹੱਲ",
     },
-
     description: {
       en: "Custom online stores and e-commerce platforms.",
       hi: "कस्टम ऑनलाइन स्टोर और ई-कॉमर्स प्लेटफॉर्म।",
       pa: "ਕਸਟਮ ਆਨਲਾਈਨ ਸਟੋਰ ਅਤੇ ਈ-ਕਾਮਰਸ ਪਲੇਟਫਾਰਮ।",
     },
-
     icon: "🛒",
-
     baseMin: 20000,
     baseMax: 80000,
-
     features: [],
     packages: [],
   },
 
   {
     id: "mobile-app",
-
     label: {
       en: "Mobile App Development",
       hi: "मोबाइल एप्लीकेशन डेवलपमेंट",
       pa: "ਮੋਬਾਈਲ ਐਪਲੀਕੇਸ਼ਨ ਡਿਵੈਲਪਮੈਂਟ",
     },
-
     description: {
       en: "Modern mobile applications for Android and iOS.",
       hi: "Android और iOS के लिए आधुनिक मोबाइल एप्लीकेशन।",
       pa: "Android ਅਤੇ iOS ਲਈ ਆਧੁਨਿਕ ਮੋਬਾਈਲ ਐਪਲੀਕੇਸ਼ਨ।",
     },
-
     icon: "📱",
-
     baseMin: 50000,
     baseMax: 200000,
-
     features: [],
     packages: [],
   },
 
   {
     id: "custom-software",
-
     label: {
       en: "Custom Software",
       hi: "कस्टम सॉफ्टवेयर",
       pa: "ਕਸਟਮ ਸਾਫਟਵੇਅਰ",
     },
-
     description: {
       en: "Custom business software designed around your workflow.",
       hi: "आपके बिजनेस वर्कफ्लो के अनुसार कस्टम सॉफ्टवेयर।",
       pa: "ਤੁਹਾਡੇ ਬਿਜ਼ਨਸ ਵਰਕਫਲੋ ਲਈ ਕਸਟਮ ਸਾਫਟਵੇਅਰ।",
     },
-
     icon: "💻",
-
     baseMin: 50000,
     baseMax: 300000,
-
     features: [],
     packages: [],
   },
 
   {
     id: "saas-platform",
-
     label: {
       en: "SaaS Development",
       hi: "SaaS डेवलपमेंट",
       pa: "SaaS ਡਿਵੈਲਪਮੈਂਟ",
     },
-
     description: {
       en: "Scalable SaaS platforms and custom web applications.",
       hi: "स्केलेबल SaaS प्लेटफॉर्म और कस्टम वेब एप्लीकेशन।",
       pa: "ਸਕੇਲੇਬਲ SaaS ਪਲੇਟਫਾਰਮ ਅਤੇ ਕਸਟਮ ਵੈੱਬ ਐਪਲੀਕੇਸ਼ਨ।",
     },
-
     icon: "☁️",
-
     baseMin: 80000,
     baseMax: 500000,
-
     features: [],
     packages: [],
   },
 
   {
     id: "seo-package",
-
     label: {
       en: "SEO Services",
       hi: "SEO सेवाएं",
       pa: "SEO ਸੇਵਾਵਾਂ",
     },
-
     description: {
       en: "SEO strategies to improve visibility and generate leads.",
       hi: "विजिबिलिटी और लीड बढ़ाने के लिए SEO रणनीतियां।",
       pa: "ਵਿਜ਼ਿਬਿਲਟੀ ਅਤੇ ਲੀਡ ਵਧਾਉਣ ਲਈ SEO ਰਣਨੀਤੀਆਂ।",
     },
-
     icon: "📈",
-
     baseMin: 5000,
     baseMax: 50000,
-
     features: [],
     packages: [],
   },
 
   {
     id: "digital-marketing",
-
     label: {
       en: "Digital Marketing",
       hi: "डिजिटल मार्केटिंग",
       pa: "ਡਿਜ਼ਿਟਲ ਮਾਰਕੀਟਿੰਗ",
     },
-
     description: {
       en: "Digital campaigns designed to grow visibility and leads.",
       hi: "विजिबिलिटी और लीड बढ़ाने के लिए डिजिटल कैंपेन।",
       pa: "ਵਿਜ਼ਿਬਿਲਟੀ ਅਤੇ ਲੀਡ ਵਧਾਉਣ ਲਈ ਡਿਜ਼ਿਟਲ ਕੈਂਪੇਨ।",
     },
-
     icon: "📣",
-
     baseMin: 8000,
     baseMax: 75000,
-
     features: [],
     packages: [],
   },
 
   {
     id: "ai-integration",
-
     label: {
       en: "AI Integration",
       hi: "AI इंटीग्रेशन",
       pa: "AI ਏਕੀਕਰਨ",
     },
-
     description: {
       en: "AI-powered automation and business integrations.",
       hi: "AI आधारित ऑटोमेशन और बिजनेस इंटीग्रेशन।",
       pa: "AI ਅਧਾਰਿਤ ਆਟੋਮੇਸ਼ਨ ਅਤੇ ਬਿਜ਼ਨਸ ਇੰਟੀਗ੍ਰੇਸ਼ਨ।",
     },
-
     icon: "🤖",
-
     baseMin: 30000,
     baseMax: 300000,
-
     features: [],
     packages: [],
   },
@@ -356,10 +316,17 @@ const FALLBACK_SERVICES: PricingService[] = [
 export default function PricingWizard() {
   const { t, lang } = useLang();
 
+  /*
+    IMPORTANT FIX:
+    String(lang) avoids TypeScript error:
+    "types 'en' and 'hi' have no overlap"
+  */
+  const language = String(lang);
+
   const currentLang: SupportedLang =
-    lang === "hi"
+    language === "hi"
       ? "hi"
-      : lang === "pa"
+      : language === "pa"
         ? "pa"
         : "en";
 
@@ -507,11 +474,8 @@ export default function PricingWizard() {
     service: PricingService
   ) {
     setSelectedServiceId(service.id);
-
     setSelectedFeatures([]);
-
     setQuote(null);
-
     setQuoteError("");
 
     const recommendedBudget =
@@ -563,11 +527,8 @@ export default function PricingWizard() {
     }
 
     setLoadingQuote(true);
-
     setQuote(null);
-
     setQuoteError("");
-
     setStep(3);
 
     try {
@@ -577,17 +538,12 @@ export default function PricingWizard() {
           {
             serviceId:
               selectedServiceId,
-
             businessType:
               bizType,
-
             complexity,
-
             features:
               selectedFeatures,
-
             timeline,
-
             budget,
           }
         );
@@ -614,10 +570,6 @@ export default function PricingWizard() {
     }
   }
 
-  /* =======================================================
-     ESTIMATE
-  ======================================================= */
-
   const estimateMin =
     quote?.estimate?.min ??
     fallbackMin;
@@ -625,10 +577,6 @@ export default function PricingWizard() {
   const estimateMax =
     quote?.estimate?.max ??
     fallbackMax;
-
-  /* =======================================================
-     CONTACT URL
-  ======================================================= */
 
   const contactUrl =
     `/contact?service=${encodeURIComponent(
@@ -659,8 +607,6 @@ export default function PricingWizard() {
         md:px-6 md:py-32
       "
     >
-      {/* Background */}
-
       <div
         className="
           pointer-events-none
@@ -692,23 +638,11 @@ export default function PricingWizard() {
 
       <div className="relative mx-auto max-w-7xl">
 
-        {/* HEADER */}
-
         <motion.div
-          initial={{
-            opacity: 0,
-            y: 25,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{
-            once: true,
-          }}
-          transition={{
-            duration: 0.6,
-          }}
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
           className="
             mx-auto mb-12
             max-w-3xl
@@ -760,23 +694,11 @@ export default function PricingWizard() {
           </p>
         </motion.div>
 
-        {/* WIZARD */}
-
         <motion.div
-          initial={{
-            opacity: 0,
-            y: 25,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{
-            once: true,
-          }}
-          transition={{
-            duration: 0.6,
-          }}
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
           className="
             mx-auto
             max-w-3xl
@@ -785,80 +707,64 @@ export default function PricingWizard() {
             bg-white
             p-5
             shadow-[0_25px_70px_rgba(15,23,42,0.08)]
-
             dark:border-white/10
             dark:bg-white/[0.04]
-
             md:p-10
           "
         >
           {/* STEPS */}
 
           <div className="mb-8 flex border-b border-slate-200 dark:border-white/10">
-            {steps.map(
-              (stepName, index) => (
-                <button
-                  key={`${stepName}-${index}`}
-                  type="button"
-                  disabled={
-                    index > step ||
-                    loadingQuote
+            {steps.map((stepName, index) => (
+              <button
+                key={`${stepName}-${index}`}
+                type="button"
+                disabled={
+                  index > step ||
+                  loadingQuote
+                }
+                onClick={() => {
+                  if (
+                    index <= step &&
+                    !loadingQuote
+                  ) {
+                    setStep(index);
                   }
-                  onClick={() => {
-                    if (
-                      index <= step &&
-                      !loadingQuote
-                    ) {
-                      setStep(index);
-                    }
-                  }}
-                  className={`
-                    -mb-px flex-1
-                    border-b-2
-                    px-2 py-3
-                    text-xs font-semibold
-                    transition-all
+                }}
+                className={`
+                  -mb-px flex-1
+                  border-b-2
+                  px-2 py-3
+                  text-xs font-semibold
+                  transition-all
+                  ${
+                    step === index
+                      ? "border-z-accent text-z-accent"
+                      : index < step
+                        ? "border-transparent text-slate-700 dark:text-z-text"
+                        : "border-transparent text-slate-400 dark:text-z-muted"
+                  }
+                `}
+              >
+                <span className="mr-1 hidden sm:inline">
+                  {index + 1}.
+                </span>
 
-                    ${
-                      step === index
-                        ? "border-z-accent text-z-accent"
-                        : index < step
-                          ? "border-transparent text-slate-700 dark:text-z-text"
-                          : "border-transparent text-slate-400 dark:text-z-muted"
-                    }
-                  `}
-                >
-                  <span className="mr-1 hidden sm:inline">
-                    {index + 1}.
-                  </span>
-
-                  {stepName}
-                </button>
-              )
-            )}
+                {stepName}
+              </button>
+            ))}
           </div>
 
           <AnimatePresence mode="wait">
 
-            {/* =================================================
-                STEP 0 — SERVICE
-            ================================================= */}
+            {/* STEP 0 */}
 
             {step === 0 && (
               <motion.div
                 key="service"
-                initial={{
-                  opacity: 0,
-                  x: 20,
-                }}
-                animate={{
-                  opacity: 1,
-                  x: 0,
-                }}
-                exit={{
-                  opacity: 0,
-                  x: -20,
-                }}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
               >
                 {loadingServices ? (
                   <div className="flex justify-center py-16">
@@ -875,9 +781,7 @@ export default function PricingWizard() {
                           key={service.id}
                           type="button"
                           onClick={() =>
-                            selectService(
-                              service
-                            )
+                            selectService(service)
                           }
                           className={`
                             flex min-h-[130px]
@@ -886,12 +790,9 @@ export default function PricingWizard() {
                             border p-4
                             text-left
                             transition-all duration-300
-
                             hover:-translate-y-1
-
                             ${
-                              selectedServiceId ===
-                              service.id
+                              selectedServiceId === service.id
                                 ? "border-z-accent bg-z-accent/10 shadow-sm"
                                 : "border-slate-200 hover:border-z-accent/50 dark:border-white/10"
                             }
@@ -902,19 +803,13 @@ export default function PricingWizard() {
                           </span>
 
                           <span className="text-sm font-bold text-slate-900 dark:text-z-text">
-                            {getLabel(
-                              service.label
-                            )}
+                            {getLabel(service.label)}
                           </span>
 
                           <span className="mt-auto pt-2 text-[11px] font-semibold text-z-accent">
-                            {formatPrice(
-                              service.baseMin
-                            )}
+                            {formatPrice(service.baseMin)}
                             {" – "}
-                            {formatPrice(
-                              service.baseMax
-                            )}
+                            {formatPrice(service.baseMax)}
                           </span>
                         </button>
                       )
@@ -924,25 +819,14 @@ export default function PricingWizard() {
               </motion.div>
             )}
 
-            {/* =================================================
-                STEP 1 — BUSINESS
-            ================================================= */}
+            {/* STEP 1 */}
 
             {step === 1 && (
               <motion.div
                 key="business"
-                initial={{
-                  opacity: 0,
-                  x: 20,
-                }}
-                animate={{
-                  opacity: 1,
-                  x: 0,
-                }}
-                exit={{
-                  opacity: 0,
-                  x: -20,
-                }}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
               >
                 <p className="mb-3 text-sm font-bold text-slate-800 dark:text-z-text">
                   {t(
@@ -952,41 +836,37 @@ export default function PricingWizard() {
                 </p>
 
                 <div className="mb-8 grid grid-cols-2 gap-3 md:grid-cols-3">
-                  {BUSINESS_TYPES[
-                    currentLang
-                  ].map((business) => (
-                    <button
-                      key={business}
-                      type="button"
-                      onClick={() =>
-                        setBizType(business)
-                      }
-                      className={`
-                        rounded-xl border
-                        p-3
-                        text-left text-sm
-                        font-semibold
-                        transition-all
-
-                        ${
-                          bizType ===
-                          business
-                            ? "border-z-accent bg-z-accent/10 text-z-accent"
-                            : "border-slate-200 text-slate-600 hover:border-z-accent/50 dark:border-white/10 dark:text-z-muted"
+                  {BUSINESS_TYPES[currentLang].map(
+                    (business) => (
+                      <button
+                        key={business}
+                        type="button"
+                        onClick={() =>
+                          setBizType(business)
                         }
-                      `}
-                    >
-                      {bizType ===
-                        business && (
-                        <Check
-                          size={14}
-                          className="mr-1 inline"
-                        />
-                      )}
+                        className={`
+                          rounded-xl border
+                          p-3 text-left
+                          text-sm font-semibold
+                          transition-all
+                          ${
+                            bizType === business
+                              ? "border-z-accent bg-z-accent/10 text-z-accent"
+                              : "border-slate-200 text-slate-600 hover:border-z-accent/50 dark:border-white/10 dark:text-z-muted"
+                          }
+                        `}
+                      >
+                        {bizType === business && (
+                          <Check
+                            size={14}
+                            className="mr-1 inline"
+                          />
+                        )}
 
-                      {business}
-                    </button>
-                  ))}
+                        {business}
+                      </button>
+                    )
+                  )}
                 </div>
 
                 <p className="mb-3 text-sm font-bold text-slate-800 dark:text-z-text">
@@ -997,41 +877,34 @@ export default function PricingWizard() {
                 </p>
 
                 <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-                  {COMPLEXITY[
-                    currentLang
-                  ].map((item) => (
-                    <button
-                      key={item.key}
-                      type="button"
-                      onClick={() =>
-                        setComplexity(
-                          item.key
-                        )
-                      }
-                      className={`
-                        rounded-xl border
-                        p-3
-                        text-center text-xs
-                        font-bold
-                        transition-all
-
-                        ${
-                          complexity ===
-                          item.key
-                            ? "border-z-accent bg-z-accent/10 text-z-accent"
-                            : "border-slate-200 text-slate-600 hover:border-z-accent/50 dark:border-white/10 dark:text-z-muted"
+                  {COMPLEXITY[currentLang].map(
+                    (item) => (
+                      <button
+                        key={item.key}
+                        type="button"
+                        onClick={() =>
+                          setComplexity(item.key)
                         }
-                      `}
-                    >
-                      {item.label}
-                    </button>
-                  ))}
+                        className={`
+                          rounded-xl border
+                          p-3 text-center
+                          text-xs font-bold
+                          transition-all
+                          ${
+                            complexity === item.key
+                              ? "border-z-accent bg-z-accent/10 text-z-accent"
+                              : "border-slate-200 text-slate-600 hover:border-z-accent/50 dark:border-white/10 dark:text-z-muted"
+                          }
+                        `}
+                      >
+                        {item.label}
+                      </button>
+                    )
+                  )}
                 </div>
 
-                {/* ADDONS */}
-
-                {(selectedService?.features
-                  ?.length ?? 0) > 0 && (
+                {(selectedService?.features?.length ??
+                  0) > 0 && (
                   <div className="mt-8">
                     <p className="mb-3 text-sm font-bold text-slate-800 dark:text-z-text">
                       {t(
@@ -1055,10 +928,8 @@ export default function PricingWizard() {
                               flex items-center
                               justify-between
                               rounded-xl border
-                              p-4
-                              text-left
+                              p-4 text-left
                               transition-all
-
                               ${
                                 selectedFeatures.includes(
                                   feature.id
@@ -1089,25 +960,14 @@ export default function PricingWizard() {
               </motion.div>
             )}
 
-            {/* =================================================
-                STEP 2 — BUDGET
-            ================================================= */}
+            {/* STEP 2 */}
 
             {step === 2 && (
               <motion.div
                 key="budget"
-                initial={{
-                  opacity: 0,
-                  x: 20,
-                }}
-                animate={{
-                  opacity: 1,
-                  x: 0,
-                }}
-                exit={{
-                  opacity: 0,
-                  x: -20,
-                }}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
               >
                 <p className="mb-3 text-center text-sm font-bold text-slate-700 dark:text-z-muted">
                   {t(
@@ -1128,21 +988,14 @@ export default function PricingWizard() {
                   value={budget}
                   onChange={(event) =>
                     setBudget(
-                      Number(
-                        event.target.value
-                      )
+                      Number(event.target.value)
                     )
                   }
-                  className="
-                    mb-2 w-full
-                    cursor-pointer
-                    accent-z-accent
-                  "
+                  className="mb-2 w-full cursor-pointer accent-z-accent"
                 />
 
                 <div className="mb-10 flex justify-between text-xs text-slate-500 dark:text-z-muted">
                   <span>₹5,000</span>
-
                   <span>₹5,00,000+</span>
                 </div>
 
@@ -1154,58 +1007,42 @@ export default function PricingWizard() {
                 </p>
 
                 <div className="grid grid-cols-3 gap-3">
-                  {TIMELINES[
-                    currentLang
-                  ].map((item) => (
-                    <button
-                      key={item.key}
-                      type="button"
-                      onClick={() =>
-                        setTimeline(
-                          item.key
-                        )
-                      }
-                      className={`
-                        rounded-xl border
-                        p-3
-                        text-center text-xs
-                        font-bold
-                        transition-all
-
-                        ${
-                          timeline ===
-                          item.key
-                            ? "border-z-accent bg-z-accent/10 text-z-accent"
-                            : "border-slate-200 text-slate-600 hover:border-z-accent/50 dark:border-white/10 dark:text-z-muted"
+                  {TIMELINES[currentLang].map(
+                    (item) => (
+                      <button
+                        key={item.key}
+                        type="button"
+                        onClick={() =>
+                          setTimeline(item.key)
                         }
-                      `}
-                    >
-                      {item.label}
-                    </button>
-                  ))}
+                        className={`
+                          rounded-xl border
+                          p-3 text-center
+                          text-xs font-bold
+                          transition-all
+                          ${
+                            timeline === item.key
+                              ? "border-z-accent bg-z-accent/10 text-z-accent"
+                              : "border-slate-200 text-slate-600 hover:border-z-accent/50 dark:border-white/10 dark:text-z-muted"
+                          }
+                        `}
+                      >
+                        {item.label}
+                      </button>
+                    )
+                  )}
                 </div>
               </motion.div>
             )}
 
-            {/* =================================================
-                STEP 3 — QUOTE
-            ================================================= */}
+            {/* STEP 3 */}
 
             {step === 3 && (
               <motion.div
                 key="quote"
-                initial={{
-                  opacity: 0,
-                  x: 20,
-                }}
-                animate={{
-                  opacity: 1,
-                  x: 0,
-                }}
-                exit={{
-                  opacity: 0,
-                  x: -20,
-                }}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
               >
                 {loadingQuote ? (
                   <div className="flex flex-col items-center justify-center gap-4 py-16">
@@ -1227,25 +1064,21 @@ export default function PricingWizard() {
                           className="shrink-0"
                         />
 
-                        <span>
-                          {quoteError}
-                        </span>
+                        <span>{quoteError}</span>
                       </div>
                     )}
 
                     <div className="rounded-3xl border border-z-accent/20 bg-z-accent/[0.05] p-6 md:p-8">
 
                       <div className="mb-2 text-2xl">
-                        {quote?.service
-                          ?.icon ||
+                        {quote?.service?.icon ||
                           selectedService?.icon ||
                           "💼"}
                       </div>
 
                       <h3 className="text-xl font-extrabold text-slate-900 dark:text-z-text">
                         {getLabel(
-                          quote?.service
-                            ?.label
+                          quote?.service?.label
                         ) ||
                           getLabel(
                             selectedService?.label
@@ -1254,11 +1087,9 @@ export default function PricingWizard() {
                       </h3>
 
                       <p className="mt-2 text-sm text-slate-600 dark:text-z-muted">
-                        {quote
-                          ?.recommendedPackage
+                        {quote?.recommendedPackage
                           ? getLabel(
-                              quote
-                                .recommendedPackage
+                              quote.recommendedPackage
                                 .name
                             )
                           : "Custom solution tailored around your business requirements."}
@@ -1322,16 +1153,14 @@ export default function PricingWizard() {
 
                       <ArrowRight
                         size={17}
-                        className="
-                          transition-transform
-                          group-hover:translate-x-1
-                        "
+                        className="transition-transform group-hover:translate-x-1"
                       />
                     </Link>
                   </>
                 )}
               </motion.div>
             )}
+
           </AnimatePresence>
 
           {/* NAVIGATION */}
@@ -1364,7 +1193,6 @@ export default function PricingWizard() {
                 hover:text-slate-900
                 disabled:cursor-not-allowed
                 disabled:opacity-30
-
                 dark:border-white/10
                 dark:text-z-muted
                 dark:hover:text-z-text
@@ -1434,6 +1262,7 @@ export default function PricingWizard() {
                 <ArrowRight size={15} />
               </button>
             )}
+
           </div>
         </motion.div>
       </div>
