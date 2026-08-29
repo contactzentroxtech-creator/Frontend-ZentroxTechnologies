@@ -29,17 +29,23 @@ interface PricingService {
 }
 
 interface QuoteResult {
-  service: { id: string; label: { en: string }; icon: string };
-  estimate: { min: number; max: number };
+  service: {
+    id: string;
+    label: { en: string; hi?: string; pa?: string };
+    icon: string;
+  };
+  estimate: {
+    min: number;
+    max: number;
+  };
   delivery: string;
   recommendedPackage: {
-    name: { en: string };
+    name: { en: string; hi?: string; pa?: string };
     features: string[];
     deliveryWeeks: string;
   } | null;
 }
 
-// SEO FIX: Updated default business types to match targeted core industries
 const BUSINESS_TYPES = {
   en: [
     "Startups",
@@ -57,7 +63,14 @@ const BUSINESS_TYPES = {
     "विनिर्माण",
     "ई-कॉमर्स",
   ],
-  pa: ["ਸਟਾਰਟਅੱਪ", "ਰੀਅਲ ਅਸਟੇਟ", "ਸਿੱਖਿਆ", "ਸਿਹਤ ਸੰਭਾਲ", "ਨਿਰਮਾਣ", "ਈ-ਕਾਮਰਸ"],
+  pa: [
+    "ਸਟਾਰਟਅੱਪ",
+    "ਰੀਅਲ ਅਸਟੇਟ",
+    "ਸਿੱਖਿਆ",
+    "ਸਿਹਤ ਸੰਭਾਲ",
+    "ਨਿਰਮਾਣ",
+    "ਈ-ਕਾਮਰਸ",
+  ],
 };
 
 const TIMELINES = {
@@ -101,6 +114,7 @@ const COMPLEXITY = {
 
 export default function PricingWizard() {
   const { t, lang } = useLang();
+
   const [step, setStep] = useState(0);
   const [services, setServices] = useState<PricingService[]>([]);
   const [loadingServices, setLoadingServices] = useState(true);
@@ -127,7 +141,6 @@ export default function PricingWizard() {
         const { data } = await api.get("/pricing/services");
         setServices(data.data);
       } catch {
-        // SEO FIX: Replaced fallback service names with high-volume search intent keywords
         setServices([
           {
             id: "business-website",
@@ -160,9 +173,9 @@ export default function PricingWizard() {
           {
             id: "mobile-app",
             label: {
-              en: "Mobile Application service",
-              hi: "मोबाइल एप्लीकेशन",
-              pa: "ਮੋਬਾਈਲ ਐਪਲੀਕੇਸ਼ਨ",
+              en: "Mobile Application Development",
+              hi: "मोबाइल एप्लीकेशन डेवलपमेंट",
+              pa: "ਮੋਬਾਈਲ ਐਪਲੀਕੇਸ਼ਨ ਡਿਵੈਲਪਮੈਂਟ",
             },
             description: { en: "", hi: "", pa: "" },
             icon: "📱",
@@ -187,7 +200,11 @@ export default function PricingWizard() {
           },
           {
             id: "seo-package",
-            label: { en: "SEO Services", hi: "SEO सेवाएं", pa: "SEO ਸੇਵਾਵਾਂ" },
+            label: {
+              en: "SEO Services",
+              hi: "SEO सेवाएं",
+              pa: "SEO ਸੇਵਾਵਾਂ",
+            },
             description: { en: "", hi: "", pa: "" },
             icon: "📈",
             baseMin: 5000,
@@ -210,52 +227,84 @@ export default function PricingWizard() {
             packages: [],
           },
         ]);
+      } finally {
+        setLoadingServices(false);
       }
-      setLoadingServices(false);
     };
+
     load();
   }, []);
 
-  const selectedService = services.find((s) => s.id === selectedServiceId);
+  const selectedService = services.find(
+    (s) => s.id === selectedServiceId
+  );
 
   const getQuote = async () => {
-    if (!selectedServiceId) return;
+    if (!selectedServiceId || !bizType) return;
+
     setLoadingQuote(true);
+
     try {
       const { data } = await api.post("/pricing/calculate", {
         serviceId: selectedServiceId,
+        businessType: bizType,
         complexity,
         features: selectedFeatures,
         timeline,
         budget,
       });
+
       setQuote(data.data);
-      setStep(3);
     } catch {
+      setQuote(null);
+    } finally {
+      setLoadingQuote(false);
       setStep(3);
     }
-    setLoadingQuote(false);
   };
 
   const toggleFeature = (id: string) => {
     setSelectedFeatures((prev) =>
-      prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]
+      prev.includes(id)
+        ? prev.filter((f) => f !== id)
+        : [...prev, id]
     );
   };
 
   const getLabel = (
-    obj: { en: string; hi: string; pa: string } | undefined
+    obj:
+      | { en: string; hi?: string; pa?: string }
+      | undefined
   ) => {
     if (!obj) return "";
-    return obj[lang as "en" | "hi" | "pa"] || obj.en || "";
+
+    const currentLang = lang as "en" | "hi" | "pa";
+
+    return obj[currentLang] || obj.en || "";
   };
 
-  const formatPrice = (n: number) => "₹" + n.toLocaleString("en-IN");
+  const formatPrice = (n: number) =>
+    "₹" + n.toLocaleString("en-IN");
 
   const businessTypes =
-    BUSINESS_TYPES[lang as "en" | "hi" | "pa"] || BUSINESS_TYPES.en;
-  const timelines = TIMELINES[lang as "en" | "hi" | "pa"] || TIMELINES.en;
-  const complexities = COMPLEXITY[lang as "en" | "hi" | "pa"] || COMPLEXITY.en;
+    BUSINESS_TYPES[lang as keyof typeof BUSINESS_TYPES] ||
+    BUSINESS_TYPES.en;
+
+  const timelines =
+    TIMELINES[lang as keyof typeof TIMELINES] ||
+    TIMELINES.en;
+
+  const complexities =
+    COMPLEXITY[lang as keyof typeof COMPLEXITY] ||
+    COMPLEXITY.en;
+
+  const fallbackMin = selectedService
+    ? selectedService.baseMin
+    : Math.round(budget * 0.8);
+
+  const fallbackMax = selectedService
+    ? selectedService.baseMax
+    : Math.round(budget * 1.2);
 
   return (
     <section
@@ -263,6 +312,8 @@ export default function PricingWizard() {
       className="relative z-10 py-24 px-4 md:px-6 bg-slate-50 dark:bg-z-dark2 transition-colors duration-300"
     >
       <div className="max-w-7xl mx-auto">
+
+        {/* Heading */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -273,18 +324,20 @@ export default function PricingWizard() {
           <div className="mb-4 inline-block px-3 py-1 text-xs font-semibold rounded-full bg-z-accent/10 text-z-accent border border-z-border">
             {t("pricing.badge", "Transparent Pricing")}
           </div>
+
           <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-z-text leading-tight tracking-tight mb-4">
             {t("pricing.title", "Estimate Your Project")}
           </h2>
+
           <p className="text-base text-slate-600 dark:text-z-muted max-w-xl leading-relaxed">
-            {/* SEO FIX: Replaced generic description with target keywords */}
             {t(
               "pricing.sub",
-              "Get a free estimate for website development, mobile apps, custom software, or Digital Marketing Services services."
+              "Get a free estimate for website development, mobile apps, custom software, SaaS development, AI integration, or digital marketing services."
             )}
           </p>
         </motion.div>
 
+        {/* Wizard */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -292,7 +345,8 @@ export default function PricingWizard() {
           viewport={{ once: true }}
           className="bg-white dark:bg-z-dark3/60 border border-slate-200 dark:border-z-border backdrop-blur-xl shadow-xl dark:shadow-card p-6 md:p-10 max-w-3xl rounded-3xl"
         >
-          {/* Step tabs */}
+
+          {/* Steps */}
           <div className="flex border-b border-slate-200 dark:border-z-border mb-8">
             {steps.map((s, i) => (
               <button
@@ -312,7 +366,8 @@ export default function PricingWizard() {
           </div>
 
           <AnimatePresence mode="wait">
-            {/* Step 0 — Service */}
+
+            {/* STEP 0 */}
             {step === 0 && (
               <motion.div
                 key="s0"
@@ -323,7 +378,10 @@ export default function PricingWizard() {
               >
                 {loadingServices ? (
                   <div className="flex items-center justify-center py-12">
-                    <Loader2 size={24} className="animate-spin text-z-accent" />
+                    <Loader2
+                      size={24}
+                      className="animate-spin text-z-accent"
+                    />
                   </div>
                 ) : (
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -333,6 +391,7 @@ export default function PricingWizard() {
                         onClick={() => {
                           setSelectedServiceId(s.id);
                           setSelectedFeatures([]);
+                          setQuote(null);
                         }}
                         className={`p-4 rounded-xl border text-sm font-medium transition-all duration-200 text-left flex flex-col gap-2 ${
                           selectedServiceId === s.id
@@ -341,12 +400,15 @@ export default function PricingWizard() {
                         }`}
                       >
                         <span className="text-xl">{s.icon}</span>
+
                         <span className="text-xs leading-snug">
                           {getLabel(s.label)}
                         </span>
+
                         {selectedServiceId === s.id && (
                           <span className="text-[10px] text-z-accent font-bold">
-                            {formatPrice(s.baseMin)} — {formatPrice(s.baseMax)}
+                            {formatPrice(s.baseMin)} —{" "}
+                            {formatPrice(s.baseMax)}
                           </span>
                         )}
                       </button>
@@ -356,7 +418,7 @@ export default function PricingWizard() {
               </motion.div>
             )}
 
-            {/* Step 1 — Business + Complexity */}
+            {/* STEP 1 */}
             {step === 1 && (
               <motion.div
                 key="s1"
@@ -368,6 +430,7 @@ export default function PricingWizard() {
                 <p className="text-sm font-medium text-slate-700 dark:text-z-muted mb-3">
                   Business Type
                 </p>
+
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-5">
                   {businessTypes.map((b) => (
                     <button
@@ -385,13 +448,16 @@ export default function PricingWizard() {
                           className="inline mr-1 text-z-accent"
                         />
                       )}
+
                       {b}
                     </button>
                   ))}
                 </div>
+
                 <p className="text-sm font-medium text-slate-700 dark:text-z-muted mb-3">
                   Project Complexity
                 </p>
+
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {complexities.map((c) => (
                     <button
@@ -406,43 +472,43 @@ export default function PricingWizard() {
                       {complexity === c.key && (
                         <Check size={10} className="inline mr-1" />
                       )}
+
                       {c.label}
                     </button>
                   ))}
                 </div>
 
-                {/* Service features */}
-                {selectedService &&
-                  selectedService.features &&
-                  selectedService?.features?.length > 0 && (
-                    <>
-                      <p className="text-sm font-medium text-slate-700 dark:text-z-muted mb-3 mt-5">
-                        Add-on Features
-                      </p>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        {selectedService.features.map((f) => (
-                          <button
-                            key={f.id}
-                            onClick={() => toggleFeature(f.id)}
-                            className={`p-3 rounded-xl border text-xs font-medium transition-all text-left flex items-center justify-between ${
-                              selectedFeatures.includes(f.id)
-                                ? "border-z-accent3 bg-z-accent3/10 text-slate-900 dark:text-z-text"
-                                : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent3/40 hover:text-slate-900 dark:hover:text-z-text"
-                            }`}
-                          >
-                            <span>{getLabel(f.label)}</span>
-                            <span className="text-[10px] text-z-accent3 font-bold">
-                              +{formatPrice(f.flatAdd)}
-                            </span>
-                          </button>
-                        ))}
-                      </div>
-                    </>
-                  )}
+                {selectedService?.features?.length > 0 && (
+                  <>
+                    <p className="text-sm font-medium text-slate-700 dark:text-z-muted mb-3 mt-5">
+                      Add-on Features
+                    </p>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                      {selectedService.features.map((f) => (
+                        <button
+                          key={f.id}
+                          onClick={() => toggleFeature(f.id)}
+                          className={`p-3 rounded-xl border text-xs font-medium transition-all text-left flex items-center justify-between ${
+                            selectedFeatures.includes(f.id)
+                              ? "border-z-accent3 bg-z-accent3/10 text-slate-900 dark:text-z-text"
+                              : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent3/40 hover:text-slate-900 dark:hover:text-z-text"
+                          }`}
+                        >
+                          <span>{getLabel(f.label)}</span>
+
+                          <span className="text-[10px] text-z-accent3 font-bold">
+                            +{formatPrice(f.flatAdd)}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
               </motion.div>
             )}
 
-            {/* Step 2 — Budget + Timeline */}
+            {/* STEP 2 */}
             {step === 2 && (
               <motion.div
                 key="s2"
@@ -452,27 +518,34 @@ export default function PricingWizard() {
                 transition={{ duration: 0.25 }}
               >
                 <p className="text-sm font-medium text-slate-700 dark:text-z-muted mb-2">
-                  Monthly budget range
+                  Estimated Project Budget
                 </p>
+
                 <div className="text-4xl font-extrabold text-z-accent text-center mb-4">
                   {formatPrice(budget)}
                 </div>
+
                 <input
                   type="range"
                   min="5000"
                   max="500000"
                   step="5000"
                   value={budget}
-                  onChange={(e) => setBudget(Number(e.target.value))}
+                  onChange={(e) =>
+                    setBudget(Number(e.target.value))
+                  }
                   className="w-full accent-z-accent mb-1 cursor-pointer"
                 />
+
                 <div className="flex justify-between text-xs text-slate-500 dark:text-z-muted mb-6">
                   <span>₹5,000</span>
-                  <span>₹5,0,000+</span>
+                  <span>₹5,00,000+</span>
                 </div>
+
                 <p className="text-sm font-medium text-slate-700 dark:text-z-muted mb-3">
                   Timeline
                 </p>
+
                 <div className="grid grid-cols-3 gap-3">
                   {timelines.map((tl) => (
                     <button
@@ -487,6 +560,7 @@ export default function PricingWizard() {
                       {timeline === tl.key && (
                         <Check size={10} className="inline mr-1" />
                       )}
+
                       {tl.label}
                     </button>
                   ))}
@@ -494,7 +568,7 @@ export default function PricingWizard() {
               </motion.div>
             )}
 
-            {/* Step 3 — Quote */}
+            {/* STEP 3 */}
             {step === 3 && (
               <motion.div
                 key="s3"
@@ -505,97 +579,141 @@ export default function PricingWizard() {
               >
                 {loadingQuote ? (
                   <div className="flex items-center justify-center py-12">
-                    <Loader2 size={24} className="animate-spin text-z-accent" />
+                    <Loader2
+                      size={24}
+                      className="animate-spin text-z-accent"
+                    />
                   </div>
                 ) : (
                   <div className="rounded-2xl border border-z-accent/20 bg-z-accent/5 p-6">
+
                     <div className="text-lg font-bold text-slate-900 dark:text-z-text mb-1">
-                      {quote?.service?.icon}{" "}
-                      {getLabel(quote?.service?.label as any) ||
-                        selectedService?.label?.[lang as "en"] ||
+                      {quote?.service?.icon || selectedService?.icon}{" "}
+                      {getLabel(quote?.service?.label) ||
+                        getLabel(selectedService?.label) ||
                         "Your Project"}
                     </div>
+
                     <div className="text-sm text-slate-600 dark:text-z-muted mb-4">
                       {quote?.recommendedPackage
-                        ? getLabel(quote.recommendedPackage.name as any)
+                        ? getLabel(
+                            quote.recommendedPackage.name
+                          )
                         : "Custom Package"}{" "}
                       — tailored for your needs
                     </div>
+
                     {quote?.recommendedPackage?.features && (
                       <div className="flex flex-wrap gap-2 mb-5">
-                        {quote.recommendedPackage.features.map((f) => (
-                          <span
-                            key={f}
-                            className="flex items-center gap-1 text-xs font-medium px-3 py-1 rounded-full bg-z-accent/10 border border-z-accent/20 text-z-accent"
-                          >
-                            <Check size={10} /> {f}
-                          </span>
-                        ))}
+                        {quote.recommendedPackage.features.map(
+                          (f) => (
+                            <span
+                              key={f}
+                              className="flex items-center gap-1 text-xs font-medium px-3 py-1 rounded-full bg-z-accent/10 border border-z-accent/20 text-z-accent"
+                            >
+                              <Check size={10} /> {f}
+                            </span>
+                          )
+                        )}
                       </div>
                     )}
+
                     <div className="flex justify-between items-center pt-4 border-t border-slate-200 dark:border-z-border">
+
                       <div>
                         <div className="text-xs text-slate-500 dark:text-z-muted uppercase tracking-wide mb-1">
                           Estimated Investment
                         </div>
+
                         <div className="text-2xl font-extrabold text-z-accent">
                           {quote
                             ? `${formatPrice(
                                 quote.estimate.min
-                              )} — ${formatPrice(quote.estimate.max)}`
-                            : `${formatPrice(budget * 0.8)} — ${formatPrice(
-                                budget * 1.2
+                              )} — ${formatPrice(
+                                quote.estimate.max
+                              )}`
+                            : `${formatPrice(
+                                fallbackMin
+                              )} — ${formatPrice(
+                                fallbackMax
                               )}`}
                         </div>
                       </div>
+
                       <div className="text-right">
                         <div className="text-xs text-slate-500 dark:text-z-muted uppercase tracking-wide mb-1">
                           Delivery
                         </div>
+
                         <div className="text-base font-bold text-slate-900 dark:text-z-text">
                           {quote?.delivery || "4-8 Weeks"}
                         </div>
                       </div>
+
                     </div>
                   </div>
                 )}
+
                 <Link
                   href="/contact"
                   className="mt-5 w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-z-accent text-white font-semibold text-sm hover:opacity-90 transition-all duration-300 shadow-glow-sm"
                 >
-                  {/* SEO FIX: Standardized CTA text */}
-                  {t("pricing.consultation", "Get Free Consultation")}{" "}
+                  {t(
+                    "pricing.consultation",
+                    "Get Free Consultation"
+                  )}
+
                   <ArrowRight size={15} />
                 </Link>
               </motion.div>
             )}
+
           </AnimatePresence>
 
           {/* Navigation */}
           <div className="flex justify-between mt-6">
+
             <button
-              onClick={() => setStep(Math.max(0, step - 1))}
-              disabled={step === 0}
+              onClick={() =>
+                setStep(Math.max(0, step - 1))
+              }
+              disabled={step === 0 || loadingQuote}
               className="px-5 py-2.5 rounded-full text-sm font-semibold border border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:text-slate-900 dark:hover:text-z-text disabled:opacity-30 transition-all duration-200"
             >
               {t("pricing.back", "Back")}
             </button>
+
             {step < 3 && (
               <button
                 onClick={() => {
-                  if (step === 2) getQuote();
-                  else setStep(Math.min(3, step + 1));
+                  if (step === 2) {
+                    getQuote();
+                  } else {
+                    setStep(Math.min(3, step + 1));
+                  }
                 }}
-                disabled={step === 0 && !selectedServiceId}
+                disabled={
+                  loadingQuote ||
+                  (step === 0 && !selectedServiceId) ||
+                  (step === 1 && !bizType)
+                }
                 className="px-6 py-2.5 rounded-full text-sm font-semibold bg-z-accent text-white hover:opacity-90 disabled:opacity-40 transition-all duration-200 flex items-center gap-2"
               >
-                {loadingQuote && <Loader2 size={14} className="animate-spin" />}
+                {loadingQuote && (
+                  <Loader2
+                    size={14}
+                    className="animate-spin"
+                  />
+                )}
+
                 {step === 2
                   ? t("pricing.get_quote", "Get Quote")
-                  : t("pricing.next", "Next")}{" "}
+                  : t("pricing.next", "Next")}
+
                 <ArrowRight size={14} />
               </button>
             )}
+
           </div>
         </motion.div>
       </div>
