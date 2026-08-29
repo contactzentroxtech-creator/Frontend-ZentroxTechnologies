@@ -2,7 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, ArrowRight, Loader2 } from "lucide-react";
+import {
+  Check,
+  ArrowRight,
+  Loader2,
+  AlertCircle,
+} from "lucide-react";
 import Link from "next/link";
 import { useLang } from "@/lib/providers";
 import api from "@/lib/api";
@@ -41,17 +46,17 @@ interface PricingService {
 }
 
 interface QuoteResult {
-  service: {
+  service?: {
     id: string;
     label: LocalizedText;
     icon: string;
   };
-  estimate: {
+  estimate?: {
     min: number;
     max: number;
   };
-  delivery: string;
-  recommendedPackage: PricingPackage | null;
+  delivery?: string;
+  recommendedPackage?: PricingPackage | null;
 }
 
 const BUSINESS_TYPES: Record<SupportedLang, string[]> = {
@@ -87,17 +92,17 @@ const TIMELINES: Record<
 > = {
   en: [
     { key: "rush", label: "ASAP (Rush)" },
-    { key: "normal", label: "1-2 Months" },
+    { key: "normal", label: "1–2 Months" },
     { key: "flexible", label: "Flexible" },
   ],
   hi: [
     { key: "rush", label: "जल्द से जल्द" },
-    { key: "normal", label: "1-2 महीने" },
+    { key: "normal", label: "1–2 महीने" },
     { key: "flexible", label: "लचीला" },
   ],
   pa: [
     { key: "rush", label: "ਜਲਦੀ ਤੋਂ ਜਲਦੀ" },
-    { key: "normal", label: "1-2 ਮਹੀਨੇ" },
+    { key: "normal", label: "1–2 ਮਹੀਨੇ" },
     { key: "flexible", label: "ਲਚਕਦਾਰ" },
   ],
 };
@@ -240,29 +245,41 @@ const FALLBACK_SERVICES: PricingService[] = [
 export default function PricingWizard() {
   const { t, lang } = useLang();
 
-  // SAFE LANGUAGE NORMALIZATION
   const rawLang = lang as string;
 
   const currentLang: SupportedLang =
     rawLang === "hi"
       ? "hi"
       : rawLang === "pa"
-      ? "pa"
-      : "en";
+        ? "pa"
+        : "en";
 
   const [step, setStep] = useState(0);
+
   const [services, setServices] = useState<PricingService[]>([]);
   const [loadingServices, setLoadingServices] = useState(true);
+
   const [loadingQuote, setLoadingQuote] = useState(false);
+  const [quoteError, setQuoteError] = useState("");
 
-  const [selectedServiceId, setSelectedServiceId] = useState("");
+  const [selectedServiceId, setSelectedServiceId] =
+    useState("");
+
   const [bizType, setBizType] = useState("");
-  const [complexity, setComplexity] = useState("standard");
-  const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
-  const [budget, setBudget] = useState(25000);
-  const [timeline, setTimeline] = useState("normal");
 
-  const [quote, setQuote] = useState<QuoteResult | null>(null);
+  const [complexity, setComplexity] =
+    useState("standard");
+
+  const [selectedFeatures, setSelectedFeatures] =
+    useState<string[]>([]);
+
+  const [budget, setBudget] = useState(25000);
+
+  const [timeline, setTimeline] =
+    useState("normal");
+
+  const [quote, setQuote] =
+    useState<QuoteResult | null>(null);
 
   const steps = [
     t("pricing.step.service", "Service"),
@@ -271,98 +288,177 @@ export default function PricingWizard() {
     t("pricing.step.quote", "Quote"),
   ];
 
+  const businessTypes =
+    BUSINESS_TYPES[currentLang];
+
+  const timelines =
+    TIMELINES[currentLang];
+
+  const complexities =
+    COMPLEXITY[currentLang];
+
+  /*
+   * Load services
+   */
+
   useEffect(() => {
+    let active = true;
+
     const loadServices = async () => {
       try {
-        const { data } = await api.get("/pricing/services");
+        const { data } =
+          await api.get("/pricing/services");
 
-        const receivedServices = data?.data;
+        const receivedServices =
+          data?.data;
 
         if (
+          active &&
           Array.isArray(receivedServices) &&
           receivedServices.length > 0
         ) {
           setServices(receivedServices);
-        } else {
+        } else if (active) {
           setServices(FALLBACK_SERVICES);
         }
       } catch {
-        setServices(FALLBACK_SERVICES);
+        if (active) {
+          setServices(FALLBACK_SERVICES);
+        }
       } finally {
-        setLoadingServices(false);
+        if (active) {
+          setLoadingServices(false);
+        }
       }
     };
 
     void loadServices();
+
+    return () => {
+      active = false;
+    };
   }, []);
+
+  /*
+   * Reset language-dependent values
+   */
+
+  useEffect(() => {
+    setBizType("");
+    setSelectedFeatures([]);
+    setQuote(null);
+    setQuoteError("");
+
+    if (step > 1) {
+      setStep(1);
+    }
+  }, [currentLang]);
+
+  /*
+   * Selected service
+   */
 
   const selectedService =
     services.find(
-      (service) => service.id === selectedServiceId
+      (service) =>
+        service.id === selectedServiceId
     ) ?? null;
 
+  /*
+   * Translation helper
+   */
+
   const getLabel = (
-    value: LocalizedText | undefined | null
+    value:
+      | LocalizedText
+      | undefined
+      | null
   ) => {
     if (!value) return "";
 
-    if (currentLang === "hi" && value.hi) {
+    if (
+      currentLang === "hi" &&
+      value.hi
+    ) {
       return value.hi;
     }
 
-    if (currentLang === "pa" && value.pa) {
+    if (
+      currentLang === "pa" &&
+      value.pa
+    ) {
       return value.pa;
     }
 
     return value.en || "";
   };
 
-  const formatPrice = (amount: number) => {
-    return `₹${Number(amount || 0).toLocaleString("en-IN")}`;
+  /*
+   * Price formatter
+   */
+
+  const formatPrice = (
+    amount: number
+  ) => {
+    return `₹${Number(
+      amount || 0
+    ).toLocaleString("en-IN")}`;
   };
 
-  const businessTypes = BUSINESS_TYPES[currentLang];
-  const timelines = TIMELINES[currentLang];
-  const complexities = COMPLEXITY[currentLang];
+  /*
+   * Feature toggle
+   */
 
-  const toggleFeature = (featureId: string) => {
-    setSelectedFeatures((previous) => {
-      if (previous.includes(featureId)) {
-        return previous.filter((id) => id !== featureId);
+  const toggleFeature = (
+    featureId: string
+  ) => {
+    setSelectedFeatures(
+      (previous) => {
+        if (
+          previous.includes(featureId)
+        ) {
+          return previous.filter(
+            (id) =>
+              id !== featureId
+          );
+        }
+
+        return [
+          ...previous,
+          featureId,
+        ];
       }
-
-      return [...previous, featureId];
-    });
+    );
   };
 
-  const getQuote = async () => {
-    if (!selectedServiceId || !bizType) {
-      return;
-    }
+  /*
+   * Service selection
+   */
 
-    setLoadingQuote(true);
+  const selectService = (
+    service: PricingService
+  ) => {
+    setSelectedServiceId(service.id);
+
+    setSelectedFeatures([]);
+
     setQuote(null);
-    setStep(3);
 
-    try {
-      const { data } = await api.post("/pricing/calculate", {
-        serviceId: selectedServiceId,
-        businessType: bizType,
-        complexity,
-        features: selectedFeatures,
-        timeline,
-        budget,
-      });
+    setQuoteError("");
 
-      if (data?.data) {
-        setQuote(data.data);
-      }
-    } catch {
-      setQuote(null);
-    } finally {
-      setLoadingQuote(false);
-    }
+    const recommendedBudget =
+      Math.round(
+        (service.baseMin +
+          service.baseMax) /
+          2
+      );
+
+    setBudget(recommendedBudget);
   };
+
+  /*
+   * Quote fallback
+   */
 
   const fallbackMin = selectedService
     ? selectedService.baseMin
@@ -372,29 +468,135 @@ export default function PricingWizard() {
     ? selectedService.baseMax
     : Math.round(budget * 1.2);
 
+  /*
+   * Quote API
+   */
+
+  const getQuote = async () => {
+    if (
+      !selectedServiceId ||
+      !bizType
+    ) {
+      return;
+    }
+
+    setLoadingQuote(true);
+
+    setQuote(null);
+
+    setQuoteError("");
+
+    setStep(3);
+
+    try {
+      const { data } =
+        await api.post(
+          "/pricing/calculate",
+          {
+            serviceId:
+              selectedServiceId,
+            businessType: bizType,
+            complexity,
+            features:
+              selectedFeatures,
+            timeline,
+            budget,
+          }
+        );
+
+      if (
+        data?.data &&
+        data.data.estimate &&
+        typeof data.data.estimate.min ===
+          "number" &&
+        typeof data.data.estimate.max ===
+          "number"
+      ) {
+        setQuote(data.data);
+      } else {
+        setQuoteError(
+          "Live pricing is currently unavailable. Showing an approximate estimate."
+        );
+      }
+    } catch {
+      setQuoteError(
+        "Unable to connect to our pricing service. Showing an approximate estimate."
+      );
+    } finally {
+      setLoadingQuote(false);
+    }
+  };
+
+  /*
+   * Contact URL with project details
+   */
+
+  const estimateMin =
+    quote?.estimate?.min ??
+    fallbackMin;
+
+  const estimateMax =
+    quote?.estimate?.max ??
+    fallbackMax;
+
+  const contactUrl =
+    `/contact?service=${encodeURIComponent(
+      selectedServiceId
+    )}` +
+    `&business=${encodeURIComponent(
+      bizType
+    )}` +
+    `&complexity=${encodeURIComponent(
+      complexity
+    )}` +
+    `&budget=${budget}` +
+    `&timeline=${encodeURIComponent(
+      timeline
+    )}` +
+    `&estimateMin=${estimateMin}` +
+    `&estimateMax=${estimateMax}`;
+
   return (
     <section
       id="pricing"
-      className="relative z-10 py-24 px-4 md:px-6 bg-slate-50 dark:bg-z-dark2 transition-colors duration-300"
+      className="relative z-10 bg-slate-50 px-4 py-24 transition-colors duration-300 dark:bg-z-dark2 md:px-6"
     >
-      <div className="max-w-7xl mx-auto">
+      <div className="mx-auto max-w-7xl">
+
         {/* HEADING */}
+
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
+          initial={{
+            opacity: 0,
+            y: 20,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          transition={{
+            duration: 0.6,
+          }}
+          viewport={{
+            once: true,
+          }}
           className="mb-10"
         >
-          <div className="mb-4 inline-block px-3 py-1 text-xs font-semibold rounded-full bg-z-accent/10 text-z-accent border border-z-border">
-            {t("pricing.badge", "Transparent Pricing")}
+          <div className="mb-4 inline-block rounded-full border border-z-border bg-z-accent/10 px-3 py-1 text-xs font-semibold text-z-accent">
+            {t(
+              "pricing.badge",
+              "Transparent Pricing"
+            )}
           </div>
 
-          <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-z-text leading-tight tracking-tight mb-4">
-            {t("pricing.title", "Estimate Your Project")}
+          <h2 className="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-slate-900 dark:text-z-text md:text-5xl">
+            {t(
+              "pricing.title",
+              "Estimate Your Project"
+            )}
           </h2>
 
-          <p className="text-base text-slate-600 dark:text-z-muted max-w-xl leading-relaxed">
+          <p className="max-w-xl text-base leading-relaxed text-slate-600 dark:text-z-muted">
             {t(
               "pricing.sub",
               "Get a free estimate for website development, mobile apps, custom software, SaaS development, AI integration, or digital marketing services."
@@ -402,178 +604,313 @@ export default function PricingWizard() {
           </p>
         </motion.div>
 
-        {/* PRICING WIZARD */}
+        {/* WIZARD */}
+
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          viewport={{ once: true }}
-          className="bg-white dark:bg-z-dark3/60 border border-slate-200 dark:border-z-border backdrop-blur-xl shadow-xl dark:shadow-card p-6 md:p-10 max-w-3xl rounded-3xl"
+          initial={{
+            opacity: 0,
+            y: 20,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          transition={{
+            duration: 0.6,
+            delay: 0.2,
+          }}
+          viewport={{
+            once: true,
+          }}
+          className="max-w-3xl rounded-3xl border border-slate-200 bg-white p-6 shadow-xl backdrop-blur-xl dark:border-z-border dark:bg-z-dark3/60 dark:shadow-card md:p-10"
         >
           {/* STEPS */}
-          <div className="flex border-b border-slate-200 dark:border-z-border mb-8">
-            {steps.map((stepName, index) => (
-              <button
-                key={`${stepName}-${index}`}
-                type="button"
-                onClick={() => {
-                  if (index <= step && !loadingQuote) {
-                    setStep(index);
+
+          <div className="mb-8 flex border-b border-slate-200 dark:border-z-border">
+            {steps.map(
+              (
+                stepName,
+                index
+              ) => (
+                <button
+                  key={`${stepName}-${index}`}
+                  type="button"
+                  disabled={
+                    index > step ||
+                    loadingQuote
                   }
-                }}
-                className={`px-3 md:px-4 py-3 text-xs font-semibold tracking-wide transition-all duration-200 border-b-2 -mb-px flex-1 ${
-                  step === index
-                    ? "border-z-accent text-z-accent"
-                    : index < step
-                    ? "border-transparent text-slate-800 dark:text-z-text cursor-pointer"
-                    : "border-transparent text-slate-400 dark:text-z-muted cursor-not-allowed"
-                }`}
-              >
-                {stepName}
-              </button>
-            ))}
+                  onClick={() => {
+                    if (
+                      index <= step &&
+                      !loadingQuote
+                    ) {
+                      setStep(index);
+                    }
+                  }}
+                  className={`-mb-px flex-1 border-b-2 px-2 py-3 text-xs font-semibold tracking-wide transition-all duration-200 md:px-4 ${
+                    step === index
+                      ? "border-z-accent text-z-accent"
+                      : index < step
+                        ? "cursor-pointer border-transparent text-slate-800 dark:text-z-text"
+                        : "cursor-not-allowed border-transparent text-slate-400 dark:text-z-muted"
+                  }`}
+                >
+                  {stepName}
+                </button>
+              )
+            )}
           </div>
 
           <AnimatePresence mode="wait">
+
             {/* STEP 0 */}
+
             {step === 0 && (
               <motion.div
                 key="step-service"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.25 }}
+                initial={{
+                  opacity: 0,
+                  x: 20,
+                }}
+                animate={{
+                  opacity: 1,
+                  x: 0,
+                }}
+                exit={{
+                  opacity: 0,
+                  x: -20,
+                }}
+                transition={{
+                  duration: 0.25,
+                }}
               >
                 {loadingServices ? (
-                  <div className="flex items-center justify-center py-12">
+                  <div className="flex justify-center py-12">
                     <Loader2
                       size={24}
                       className="animate-spin text-z-accent"
                     />
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    {services.map((service) => (
-                      <button
-                        key={service.id}
-                        type="button"
-                        onClick={() => {
-                          setSelectedServiceId(service.id);
-                          setSelectedFeatures([]);
-                          setQuote(null);
-                        }}
-                        className={`p-4 rounded-xl border text-sm font-medium transition-all duration-200 text-left flex flex-col gap-2 ${
-                          selectedServiceId === service.id
-                            ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
-                            : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent/50 hover:text-slate-900 dark:hover:text-z-text"
-                        }`}
-                      >
-                        <span className="text-xl">{service.icon}</span>
-
-                        <span className="text-xs leading-snug">
-                          {getLabel(service.label)}
-                        </span>
-
-                        {selectedServiceId === service.id && (
-                          <span className="text-[10px] text-z-accent font-bold">
-                            {formatPrice(service.baseMin)} —{" "}
-                            {formatPrice(service.baseMax)}
+                  <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+                    {services.map(
+                      (
+                        service
+                      ) => (
+                        <button
+                          key={
+                            service.id
+                          }
+                          type="button"
+                          onClick={() =>
+                            selectService(
+                              service
+                            )
+                          }
+                          className={`flex flex-col gap-2 rounded-xl border p-4 text-left text-sm font-medium transition-all duration-200 ${
+                            selectedServiceId ===
+                            service.id
+                              ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
+                              : "border-slate-200 text-slate-600 hover:border-z-accent/50 hover:text-slate-900 dark:border-z-border dark:text-z-muted dark:hover:text-z-text"
+                          }`}
+                        >
+                          <span className="text-xl">
+                            {
+                              service.icon
+                            }
                           </span>
-                        )}
-                      </button>
-                    ))}
+
+                          <span className="text-xs leading-snug">
+                            {getLabel(
+                              service.label
+                            )}
+                          </span>
+
+                          {selectedServiceId ===
+                            service.id && (
+                            <span className="text-[10px] font-bold text-z-accent">
+                              {formatPrice(
+                                service.baseMin
+                              )}
+                              {" — "}
+                              {formatPrice(
+                                service.baseMax
+                              )}
+                            </span>
+                          )}
+                        </button>
+                      )
+                    )}
                   </div>
                 )}
               </motion.div>
             )}
 
             {/* STEP 1 */}
+
             {step === 1 && (
               <motion.div
                 key="step-business"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.25 }}
+                initial={{
+                  opacity: 0,
+                  x: 20,
+                }}
+                animate={{
+                  opacity: 1,
+                  x: 0,
+                }}
+                exit={{
+                  opacity: 0,
+                  x: -20,
+                }}
+                transition={{
+                  duration: 0.25,
+                }}
               >
-                <p className="text-sm font-medium text-slate-700 dark:text-z-muted mb-3">
-                  {t("pricing.business_type", "Business Type")}
+                <p className="mb-3 text-sm font-medium text-slate-700 dark:text-z-muted">
+                  {t(
+                    "pricing.business_type",
+                    "Business Type"
+                  )}
                 </p>
 
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
-                  {businessTypes.map((business) => (
-                    <button
-                      key={business}
-                      type="button"
-                      onClick={() => setBizType(business)}
-                      className={`p-3 rounded-xl border text-sm font-medium transition-all duration-200 text-left ${
-                        bizType === business
-                          ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
-                          : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent/50"
-                      }`}
-                    >
-                      {bizType === business && (
-                        <Check
-                          size={12}
-                          className="inline mr-1 text-z-accent"
-                        />
-                      )}
+                <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-3">
+                  {businessTypes.map(
+                    (
+                      business
+                    ) => (
+                      <button
+                        key={
+                          business
+                        }
+                        type="button"
+                        onClick={() =>
+                          setBizType(
+                            business
+                          )
+                        }
+                        className={`rounded-xl border p-3 text-left text-sm font-medium transition-all duration-200 ${
+                          bizType ===
+                          business
+                            ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
+                            : "border-slate-200 text-slate-600 hover:border-z-accent/50 dark:border-z-border dark:text-z-muted"
+                        }`}
+                      >
+                        {bizType ===
+                          business && (
+                          <Check
+                            size={
+                              12
+                            }
+                            className="mr-1 inline text-z-accent"
+                          />
+                        )}
 
-                      {business}
-                    </button>
-                  ))}
+                        {
+                          business
+                        }
+                      </button>
+                    )
+                  )}
                 </div>
 
-                <p className="text-sm font-medium text-slate-700 dark:text-z-muted mb-3">
-                  {t("pricing.complexity", "Project Complexity")}
+                <p className="mb-3 text-sm font-medium text-slate-700 dark:text-z-muted">
+                  {t(
+                    "pricing.complexity",
+                    "Project Complexity"
+                  )}
                 </p>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {complexities.map((item) => (
-                    <button
-                      key={item.key}
-                      type="button"
-                      onClick={() => setComplexity(item.key)}
-                      className={`p-3 rounded-xl border text-xs font-semibold transition-all duration-200 text-center ${
-                        complexity === item.key
-                          ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
-                          : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent/50"
-                      }`}
-                    >
-                      {complexity === item.key && (
-                        <Check size={10} className="inline mr-1" />
-                      )}
+                <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+                  {complexities.map(
+                    (
+                      item
+                    ) => (
+                      <button
+                        key={
+                          item.key
+                        }
+                        type="button"
+                        onClick={() =>
+                          setComplexity(
+                            item.key
+                          )
+                        }
+                        className={`rounded-xl border p-3 text-center text-xs font-semibold transition-all duration-200 ${
+                          complexity ===
+                          item.key
+                            ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
+                            : "border-slate-200 text-slate-600 hover:border-z-accent/50 dark:border-z-border dark:text-z-muted"
+                        }`}
+                      >
+                        {complexity ===
+                          item.key && (
+                          <Check
+                            size={
+                              10
+                            }
+                            className="mr-1 inline"
+                          />
+                        )}
 
-                      {item.label}
-                    </button>
-                  ))}
+                        {
+                          item.label
+                        }
+                      </button>
+                    )
+                  )}
                 </div>
 
-                {(selectedService?.features?.length ?? 0) > 0 && (
+                {(selectedService
+                  ?.features
+                  ?.length ??
+                  0) > 0 && (
                   <>
-                    <p className="text-sm font-medium text-slate-700 dark:text-z-muted mb-3 mt-6">
-                      {t("pricing.addons", "Add-on Features")}
+                    <p className="mb-3 mt-6 text-sm font-medium text-slate-700 dark:text-z-muted">
+                      {t(
+                        "pricing.addons",
+                        "Add-on Features"
+                      )}
                     </p>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                      {selectedService?.features?.map((feature) => (
-                        <button
-                          key={feature.id}
-                          type="button"
-                          onClick={() => toggleFeature(feature.id)}
-                          className={`p-3 rounded-xl border text-xs font-medium transition-all text-left flex items-center justify-between ${
-                            selectedFeatures.includes(feature.id)
-                              ? "border-z-accent3 bg-z-accent3/10 text-slate-900 dark:text-z-text"
-                              : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent3/40"
-                          }`}
-                        >
-                          <span>{getLabel(feature.label)}</span>
+                    <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+                      {selectedService?.features?.map(
+                        (
+                          feature
+                        ) => (
+                          <button
+                            key={
+                              feature.id
+                            }
+                            type="button"
+                            onClick={() =>
+                              toggleFeature(
+                                feature.id
+                              )
+                            }
+                            className={`flex items-center justify-between rounded-xl border p-3 text-left text-xs font-medium transition-all ${
+                              selectedFeatures.includes(
+                                feature.id
+                              )
+                                ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
+                                : "border-slate-200 text-slate-600 hover:border-z-accent/50 dark:border-z-border dark:text-z-muted"
+                            }`}
+                          >
+                            <span>
+                              {getLabel(
+                                feature.label
+                              )}
+                            </span>
 
-                          <span className="text-[10px] text-z-accent3 font-bold">
-                            +{formatPrice(feature.flatAdd)}
-                          </span>
-                        </button>
-                      ))}
+                            <span className="text-[10px] font-bold text-z-accent">
+                              +
+                              {formatPrice(
+                                feature.flatAdd
+                              )}
+                            </span>
+                          </button>
+                        )
+                      )}
                     </div>
                   </>
                 )}
@@ -581,20 +918,37 @@ export default function PricingWizard() {
             )}
 
             {/* STEP 2 */}
+
             {step === 2 && (
               <motion.div
                 key="step-budget"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.25 }}
+                initial={{
+                  opacity: 0,
+                  x: 20,
+                }}
+                animate={{
+                  opacity: 1,
+                  x: 0,
+                }}
+                exit={{
+                  opacity: 0,
+                  x: -20,
+                }}
+                transition={{
+                  duration: 0.25,
+                }}
               >
-                <p className="text-sm font-medium text-slate-700 dark:text-z-muted mb-2">
-                  {t("pricing.budget", "Estimated Project Budget")}
+                <p className="mb-2 text-sm font-medium text-slate-700 dark:text-z-muted">
+                  {t(
+                    "pricing.budget",
+                    "Estimated Project Budget"
+                  )}
                 </p>
 
-                <div className="text-4xl font-extrabold text-z-accent text-center mb-4">
-                  {formatPrice(budget)}
+                <div className="mb-4 text-center text-4xl font-extrabold text-z-accent">
+                  {formatPrice(
+                    budget
+                  )}
                 </div>
 
                 <input
@@ -603,177 +957,303 @@ export default function PricingWizard() {
                   max="500000"
                   step="5000"
                   value={budget}
-                  onChange={(event) =>
-                    setBudget(Number(event.target.value))
+                  onChange={(
+                    event
+                  ) =>
+                    setBudget(
+                      Number(
+                        event.target
+                          .value
+                      )
+                    )
                   }
-                  className="w-full accent-z-accent mb-1 cursor-pointer"
+                  className="mb-1 w-full cursor-pointer accent-z-accent"
                 />
 
-                <div className="flex justify-between text-xs text-slate-500 dark:text-z-muted mb-6">
-                  <span>₹5,000</span>
-                  <span>₹5,00,000+</span>
+                <div className="mb-6 flex justify-between text-xs text-slate-500 dark:text-z-muted">
+                  <span>
+                    ₹5,000
+                  </span>
+
+                  <span>
+                    ₹5,00,000+
+                  </span>
                 </div>
 
-                <p className="text-sm font-medium text-slate-700 dark:text-z-muted mb-3">
-                  {t("pricing.timeline", "Timeline")}
+                <p className="mb-3 text-sm font-medium text-slate-700 dark:text-z-muted">
+                  {t(
+                    "pricing.timeline",
+                    "Timeline"
+                  )}
                 </p>
 
                 <div className="grid grid-cols-3 gap-3">
-                  {timelines.map((item) => (
-                    <button
-                      key={item.key}
-                      type="button"
-                      onClick={() => setTimeline(item.key)}
-                      className={`p-3 rounded-xl border text-xs font-semibold transition-all text-center ${
-                        timeline === item.key
-                          ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
-                          : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent/50"
-                      }`}
-                    >
-                      {timeline === item.key && (
-                        <Check size={10} className="inline mr-1" />
-                      )}
+                  {timelines.map(
+                    (
+                      item
+                    ) => (
+                      <button
+                        key={
+                          item.key
+                        }
+                        type="button"
+                        onClick={() =>
+                          setTimeline(
+                            item.key
+                          )
+                        }
+                        className={`rounded-xl border p-3 text-center text-xs font-semibold transition-all ${
+                          timeline ===
+                          item.key
+                            ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
+                            : "border-slate-200 text-slate-600 hover:border-z-accent/50 dark:border-z-border dark:text-z-muted"
+                        }`}
+                      >
+                        {timeline ===
+                          item.key && (
+                          <Check
+                            size={
+                              10
+                            }
+                            className="mr-1 inline"
+                          />
+                        )}
 
-                      {item.label}
-                    </button>
-                  ))}
+                        {
+                          item.label
+                        }
+                      </button>
+                    )
+                  )}
                 </div>
               </motion.div>
             )}
 
             {/* STEP 3 */}
+
             {step === 3 && (
               <motion.div
                 key="step-quote"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.25 }}
+                initial={{
+                  opacity: 0,
+                  x: 20,
+                }}
+                animate={{
+                  opacity: 1,
+                  x: 0,
+                }}
+                exit={{
+                  opacity: 0,
+                  x: -20,
+                }}
+                transition={{
+                  duration: 0.25,
+                }}
               >
                 {loadingQuote ? (
-                  <div className="flex items-center justify-center py-12">
+                  <div className="flex flex-col items-center justify-center gap-3 py-12">
                     <Loader2
-                      size={24}
+                      size={28}
                       className="animate-spin text-z-accent"
                     />
+
+                    <p className="text-sm text-z-muted">
+                      Calculating
+                      your estimate...
+                    </p>
                   </div>
                 ) : (
-                  <div className="rounded-2xl border border-z-accent/20 bg-z-accent/5 p-6">
-                    <div className="text-lg font-bold text-slate-900 dark:text-z-text mb-1">
-                      {quote?.service?.icon ||
-                        selectedService?.icon ||
-                        "💼"}{" "}
-                      {getLabel(quote?.service?.label) ||
-                        getLabel(selectedService?.label) ||
-                        "Your Project"}
-                    </div>
+                  <>
+                    {quoteError && (
+                      <div className="mb-4 flex items-start gap-2 rounded-xl border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-xs leading-relaxed text-amber-700 dark:text-amber-300">
+                        <AlertCircle
+                          size={
+                            15
+                          }
+                          className="mt-0.5 shrink-0"
+                        />
 
-                    <div className="text-sm text-slate-600 dark:text-z-muted mb-4">
-                      {quote?.recommendedPackage
-                        ? getLabel(
-                            quote.recommendedPackage.name
-                          )
-                        : "Custom Package"}{" "}
-                      — tailored for your needs
-                    </div>
-
-                    {(quote?.recommendedPackage?.features?.length ??
-                      0) > 0 && (
-                      <div className="flex flex-wrap gap-2 mb-5">
-                        {quote?.recommendedPackage?.features?.map(
-                          (feature) => (
-                            <span
-                              key={feature}
-                              className="flex items-center gap-1 text-xs font-medium px-3 py-1 rounded-full bg-z-accent/10 border border-z-accent/20 text-z-accent"
-                            >
-                              <Check size={10} />
-                              {feature}
-                            </span>
-                          )
-                        )}
+                        <span>
+                          {
+                            quoteError
+                          }
+                        </span>
                       </div>
                     )}
 
-                    <div className="flex justify-between items-center pt-4 border-t border-slate-200 dark:border-z-border">
-                      <div>
-                        <div className="text-xs text-slate-500 dark:text-z-muted uppercase tracking-wide mb-1">
-                          Estimated Investment
-                        </div>
-
-                        <div className="text-2xl font-extrabold text-z-accent">
-                          {quote
-                            ? `${formatPrice(
-                                quote.estimate.min
-                              )} — ${formatPrice(
-                                quote.estimate.max
-                              )}`
-                            : `${formatPrice(
-                                fallbackMin
-                              )} — ${formatPrice(fallbackMax)}`}
-                        </div>
+                    <div className="rounded-2xl border border-z-accent/20 bg-z-accent/5 p-6">
+                      <div className="mb-1 text-lg font-bold text-slate-900 dark:text-z-text">
+                        {quote?.service
+                          ?.icon ||
+                          selectedService?.icon ||
+                          "💼"}{" "}
+                        {getLabel(
+                          quote?.service
+                            ?.label
+                        ) ||
+                          getLabel(
+                            selectedService?.label
+                          ) ||
+                          "Your Project"}
                       </div>
 
-                      <div className="text-right">
-                        <div className="text-xs text-slate-500 dark:text-z-muted uppercase tracking-wide mb-1">
-                          Delivery
+                      <div className="mb-4 text-sm text-slate-600 dark:text-z-muted">
+                        {quote
+                          ?.recommendedPackage
+                          ? getLabel(
+                              quote
+                                .recommendedPackage
+                                .name
+                            )
+                          : "Custom Package"}
+                        {" — "}
+                        tailored for your
+                        needs
+                      </div>
+
+                      {(quote
+                        ?.recommendedPackage
+                        ?.features
+                        ?.length ??
+                        0) >
+                        0 && (
+                        <div className="mb-5 flex flex-wrap gap-2">
+                          {quote?.recommendedPackage?.features?.map(
+                            (
+                              feature
+                            ) => (
+                              <span
+                                key={
+                                  feature
+                                }
+                                className="flex items-center gap-1 rounded-full border border-z-accent/20 bg-z-accent/10 px-3 py-1 text-xs font-medium text-z-accent"
+                              >
+                                <Check
+                                  size={
+                                    10
+                                  }
+                                />
+
+                                {
+                                  feature
+                                }
+                              </span>
+                            )
+                          )}
+                        </div>
+                      )}
+
+                      <div className="flex items-center justify-between border-t border-slate-200 pt-4 dark:border-z-border">
+                        <div>
+                          <div className="mb-1 text-xs uppercase tracking-wide text-slate-500 dark:text-z-muted">
+                            Estimated
+                            Investment
+                          </div>
+
+                          <div className="text-2xl font-extrabold text-z-accent">
+                            {formatPrice(
+                              estimateMin
+                            )}
+                            {" — "}
+                            {formatPrice(
+                              estimateMax
+                            )}
+                          </div>
                         </div>
 
-                        <div className="text-base font-bold text-slate-900 dark:text-z-text">
-                          {quote?.delivery || "4-8 Weeks"}
+                        <div className="text-right">
+                          <div className="mb-1 text-xs uppercase tracking-wide text-slate-500 dark:text-z-muted">
+                            Delivery
+                          </div>
+
+                          <div className="text-base font-bold text-slate-900 dark:text-z-text">
+                            {quote?.delivery ||
+                              "4–8 Weeks"}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+
+                    <Link
+                      href={
+                        contactUrl
+                      }
+                      className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-z-accent py-3.5 text-sm font-semibold text-white shadow-glow-sm transition-all duration-300 hover:opacity-90"
+                    >
+                      {t(
+                        "pricing.consultation",
+                        "Get Free Consultation"
+                      )}
+
+                      <ArrowRight
+                        size={15}
+                      />
+                    </Link>
+                  </>
                 )}
-
-                <Link
-                  href="/contact"
-                  className="mt-5 w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-z-accent text-white font-semibold text-sm hover:opacity-90 transition-all duration-300 shadow-glow-sm"
-                >
-                  {t(
-                    "pricing.consultation",
-                    "Get Free Consultation"
-                  )}
-
-                  <ArrowRight size={15} />
-                </Link>
               </motion.div>
             )}
           </AnimatePresence>
 
           {/* NAVIGATION */}
-          <div className="flex justify-between mt-6">
+
+          <div className="mt-6 flex justify-between">
             <button
               type="button"
               onClick={() =>
-                setStep((currentStep) =>
-                  Math.max(0, currentStep - 1)
+                setStep(
+                  (
+                    currentStep
+                  ) =>
+                    Math.max(
+                      0,
+                      currentStep -
+                        1
+                    )
                 )
               }
-              disabled={step === 0 || loadingQuote}
-              className="px-5 py-2.5 rounded-full text-sm font-semibold border border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:text-slate-900 dark:hover:text-z-text disabled:opacity-30 transition-all duration-200"
+              disabled={
+                step === 0 ||
+                loadingQuote
+              }
+              className="rounded-full border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 transition-all duration-200 hover:text-slate-900 disabled:opacity-30 dark:border-z-border dark:text-z-muted dark:hover:text-z-text"
             >
-              {t("pricing.back", "Back")}
+              {t(
+                "pricing.back",
+                "Back"
+              )}
             </button>
 
             {step < 3 && (
               <button
                 type="button"
                 onClick={() => {
-                  if (step === 2) {
+                  if (
+                    step === 2
+                  ) {
                     void getQuote();
-                  } else {
-                    setStep((currentStep) =>
-                      Math.min(3, currentStep + 1)
-                    );
+                    return;
                   }
+
+                  setStep(
+                    (
+                      currentStep
+                    ) =>
+                      Math.min(
+                        3,
+                        currentStep +
+                          1
+                      )
+                  );
                 }}
                 disabled={
                   loadingQuote ||
-                  (step === 0 && !selectedServiceId) ||
-                  (step === 1 && !bizType)
+                  (step === 0 &&
+                    !selectedServiceId) ||
+                  (step === 1 &&
+                    !bizType)
                 }
-                className="px-6 py-2.5 rounded-full text-sm font-semibold bg-z-accent text-white hover:opacity-90 disabled:opacity-40 transition-all duration-200 flex items-center gap-2"
+                className="flex items-center gap-2 rounded-full bg-z-accent px-6 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:opacity-90 disabled:opacity-40"
               >
                 {loadingQuote && (
                   <Loader2
@@ -783,10 +1263,18 @@ export default function PricingWizard() {
                 )}
 
                 {step === 2
-                  ? t("pricing.get_quote", "Get Quote")
-                  : t("pricing.next", "Next")}
+                  ? t(
+                      "pricing.get_quote",
+                      "Get Quote"
+                    )
+                  : t(
+                      "pricing.next",
+                      "Next"
+                    )}
 
-                <ArrowRight size={14} />
+                <ArrowRight
+                  size={14}
+                />
               </button>
             )}
           </div>
