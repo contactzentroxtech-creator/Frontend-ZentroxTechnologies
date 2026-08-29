@@ -17,13 +17,39 @@ import FloatingCTA from "@/components/ui/FloatingCTA";
 import CursorEffect from "@/components/ui/CursorEffect";
 
 export const metadata: Metadata = {
-  title: "Zentrox Technologies — Software & Digital Growth Partner",
+  title: "Zentrox Technologies | Software Development & Digital Growth Partner",
 
   description:
-    "Premium software development, website development, mobile applications, AI solutions, SaaS development, SEO and digital services for businesses in India and worldwide.",
+    "Zentrox Technologies provides custom software development, website development, mobile app development, SaaS solutions, AI integration, SEO, digital marketing and UI/UX design for businesses in India and worldwide.",
 
   alternates: {
-    canonical: "https://zentroxtechnologies.com",
+    canonical: "https://zentroxtechnologies.com/",
+  },
+
+  openGraph: {
+    title:
+      "Zentrox Technologies | Software Development & Digital Growth Partner",
+
+    description:
+      "Custom software, websites, mobile apps, SaaS, AI integration, SEO and digital marketing solutions for growing businesses worldwide.",
+
+    url: "https://zentroxtechnologies.com/",
+
+    siteName: "Zentrox Technologies",
+
+    type: "website",
+
+    locale: "en_IN",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+
+    title:
+      "Zentrox Technologies | Software Development & Digital Growth Partner",
+
+    description:
+      "Custom software, websites, mobile apps, SaaS, AI integration, SEO and digital marketing solutions for growing businesses.",
   },
 };
 
@@ -33,12 +59,12 @@ export default function HomePage() {
       {/* Premium Cursor Effect */}
       <CursorEffect />
 
-      {/* Header */}
+      {/* Header / Navigation */}
       <Navbar />
 
       {/* Main Website Content */}
       <main>
-        {/* Hero */}
+        {/* Hero Section */}
         <HeroSection />
 
         {/* Company Statistics */}

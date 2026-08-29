@@ -1,46 +1,60 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, ArrowRight, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useLang } from "@/lib/providers";
 import api from "@/lib/api";
 
+type SupportedLang = "en" | "hi" | "pa";
+
+interface LocalizedText {
+  en: string;
+  hi?: string;
+  pa?: string;
+}
+
+interface PricingFeature {
+  id: string;
+  label: LocalizedText;
+  flatAdd: number;
+  multiplier: number;
+}
+
+interface PricingPackage {
+  name: LocalizedText;
+  minBudget: number;
+  features: string[];
+  deliveryWeeks: string;
+}
+
 interface PricingService {
   id: string;
-  label: { en: string; hi: string; pa: string };
-  description: { en: string; hi: string; pa: string };
+  label: LocalizedText;
+  description: LocalizedText;
   icon: string;
   baseMin: number;
   baseMax: number;
-  features: {
-    id: string;
-    label: { en: string; hi: string; pa: string };
-    flatAdd: number;
-    multiplier: number;
-  }[];
-  packages: {
-    name: { en: string; hi: string; pa: string };
-    minBudget: number;
-    features: string[];
-    deliveryWeeks: string;
-  }[];
+  features?: PricingFeature[];
+  packages?: PricingPackage[];
 }
 
 interface QuoteResult {
-  service: { id: string; label: { en: string }; icon: string };
-  estimate: { min: number; max: number };
+  service: {
+    id: string;
+    label: LocalizedText;
+    icon: string;
+  };
+  estimate: {
+    min: number;
+    max: number;
+  };
   delivery: string;
-  recommendedPackage: {
-    name: { en: string };
-    features: string[];
-    deliveryWeeks: string;
-  } | null;
+  recommendedPackage: PricingPackage | null;
 }
 
-// SEO FIX: Updated default business types to match targeted core industries
-const BUSINESS_TYPES = {
+const BUSINESS_TYPES: Record<SupportedLang, string[]> = {
   en: [
     "Startups",
     "Real Estate",
@@ -57,10 +71,20 @@ const BUSINESS_TYPES = {
     "विनिर्माण",
     "ई-कॉमर्स",
   ],
-  pa: ["ਸਟਾਰਟਅੱਪ", "ਰੀਅਲ ਅਸਟੇਟ", "ਸਿੱਖਿਆ", "ਸਿਹਤ ਸੰਭਾਲ", "ਨਿਰਮਾਣ", "ਈ-ਕਾਮਰਸ"],
+  pa: [
+    "ਸਟਾਰਟਅੱਪ",
+    "ਰੀਅਲ ਅਸਟੇਟ",
+    "ਸਿੱਖਿਆ",
+    "ਸਿਹਤ ਸੰਭਾਲ",
+    "ਨਿਰਮਾਣ",
+    "ਈ-ਕਾਮਰਸ",
+  ],
 };
 
-const TIMELINES = {
+const TIMELINES: Record<
+  SupportedLang,
+  { key: string; label: string }[]
+> = {
   en: [
     { key: "rush", label: "ASAP (Rush)" },
     { key: "normal", label: "1-2 Months" },
@@ -78,7 +102,10 @@ const TIMELINES = {
   ],
 };
 
-const COMPLEXITY = {
+const COMPLEXITY: Record<
+  SupportedLang,
+  { key: string; label: string }[]
+> = {
   en: [
     { key: "basic", label: "Basic" },
     { key: "standard", label: "Standard" },
@@ -99,8 +126,130 @@ const COMPLEXITY = {
   ],
 };
 
+const FALLBACK_SERVICES: PricingService[] = [
+  {
+    id: "business-website",
+    label: {
+      en: "Website Development",
+      hi: "वेबसाइट डेवलपमेंट",
+      pa: "ਵੈੱਬਸਾਈਟ ਡਿਵੈਲਪਮੈਂਟ",
+    },
+    description: {
+      en: "Professional business websites built for growth.",
+      hi: "व्यवसाय के विकास के लिए प्रोफेशनल वेबसाइट।",
+      pa: "ਬਿਜ਼ਨਸ ਵਿਕਾਸ ਲਈ ਪ੍ਰੋਫੈਸ਼ਨਲ ਵੈੱਬਸਾਈਟਾਂ।",
+    },
+    icon: "🌐",
+    baseMin: 8000,
+    baseMax: 25000,
+    features: [],
+    packages: [],
+  },
+  {
+    id: "ecommerce",
+    label: {
+      en: "E-Commerce Solutions",
+      hi: "ई-कॉमर्स समाधान",
+      pa: "ਈ-ਕਾਮਰਸ ਹੱਲ",
+    },
+    description: {
+      en: "Custom online stores and e-commerce platforms.",
+      hi: "कस्टम ऑनलाइन स्टोर और ई-कॉमर्स प्लेटफॉर्म।",
+      pa: "ਕਸਟਮ ਆਨਲਾਈਨ ਸਟੋਰ ਅਤੇ ਈ-ਕਾਮਰਸ ਪਲੇਟਫਾਰਮ।",
+    },
+    icon: "🛒",
+    baseMin: 20000,
+    baseMax: 80000,
+    features: [],
+    packages: [],
+  },
+  {
+    id: "mobile-app",
+    label: {
+      en: "Mobile Application Development",
+      hi: "मोबाइल एप्लीकेशन डेवलपमेंट",
+      pa: "ਮੋਬਾਈਲ ਐਪਲੀਕੇਸ਼ਨ ਡਿਵੈਲਪਮੈਂਟ",
+    },
+    description: {
+      en: "Modern mobile applications for Android and iOS.",
+      hi: "Android और iOS के लिए आधुनिक मोबाइल एप्लीकेशन।",
+      pa: "Android ਅਤੇ iOS ਲਈ ਆਧੁਨਿਕ ਮੋਬਾਈਲ ਐਪਲੀਕੇਸ਼ਨ।",
+    },
+    icon: "📱",
+    baseMin: 50000,
+    baseMax: 200000,
+    features: [],
+    packages: [],
+  },
+  {
+    id: "saas-platform",
+    label: {
+      en: "SaaS Development",
+      hi: "SaaS डेवलपमेंट",
+      pa: "SaaS ਡਿਵੈਲਪਮੈਂਟ",
+    },
+    description: {
+      en: "Scalable SaaS platforms and custom web applications.",
+      hi: "स्केलेबल SaaS प्लेटफॉर्म और कस्टम वेब एप्लीकेशन।",
+      pa: "ਸਕੇਲੇਬਲ SaaS ਪਲੇਟਫਾਰਮ ਅਤੇ ਕਸਟਮ ਵੈੱਬ ਐਪਲੀਕੇਸ਼ਨ।",
+    },
+    icon: "☁️",
+    baseMin: 80000,
+    baseMax: 500000,
+    features: [],
+    packages: [],
+  },
+  {
+    id: "seo-package",
+    label: {
+      en: "SEO Services",
+      hi: "SEO सेवाएं",
+      pa: "SEO ਸੇਵਾਵਾਂ",
+    },
+    description: {
+      en: "SEO strategies to improve visibility and leads.",
+      hi: "विजिबिलिटी और लीड बढ़ाने के लिए SEO रणनीतियां।",
+      pa: "ਵਿਜ਼ਿਬਿਲਟੀ ਅਤੇ ਲੀਡ ਵਧਾਉਣ ਲਈ SEO ਰਣਨੀਤੀਆਂ।",
+    },
+    icon: "📈",
+    baseMin: 5000,
+    baseMax: 50000,
+    features: [],
+    packages: [],
+  },
+  {
+    id: "ai-integration",
+    label: {
+      en: "AI Integration",
+      hi: "AI इंटीग्रेशन",
+      pa: "AI ਏਕੀਕਰਨ",
+    },
+    description: {
+      en: "AI-powered automation and business integrations.",
+      hi: "AI आधारित ऑटोमेशन और बिजनेस इंटीग्रेशन।",
+      pa: "AI ਅਧਾਰਿਤ ਆਟੋਮੇਸ਼ਨ ਅਤੇ ਬਿਜ਼ਨਸ ਇੰਟੀਗ੍ਰੇਸ਼ਨ।",
+    },
+    icon: "🤖",
+    baseMin: 30000,
+    baseMax: 300000,
+    features: [],
+    packages: [],
+  },
+];
+
 export default function PricingWizard() {
   const { t, lang } = useLang();
+
+  // SAFE LANGUAGE NORMALIZATION
+  const rawLang = lang as string;
+
+  const currentLang: SupportedLang =
+    rawLang === "hi"
+      ? "hi"
+      : rawLang === "pa"
+      ? "pa"
+      : "en";
+
   const [step, setStep] = useState(0);
   const [services, setServices] = useState<PricingService[]>([]);
   const [loadingServices, setLoadingServices] = useState(true);
@@ -112,6 +261,7 @@ export default function PricingWizard() {
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
   const [budget, setBudget] = useState(25000);
   const [timeline, setTimeline] = useState("normal");
+
   const [quote, setQuote] = useState<QuoteResult | null>(null);
 
   const steps = [
@@ -122,140 +272,105 @@ export default function PricingWizard() {
   ];
 
   useEffect(() => {
-    const load = async () => {
+    const loadServices = async () => {
       try {
         const { data } = await api.get("/pricing/services");
-        setServices(data.data);
+
+        const receivedServices = data?.data;
+
+        if (
+          Array.isArray(receivedServices) &&
+          receivedServices.length > 0
+        ) {
+          setServices(receivedServices);
+        } else {
+          setServices(FALLBACK_SERVICES);
+        }
       } catch {
-        // SEO FIX: Replaced fallback service names with high-volume search intent keywords
-        setServices([
-          {
-            id: "business-website",
-            label: {
-              en: "Website Development",
-              hi: "वेबसाइट डेवलपमेंट",
-              pa: "ਵੈੱਬਸਾਈਟ ਡਿਵੈਲਪਮੈਂਟ",
-            },
-            description: { en: "", hi: "", pa: "" },
-            icon: "🌐",
-            baseMin: 8000,
-            baseMax: 25000,
-            features: [],
-            packages: [],
-          },
-          {
-            id: "ecommerce",
-            label: {
-              en: "E-Commerce Solutions",
-              hi: "ई-कॉमर्स समाधान",
-              pa: "ਈ-ਕਾਮਰਸ ਹੱਲ",
-            },
-            description: { en: "", hi: "", pa: "" },
-            icon: "🛒",
-            baseMin: 20000,
-            baseMax: 80000,
-            features: [],
-            packages: [],
-          },
-          {
-            id: "mobile-app",
-            label: {
-              en: "Mobile Application service",
-              hi: "मोबाइल एप्लीकेशन",
-              pa: "ਮੋਬਾਈਲ ਐਪਲੀਕੇਸ਼ਨ",
-            },
-            description: { en: "", hi: "", pa: "" },
-            icon: "📱",
-            baseMin: 50000,
-            baseMax: 200000,
-            features: [],
-            packages: [],
-          },
-          {
-            id: "saas-platform",
-            label: {
-              en: "SaaS Development",
-              hi: "SaaS डेवलपमेंट",
-              pa: "SaaS ਡਿਵੈਲਪਮੈਂਟ",
-            },
-            description: { en: "", hi: "", pa: "" },
-            icon: "☁️",
-            baseMin: 80000,
-            baseMax: 500000,
-            features: [],
-            packages: [],
-          },
-          {
-            id: "seo-package",
-            label: { en: "SEO Services", hi: "SEO सेवाएं", pa: "SEO ਸੇਵਾਵਾਂ" },
-            description: { en: "", hi: "", pa: "" },
-            icon: "📈",
-            baseMin: 5000,
-            baseMax: 50000,
-            features: [],
-            packages: [],
-          },
-          {
-            id: "ai-integration",
-            label: {
-              en: "AI Integration",
-              hi: "AI इंटीग्रेशन",
-              pa: "AI ਏਕੀਕਰਨ",
-            },
-            description: { en: "", hi: "", pa: "" },
-            icon: "🤖",
-            baseMin: 30000,
-            baseMax: 300000,
-            features: [],
-            packages: [],
-          },
-        ]);
+        setServices(FALLBACK_SERVICES);
+      } finally {
+        setLoadingServices(false);
       }
-      setLoadingServices(false);
     };
-    load();
+
+    void loadServices();
   }, []);
 
-  const selectedService = services.find((s) => s.id === selectedServiceId);
+  const selectedService =
+    services.find(
+      (service) => service.id === selectedServiceId
+    ) ?? null;
+
+  const getLabel = (
+    value: LocalizedText | undefined | null
+  ) => {
+    if (!value) return "";
+
+    if (currentLang === "hi" && value.hi) {
+      return value.hi;
+    }
+
+    if (currentLang === "pa" && value.pa) {
+      return value.pa;
+    }
+
+    return value.en || "";
+  };
+
+  const formatPrice = (amount: number) => {
+    return `₹${Number(amount || 0).toLocaleString("en-IN")}`;
+  };
+
+  const businessTypes = BUSINESS_TYPES[currentLang];
+  const timelines = TIMELINES[currentLang];
+  const complexities = COMPLEXITY[currentLang];
+
+  const toggleFeature = (featureId: string) => {
+    setSelectedFeatures((previous) => {
+      if (previous.includes(featureId)) {
+        return previous.filter((id) => id !== featureId);
+      }
+
+      return [...previous, featureId];
+    });
+  };
 
   const getQuote = async () => {
-    if (!selectedServiceId) return;
+    if (!selectedServiceId || !bizType) {
+      return;
+    }
+
     setLoadingQuote(true);
+    setQuote(null);
+    setStep(3);
+
     try {
       const { data } = await api.post("/pricing/calculate", {
         serviceId: selectedServiceId,
+        businessType: bizType,
         complexity,
         features: selectedFeatures,
         timeline,
         budget,
       });
-      setQuote(data.data);
-      setStep(3);
+
+      if (data?.data) {
+        setQuote(data.data);
+      }
     } catch {
-      setStep(3);
+      setQuote(null);
+    } finally {
+      setLoadingQuote(false);
     }
-    setLoadingQuote(false);
   };
 
-  const toggleFeature = (id: string) => {
-    setSelectedFeatures((prev) =>
-      prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]
-    );
-  };
+  const fallbackMin = selectedService
+    ? selectedService.baseMin
+    : Math.round(budget * 0.8);
 
-  const getLabel = (
-    obj: { en: string; hi: string; pa: string } | undefined
-  ) => {
-    if (!obj) return "";
-    return obj[lang as "en" | "hi" | "pa"] || obj.en || "";
-  };
-
-  const formatPrice = (n: number) => "₹" + n.toLocaleString("en-IN");
-
-  const businessTypes =
-    BUSINESS_TYPES[lang as "en" | "hi" | "pa"] || BUSINESS_TYPES.en;
-  const timelines = TIMELINES[lang as "en" | "hi" | "pa"] || TIMELINES.en;
-  const complexities = COMPLEXITY[lang as "en" | "hi" | "pa"] || COMPLEXITY.en;
+  const fallbackMax = selectedService
+    ? selectedService.baseMax
+    : Math.round(budget * 1.2);
 
   return (
     <section
@@ -263,6 +378,7 @@ export default function PricingWizard() {
       className="relative z-10 py-24 px-4 md:px-6 bg-slate-50 dark:bg-z-dark2 transition-colors duration-300"
     >
       <div className="max-w-7xl mx-auto">
+        {/* HEADING */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -273,18 +389,20 @@ export default function PricingWizard() {
           <div className="mb-4 inline-block px-3 py-1 text-xs font-semibold rounded-full bg-z-accent/10 text-z-accent border border-z-border">
             {t("pricing.badge", "Transparent Pricing")}
           </div>
+
           <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-z-text leading-tight tracking-tight mb-4">
             {t("pricing.title", "Estimate Your Project")}
           </h2>
+
           <p className="text-base text-slate-600 dark:text-z-muted max-w-xl leading-relaxed">
-            {/* SEO FIX: Replaced generic description with target keywords */}
             {t(
               "pricing.sub",
-              "Get a free estimate for website development, mobile apps, custom software, or Digital Marketing Services services."
+              "Get a free estimate for website development, mobile apps, custom software, SaaS development, AI integration, or digital marketing services."
             )}
           </p>
         </motion.div>
 
+        {/* PRICING WIZARD */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -292,30 +410,35 @@ export default function PricingWizard() {
           viewport={{ once: true }}
           className="bg-white dark:bg-z-dark3/60 border border-slate-200 dark:border-z-border backdrop-blur-xl shadow-xl dark:shadow-card p-6 md:p-10 max-w-3xl rounded-3xl"
         >
-          {/* Step tabs */}
+          {/* STEPS */}
           <div className="flex border-b border-slate-200 dark:border-z-border mb-8">
-            {steps.map((s, i) => (
+            {steps.map((stepName, index) => (
               <button
-                key={s}
-                onClick={() => i <= step && setStep(i)}
+                key={`${stepName}-${index}`}
+                type="button"
+                onClick={() => {
+                  if (index <= step && !loadingQuote) {
+                    setStep(index);
+                  }
+                }}
                 className={`px-3 md:px-4 py-3 text-xs font-semibold tracking-wide transition-all duration-200 border-b-2 -mb-px flex-1 ${
-                  step === i
+                  step === index
                     ? "border-z-accent text-z-accent"
-                    : i < step
+                    : index < step
                     ? "border-transparent text-slate-800 dark:text-z-text cursor-pointer"
                     : "border-transparent text-slate-400 dark:text-z-muted cursor-not-allowed"
                 }`}
               >
-                {s}
+                {stepName}
               </button>
             ))}
           </div>
 
           <AnimatePresence mode="wait">
-            {/* Step 0 — Service */}
+            {/* STEP 0 */}
             {step === 0 && (
               <motion.div
-                key="s0"
+                key="step-service"
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
@@ -323,30 +446,38 @@ export default function PricingWizard() {
               >
                 {loadingServices ? (
                   <div className="flex items-center justify-center py-12">
-                    <Loader2 size={24} className="animate-spin text-z-accent" />
+                    <Loader2
+                      size={24}
+                      className="animate-spin text-z-accent"
+                    />
                   </div>
                 ) : (
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    {services.map((s) => (
+                    {services.map((service) => (
                       <button
-                        key={s.id}
+                        key={service.id}
+                        type="button"
                         onClick={() => {
-                          setSelectedServiceId(s.id);
+                          setSelectedServiceId(service.id);
                           setSelectedFeatures([]);
+                          setQuote(null);
                         }}
                         className={`p-4 rounded-xl border text-sm font-medium transition-all duration-200 text-left flex flex-col gap-2 ${
-                          selectedServiceId === s.id
+                          selectedServiceId === service.id
                             ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
                             : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent/50 hover:text-slate-900 dark:hover:text-z-text"
                         }`}
                       >
-                        <span className="text-xl">{s.icon}</span>
+                        <span className="text-xl">{service.icon}</span>
+
                         <span className="text-xs leading-snug">
-                          {getLabel(s.label)}
+                          {getLabel(service.label)}
                         </span>
-                        {selectedServiceId === s.id && (
+
+                        {selectedServiceId === service.id && (
                           <span className="text-[10px] text-z-accent font-bold">
-                            {formatPrice(s.baseMin)} — {formatPrice(s.baseMax)}
+                            {formatPrice(service.baseMin)} —{" "}
+                            {formatPrice(service.baseMax)}
                           </span>
                         )}
                       </button>
@@ -356,148 +487,164 @@ export default function PricingWizard() {
               </motion.div>
             )}
 
-            {/* Step 1 — Business + Complexity */}
+            {/* STEP 1 */}
             {step === 1 && (
               <motion.div
-                key="s1"
+                key="step-business"
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.25 }}
               >
                 <p className="text-sm font-medium text-slate-700 dark:text-z-muted mb-3">
-                  Business Type
+                  {t("pricing.business_type", "Business Type")}
                 </p>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-5">
-                  {businessTypes.map((b) => (
+
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
+                  {businessTypes.map((business) => (
                     <button
-                      key={b}
-                      onClick={() => setBizType(b)}
+                      key={business}
+                      type="button"
+                      onClick={() => setBizType(business)}
                       className={`p-3 rounded-xl border text-sm font-medium transition-all duration-200 text-left ${
-                        bizType === b
+                        bizType === business
                           ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
-                          : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent/50 hover:text-slate-900 dark:hover:text-z-text"
+                          : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent/50"
                       }`}
                     >
-                      {bizType === b && (
+                      {bizType === business && (
                         <Check
                           size={12}
                           className="inline mr-1 text-z-accent"
                         />
                       )}
-                      {b}
-                    </button>
-                  ))}
-                </div>
-                <p className="text-sm font-medium text-slate-700 dark:text-z-muted mb-3">
-                  Project Complexity
-                </p>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {complexities.map((c) => (
-                    <button
-                      key={c.key}
-                      onClick={() => setComplexity(c.key)}
-                      className={`p-3 rounded-xl border text-xs font-semibold transition-all duration-200 text-center ${
-                        complexity === c.key
-                          ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
-                          : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent/50 hover:text-slate-900 dark:hover:text-z-text"
-                      }`}
-                    >
-                      {complexity === c.key && (
-                        <Check size={10} className="inline mr-1" />
-                      )}
-                      {c.label}
+
+                      {business}
                     </button>
                   ))}
                 </div>
 
-                {/* Service features */}
-                {selectedService &&
-                  selectedService.features &&
-                  selectedService?.features?.length > 0 && (
-                    <>
-                      <p className="text-sm font-medium text-slate-700 dark:text-z-muted mb-3 mt-5">
-                        Add-on Features
-                      </p>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        {selectedService.features.map((f) => (
-                          <button
-                            key={f.id}
-                            onClick={() => toggleFeature(f.id)}
-                            className={`p-3 rounded-xl border text-xs font-medium transition-all text-left flex items-center justify-between ${
-                              selectedFeatures.includes(f.id)
-                                ? "border-z-accent3 bg-z-accent3/10 text-slate-900 dark:text-z-text"
-                                : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent3/40 hover:text-slate-900 dark:hover:text-z-text"
-                            }`}
-                          >
-                            <span>{getLabel(f.label)}</span>
-                            <span className="text-[10px] text-z-accent3 font-bold">
-                              +{formatPrice(f.flatAdd)}
-                            </span>
-                          </button>
-                        ))}
-                      </div>
-                    </>
-                  )}
+                <p className="text-sm font-medium text-slate-700 dark:text-z-muted mb-3">
+                  {t("pricing.complexity", "Project Complexity")}
+                </p>
+
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {complexities.map((item) => (
+                    <button
+                      key={item.key}
+                      type="button"
+                      onClick={() => setComplexity(item.key)}
+                      className={`p-3 rounded-xl border text-xs font-semibold transition-all duration-200 text-center ${
+                        complexity === item.key
+                          ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
+                          : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent/50"
+                      }`}
+                    >
+                      {complexity === item.key && (
+                        <Check size={10} className="inline mr-1" />
+                      )}
+
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+
+                {(selectedService?.features?.length ?? 0) > 0 && (
+                  <>
+                    <p className="text-sm font-medium text-slate-700 dark:text-z-muted mb-3 mt-6">
+                      {t("pricing.addons", "Add-on Features")}
+                    </p>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                      {selectedService?.features?.map((feature) => (
+                        <button
+                          key={feature.id}
+                          type="button"
+                          onClick={() => toggleFeature(feature.id)}
+                          className={`p-3 rounded-xl border text-xs font-medium transition-all text-left flex items-center justify-between ${
+                            selectedFeatures.includes(feature.id)
+                              ? "border-z-accent3 bg-z-accent3/10 text-slate-900 dark:text-z-text"
+                              : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent3/40"
+                          }`}
+                        >
+                          <span>{getLabel(feature.label)}</span>
+
+                          <span className="text-[10px] text-z-accent3 font-bold">
+                            +{formatPrice(feature.flatAdd)}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
               </motion.div>
             )}
 
-            {/* Step 2 — Budget + Timeline */}
+            {/* STEP 2 */}
             {step === 2 && (
               <motion.div
-                key="s2"
+                key="step-budget"
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.25 }}
               >
                 <p className="text-sm font-medium text-slate-700 dark:text-z-muted mb-2">
-                  Monthly budget range
+                  {t("pricing.budget", "Estimated Project Budget")}
                 </p>
+
                 <div className="text-4xl font-extrabold text-z-accent text-center mb-4">
                   {formatPrice(budget)}
                 </div>
+
                 <input
                   type="range"
                   min="5000"
                   max="500000"
                   step="5000"
                   value={budget}
-                  onChange={(e) => setBudget(Number(e.target.value))}
+                  onChange={(event) =>
+                    setBudget(Number(event.target.value))
+                  }
                   className="w-full accent-z-accent mb-1 cursor-pointer"
                 />
+
                 <div className="flex justify-between text-xs text-slate-500 dark:text-z-muted mb-6">
                   <span>₹5,000</span>
-                  <span>₹5,0,000+</span>
+                  <span>₹5,00,000+</span>
                 </div>
+
                 <p className="text-sm font-medium text-slate-700 dark:text-z-muted mb-3">
-                  Timeline
+                  {t("pricing.timeline", "Timeline")}
                 </p>
+
                 <div className="grid grid-cols-3 gap-3">
-                  {timelines.map((tl) => (
+                  {timelines.map((item) => (
                     <button
-                      key={tl.key}
-                      onClick={() => setTimeline(tl.key)}
+                      key={item.key}
+                      type="button"
+                      onClick={() => setTimeline(item.key)}
                       className={`p-3 rounded-xl border text-xs font-semibold transition-all text-center ${
-                        timeline === tl.key
+                        timeline === item.key
                           ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
-                          : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent/50 hover:text-slate-900 dark:hover:text-z-text"
+                          : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent/50"
                       }`}
                     >
-                      {timeline === tl.key && (
+                      {timeline === item.key && (
                         <Check size={10} className="inline mr-1" />
                       )}
-                      {tl.label}
+
+                      {item.label}
                     </button>
                   ))}
                 </div>
               </motion.div>
             )}
 
-            {/* Step 3 — Quote */}
+            {/* STEP 3 */}
             {step === 3 && (
               <motion.div
-                key="s3"
+                key="step-quote"
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
@@ -505,53 +652,72 @@ export default function PricingWizard() {
               >
                 {loadingQuote ? (
                   <div className="flex items-center justify-center py-12">
-                    <Loader2 size={24} className="animate-spin text-z-accent" />
+                    <Loader2
+                      size={24}
+                      className="animate-spin text-z-accent"
+                    />
                   </div>
                 ) : (
                   <div className="rounded-2xl border border-z-accent/20 bg-z-accent/5 p-6">
                     <div className="text-lg font-bold text-slate-900 dark:text-z-text mb-1">
-                      {quote?.service?.icon}{" "}
-                      {getLabel(quote?.service?.label as any) ||
-                        selectedService?.label?.[lang as "en"] ||
+                      {quote?.service?.icon ||
+                        selectedService?.icon ||
+                        "💼"}{" "}
+                      {getLabel(quote?.service?.label) ||
+                        getLabel(selectedService?.label) ||
                         "Your Project"}
                     </div>
+
                     <div className="text-sm text-slate-600 dark:text-z-muted mb-4">
                       {quote?.recommendedPackage
-                        ? getLabel(quote.recommendedPackage.name as any)
+                        ? getLabel(
+                            quote.recommendedPackage.name
+                          )
                         : "Custom Package"}{" "}
                       — tailored for your needs
                     </div>
-                    {quote?.recommendedPackage?.features && (
+
+                    {(quote?.recommendedPackage?.features?.length ??
+                      0) > 0 && (
                       <div className="flex flex-wrap gap-2 mb-5">
-                        {quote.recommendedPackage.features.map((f) => (
-                          <span
-                            key={f}
-                            className="flex items-center gap-1 text-xs font-medium px-3 py-1 rounded-full bg-z-accent/10 border border-z-accent/20 text-z-accent"
-                          >
-                            <Check size={10} /> {f}
-                          </span>
-                        ))}
+                        {quote?.recommendedPackage?.features?.map(
+                          (feature) => (
+                            <span
+                              key={feature}
+                              className="flex items-center gap-1 text-xs font-medium px-3 py-1 rounded-full bg-z-accent/10 border border-z-accent/20 text-z-accent"
+                            >
+                              <Check size={10} />
+                              {feature}
+                            </span>
+                          )
+                        )}
                       </div>
                     )}
+
                     <div className="flex justify-between items-center pt-4 border-t border-slate-200 dark:border-z-border">
                       <div>
                         <div className="text-xs text-slate-500 dark:text-z-muted uppercase tracking-wide mb-1">
                           Estimated Investment
                         </div>
+
                         <div className="text-2xl font-extrabold text-z-accent">
                           {quote
                             ? `${formatPrice(
                                 quote.estimate.min
-                              )} — ${formatPrice(quote.estimate.max)}`
-                            : `${formatPrice(budget * 0.8)} — ${formatPrice(
-                                budget * 1.2
-                              )}`}
+                              )} — ${formatPrice(
+                                quote.estimate.max
+                              )}`
+                            : `${formatPrice(
+                                fallbackMin
+                              )} — ${formatPrice(fallbackMax)}`}
                         </div>
                       </div>
+
                       <div className="text-right">
                         <div className="text-xs text-slate-500 dark:text-z-muted uppercase tracking-wide mb-1">
                           Delivery
                         </div>
+
                         <div className="text-base font-bold text-slate-900 dark:text-z-text">
                           {quote?.delivery || "4-8 Weeks"}
                         </div>
@@ -559,40 +725,67 @@ export default function PricingWizard() {
                     </div>
                   </div>
                 )}
+
                 <Link
                   href="/contact"
                   className="mt-5 w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-z-accent text-white font-semibold text-sm hover:opacity-90 transition-all duration-300 shadow-glow-sm"
                 >
-                  {/* SEO FIX: Standardized CTA text */}
-                  {t("pricing.consultation", "Get Free Consultation")}{" "}
+                  {t(
+                    "pricing.consultation",
+                    "Get Free Consultation"
+                  )}
+
                   <ArrowRight size={15} />
                 </Link>
               </motion.div>
             )}
           </AnimatePresence>
 
-          {/* Navigation */}
+          {/* NAVIGATION */}
           <div className="flex justify-between mt-6">
             <button
-              onClick={() => setStep(Math.max(0, step - 1))}
-              disabled={step === 0}
+              type="button"
+              onClick={() =>
+                setStep((currentStep) =>
+                  Math.max(0, currentStep - 1)
+                )
+              }
+              disabled={step === 0 || loadingQuote}
               className="px-5 py-2.5 rounded-full text-sm font-semibold border border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:text-slate-900 dark:hover:text-z-text disabled:opacity-30 transition-all duration-200"
             >
               {t("pricing.back", "Back")}
             </button>
+
             {step < 3 && (
               <button
+                type="button"
                 onClick={() => {
-                  if (step === 2) getQuote();
-                  else setStep(Math.min(3, step + 1));
+                  if (step === 2) {
+                    void getQuote();
+                  } else {
+                    setStep((currentStep) =>
+                      Math.min(3, currentStep + 1)
+                    );
+                  }
                 }}
-                disabled={step === 0 && !selectedServiceId}
+                disabled={
+                  loadingQuote ||
+                  (step === 0 && !selectedServiceId) ||
+                  (step === 1 && !bizType)
+                }
                 className="px-6 py-2.5 rounded-full text-sm font-semibold bg-z-accent text-white hover:opacity-90 disabled:opacity-40 transition-all duration-200 flex items-center gap-2"
               >
-                {loadingQuote && <Loader2 size={14} className="animate-spin" />}
+                {loadingQuote && (
+                  <Loader2
+                    size={14}
+                    className="animate-spin"
+                  />
+                )}
+
                 {step === 2
                   ? t("pricing.get_quote", "Get Quote")
-                  : t("pricing.next", "Next")}{" "}
+                  : t("pricing.next", "Next")}
+
                 <ArrowRight size={14} />
               </button>
             )}

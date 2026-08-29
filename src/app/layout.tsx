@@ -1,41 +1,68 @@
 import type { Metadata, Viewport } from "next";
 import { Toaster } from "react-hot-toast";
 import { Analytics } from "@vercel/analytics/react";
-import { AppProviders } from "@/lib/providers";
 import Script from "next/script";
+
+import { AppProviders } from "@/lib/providers";
+
 import "../styles/globals.css";
 
+const SITE_URL = "https://zentroxtechnologies.com";
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://zentroxtechnologies.com"),
+  metadataBase: new URL(SITE_URL),
+
   title: {
     default:
-      "Zentrox Technologies — Premium website development & AI Solutions",
+      "Zentrox Technologies | Software Development & Digital Growth Partner",
     template: "%s | Zentrox Technologies",
   },
+
   description:
-    "Zentrox Technologies — MSME-registered technology company in Mohali & Chandigarh. We build premium websites, mobile apps, SaaS platforms, and AI solutions for growing businesses across Punjab.",
+    "Zentrox Technologies provides custom software development, website development, mobile app development, SaaS solutions, AI integration, SEO, digital marketing and UI/UX design for businesses in India and worldwide.",
+
   keywords: [
-    "website development company Mohali",
-    "software company Chandigarh",
-    "app development Punjab",
-    "SEO company Chandigarh",
-    "Digital Marketing Services Haryana",
-    "AI automation India",
-    "SaaS development",
     "Zentrox Technologies",
+    "software development company India",
+    "website development company Mohali",
+    "website development company Chandigarh",
+    "custom software development",
+    "mobile app development",
+    "SaaS development",
+    "AI integration services",
+    "SEO company Chandigarh",
+    "digital marketing company Punjab",
+    "UI UX design services",
   ],
+
+  authors: [
+    {
+      name: "Zentrox Technologies",
+      url: SITE_URL,
+    },
+  ],
+
+  creator: "Zentrox Technologies",
+  publisher: "Zentrox Technologies",
+
+  alternates: {
+    canonical: SITE_URL,
+  },
+
   icons: {
     icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/zentroxLogo.png", type: "image/png" },
+      {
+        url: "/favicon.ico",
+        sizes: "any",
+      },
+      {
+        url: "/zentroxLogo.png",
+        type: "image/png",
+      },
     ],
     apple: "/apple-touch-icon.png",
   },
-  authors: [
-    { name: "Zentrox Technologies", url: "https://zentroxtechnologies.com" },
-  ],
-  creator: "Zentrox Technologies",
-  publisher: "Zentrox Technologies",
+
   robots: {
     index: true,
     follow: true,
@@ -43,35 +70,45 @@ export const metadata: Metadata = {
       index: true,
       follow: true,
       "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
     },
   },
+
   openGraph: {
     type: "website",
     locale: "en_IN",
-    url: "https://zentroxtechnologies.com",
+    url: SITE_URL,
     siteName: "Zentrox Technologies",
-    title: "Zentrox Technologies — Premium Web & AI Solutions",
+
+    title:
+      "Zentrox Technologies | Software Development & Digital Growth Partner",
+
     description:
-      "MSME-registered technology company building futuristic web, mobile, and AI solutions for Punjab businesses.",
+      "Custom software, websites, mobile apps, SaaS, AI integration, SEO and digital marketing solutions for businesses in India and worldwide.",
+
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Zentrox Technologies",
+        alt: "Zentrox Technologies - Software & Digital Solutions",
       },
     ],
   },
+
   twitter: {
     card: "summary_large_image",
-    title: "Zentrox Technologies",
+
+    title:
+      "Zentrox Technologies | Software Development & Digital Growth Partner",
+
     description:
-      "Premium website development, AI & SaaS Solutions — Mohali & Chandigarh",
+      "Custom software, websites, mobile apps, SaaS, AI integration, SEO and digital marketing solutions for growing businesses.",
+
     images: ["/og-image.png"],
   },
-  alternates: {
-    canonical: "https://zentroxtechnologies.com",
-  },
+
   verification: {
     google: "YyKjsbz3GhRqz0h09_nEslhvmpeInev20hILYpun6eU",
   },
@@ -83,105 +120,132 @@ export const viewport: Viewport = {
   themeColor: "#04050a",
 };
 
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+
+  name: "Zentrox Technologies",
+
+  url: SITE_URL,
+
+  logo: `${SITE_URL}/zentroxLogo.png`,
+
+  description:
+    "Zentrox Technologies is an MSME-registered technology company providing custom software development, website development, mobile apps, SaaS solutions, AI integration, SEO, digital marketing and UI/UX design.",
+
+  foundingDate: "2023",
+
+  contactPoint: {
+    "@type": "ContactPoint",
+    telephone: "+91-8988183513",
+    contactType: "customer service",
+    areaServed: "IN",
+    availableLanguage: ["English", "Hindi", "Punjabi"],
+  },
+
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Mohali",
+    addressRegion: "Punjab",
+    addressCountry: "IN",
+  },
+
+  sameAs: [],
+};
+
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Performance */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
+
         <link
           rel="preconnect"
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
 
-        {/* Structured Data */}
-        <script
+        {/* Organization Structured Data */}
+        <Script
+          id="organization-schema"
           type="application/ld+json"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              name: "Zentrox Technologies",
-              url: "https://zentroxtechnologies.com",
-              logo: "https://zentroxtechnologies.com/logo.png",
-              contactPoint: {
-                "@type": "ContactPoint",
-                telephone: "+91-8988183513",
-                contactType: "customer service",
-                areaServed: "IN",
-                availableLanguage: ["English", "Hindi", "Punjabi"],
-              },
-              address: {
-                "@type": "PostalAddress",
-                addressLocality: "Mohali",
-                addressRegion: "Punjab",
-                addressCountry: "IN",
-              },
-              description:
-                "MSME-registered technology startup offering website development, AI solutions, SaaS development, SEO, and Digital Marketing Services.",
-              foundingDate: "2023",
-            }),
+            __html: JSON.stringify(organizationSchema),
           }}
         />
 
         {/* Theme */}
-        <script
+        <Script
+          id="theme-script"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
-            __html: `try{var t=localStorage.getItem('zt_theme')||'dark';document.documentElement.className=t;}catch(e){}`,
+            __html: `
+              try {
+                var theme = localStorage.getItem("zt_theme") || "dark";
+                document.documentElement.className = theme;
+              } catch (error) {}
+            `,
           }}
         />
 
-        {/* Google Analytics */}
+        {/* Google Tag Manager */}
         <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-14KYPQYTNB"
+          id="google-tag-manager"
           strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(w,d,s,l,i){
+                w[l]=w[l]||[];
+                w[l].push({
+                  'gtm.start': new Date().getTime(),
+                  event:'gtm.js'
+                });
+
+                var f=d.getElementsByTagName(s)[0],
+                j=d.createElement(s),
+                dl=l!='dataLayer' ? '&l='+l : '';
+
+                j.async=true;
+                j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+
+                f.parentNode.insertBefore(j,f);
+              })(window,document,'script','dataLayer','GTM-WD9DPB8R');
+            `,
+          }}
         />
 
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-14KYPQYTNB');
-          `}
-        </Script>
-
-        {/* Google Tag Manager */}
-        <Script id="google-tag-manager" strategy="afterInteractive">
-          {`
-            (function(w,d,s,l,i){w[l]=w[l]||[];
-            w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'});
-            var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
-            j.async=true;
-            j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
-            f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','GTM-WD9DPB8R');
-          `}
-        </Script>
-
         {/* Microsoft Clarity */}
-        <Script id="microsoft-clarity" strategy="afterInteractive">
-          {`
-            (function(c,l,a,r,i,t,y){
-              c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-              t=l.createElement(r);
-              t.async=1;
-              t.src="https://www.clarity.ms/tag/"+i;
-              y=l.getElementsByTagName(r)[0];
-              y.parentNode.insertBefore(t,y);
-            })(window, document, "clarity", "script", "xb0gh2ipu2");
-          `}
-        </Script>
+        <Script
+          id="microsoft-clarity"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){
+                  (c[a].q=c[a].q||[]).push(arguments)
+                };
+
+                t=l.createElement(r);
+                t.async=1;
+                t.src="https://www.clarity.ms/tag/"+i;
+
+                y=l.getElementsByTagName(r)[0];
+                y.parentNode.insertBefore(t,y);
+              })(window, document, "clarity", "script", "xb0gh2ipu2");
+            `,
+          }}
+        />
       </head>
 
-      <body className="bg-white dark:bg-[#04050a] text-slate-900 dark:text-white transition-colors duration-300 min-h-screen relative">
-        {/* Google Tag Manager (noscript) */}
+      <body className="relative min-h-screen bg-white text-slate-900 transition-colors duration-300 dark:bg-[#04050a] dark:text-white">
+
+        {/* Google Tag Manager NoScript */}
         <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-WD9DPB8R"
@@ -194,14 +258,15 @@ export default function RootLayout({
           />
         </noscript>
 
-        {/* FIXED GRID */}
+        {/* Background Grid */}
         <div
-          className="grid-bg opacity-[0.03] dark:opacity-100 pointer-events-none"
+          className="grid-bg pointer-events-none opacity-[0.03] dark:opacity-100"
           aria-hidden="true"
         />
 
         <AppProviders>
           {children}
+
           <Toaster
             position="top-right"
             toastOptions={{

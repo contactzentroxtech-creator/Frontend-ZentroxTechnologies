@@ -36,21 +36,46 @@ module.exports = {
           "Plus Jakarta Sans",
           "Inter",
           "system-ui",
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "Segoe UI",
           "sans-serif",
         ],
-        mono: ["JetBrains Mono", "monospace"],
+
+        mono: [
+          "JetBrains Mono",
+          "ui-monospace",
+          "SFMono-Regular",
+          "monospace",
+        ],
       },
 
       animation: {
         float: "float 6s ease-in-out infinite",
-        "pulse-glow": "pulseGlow 3s ease-in-out infinite",
-        "gradient-shift": "gradientShift 8s ease infinite",
-        "slide-up": "slideUp 0.6s ease forwards",
-        "fade-in": "fadeIn 0.5s ease forwards",
-        "spin-slow": "spin 8s linear infinite",
-        "bounce-soft": "bounceSoft 2s ease-in-out infinite",
-        marquee: "marquee 25s linear infinite",
-        "marquee-reverse": "marqueeReverse 25s linear infinite",
+
+        "pulse-glow":
+          "pulseGlow 3s ease-in-out infinite",
+
+        "gradient-shift":
+          "gradientShift 8s ease infinite",
+
+        "slide-up":
+          "slideUp 0.6s ease forwards",
+
+        "fade-in":
+          "fadeIn 0.5s ease forwards",
+
+        "spin-slow":
+          "spin 8s linear infinite",
+
+        "bounce-soft":
+          "bounceSoft 2s ease-in-out infinite",
+
+        marquee:
+          "marquee 25s linear infinite",
+
+        "marquee-reverse":
+          "marqueeReverse 25s linear infinite",
       },
 
       keyframes: {
@@ -58,6 +83,7 @@ module.exports = {
           "0%, 100%": {
             transform: "translateY(0)",
           },
+
           "50%": {
             transform: "translateY(-10px)",
           },
@@ -68,6 +94,7 @@ module.exports = {
             opacity: "0.7",
             transform: "scale(1)",
           },
+
           "50%": {
             opacity: "1",
             transform: "scale(1.04)",
@@ -78,6 +105,7 @@ module.exports = {
           "0%, 100%": {
             backgroundPosition: "0% 50%",
           },
+
           "50%": {
             backgroundPosition: "100% 50%",
           },
@@ -88,6 +116,7 @@ module.exports = {
             opacity: "0",
             transform: "translateY(24px)",
           },
+
           to: {
             opacity: "1",
             transform: "translateY(0)",
@@ -98,6 +127,7 @@ module.exports = {
           from: {
             opacity: "0",
           },
+
           to: {
             opacity: "1",
           },
@@ -107,6 +137,7 @@ module.exports = {
           "0%, 100%": {
             transform: "translateY(0)",
           },
+
           "50%": {
             transform: "translateY(-5px)",
           },
@@ -116,6 +147,7 @@ module.exports = {
           "0%": {
             transform: "translateX(0)",
           },
+
           "100%": {
             transform: "translateX(-50%)",
           },
@@ -125,6 +157,7 @@ module.exports = {
           "0%": {
             transform: "translateX(-50%)",
           },
+
           "100%": {
             transform: "translateX(0)",
           },
@@ -139,7 +172,7 @@ module.exports = {
           "radial-gradient(ellipse 70% 55% at 50% 0%, rgba(37,99,235,0.10) 0%, transparent 72%)",
 
         "card-glow":
-          "radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(37,99,235,0.06) 0%, transparent 60%)",
+          "radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(37,99,235,0.06) 0%, transparent 60%)",
 
         "accent-gradient":
           "linear-gradient(135deg, var(--z-accent) 0%, var(--z-accent2) 50%, var(--z-accent3) 100%)",
@@ -151,16 +184,16 @@ module.exports = {
 
       boxShadow: {
         "glow-accent":
-          "0 10px 35px rgba(37,99,235,0.12)",
+          "0 10px 35px rgba(37,99,235,0.18)",
 
         "glow-sm":
-          "0 6px 20px rgba(37,99,235,0.10)",
+          "0 6px 20px rgba(37,99,235,0.12)",
 
         card:
-          "0 8px 30px rgba(15,23,42,0.08)",
+          "0 8px 30px rgba(15,23,42,0.10)",
 
         "card-hover":
-          "0 20px 50px rgba(15,23,42,0.14)",
+          "0 20px 50px rgba(15,23,42,0.16)",
       },
     },
   },

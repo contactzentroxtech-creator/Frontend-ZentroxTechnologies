@@ -11,9 +11,10 @@ import {
   LayoutDashboard,
   LogOut,
   ShieldCheck,
-  Sparkles,
+  ArrowRight,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { useLang } from "@/lib/providers";
 import { useAuthStore } from "@/store/authStore";
@@ -21,7 +22,10 @@ import { useAuthStore } from "@/store/authStore";
 type NavLink = {
   label: string;
   href: string;
-  children?: { label: string; href: string }[];
+  children?: {
+    label: string;
+    href: string;
+  }[];
 };
 
 export default function Navbar() {
@@ -32,27 +36,37 @@ export default function Navbar() {
 
   const pathname = usePathname();
   const router = useRouter();
+
   const { t } = useLang();
   const { user, logout, fetchMe, initialized } = useAuthStore();
 
+  // Fetch logged-in user
   useEffect(() => {
-    if (!initialized) fetchMe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (!initialized) {
+      fetchMe();
+    }
+  }, [initialized, fetchMe]);
 
+  // Navbar scroll effect
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 15);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
 
-    window.addEventListener("scroll", onScroll, {
+    window.addEventListener("scroll", handleScroll, {
       passive: true,
     });
 
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
+  // Close menus on route change
   useEffect(() => {
     setMobileOpen(false);
     setUserMenuOpen(false);
+    setDropdownOpen(null);
   }, [pathname]);
 
   const handleLogout = async () => {
@@ -62,48 +76,61 @@ export default function Navbar() {
 
   const isAdmin = user?.role === "admin";
 
-  // ENGLISH ONLY + INTERNSHIP REMOVED
+  // Navigation links
   const navLinks = useMemo<NavLink[]>(
     () => [
-      { label: "Home", href: "/" },
-      { label: "Services", href: "/services" },
-      { label: "Courses", href: "/courses" },
-      { label: "Blog", href: "/blog" },
-      { label: "About", href: "/about" },
-      { label: "Contact", href: "/contact" },
+      {
+        label: "Home",
+        href: "/",
+      },
+      {
+        label: t("nav.services"),
+        href: "/services",
+      },
+      {
+        label: t("nav.internship"),
+        href: "/internship",
+      },
+      {
+        label: t("nav.blog"),
+        href: "/blog",
+      },
+      {
+        label: t("nav.about"),
+        href: "/about",
+      },
+      {
+        label: t("nav.contact"),
+        href: "/contact",
+      },
     ],
-    []
+    [t]
   );
 
-  const isActive = (href: string) =>
-    href === "/"
-      ? pathname === href
-      : pathname.startsWith(href.split("#")[0]) &&
-        href.split("#")[0].length > 1;
+  const isActive = (href: string) => {
+    if (href === "/") {
+      return pathname === "/";
+    }
+
+    return pathname.startsWith(href.split("#")[0]);
+  };
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
         scrolled
-          ? "bg-white/92 dark:bg-z-dark2/92 backdrop-blur-2xl border-b border-slate-200/80 dark:border-z-border shadow-[0_8px_30px_rgba(15,23,42,0.08)]"
-          : "bg-white/60 dark:bg-z-dark/40 backdrop-blur-md"
+          ? "border-b border-slate-200/70 bg-white/80 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-[#1b1d22]/80"
+          : "bg-transparent"
       }`}
     >
-      {/* Premium subtle gradient line */}
-      <div
-        className={`absolute bottom-0 left-0 h-[1px] w-full transition-opacity duration-500 ${
-          scrolled ? "opacity-100" : "opacity-0"
-        } bg-gradient-to-r from-transparent via-blue-400/50 to-transparent`}
-      />
-
-      <nav className="max-w-7xl mx-auto px-4 md:px-6 flex items-center justify-between h-[72px]">
-        {/* LOGO */}
+      <nav className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-4 md:px-6">
+        {/* ================= LOGO ================= */}
         <Link
           href="/"
-          className="flex items-center gap-2.5 group flex-shrink-0"
+          className="group relative z-10 flex flex-shrink-0 items-center gap-2.5"
         >
           <div className="relative">
-            <div className="absolute inset-0 rounded-full bg-blue-400/20 blur-xl scale-110 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="absolute inset-0 scale-110 rounded-full bg-blue-500/10 opacity-0 blur-md transition-opacity duration-300 group-hover:opacity-100" />
 
             <Image
               src="/Zentrox-Logo1.png"
@@ -111,20 +138,22 @@ export default function Navbar() {
               width={42}
               height={42}
               priority
-              className="relative drop-shadow-[0_4px_10px_rgba(37,99,235,0.22)] group-hover:scale-105 transition-transform duration-300"
+              className="relative transition-transform duration-300 group-hover:scale-105"
             />
           </div>
 
-          <span className="font-extrabold text-[17px] tracking-tight whitespace-nowrap">
-            <span className="text-slate-900 dark:text-z-text">
+          <span className="hidden text-[17px] font-extrabold tracking-tight sm:block">
+            <span className="text-slate-900 dark:text-white">
               Zentrox
             </span>{" "}
-            <span className="text-z-accent">Technologies</span>
+            <span className="text-blue-600 dark:text-blue-400">
+              Technologies
+            </span>
           </span>
         </Link>
 
-        {/* DESKTOP NAVIGATION */}
-        <div className="hidden lg:flex items-center gap-1 p-1 rounded-full bg-slate-100/70 dark:bg-white/5 border border-slate-200/70 dark:border-white/5">
+        {/* ================= DESKTOP NAVIGATION ================= */}
+        <div className="hidden items-center gap-1 lg:flex">
           {navLinks.map((link) =>
             link.children ? (
               <div
@@ -133,12 +162,22 @@ export default function Navbar() {
                 onMouseEnter={() => setDropdownOpen(link.label)}
                 onMouseLeave={() => setDropdownOpen(null)}
               >
-                <button className="flex items-center gap-1 px-4 py-2 text-sm font-semibold text-slate-600 dark:text-z-muted hover:text-slate-900 dark:hover:text-z-text transition-colors">
+                <button
+                  className="
+                    flex items-center gap-1 rounded-full px-3.5 py-2
+                    text-sm font-medium text-slate-600
+                    transition-all duration-300
+                    hover:bg-slate-100 hover:text-slate-950
+                    dark:text-slate-400
+                    dark:hover:bg-white/[0.06]
+                    dark:hover:text-white
+                  "
+                >
                   {link.label}
 
                   <ChevronDown
                     size={14}
-                    className={`transition-transform duration-200 ${
+                    className={`transition-transform duration-300 ${
                       dropdownOpen === link.label ? "rotate-180" : ""
                     }`}
                   />
@@ -147,16 +186,47 @@ export default function Navbar() {
                 <AnimatePresence>
                   {dropdownOpen === link.label && (
                     <motion.div
-                      initial={{ opacity: 0, y: -8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -8 }}
-                      className="absolute top-full left-0 mt-3 w-52 bg-white/95 dark:bg-z-dark3/95 backdrop-blur-xl border border-slate-200 dark:border-z-border py-2 rounded-2xl shadow-2xl overflow-hidden"
+                      initial={{
+                        opacity: 0,
+                        y: -8,
+                        scale: 0.98,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+                      }}
+                      exit={{
+                        opacity: 0,
+                        y: -8,
+                        scale: 0.98,
+                      }}
+                      transition={{
+                        duration: 0.2,
+                      }}
+                      className="
+                        absolute left-0 top-full mt-2 w-52
+                        overflow-hidden rounded-2xl
+                        border border-slate-200/80
+                        bg-white/95 p-2 shadow-xl
+                        backdrop-blur-xl
+                        dark:border-white/10
+                        dark:bg-[#20232a]/95
+                      "
                     >
                       {link.children.map((child) => (
                         <Link
                           key={child.href}
                           href={child.href}
-                          className="block px-4 py-3 text-sm font-medium text-slate-600 dark:text-z-muted hover:text-blue-600 dark:hover:text-z-text hover:bg-blue-50 dark:hover:bg-white/5 transition-all"
+                          className="
+                            block rounded-xl px-4 py-2.5
+                            text-sm text-slate-600
+                            transition-all
+                            hover:bg-blue-50 hover:text-blue-600
+                            dark:text-slate-400
+                            dark:hover:bg-white/[0.05]
+                            dark:hover:text-blue-300
+                          "
                         >
                           {child.label}
                         </Link>
@@ -169,18 +239,22 @@ export default function Navbar() {
               <Link
                 key={link.label}
                 href={link.href}
-                className={`relative px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
-                  isActive(link.href)
-                    ? "text-blue-700 dark:text-white bg-white dark:bg-white/10 shadow-sm"
-                    : "text-slate-600 dark:text-z-muted hover:text-blue-700 dark:hover:text-white hover:bg-white/70 dark:hover:bg-white/5"
-                }`}
+                className={`
+                  relative rounded-full px-3.5 py-2
+                  text-sm font-medium transition-all duration-300
+                  ${
+                    isActive(link.href)
+                      ? "bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-300"
+                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-white/[0.06] dark:hover:text-white"
+                  }
+                `}
               >
                 {link.label}
 
                 {isActive(link.href) && (
                   <motion.span
-                    layoutId="activeNav"
-                    className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-z-accent"
+                    layoutId="navbar-active"
+                    className="absolute bottom-0 left-1/2 h-0.5 w-5 -translate-x-1/2 rounded-full bg-blue-600 dark:bg-blue-400"
                   />
                 )}
               </Link>
@@ -188,8 +262,8 @@ export default function Navbar() {
           )}
         </div>
 
-        {/* DESKTOP ACTIONS */}
-        <div className="hidden md:flex items-center gap-2">
+        {/* ================= DESKTOP ACTIONS ================= */}
+        <div className="hidden items-center gap-2 lg:flex">
           <ThemeToggle compact />
 
           {user ? (
@@ -200,64 +274,126 @@ export default function Navbar() {
               <button
                 onMouseEnter={() => setUserMenuOpen(true)}
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
-                className="flex items-center gap-2 px-2 py-1.5 pr-3 rounded-full border border-slate-200 dark:border-z-border bg-white/80 dark:bg-white/5 hover:border-blue-300 dark:hover:border-z-accent/40 hover:shadow-sm transition-all"
+                className="
+                  flex items-center gap-2 rounded-full
+                  border border-slate-200/80 bg-white/70
+                  py-1.5 pl-2 pr-3
+                  shadow-sm backdrop-blur-md
+                  transition-all duration-300
+                  hover:border-blue-300 hover:shadow-md
+                  dark:border-white/10
+                  dark:bg-white/[0.04]
+                "
               >
-                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-z-accent to-z-accent2 flex items-center justify-center text-white text-[11px] font-bold shadow-sm">
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 text-[10px] font-bold text-white">
                   {user.name?.[0]?.toUpperCase()}
                 </div>
 
-                <span className="text-sm font-semibold text-slate-800 dark:text-z-text max-w-[100px] truncate">
-                  {user.name.split(" ")[0]}
+                <span className="max-w-[90px] truncate text-sm font-semibold text-slate-700 dark:text-slate-200">
+                  {user.name?.split(" ")[0]}
                 </span>
 
                 <ChevronDown
                   size={13}
-                  className="text-slate-400 dark:text-z-muted"
+                  className="text-slate-400"
                 />
               </button>
 
               <AnimatePresence>
                 {userMenuOpen && (
                   <motion.div
-                    initial={{ opacity: 0, y: -8, scale: 0.98 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -8, scale: 0.98 }}
-                    transition={{ duration: 0.18 }}
-                    className="absolute right-0 top-full mt-3 w-56 bg-white/98 dark:bg-z-dark3/98 backdrop-blur-xl border border-slate-200 dark:border-z-border py-2 rounded-2xl shadow-2xl overflow-hidden"
+                    initial={{
+                      opacity: 0,
+                      y: -8,
+                      scale: 0.98,
+                    }}
+                    animate={{
+                      opacity: 1,
+                      y: 0,
+                      scale: 1,
+                    }}
+                    exit={{
+                      opacity: 0,
+                      y: -8,
+                      scale: 0.98,
+                    }}
+                    transition={{
+                      duration: 0.2,
+                    }}
+                    className="
+                      absolute right-0 top-full mt-3 w-56
+                      overflow-hidden rounded-2xl
+                      border border-slate-200/80
+                      bg-white/95 p-2 shadow-xl
+                      backdrop-blur-xl
+                      dark:border-white/10
+                      dark:bg-[#20232a]/95
+                    "
                   >
-                    <div className="px-4 py-3 border-b border-slate-100 dark:border-z-border mb-1">
-                      <div className="text-sm font-bold text-slate-900 dark:text-z-text truncate">
+                    {/* User Info */}
+                    <div className="mb-2 border-b border-slate-100 px-3 py-2.5 dark:border-white/10">
+                      <p className="truncate text-sm font-bold text-slate-900 dark:text-white">
                         {user.name}
-                      </div>
+                      </p>
 
-                      <div className="text-[11px] text-z-accent capitalize font-semibold mt-0.5">
+                      <p className="mt-0.5 text-[11px] font-medium capitalize text-blue-600 dark:text-blue-400">
                         {user.role}
-                      </div>
+                      </p>
                     </div>
 
+                    {/* Admin */}
                     {isAdmin && (
                       <Link
                         href="/admin"
-                        className="flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-slate-600 dark:text-z-muted hover:text-blue-700 dark:hover:text-white hover:bg-blue-50 dark:hover:bg-white/5 transition-all"
+                        className="
+                          flex items-center gap-2.5 rounded-xl px-3 py-2.5
+                          text-sm text-slate-600 transition-colors
+                          hover:bg-blue-50 hover:text-blue-600
+                          dark:text-slate-400
+                          dark:hover:bg-white/[0.05]
+                          dark:hover:text-blue-300
+                        "
                       >
-                        <ShieldCheck size={16} className="text-z-accent" />
+                        <ShieldCheck
+                          size={16}
+                          className="text-blue-600"
+                        />
+
                         Admin Panel
                       </Link>
                     )}
 
+                    {/* Dashboard */}
                     <Link
                       href="/dashboard"
-                      className="flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-slate-600 dark:text-z-muted hover:text-blue-700 dark:hover:text-white hover:bg-blue-50 dark:hover:bg-white/5 transition-all"
+                      className="
+                        flex items-center gap-2.5 rounded-xl px-3 py-2.5
+                        text-sm text-slate-600 transition-colors
+                        hover:bg-slate-50 hover:text-slate-900
+                        dark:text-slate-400
+                        dark:hover:bg-white/[0.05]
+                        dark:hover:text-white
+                      "
                     >
                       <LayoutDashboard size={16} />
+
                       Dashboard
                     </Link>
 
+                    {/* Logout */}
                     <button
                       onClick={handleLogout}
-                      className="w-full flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-slate-600 dark:text-z-muted hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/5 transition-all"
+                      className="
+                        flex w-full items-center gap-2.5 rounded-xl
+                        px-3 py-2.5 text-sm text-slate-600
+                        transition-colors
+                        hover:bg-red-50 hover:text-red-600
+                        dark:text-slate-400
+                        dark:hover:bg-red-500/10
+                      "
                     >
                       <LogOut size={16} />
+
                       Logout
                     </button>
                   </motion.div>
@@ -266,125 +402,237 @@ export default function Navbar() {
             </div>
           ) : (
             <>
+              {/* Login */}
               <Link
                 href="/auth/login"
-                className="px-3 py-2 text-sm font-semibold text-slate-600 dark:text-z-muted hover:text-blue-700 dark:hover:text-z-text transition-colors"
+                className="
+                  px-3 py-2 text-sm font-medium text-slate-600
+                  transition-colors hover:text-slate-950
+                  dark:text-slate-400 dark:hover:text-white
+                "
               >
                 Login
               </Link>
 
+              {/* Get Started */}
               <Link
                 href="/contact"
-                className="group flex items-center gap-2 px-5 py-2.5 text-sm font-bold rounded-full bg-gradient-to-r from-z-accent to-blue-500 text-white hover:shadow-[0_8px_25px_rgba(37,99,235,0.28)] hover:-translate-y-0.5 transition-all duration-300"
+                className="
+                  group flex items-center gap-2 rounded-full
+                  bg-blue-600 px-5 py-2.5
+                  text-sm font-semibold text-white
+                  shadow-lg shadow-blue-500/20
+                  transition-all duration-300
+                  hover:-translate-y-0.5
+                  hover:bg-blue-700
+                  hover:shadow-xl hover:shadow-blue-500/25
+                "
               >
-                <Sparkles
+                {t("nav.get_started")}
+
+                <ArrowRight
                   size={15}
-                  className="group-hover:rotate-12 transition-transform"
+                  className="transition-transform duration-300 group-hover:translate-x-0.5"
                 />
-                Get Started
               </Link>
             </>
           )}
         </div>
 
-        {/* MOBILE MENU BUTTON */}
+        {/* ================= MOBILE MENU BUTTON ================= */}
         <button
-          className="md:hidden flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 dark:border-z-border bg-white/80 dark:bg-white/5 text-slate-700 dark:text-z-muted hover:border-blue-300 transition-all"
+          className="
+            flex h-10 w-10 items-center justify-center
+            rounded-full border border-slate-200
+            bg-white/70 text-slate-700
+            shadow-sm backdrop-blur-md
+            transition-all hover:border-blue-300
+            dark:border-white/10
+            dark:bg-white/[0.05]
+            dark:text-slate-200
+            lg:hidden
+          "
           onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle menu"
+          aria-label="Toggle navigation menu"
+          aria-expanded={mobileOpen}
         >
-          {mobileOpen ? <X size={21} /> : <Menu size={21} />}
+          {mobileOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </nav>
 
-      {/* MOBILE MENU */}
+      {/* ================= MOBILE MENU ================= */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.25 }}
-            className="md:hidden absolute top-full left-3 right-3 mt-2 overflow-hidden rounded-2xl bg-white/98 dark:bg-z-dark3/98 backdrop-blur-2xl border border-slate-200 dark:border-z-border shadow-2xl"
+            initial={{
+              opacity: 0,
+              y: -12,
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+            }}
+            exit={{
+              opacity: 0,
+              y: -12,
+            }}
+            transition={{
+              duration: 0.25,
+            }}
+            className="
+              border-t border-slate-200/70
+              bg-white/95 shadow-xl backdrop-blur-xl
+              dark:border-white/10
+              dark:bg-[#1b1d22]/95
+              lg:hidden
+            "
           >
-            <div className="p-3 flex flex-col gap-1">
-              {navLinks.map((link) => (
-                <div key={link.label}>
-                  <Link
-                    href={link.href}
-                    className={`block px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
-                      isActive(link.href)
-                        ? "bg-blue-50 dark:bg-white/10 text-blue-700 dark:text-white"
-                        : "text-slate-700 dark:text-z-muted hover:bg-slate-50 dark:hover:bg-white/5 hover:text-blue-700 dark:hover:text-white"
-                    }`}
+            <div className="mx-auto max-w-7xl px-4 py-5">
+              {/* Mobile Navigation */}
+              <div className="flex flex-col gap-1">
+                {navLinks.map((link, index) => (
+                  <motion.div
+                    key={link.label}
+                    initial={{
+                      opacity: 0,
+                      x: -10,
+                    }}
+                    animate={{
+                      opacity: 1,
+                      x: 0,
+                    }}
+                    transition={{
+                      delay: index * 0.04,
+                    }}
                   >
-                    {link.label}
+                    <Link
+                      href={link.href}
+                      className={`
+                        flex items-center justify-between rounded-xl
+                        px-4 py-3 text-sm font-semibold
+                        transition-all
+                        ${
+                          isActive(link.href)
+                            ? "bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-300"
+                            : "text-slate-600 hover:bg-slate-50 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-white/[0.05] dark:hover:text-white"
+                        }
+                      `}
+                    >
+                      {link.label}
+
+                      {isActive(link.href) && (
+                        <span className="h-2 w-2 rounded-full bg-blue-600" />
+                      )}
+                    </Link>
+
+                    {/* Mobile Dropdown Children */}
+                    {link.children?.map((child) => (
+                      <Link
+                        key={child.href}
+                        href={child.href}
+                        className="
+                          ml-4 mt-1 block rounded-lg
+                          px-4 py-2 text-sm
+                          text-slate-500
+                          hover:bg-slate-50
+                          hover:text-blue-600
+                          dark:text-slate-400
+                          dark:hover:bg-white/[0.05]
+                        "
+                      >
+                        {child.label}
+                      </Link>
+                    ))}
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Theme */}
+              <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-5 dark:border-white/10">
+                <span className="text-sm font-semibold text-slate-600 dark:text-slate-300">
+                  Appearance
+                </span>
+
+                <ThemeToggle />
+              </div>
+
+              {/* Logged In User */}
+              {user ? (
+                <div className="mt-5 flex flex-col gap-2">
+                  {isAdmin && (
+                    <Link
+                      href="/admin"
+                      className="
+                        flex items-center justify-center gap-2
+                        rounded-full border border-blue-200
+                        py-3 text-sm font-semibold text-blue-600
+                        dark:border-blue-500/20 dark:text-blue-300
+                      "
+                    >
+                      <ShieldCheck size={16} />
+
+                      Admin Panel
+                    </Link>
+                  )}
+
+                  <Link
+                    href="/dashboard"
+                    className="
+                      flex items-center justify-center gap-2
+                      rounded-full border border-slate-200
+                      py-3 text-sm font-semibold text-slate-700
+                      dark:border-white/10 dark:text-slate-300
+                    "
+                  >
+                    <LayoutDashboard size={16} />
+
+                    Dashboard
                   </Link>
 
-                  {link.children?.map((child) => (
-                    <Link
-                      key={child.href}
-                      href={child.href}
-                      className="block px-6 py-2 text-sm text-slate-500 dark:text-z-muted hover:text-blue-700"
-                    >
-                      {child.label}
-                    </Link>
-                  ))}
+                  <button
+                    onClick={handleLogout}
+                    className="
+                      flex items-center justify-center gap-2
+                      rounded-full border border-red-200
+                      py-3 text-sm font-semibold text-red-600
+                      dark:border-red-500/20
+                    "
+                  >
+                    <LogOut size={16} />
+
+                    Logout
+                  </button>
                 </div>
-              ))}
+              ) : (
+                /* Not Logged In */
+                <div className="mt-5 grid grid-cols-2 gap-3">
+                  <Link
+                    href="/auth/login"
+                    className="
+                      rounded-full border border-slate-200
+                      py-3 text-center text-sm font-semibold
+                      text-slate-700
+                      dark:border-white/10 dark:text-slate-300
+                    "
+                  >
+                    Login
+                  </Link>
 
-              <div className="mt-3 pt-3 border-t border-slate-100 dark:border-z-border">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                    Appearance
-                  </span>
-                  <ThemeToggle compact />
+                  <Link
+                    href="/contact"
+                    className="
+                      flex items-center justify-center gap-2
+                      rounded-full bg-blue-600 py-3
+                      text-sm font-semibold text-white
+                      shadow-lg shadow-blue-500/20
+                    "
+                  >
+                    Get Started
+
+                    <ArrowRight size={15} />
+                  </Link>
                 </div>
-
-                {user ? (
-                  <div className="flex flex-col gap-2">
-                    {isAdmin && (
-                      <Link
-                        href="/admin"
-                        className="flex items-center justify-center gap-2 py-3 text-sm font-bold border border-z-accent/30 text-z-accent rounded-xl"
-                      >
-                        <ShieldCheck size={16} />
-                        Admin Panel
-                      </Link>
-                    )}
-
-                    <Link
-                      href="/dashboard"
-                      className="text-center py-3 text-sm font-bold border border-slate-200 dark:border-z-border rounded-xl text-slate-700 dark:text-z-muted"
-                    >
-                      Dashboard
-                    </Link>
-
-                    <button
-                      onClick={handleLogout}
-                      className="text-center py-3 text-sm font-bold text-red-500 border border-red-200 dark:border-red-500/20 rounded-xl"
-                    >
-                      Logout
-                    </button>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-2 gap-2">
-                    <Link
-                      href="/auth/login"
-                      className="text-center py-3 text-sm font-bold border border-slate-200 dark:border-z-border rounded-xl text-slate-700 dark:text-z-muted"
-                    >
-                      Login
-                    </Link>
-
-                    <Link
-                      href="/contact"
-                      className="text-center py-3 text-sm font-bold bg-z-accent text-white rounded-xl shadow-sm"
-                    >
-                      Get Started
-                    </Link>
-                  </div>
-                )}
-              </div>
+              )}
             </div>
           </motion.div>
         )}
