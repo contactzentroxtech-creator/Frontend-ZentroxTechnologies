@@ -114,6 +114,10 @@ const coreValues = [
   },
 ];
 
+/* =========================================
+   TEAM DATA - FIXED FOR TYPESCRIPT
+========================================= */
+
 const teamDepartments = [
   {
     category: "Leadership",
@@ -136,6 +140,8 @@ const teamDepartments = [
         name: "Development Team",
         role: "Web, Software & Applications",
         initials: "DT",
+        badge: "",
+        isPrimary: false,
       },
     ],
   },
@@ -147,6 +153,8 @@ const teamDepartments = [
         name: "Creative Team",
         role: "SEO, Marketing & UI/UX",
         initials: "CT",
+        badge: "",
+        isPrimary: false,
       },
     ],
   },
@@ -158,6 +166,8 @@ const teamDepartments = [
         name: "Support Team",
         role: "Quality & Client Support",
         initials: "ST",
+        badge: "",
+        isPrimary: false,
       },
     ],
   },
