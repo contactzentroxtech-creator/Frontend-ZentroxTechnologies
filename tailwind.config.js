@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+
 module.exports = {
   darkMode: "class",
 
@@ -12,28 +13,21 @@ module.exports = {
     extend: {
       colors: {
         z: {
-          /*
-           * IMPORTANT:
-           * CSS variables use kar rahe hain so light/dark
-           * mode me puri website automatically update hogi.
-           */
+          dark: "var(--z-dark)",
+          dark2: "var(--z-dark2)",
+          dark3: "var(--z-dark3)",
+          dark4: "var(--z-dark4)",
 
-          dark: "rgb(var(--z-dark) / <alpha-value>)",
-          dark2: "rgb(var(--z-dark2) / <alpha-value>)",
-          dark3: "rgb(var(--z-dark3) / <alpha-value>)",
-          dark4: "rgb(var(--z-dark4) / <alpha-value>)",
+          accent: "var(--z-accent)",
+          accent2: "var(--z-accent2)",
+          accent3: "var(--z-accent3)",
+          gold: "var(--z-gold)",
 
-          accent: "rgb(var(--z-accent) / <alpha-value>)",
-          accent2: "rgb(var(--z-accent2) / <alpha-value>)",
-          accent3: "rgb(var(--z-accent3) / <alpha-value>)",
+          text: "var(--z-text)",
+          muted: "var(--z-muted)",
 
-          gold: "rgb(var(--z-gold) / <alpha-value>)",
-
-          text: "rgb(var(--z-text) / <alpha-value>)",
-          muted: "rgb(var(--z-muted) / <alpha-value>)",
-
-          border: "rgb(var(--z-border) / <alpha-value>)",
-          glow: "rgb(var(--z-glow) / <alpha-value>)",
+          border: "var(--z-border)",
+          glow: "var(--z-glow)",
         },
       },
 
@@ -58,14 +52,30 @@ module.exports = {
 
       animation: {
         float: "float 6s ease-in-out infinite",
-        "pulse-glow": "pulseGlow 3s ease-in-out infinite",
-        "gradient-shift": "gradientShift 8s ease-in-out infinite",
-        "slide-up": "slideUp 0.6s ease forwards",
-        "fade-in": "fadeIn 0.5s ease forwards",
-        "spin-slow": "spin 8s linear infinite",
-        "bounce-soft": "bounceSoft 2s ease-in-out infinite",
-        marquee: "marquee 25s linear infinite",
-        "marquee-reverse": "marqueeReverse 25s linear infinite",
+
+        "pulse-glow":
+          "pulseGlow 3s ease-in-out infinite",
+
+        "gradient-shift":
+          "gradientShift 8s ease infinite",
+
+        "slide-up":
+          "slideUp 0.6s ease forwards",
+
+        "fade-in":
+          "fadeIn 0.5s ease forwards",
+
+        "spin-slow":
+          "spin 8s linear infinite",
+
+        "bounce-soft":
+          "bounceSoft 2s ease-in-out infinite",
+
+        marquee:
+          "marquee 25s linear infinite",
+
+        "marquee-reverse":
+          "marqueeReverse 25s linear infinite",
       },
 
       keyframes: {
@@ -73,6 +83,7 @@ module.exports = {
           "0%, 100%": {
             transform: "translateY(0)",
           },
+
           "50%": {
             transform: "translateY(-10px)",
           },
@@ -83,6 +94,7 @@ module.exports = {
             opacity: "0.7",
             transform: "scale(1)",
           },
+
           "50%": {
             opacity: "1",
             transform: "scale(1.04)",
@@ -93,6 +105,7 @@ module.exports = {
           "0%, 100%": {
             backgroundPosition: "0% 50%",
           },
+
           "50%": {
             backgroundPosition: "100% 50%",
           },
@@ -103,6 +116,7 @@ module.exports = {
             opacity: "0",
             transform: "translateY(24px)",
           },
+
           to: {
             opacity: "1",
             transform: "translateY(0)",
@@ -113,6 +127,7 @@ module.exports = {
           from: {
             opacity: "0",
           },
+
           to: {
             opacity: "1",
           },
@@ -122,6 +137,7 @@ module.exports = {
           "0%, 100%": {
             transform: "translateY(0)",
           },
+
           "50%": {
             transform: "translateY(-5px)",
           },
@@ -131,6 +147,7 @@ module.exports = {
           "0%": {
             transform: "translateX(0)",
           },
+
           "100%": {
             transform: "translateX(-50%)",
           },
@@ -140,6 +157,7 @@ module.exports = {
           "0%": {
             transform: "translateX(-50%)",
           },
+
           "100%": {
             transform: "translateX(0)",
           },
@@ -148,16 +166,16 @@ module.exports = {
 
       backgroundImage: {
         "grid-pattern":
-          "linear-gradient(rgb(var(--z-grid) / 0.08) 1px, transparent 1px), linear-gradient(90deg, rgb(var(--z-grid) / 0.08) 1px, transparent 1px)",
+          "linear-gradient(rgba(148,163,184,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.05) 1px, transparent 1px)",
 
         "hero-glow":
-          "radial-gradient(ellipse 70% 55% at 50% 0%, rgb(var(--z-accent) / 0.12) 0%, transparent 72%)",
+          "radial-gradient(ellipse 70% 55% at 50% 0%, rgba(37,99,235,0.10) 0%, transparent 72%)",
 
         "card-glow":
-          "radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgb(var(--z-accent) / 0.08) 0%, transparent 60%)",
+          "radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(37,99,235,0.06) 0%, transparent 60%)",
 
         "accent-gradient":
-          "linear-gradient(135deg, rgb(var(--z-accent)) 0%, rgb(var(--z-accent2)) 50%, rgb(var(--z-accent3)) 100%)",
+          "linear-gradient(135deg, var(--z-accent) 0%, var(--z-accent2) 50%, var(--z-accent3) 100%)",
       },
 
       backdropBlur: {
@@ -166,16 +184,16 @@ module.exports = {
 
       boxShadow: {
         "glow-accent":
-          "0 10px 35px rgb(var(--z-accent) / 0.18)",
+          "0 10px 35px rgba(37,99,235,0.18)",
 
         "glow-sm":
-          "0 6px 20px rgb(var(--z-accent) / 0.12)",
+          "0 6px 20px rgba(37,99,235,0.12)",
 
         card:
-          "0 8px 30px rgb(var(--z-shadow) / 0.10)",
+          "0 8px 30px rgba(15,23,42,0.10)",
 
         "card-hover":
-          "0 20px 50px rgb(var(--z-shadow) / 0.16)",
+          "0 20px 50px rgba(15,23,42,0.16)",
       },
     },
   },

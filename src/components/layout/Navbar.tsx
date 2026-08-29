@@ -14,14 +14,18 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ThemeToggle, LangSwitcher } from "@/components/ui/ThemeToggle";
+
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { useLang } from "@/lib/providers";
 import { useAuthStore } from "@/store/authStore";
 
 type NavLink = {
   label: string;
   href: string;
-  children?: { label: string; href: string }[];
+  children?: {
+    label: string;
+    href: string;
+  }[];
 };
 
 export default function Navbar() {
@@ -32,14 +36,18 @@ export default function Navbar() {
 
   const pathname = usePathname();
   const router = useRouter();
+
   const { t } = useLang();
   const { user, logout, fetchMe, initialized } = useAuthStore();
 
+  // Fetch logged-in user
   useEffect(() => {
-    if (!initialized) fetchMe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (!initialized) {
+      fetchMe();
+    }
+  }, [initialized, fetchMe]);
 
+  // Navbar scroll effect
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -49,9 +57,12 @@ export default function Navbar() {
       passive: true,
     });
 
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
+  // Close menus on route change
   useEffect(() => {
     setMobileOpen(false);
     setUserMenuOpen(false);
@@ -65,20 +76,42 @@ export default function Navbar() {
 
   const isAdmin = user?.role === "admin";
 
+  // Navigation links
   const navLinks = useMemo<NavLink[]>(
     () => [
-      { label: "Home", href: "/" },
-      { label: t("nav.services"), href: "/services" },
-      { label: t("nav.internship"), href: "/internship" },
-      { label: t("nav.blog"), href: "/blog" },
-      { label: t("nav.about"), href: "/about" },
-      { label: t("nav.contact"), href: "/contact" },
+      {
+        label: "Home",
+        href: "/",
+      },
+      {
+        label: t("nav.services"),
+        href: "/services",
+      },
+      {
+        label: t("nav.internship"),
+        href: "/internship",
+      },
+      {
+        label: t("nav.blog"),
+        href: "/blog",
+      },
+      {
+        label: t("nav.about"),
+        href: "/about",
+      },
+      {
+        label: t("nav.contact"),
+        href: "/contact",
+      },
     ],
     [t]
   );
 
   const isActive = (href: string) => {
-    if (href === "/") return pathname === "/";
+    if (href === "/") {
+      return pathname === "/";
+    }
+
     return pathname.startsWith(href.split("#")[0]);
   };
 
@@ -91,7 +124,7 @@ export default function Navbar() {
       }`}
     >
       <nav className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-4 md:px-6">
-        {/* LOGO */}
+        {/* ================= LOGO ================= */}
         <Link
           href="/"
           className="group relative z-10 flex flex-shrink-0 items-center gap-2.5"
@@ -119,7 +152,7 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* DESKTOP NAVIGATION */}
+        {/* ================= DESKTOP NAVIGATION ================= */}
         <div className="hidden items-center gap-1 lg:flex">
           {navLinks.map((link) =>
             link.children ? (
@@ -145,9 +178,7 @@ export default function Navbar() {
                   <ChevronDown
                     size={14}
                     className={`transition-transform duration-300 ${
-                      dropdownOpen === link.label
-                        ? "rotate-180"
-                        : ""
+                      dropdownOpen === link.label ? "rotate-180" : ""
                     }`}
                   />
                 </button>
@@ -155,10 +186,24 @@ export default function Navbar() {
                 <AnimatePresence>
                   {dropdownOpen === link.label && (
                     <motion.div
-                      initial={{ opacity: 0, y: -8, scale: 0.98 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: -8, scale: 0.98 }}
-                      transition={{ duration: 0.2 }}
+                      initial={{
+                        opacity: 0,
+                        y: -8,
+                        scale: 0.98,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+                      }}
+                      exit={{
+                        opacity: 0,
+                        y: -8,
+                        scale: 0.98,
+                      }}
+                      transition={{
+                        duration: 0.2,
+                      }}
                       className="
                         absolute left-0 top-full mt-2 w-52
                         overflow-hidden rounded-2xl
@@ -217,10 +262,9 @@ export default function Navbar() {
           )}
         </div>
 
-        {/* DESKTOP ACTIONS */}
+        {/* ================= DESKTOP ACTIONS ================= */}
         <div className="hidden items-center gap-2 lg:flex">
           <ThemeToggle compact />
-          <LangSwitcher />
 
           {user ? (
             <div
@@ -229,9 +273,7 @@ export default function Navbar() {
             >
               <button
                 onMouseEnter={() => setUserMenuOpen(true)}
-                onClick={() =>
-                  setUserMenuOpen(!userMenuOpen)
-                }
+                onClick={() => setUserMenuOpen(!userMenuOpen)}
                 className="
                   flex items-center gap-2 rounded-full
                   border border-slate-200/80 bg-white/70
@@ -248,7 +290,7 @@ export default function Navbar() {
                 </div>
 
                 <span className="max-w-[90px] truncate text-sm font-semibold text-slate-700 dark:text-slate-200">
-                  {user.name.split(" ")[0]}
+                  {user.name?.split(" ")[0]}
                 </span>
 
                 <ChevronDown
@@ -260,10 +302,24 @@ export default function Navbar() {
               <AnimatePresence>
                 {userMenuOpen && (
                   <motion.div
-                    initial={{ opacity: 0, y: -8, scale: 0.98 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -8, scale: 0.98 }}
-                    transition={{ duration: 0.2 }}
+                    initial={{
+                      opacity: 0,
+                      y: -8,
+                      scale: 0.98,
+                    }}
+                    animate={{
+                      opacity: 1,
+                      y: 0,
+                      scale: 1,
+                    }}
+                    exit={{
+                      opacity: 0,
+                      y: -8,
+                      scale: 0.98,
+                    }}
+                    transition={{
+                      duration: 0.2,
+                    }}
                     className="
                       absolute right-0 top-full mt-3 w-56
                       overflow-hidden rounded-2xl
@@ -274,6 +330,7 @@ export default function Navbar() {
                       dark:bg-[#20232a]/95
                     "
                   >
+                    {/* User Info */}
                     <div className="mb-2 border-b border-slate-100 px-3 py-2.5 dark:border-white/10">
                       <p className="truncate text-sm font-bold text-slate-900 dark:text-white">
                         {user.name}
@@ -284,6 +341,7 @@ export default function Navbar() {
                       </p>
                     </div>
 
+                    {/* Admin */}
                     {isAdmin && (
                       <Link
                         href="/admin"
@@ -300,10 +358,12 @@ export default function Navbar() {
                           size={16}
                           className="text-blue-600"
                         />
+
                         Admin Panel
                       </Link>
                     )}
 
+                    {/* Dashboard */}
                     <Link
                       href="/dashboard"
                       className="
@@ -316,9 +376,11 @@ export default function Navbar() {
                       "
                     >
                       <LayoutDashboard size={16} />
+
                       Dashboard
                     </Link>
 
+                    {/* Logout */}
                     <button
                       onClick={handleLogout}
                       className="
@@ -331,6 +393,7 @@ export default function Navbar() {
                       "
                     >
                       <LogOut size={16} />
+
                       Logout
                     </button>
                   </motion.div>
@@ -339,6 +402,7 @@ export default function Navbar() {
             </div>
           ) : (
             <>
+              {/* Login */}
               <Link
                 href="/auth/login"
                 className="
@@ -347,9 +411,10 @@ export default function Navbar() {
                   dark:text-slate-400 dark:hover:text-white
                 "
               >
-                {t("nav.login")}
+                Login
               </Link>
 
+              {/* Get Started */}
               <Link
                 href="/contact"
                 className="
@@ -374,7 +439,7 @@ export default function Navbar() {
           )}
         </div>
 
-        {/* MOBILE MENU BUTTON */}
+        {/* ================= MOBILE MENU BUTTON ================= */}
         <button
           className="
             flex h-10 w-10 items-center justify-center
@@ -395,14 +460,25 @@ export default function Navbar() {
         </button>
       </nav>
 
-      {/* MOBILE MENU */}
+      {/* ================= MOBILE MENU ================= */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.25 }}
+            initial={{
+              opacity: 0,
+              y: -12,
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+            }}
+            exit={{
+              opacity: 0,
+              y: -12,
+            }}
+            transition={{
+              duration: 0.25,
+            }}
             className="
               border-t border-slate-200/70
               bg-white/95 shadow-xl backdrop-blur-xl
@@ -412,12 +488,19 @@ export default function Navbar() {
             "
           >
             <div className="mx-auto max-w-7xl px-4 py-5">
+              {/* Mobile Navigation */}
               <div className="flex flex-col gap-1">
                 {navLinks.map((link, index) => (
                   <motion.div
                     key={link.label}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
+                    initial={{
+                      opacity: 0,
+                      x: -10,
+                    }}
+                    animate={{
+                      opacity: 1,
+                      x: 0,
+                    }}
                     transition={{
                       delay: index * 0.04,
                     }}
@@ -441,15 +524,39 @@ export default function Navbar() {
                         <span className="h-2 w-2 rounded-full bg-blue-600" />
                       )}
                     </Link>
+
+                    {/* Mobile Dropdown Children */}
+                    {link.children?.map((child) => (
+                      <Link
+                        key={child.href}
+                        href={child.href}
+                        className="
+                          ml-4 mt-1 block rounded-lg
+                          px-4 py-2 text-sm
+                          text-slate-500
+                          hover:bg-slate-50
+                          hover:text-blue-600
+                          dark:text-slate-400
+                          dark:hover:bg-white/[0.05]
+                        "
+                      >
+                        {child.label}
+                      </Link>
+                    ))}
                   </motion.div>
                 ))}
               </div>
 
+              {/* Theme */}
               <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-5 dark:border-white/10">
-                <LangSwitcher />
+                <span className="text-sm font-semibold text-slate-600 dark:text-slate-300">
+                  Appearance
+                </span>
+
                 <ThemeToggle />
               </div>
 
+              {/* Logged In User */}
               {user ? (
                 <div className="mt-5 flex flex-col gap-2">
                   {isAdmin && (
@@ -463,6 +570,7 @@ export default function Navbar() {
                       "
                     >
                       <ShieldCheck size={16} />
+
                       Admin Panel
                     </Link>
                   )}
@@ -477,6 +585,7 @@ export default function Navbar() {
                     "
                   >
                     <LayoutDashboard size={16} />
+
                     Dashboard
                   </Link>
 
@@ -490,10 +599,12 @@ export default function Navbar() {
                     "
                   >
                     <LogOut size={16} />
+
                     Logout
                   </button>
                 </div>
               ) : (
+                /* Not Logged In */
                 <div className="mt-5 grid grid-cols-2 gap-3">
                   <Link
                     href="/auth/login"
@@ -504,7 +615,7 @@ export default function Navbar() {
                       dark:border-white/10 dark:text-slate-300
                     "
                   >
-                    {t("nav.login")}
+                    Login
                   </Link>
 
                   <Link
@@ -517,6 +628,7 @@ export default function Navbar() {
                     "
                   >
                     Get Started
+
                     <ArrowRight size={15} />
                   </Link>
                 </div>

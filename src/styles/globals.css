@@ -4,42 +4,60 @@
 @tailwind components;
 @tailwind utilities;
 
-@import "./theme.css";
-
 /* =========================================================
    ZENTROX TECHNOLOGIES — PREMIUM GLOBAL THEME
    Clean • Professional • International SaaS Agency
 ========================================================= */
 
 :root {
+  /* BACKGROUNDS */
   --z-dark: #0b0f14;
   --z-dark2: #111820;
   --z-dark3: #18212b;
   --z-dark4: #202a35;
 
+  /* BRAND */
   --z-accent: #2563eb;
   --z-accent2: #1d4ed8;
   --z-accent3: #0f766e;
   --z-gold: #d97706;
 
+  /* TEXT */
   --z-text: #f8fafc;
   --z-muted: #94a3b8;
 
-  --z-border: rgba(148, 163, 184, 0.16);
-  --z-glow: rgba(37, 99, 235, 0.12);
+  /* UI */
+  --z-border: rgba(148, 163, 184, 0.14);
+  --z-glow: rgba(37, 99, 235, 0.1);
 
+  /* Cursor */
   --mx: 50%;
   --my: 50%;
 }
 
 /* =========================================================
-   BASE
+   LIGHT MODE
+========================================================= */
+
+:root.light {
+  --z-dark: #f8fafc;
+  --z-dark2: #f1f5f9;
+  --z-dark3: #e2e8f0;
+  --z-dark4: #cbd5e1;
+
+  --z-text: #0f172a;
+  --z-muted: #64748b;
+
+  --z-border: rgba(15, 23, 42, 0.1);
+  --z-glow: rgba(37, 99, 235, 0.08);
+}
+
+/* =========================================================
+   RESET
 ========================================================= */
 
 * {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
 html {
@@ -47,67 +65,66 @@ html {
 }
 
 body {
+  margin: 0;
+  padding: 0;
+
   background: var(--z-dark);
   color: var(--z-text);
-  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+
+  font-family:
+    "Plus Jakarta Sans",
+    system-ui,
+    sans-serif;
+
   overflow-x: hidden;
+
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
 /* =========================================================
-   SCROLLBAR
-========================================================= */
-
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--z-dark);
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.35);
-  border-radius: 999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.55);
-}
-
-/* =========================================================
-   SELECTION
-========================================================= */
-
-::selection {
-  background: rgba(37, 99, 235, 0.22);
-  color: #ffffff;
-}
-
-/* =========================================================
-   SUBTLE BACKGROUND TEXTURE
+   PREMIUM BACKGROUND
 ========================================================= */
 
 body::before {
   content: "";
+
   position: fixed;
   inset: 0;
 
-  background-image:
+  pointer-events: none;
+  z-index: -2;
+
+  background:
     radial-gradient(
-      circle at 20% 10%,
-      rgba(37, 99, 235, 0.035),
+      circle at 15% 10%,
+      rgba(37, 99, 235, 0.06),
       transparent 30%
     ),
     radial-gradient(
-      circle at 80% 80%,
+      circle at 85% 20%,
+      rgba(15, 118, 110, 0.035),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 50% 90%,
+      rgba(37, 99, 235, 0.03),
+      transparent 32%
+    );
+}
+
+:root.light body::before {
+  background:
+    radial-gradient(
+      circle at 15% 10%,
+      rgba(37, 99, 235, 0.05),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 85% 20%,
       rgba(15, 118, 110, 0.025),
       transparent 30%
     );
-
-  pointer-events: none;
-  z-index: 0;
 }
 
 /* =========================================================
@@ -117,33 +134,43 @@ body::before {
 .grid-bg {
   position: fixed;
   inset: 0;
-  z-index: 0;
+
   pointer-events: none;
+  z-index: -1;
+
+  opacity: 0.5;
 
   background-image:
     linear-gradient(
-      rgba(148, 163, 184, 0.035) 1px,
+      rgba(148, 163, 184, 0.03) 1px,
       transparent 1px
     ),
     linear-gradient(
       90deg,
-      rgba(148, 163, 184, 0.035) 1px,
+      rgba(148, 163, 184, 0.03) 1px,
       transparent 1px
     );
 
-  background-size: 70px 70px;
+  background-size: 80px 80px;
+
+  mask-image:
+    linear-gradient(
+      to bottom,
+      black,
+      transparent 85%
+    );
 }
 
-.grid-bg::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-
-  background:
-    radial-gradient(
-      ellipse 70% 50% at 50% 0%,
-      rgba(37, 99, 235, 0.07),
-      transparent 70%
+:root.light .grid-bg {
+  background-image:
+    linear-gradient(
+      rgba(15, 23, 42, 0.035) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(15, 23, 42, 0.035) 1px,
+      transparent 1px
     );
 }
 
@@ -152,37 +179,90 @@ body::before {
 ========================================================= */
 
 .glass-card {
-  background: rgba(17, 24, 32, 0.78);
-  border: 1px solid rgba(148, 163, 184, 0.14);
+  background:
+    linear-gradient(
+      145deg,
+      rgba(17, 24, 32, 0.94),
+      rgba(11, 15, 20, 0.9)
+    );
+
+  border: 1px solid var(--z-border);
+
   border-radius: 20px;
 
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 
   box-shadow:
-    0 10px 35px rgba(0, 0, 0, 0.16),
+    0 12px 40px rgba(0, 0, 0, 0.18),
     inset 0 1px 0 rgba(255, 255, 255, 0.025);
+
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-4px);
+
+  border-color: rgba(37, 99, 235, 0.25);
+
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+:root.light .glass-card {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.95),
+      rgba(248, 250, 252, 0.95)
+    );
+
+  border-color: rgba(15, 23, 42, 0.08);
+
+  box-shadow:
+    0 10px 35px rgba(15, 23, 42, 0.06);
 }
 
 /* =========================================================
-   PREMIUM GRADIENT TEXT
+   GRADIENT TEXT
 ========================================================= */
 
 .gradient-text {
-  background: linear-gradient(
-    135deg,
-    #2563eb 0%,
-    #1d4ed8 55%,
-    #0f766e 100%
-  );
+  background:
+    linear-gradient(
+      135deg,
+      #60a5fa,
+      #2563eb,
+      #14b8a6
+    );
 
-  background-size: 160% auto;
+  background-size: 180% auto;
 
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   background-clip: text;
 
-  animation: gradientShift 8s ease infinite;
+  -webkit-text-fill-color: transparent;
+
+  animation: gradientShift 10s ease infinite;
+}
+
+.brand-gradient {
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #1d4ed8,
+      #0f766e
+    );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  -webkit-text-fill-color: transparent;
 }
 
 @keyframes gradientShift {
@@ -200,59 +280,94 @@ body::before {
 }
 
 /* =========================================================
-   BUTTON EFFECT
+   BUTTON SYSTEM
 ========================================================= */
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
 
 .btn-glow {
   position: relative;
   overflow: hidden;
   isolation: isolate;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
-.btn-glow::after {
+.btn-glow:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 25px rgba(37, 99, 235, 0.2);
+}
+
+.btn-glow::before {
   content: "";
+
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: -100%;
 
-  background: linear-gradient(
-    135deg,
-    rgba(37, 99, 235, 0.12),
-    rgba(15, 118, 110, 0.08)
-  );
+  width: 70%;
+  height: 100%;
 
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: -1;
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.12),
+      transparent
+    );
+
+  transform: skewX(-20deg);
+
+  transition: left 0.6s ease;
 }
 
-.btn-glow:hover::after {
-  opacity: 1;
+.btn-glow:hover::before {
+  left: 130%;
 }
 
 /* =========================================================
-   CARD HOVER SPOTLIGHT
+   TILE HOVER
 ========================================================= */
 
 .tile-glow {
   position: relative;
-  overflow: hidden;
+
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    background 0.3s ease;
 }
 
 .tile-glow::before {
   content: "";
+
   position: absolute;
   inset: 0;
 
-  background: radial-gradient(
-    circle at var(--mx) var(--my),
-    rgba(37, 99, 235, 0.055) 0%,
-    transparent 60%
-  );
-
-  opacity: 0;
-  transition: opacity 0.35s ease;
   pointer-events: none;
   z-index: 0;
+
+  background:
+    radial-gradient(
+      circle at var(--mx) var(--my),
+      rgba(37, 99, 235, 0.06),
+      transparent 65%
+    );
+
+  opacity: 0;
+
+  transition: opacity 0.35s ease;
+}
+
+.tile-glow:hover {
+  transform: translateY(-5px);
 }
 
 .tile-glow:hover::before {
@@ -260,62 +375,139 @@ body::before {
 }
 
 /* =========================================================
-   ANIMATIONS
+   INPUTS
 ========================================================= */
 
-@keyframes borderSpin {
-  from {
-    transform: rotate(0deg);
-  }
+.z-input {
+  width: 100%;
 
-  to {
-    transform: rotate(360deg);
-  }
-}
+  padding: 13px 16px;
 
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0) rotate(var(--rot, 0deg));
-  }
+  background: rgba(11, 15, 20, 0.75);
 
-  50% {
-    transform: translateY(-10px) rotate(var(--rot, 0deg));
-  }
-}
+  color: var(--z-text);
 
-@keyframes progressFill {
-  from {
-    width: 0;
-  }
-}
+  border: 1px solid var(--z-border);
 
-/* =========================================================
-   REVEAL ANIMATION
-========================================================= */
+  border-radius: 12px;
 
-.reveal {
-  opacity: 0;
-  transform: translateY(30px);
+  outline: none;
+
+  font-family: inherit;
+
+  font-size: 0.875rem;
 
   transition:
-    opacity 0.7s ease,
-    transform 0.7s ease;
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
+.z-input:hover {
+  border-color: rgba(148, 163, 184, 0.28);
+}
+
+.z-input:focus {
+  background: rgba(11, 15, 20, 0.95);
+
+  border-color: #2563eb;
+
+  box-shadow:
+    0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.z-input::placeholder {
+  color: var(--z-muted);
+}
+
+:root.light .z-input {
+  background: #ffffff;
+
+  color: #0f172a;
+
+  border-color: rgba(15, 23, 42, 0.12);
+}
+
+:root.light .z-input:focus {
+  background: #ffffff;
 }
 
 /* =========================================================
-   ADMIN SIDEBAR
+   BADGE
 ========================================================= */
 
-.admin-sidebar-link.active {
-  background: rgba(37, 99, 235, 0.1);
-  border-color: rgba(37, 99, 235, 0.25);
-  color: #ffffff;
+.z-badge {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 6px;
+
+  padding: 7px 14px;
+
+  border-radius: 999px;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+
+  color: #60a5fa;
+
+  background: rgba(37, 99, 235, 0.07);
+
+  border:
+    1px solid rgba(37, 99, 235, 0.18);
+}
+
+/* =========================================================
+   CUSTOM CURSOR
+========================================================= */
+
+.custom-cursor {
+  position: fixed;
+
+  width: 10px;
+  height: 10px;
+
+  border-radius: 50%;
+
+  background: #2563eb;
+
+  pointer-events: none;
+
+  z-index: 9999;
+
+  transform: translate(-50%, -50%);
+
+  transition:
+    width 0.2s ease,
+    height 0.2s ease;
+}
+
+.cursor-ring {
+  position: fixed;
+
+  width: 34px;
+  height: 34px;
+
+  border-radius: 50%;
+
+  border: 1px solid rgba(37, 99, 235, 0.3);
+
+  pointer-events: none;
+
+  z-index: 9998;
+
+  transform: translate(-50%, -50%);
+
+  transition:
+    width 0.2s ease,
+    height 0.2s ease;
+}
+
+:root.light .custom-cursor {
+  mix-blend-mode: multiply;
 }
 
 /* =========================================================
@@ -342,218 +534,6 @@ body::before {
   color: #64748b;
 }
 
-/* =========================================================
-   FORM INPUTS
-========================================================= */
-
-.z-input {
-  width: 100%;
-  padding: 12px 16px;
-
-  background: rgba(11, 15, 20, 0.75);
-  border: 1px solid rgba(148, 163, 184, 0.16);
-  border-radius: 12px;
-
-  color: var(--z-text);
-
-  font-family:
-    "Plus Jakarta Sans",
-    system-ui,
-    sans-serif;
-
-  font-size: 0.875rem;
-
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    background 0.2s ease;
-
-  outline: none;
-}
-
-.z-input:hover {
-  border-color: rgba(148, 163, 184, 0.28);
-}
-
-.z-input:focus {
-  background: rgba(11, 15, 20, 0.95);
-  border-color: #2563eb;
-
-  box-shadow:
-    0 0 0 3px
-    rgba(37, 99, 235, 0.1);
-}
-
-.z-input::placeholder {
-  color: var(--z-muted);
-}
-
-/* =========================================================
-   CUSTOM CURSOR
-========================================================= */
-
-.custom-cursor {
-  position: fixed;
-
-  width: 10px;
-  height: 10px;
-
-  border-radius: 50%;
-  background: #2563eb;
-
-  pointer-events: none;
-  z-index: 9999;
-
-  transform: translate(-50%, -50%);
-  mix-blend-mode: screen;
-
-  transition:
-    width 0.2s ease,
-    height 0.2s ease,
-    background 0.2s ease;
-}
-
-.cursor-ring {
-  position: fixed;
-
-  width: 34px;
-  height: 34px;
-
-  border-radius: 50%;
-
-  border: 1px solid rgba(37, 99, 235, 0.35);
-
-  pointer-events: none;
-  z-index: 9998;
-
-  transform: translate(-50%, -50%);
-
-  transition:
-    width 0.2s ease,
-    height 0.2s ease;
-}
-
-/* =========================================================
-   BADGE
-========================================================= */
-
-.z-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-
-  font-size: 0.7rem;
-  font-weight: 600;
-
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-
-  color: #2563eb;
-
-  border: 1px solid rgba(37, 99, 235, 0.22);
-
-  background: rgba(37, 99, 235, 0.06);
-
-  border-radius: 999px;
-  padding: 6px 14px;
-}
-
-/* =========================================================
-   SWIPER
-========================================================= */
-
-.swiper-pagination-bullet {
-  background: rgba(148, 163, 184, 0.5) !important;
-  opacity: 1 !important;
-}
-
-.swiper-pagination-bullet-active {
-  background: #2563eb !important;
-}
-
-/* =========================================================
-   LIGHT MODE
-========================================================= */
-
-:root.light {
-  --z-dark: #ffffff;
-  --z-dark2: #f8fafc;
-  --z-dark3: #f1f5f9;
-  --z-dark4: #e2e8f0;
-
-  --z-text: #0f172a;
-  --z-muted: #64748b;
-
-  --z-border: rgba(15, 23, 42, 0.1);
-}
-
-:root.light body {
-  background: #ffffff;
-  color: #0f172a;
-}
-
-:root.light body::before {
-  background-image:
-    radial-gradient(
-      circle at 20% 10%,
-      rgba(37, 99, 235, 0.035),
-      transparent 30%
-    );
-}
-
-:root.light .grid-bg {
-  background-image:
-    linear-gradient(
-      rgba(15, 23, 42, 0.035) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      90deg,
-      rgba(15, 23, 42, 0.035) 1px,
-      transparent 1px
-    );
-}
-
-:root.light .grid-bg::after {
-  background:
-    radial-gradient(
-      ellipse 70% 50% at 50% 0%,
-      rgba(37, 99, 235, 0.04),
-      transparent 70%
-    );
-}
-
-:root.light .glass-card {
-  background: rgba(255, 255, 255, 0.78);
-
-  border-color: rgba(15, 23, 42, 0.08);
-
-  box-shadow:
-    0 10px 35px
-    rgba(15, 23, 42, 0.06);
-}
-
-/* Light mode inputs */
-
-:root.light .z-input {
-  background: #ffffff;
-  color: #0f172a;
-  border-color: rgba(15, 23, 42, 0.12);
-}
-
-:root.light .z-input:focus {
-  background: #ffffff;
-  border-color: #2563eb;
-
-  box-shadow:
-    0 0 0 3px
-    rgba(37, 99, 235, 0.1);
-}
-
-/* =========================================================
-   LIGHT MODE CODE COLORS
-========================================================= */
-
 :root.light .code-kw {
   color: #4f46e5;
 }
@@ -570,233 +550,136 @@ body::before {
   color: #2563eb;
 }
 
-:root.light .code-cm {
-  color: #64748b;
+/* =========================================================
+   ADMIN SIDEBAR
+========================================================= */
+
+.admin-sidebar-link.active {
+  background: rgba(37, 99, 235, 0.1);
+
+  border-color: rgba(37, 99, 235, 0.25);
+
+  color: #ffffff;
+}
+
+:root.light .admin-sidebar-link.active {
+  color: #2563eb;
 }
 
 /* =========================================================
-   LIGHT MODE CURSOR
+   SWIPER
 ========================================================= */
 
-:root.light .custom-cursor {
-  mix-blend-mode: multiply;
-  background: #2563eb;
+.swiper-pagination-bullet {
+  background: rgba(148, 163, 184, 0.5) !important;
+
+  opacity: 1 !important;
 }
 
-:root.light .cursor-ring {
-  border-color: rgba(37, 99, 235, 0.35);
+.swiper-pagination-bullet-active {
+  background: #2563eb !important;
 }
 
 /* =========================================================
-   ACCESSIBILITY
+   LIGHT MODE TAILWIND OVERRIDES
 ========================================================= */
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-
-    scroll-behavior: auto !important;
-
-    transition-duration: 0.01ms !important;
-  }
-}
-/* =========================================================
-   ZENTROX MASTER PREMIUM UI OVERRIDE
-   This layer removes old neon / cyberpunk appearance
-========================================================= */
-
-:root {
-  --brand-primary: #2563eb;
-  --brand-primary-dark: #1d4ed8;
-  --brand-secondary: #0f766e;
-
-  --surface-main: #0b0f14;
-  --surface-1: #111820;
-  --surface-2: #18212b;
-  --surface-3: #202a35;
-
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-
-  --border-premium: rgba(148, 163, 184, 0.14);
+:root.light .bg-z-dark {
+  background-color: #f8fafc !important;
 }
 
-/* =========================================================
-   REMOVE OLD NEON FEEL
-========================================================= */
-
-body {
-  background: #0b0f14 !important;
+:root.light .bg-z-dark2 {
+  background-color: #f1f5f9 !important;
 }
 
-/* Old neon gradients */
-.gradient-text {
-  background: linear-gradient(
-    135deg,
-    #f8fafc 0%,
-    #cbd5e1 45%,
-    #94a3b8 100%
-  ) !important;
-
-  background-size: 100% !important;
-
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-
-  animation: none !important;
+:root.light .bg-z-dark3 {
+  background-color: #e2e8f0 !important;
 }
 
-/* Premium colored text version */
-.brand-gradient {
-  background: linear-gradient(
-    135deg,
-    #2563eb,
-    #1d4ed8,
-    #0f766e
-  ) !important;
+:root.light .bg-z-dark4 {
+  background-color: #cbd5e1 !important;
+}
 
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
+:root.light .text-z-text {
+  color: #0f172a !important;
+}
+
+:root.light .text-z-muted {
+  color: #64748b !important;
+}
+
+:root.light .text-slate-100,
+:root.light .text-slate-200 {
+  color: #1e293b !important;
+}
+
+:root.light .text-slate-300,
+:root.light .text-slate-400 {
+  color: #526171 !important;
+}
+
+:root.light .border-z-border {
+  border-color: rgba(15, 23, 42, 0.1) !important;
+}
+
+:root.light .border-white\/5,
+:root.light .border-white\/10 {
+  border-color: rgba(15, 23, 42, 0.1) !important;
+}
+
+:root.light .bg-white\/5 {
+  background-color: rgba(15, 23, 42, 0.035) !important;
+}
+
+:root.light .bg-white\/10 {
+  background-color: rgba(15, 23, 42, 0.06) !important;
+}
+
+:root.light .bg-white\/20 {
+  background-color: rgba(15, 23, 42, 0.08) !important;
 }
 
 /* =========================================================
-   FORCE ZENTROX TAILWIND COLORS
+   PRIMARY BUTTON PROTECTION
 ========================================================= */
 
-.bg-z-dark {
-  background-color: #0b0f14 !important;
-}
-
-.bg-z-dark2 {
-  background-color: #111820 !important;
-}
-
-.bg-z-dark3 {
-  background-color: #18212b !important;
-}
-
-.bg-z-dark4 {
-  background-color: #202a35 !important;
-}
-
-.bg-z-accent {
-  background-color: #2563eb !important;
-}
-
-.bg-z-accent2 {
-  background-color: #1d4ed8 !important;
-}
-
-.bg-z-accent3 {
-  background-color: #0f766e !important;
-}
-
-.text-z-accent {
-  color: #2563eb !important;
-}
-
-.text-z-accent2 {
-  color: #1d4ed8 !important;
-}
-
-.text-z-accent3 {
-  color: #14b8a6 !important;
-}
-
-.border-z-border {
-  border-color: rgba(148, 163, 184, 0.14) !important;
-}
-
-/* =========================================================
-   REMOVE EXCESSIVE GLOWS
-========================================================= */
-
-.shadow-glow-accent {
-  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.14) !important;
-}
-
-.shadow-glow-sm {
-  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.1) !important;
-}
-
-/* =========================================================
-   PREMIUM CARDS
-========================================================= */
-
-.glass-card {
-  background: rgba(17, 24, 32, 0.88) !important;
-
-  border: 1px solid rgba(148, 163, 184, 0.14) !important;
-
-  box-shadow:
-    0 12px 40px rgba(0, 0, 0, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.025) !important;
-
-  backdrop-filter: blur(16px) !important;
-}
-
-/* =========================================================
-   BUTTON SYSTEM
-========================================================= */
-
-/* Primary */
 .bg-z-accent,
 button.bg-z-accent,
 a.bg-z-accent {
-  background: linear-gradient(
-    135deg,
-    #2563eb,
-    #1d4ed8
-  ) !important;
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #1d4ed8
+    ) !important;
 
   color: #ffffff !important;
 
   box-shadow:
-    0 8px 24px rgba(37, 99, 235, 0.22) !important;
+    0 8px 24px rgba(37, 99, 235, 0.2);
 }
 
-/* Secondary buttons */
-button.bg-z-dark3,
-a.bg-z-dark3 {
-  background: #18212b !important;
-
-  color: #f8fafc !important;
-
-  border: 1px solid rgba(148, 163, 184, 0.2) !important;
-
-  box-shadow: none !important;
+:root.light .bg-blue-500,
+:root.light .bg-blue-600,
+:root.light .bg-blue-700,
+:root.light .bg-z-accent {
+  color: #ffffff !important;
 }
 
-/* Hover */
-button:hover,
-a:hover {
-  transition:
-    background 0.25s ease,
-    border-color 0.25s ease,
-    transform 0.25s ease !important;
+:root.light .bg-blue-500 *,
+:root.light .bg-blue-600 *,
+:root.light .bg-blue-700 *,
+:root.light .bg-z-accent * {
+  color: #ffffff !important;
 }
 
 /* =========================================================
-   OLD BLUE / NEON BACKGROUND BLOBS
+   SECONDARY BUTTON
 ========================================================= */
 
-.bg-z-accent\/10,
-.bg-z-accent\/20,
-.bg-z-accent\/30 {
-  background-color: rgba(37, 99, 235, 0.08) !important;
-}
-
-.bg-z-accent2\/10,
-.bg-z-accent2\/20 {
-  background-color: rgba(29, 78, 216, 0.06) !important;
-}
-
-.bg-z-accent3\/10,
-.bg-z-accent3\/20 {
-  background-color: rgba(15, 118, 110, 0.05) !important;
+button.bg-z-dark3,
+a.bg-z-dark3 {
+  border: 1px solid rgba(148, 163, 184, 0.2);
 }
 
 /* =========================================================
@@ -809,126 +692,115 @@ section[class*="hero"] {
     radial-gradient(
       ellipse at top,
       rgba(37, 99, 235, 0.07),
-      transparent 48%
-    ) !important;
+      transparent 50%
+    );
 }
 
 /* =========================================================
-   GRID - MUCH SUBTLER
+   REVEAL ANIMATION
 ========================================================= */
 
-.grid-bg {
-  opacity: 0.45 !important;
+.reveal {
+  opacity: 0;
 
-  background-image:
-    linear-gradient(
-      rgba(148, 163, 184, 0.035) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      90deg,
-      rgba(148, 163, 184, 0.035) 1px,
-      transparent 1px
-    ) !important;
+  transform: translateY(25px);
+
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.grid-bg::after {
-  background:
-    radial-gradient(
-      ellipse 65% 45% at 50% 0%,
-      rgba(37, 99, 235, 0.05),
-      transparent 70%
-    ) !important;
+.reveal.visible {
+  opacity: 1;
+
+  transform: translateY(0);
 }
 
 /* =========================================================
-   NAVBAR PREMIUM
+   FLOAT ANIMATION
 ========================================================= */
 
-nav {
-  border-color: rgba(148, 163, 184, 0.12) !important;
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
 }
 
 /* =========================================================
-   REMOVE CYBER GLOW
+   FADE UP
 ========================================================= */
 
-.btn-glow::after {
-  background: linear-gradient(
-    135deg,
-    rgba(37, 99, 235, 0.1),
-    rgba(15, 118, 110, 0.05)
-  ) !important;
+.fade-up {
+  animation:
+    fadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1)
+    forwards;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
 }
 
 /* =========================================================
-   TILE HOVER
+   SCROLLBAR
 ========================================================= */
 
-.tile-glow::before {
-  background:
-    radial-gradient(
-      circle at var(--mx) var(--my),
-      rgba(37, 99, 235, 0.06),
-      transparent 65%
-    ) !important;
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--z-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.35);
+
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(37, 99, 235, 0.45);
 }
 
 /* =========================================================
-   BADGES
+   SELECTION
 ========================================================= */
 
-.z-badge {
-  color: #60a5fa !important;
+::selection {
+  background: rgba(37, 99, 235, 0.22);
 
-  background: rgba(37, 99, 235, 0.07) !important;
-
-  border-color: rgba(37, 99, 235, 0.18) !important;
+  color: #ffffff;
 }
 
 /* =========================================================
-   INPUTS
+   ACCESSIBILITY
 ========================================================= */
 
-.z-input {
-  background: #111820 !important;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
 
-  border-color: rgba(148, 163, 184, 0.16) !important;
+    animation-iteration-count: 1 !important;
 
-  color: #f8fafc !important;
-}
+    transition-duration: 0.01ms !important;
 
-.z-input:focus {
-  border-color: #2563eb !important;
-
-  box-shadow:
-    0 0 0 3px rgba(37, 99, 235, 0.1) !important;
-}
-
-/* =========================================================
-   CUSTOM CURSOR - SUBTLE
-========================================================= */
-
-.custom-cursor {
-  background: #2563eb !important;
-
-  box-shadow: none !important;
-}
-
-.cursor-ring {
-  border-color: rgba(37, 99, 235, 0.3) !important;
-}
-
-/* =========================================================
-   REMOVE EXCESSIVE ANIMATION FEEL
-========================================================= */
-
-.gradient-text {
-  animation: none !important;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .animate-pulse-glow {
-    animation-duration: 4s !important;
+    scroll-behavior: auto !important;
   }
 }

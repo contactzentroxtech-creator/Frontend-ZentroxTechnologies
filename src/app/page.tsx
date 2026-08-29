@@ -56,30 +56,43 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
+      {/* Premium Cursor Effect */}
       <CursorEffect />
 
+      {/* Header / Navigation */}
       <Navbar />
 
+      {/* Main Website Content */}
       <main>
+        {/* Hero Section */}
         <HeroSection />
 
+        {/* Company Statistics */}
         <StatsSection />
 
+        {/* Services */}
         <ServicesSection />
 
+        {/* Local Business Section */}
         <LocalSection />
 
+        {/* Pricing & Quote */}
         <PricingWizard />
 
+        {/* Testimonials */}
         <TestimonialsSection />
 
+        {/* Final Call To Action */}
         <CTASection />
       </main>
 
+      {/* Footer */}
       <Footer />
 
+      {/* Website Popup System */}
       <PopupManager />
 
+      {/* Floating WhatsApp / CTA */}
       <FloatingCTA />
     </>
   );
