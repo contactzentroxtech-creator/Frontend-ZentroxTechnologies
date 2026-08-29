@@ -15,6 +15,25 @@ import { useLang } from "@/lib/providers";
 import api from "@/lib/api";
 
 /* =========================================================
+   TYPES
+========================================================= */
+
+interface StatItem {
+  num?: number;
+  suffix?: string;
+  label: string;
+  labelKey: string;
+  custom?: string;
+  settingKey?: string;
+}
+
+interface StatConfig {
+  icon: typeof FolderCheck;
+  iconClass: string;
+  accent: string;
+}
+
+/* =========================================================
    ANIMATED COUNTER
 ========================================================= */
 
@@ -26,7 +45,6 @@ function AnimatedCounter({
   suffix?: string;
 }) {
   const [count, setCount] = useState(0);
-
   const ref = useRef<HTMLDivElement>(null);
 
   const inView = useInView(ref, {
@@ -38,6 +56,7 @@ function AnimatedCounter({
     if (!inView || target <= 0) return;
 
     let animationFrame: number;
+
     const duration = 1400;
     const startTime = performance.now();
 
@@ -45,7 +64,6 @@ function AnimatedCounter({
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
 
-      // Smooth ease out
       const easedProgress =
         1 - Math.pow(1 - progress, 4);
 
@@ -62,8 +80,9 @@ function AnimatedCounter({
     animationFrame =
       requestAnimationFrame(animate);
 
-    return () =>
+    return () => {
       cancelAnimationFrame(animationFrame);
+    };
   }, [inView, target]);
 
   return (
@@ -72,19 +91,6 @@ function AnimatedCounter({
       {suffix}
     </div>
   );
-}
-
-/* =========================================================
-   TYPES
-========================================================= */
-
-interface StatItem {
-  num?: number;
-  suffix?: string;
-  label: string;
-  labelKey: string;
-  custom?: string;
-  settingKey?: string;
 }
 
 /* =========================================================
@@ -125,7 +131,7 @@ const DEFAULT_STATS: StatItem[] = [
    VISUAL CONFIG
 ========================================================= */
 
-const STAT_CONFIG = [
+const STAT_CONFIG: StatConfig[] = [
   {
     icon: FolderCheck,
     iconClass:
@@ -195,22 +201,31 @@ export default function StatsSection() {
             const value =
               cms[stat.settingKey];
 
-            if (
-              stat.custom !== undefined
-            ) {
+            /* Custom stat such as rating */
+
+            if (stat.custom !== undefined) {
+              const rating =
+                String(value).trim();
+
+              if (!rating) {
+                return stat;
+              }
+
               return {
                 ...stat,
-                custom: String(value),
+                custom: rating.includes("★")
+                  ? rating
+                  : `${rating}★`,
               };
             }
+
+            /* Numeric stats */
 
             const numericValue =
               Number(value);
 
             if (
-              Number.isFinite(
-                numericValue
-              ) &&
+              Number.isFinite(numericValue) &&
               numericValue > 0
             ) {
               return {
@@ -222,68 +237,59 @@ export default function StatsSection() {
             return stat;
           });
 
-        setStats(updatedStats);
+        if (mounted) {
+          setStats(updatedStats);
+        }
       } catch {
-        // Keep safe fallback stats
+        // Safe fallback to default stats
       }
     };
 
-    loadStats();
+    void loadStats();
 
     return () => {
       mounted = false;
     };
   }, []);
 
+  const trustItems = [
+    t(
+      "stats.trust1",
+      "Custom Development"
+    ),
+    t(
+      "stats.trust2",
+      "Transparent Communication"
+    ),
+    t(
+      "stats.trust3",
+      "India & Global Delivery"
+    ),
+    t(
+      "stats.trust4",
+      "Long-Term Support"
+    ),
+  ];
+
   return (
     <section
       aria-label="Zentrox Technologies achievements"
-      className="
-        relative overflow-hidden
-        px-4 py-16
-        md:px-6 md:py-24
-      "
+      className="relative overflow-hidden px-4 py-16 md:px-6 md:py-24"
     >
-      {/* =====================================================
-          BACKGROUND
-      ===================================================== */}
+      {/* Background */}
 
       <div
-        className="
-          pointer-events-none
-          absolute inset-0
-          overflow-hidden
-        "
+        className="pointer-events-none absolute inset-0 overflow-hidden"
         aria-hidden="true"
       >
-        <div
-          className="
-            absolute left-[5%] top-1/2
-            h-72 w-72
-            -translate-y-1/2
-            rounded-full
-            bg-blue-500/[0.06]
-            blur-[120px]
-          "
-        />
+        <div className="absolute left-[5%] top-1/2 h-72 w-72 -translate-y-1/2 rounded-full bg-blue-500/[0.06] blur-[120px]" />
 
-        <div
-          className="
-            absolute right-[5%] top-1/2
-            h-72 w-72
-            -translate-y-1/2
-            rounded-full
-            bg-orange-500/[0.05]
-            blur-[120px]
-          "
-        />
+        <div className="absolute right-[5%] top-1/2 h-72 w-72 -translate-y-1/2 rounded-full bg-orange-500/[0.05] blur-[120px]" />
       </div>
 
       <div className="relative mx-auto max-w-7xl">
 
-        {/* ===================================================
-            TRUST HEADER
-        =================================================== */}
+        {/* Header */}
 
         <motion.div
           initial={{
@@ -301,25 +307,9 @@ export default function StatsSection() {
           transition={{
             duration: 0.6,
           }}
-          className="
-            mx-auto mb-10
-            max-w-2xl
-            text-center
-            md:mb-14
-          "
+          className="mx-auto mb-10 max-w-2xl text-center md:mb-14"
         >
-          <div
-            className="
-              inline-flex items-center gap-2
-              rounded-full
-              border border-blue-500/15
-              bg-blue-500/[0.05]
-              px-4 py-2
-              text-xs font-semibold
-              text-blue-700
-              dark:text-blue-300
-            "
-          >
+          <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/15 bg-blue-500/[0.05] px-4 py-2 text-xs font-semibold text-blue-700 dark:text-blue-300">
             <CheckCircle2 size={15} />
 
             {t(
@@ -328,15 +318,7 @@ export default function StatsSection() {
             )}
           </div>
 
-          <p
-            className="
-              mx-auto mt-4
-              max-w-xl
-              text-sm leading-relaxed
-              text-z-muted
-              md:text-base
-            "
-          >
+          <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-slate-600 dark:text-z-muted md:text-base">
             {t(
               "stats.description",
               "Helping businesses in India and worldwide build stronger digital products, improve online visibility and scale with confidence."
@@ -344,20 +326,9 @@ export default function StatsSection() {
           </p>
         </motion.div>
 
-        {/* ===================================================
-            STATS GRID
-        =================================================== */}
+        {/* Stats Grid */}
 
-        <div
-          className="
-            grid
-            grid-cols-2
-            gap-3
-            sm:gap-4
-            md:grid-cols-4
-            md:gap-5
-          "
-        >
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4 md:gap-5">
           {stats.map((stat, index) => {
             const config =
               STAT_CONFIG[index];
@@ -387,127 +358,44 @@ export default function StatsSection() {
                 whileHover={{
                   y: -6,
                 }}
-                className="
-                  group relative
-                  min-h-[190px]
-                  overflow-hidden
-                  rounded-[24px]
-                  border border-slate-200/80
-                  bg-white
-                  p-4
-                  shadow-[0_10px_35px_rgba(15,23,42,0.06)]
-                  transition-all duration-300
-
-                  hover:border-slate-300
-                  hover:shadow-[0_20px_55px_rgba(15,23,42,0.10)]
-
-                  dark:border-white/10
-                  dark:bg-white/[0.045]
-                  dark:hover:border-white/15
-
-                  sm:p-5
-                  md:min-h-[220px]
-                  md:p-6
-                "
+                className="group relative min-h-[190px] overflow-hidden rounded-[24px] border border-slate-200/80 bg-white p-4 shadow-[0_10px_35px_rgba(15,23,42,0.06)] transition-all duration-300 hover:border-slate-300 hover:shadow-[0_20px_55px_rgba(15,23,42,0.10)] dark:border-white/10 dark:bg-white/[0.045] dark:hover:border-white/15 sm:p-5 md:min-h-[220px] md:p-6"
               >
-                {/* Dynamic gradient */}
+                {/* Hover Gradient */}
+
                 <div
-                  className={`
-                    absolute inset-0
-                    bg-gradient-to-br
-                    ${config.accent}
-                    opacity-0
-                    transition-opacity
-                    duration-500
-                    group-hover:opacity-100
-                  `}
+                  className={`absolute inset-0 bg-gradient-to-br ${config.accent} opacity-0 transition-opacity duration-500 group-hover:opacity-100`}
                 />
 
-                {/* Top row */}
-                <div
-                  className="
-                    relative
-                    flex items-start
-                    justify-between
-                  "
-                >
+                {/* Top */}
+
+                <div className="relative flex items-start justify-between">
                   <div
-                    className={`
-                      flex h-11 w-11
-                      items-center justify-center
-                      rounded-2xl
-                      transition-transform
-                      duration-300
-                      group-hover:scale-110
-                      group-hover:rotate-3
-                      ${config.iconClass}
-                    `}
+                    className={`flex h-11 w-11 items-center justify-center rounded-2xl transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3 ${config.iconClass}`}
                   >
                     <Icon size={20} />
                   </div>
 
                   <ArrowUpRight
                     size={18}
-                    className="
-                      text-slate-300
-                      transition-all
-                      duration-300
-
-                      group-hover:
-                      translate-x-0.5
-                      -translate-y-0.5
-                      group-hover:text-z-accent
-
-                      dark:text-slate-600
-                    "
+                    className="text-slate-300 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-z-accent dark:text-slate-600"
                   />
                 </div>
 
                 {/* Content */}
-                <div
-                  className="
-                    relative mt-7
-                    md:mt-9
-                  "
-                >
-                  <div
-                    className="
-                      text-3xl
-                      font-extrabold
-                      tracking-tight
-                      text-z-text
 
-                      sm:text-4xl
-                      md:text-5xl
-                    "
-                  >
+                <div className="relative mt-7 md:mt-9">
+                  <div className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-z-text sm:text-4xl md:text-5xl">
                     {stat.custom ? (
                       stat.custom
                     ) : (
                       <AnimatedCounter
-                        target={
-                          stat.num ?? 0
-                        }
-                        suffix={
-                          stat.suffix
-                        }
+                        target={stat.num ?? 0}
+                        suffix={stat.suffix}
                       />
                     )}
                   </div>
 
-                  <p
-                    className="
-                      mt-3
-                      text-[10px]
-                      font-bold
-                      uppercase
-                      leading-relaxed
-                      tracking-[0.12em]
-                      text-z-muted
-
-                      sm:text-[11px]
-                    "
-                  >
+                  <p className="mt-3 text-[10px] font-bold uppercase leading-relaxed tracking-[0.12em] text-slate-500 dark:text-z-muted sm:text-[11px]">
                     {t(
                       stat.labelKey,
                       stat.label
@@ -515,31 +403,15 @@ export default function StatsSection() {
                   </p>
                 </div>
 
-                {/* Bottom line */}
-                <div
-                  className="
-                    absolute
-                    bottom-0 left-0
-                    h-1 w-full
-                    origin-left
-                    scale-x-0
-                    bg-gradient-to-r
-                    from-z-accent
-                    via-blue-400
-                    to-transparent
-                    transition-transform
-                    duration-500
-                    group-hover:scale-x-100
-                  "
-                />
+                {/* Bottom Accent */}
+
+                <div className="absolute bottom-0 left-0 h-1 w-full origin-left scale-x-0 bg-gradient-to-r from-z-accent via-blue-400 to-transparent transition-transform duration-500 group-hover:scale-x-100" />
               </motion.article>
             );
           })}
         </div>
 
-        {/* ===================================================
-            TRUST FOOTER
-        =================================================== */}
+        {/* Trust Footer */}
 
         <motion.div
           initial={{
@@ -555,31 +427,21 @@ export default function StatsSection() {
             duration: 0.6,
             delay: 0.2,
           }}
-          className="
-            mt-10
-            flex flex-wrap
-            justify-center
-            gap-x-6 gap-y-3
-            text-xs
-            text-z-muted
-            md:mt-12
-          "
+          className="mt-10 flex flex-wrap justify-center gap-x-6 gap-y-3 text-xs text-slate-500 dark:text-z-muted md:mt-12"
         >
-          <span>
-            ✓ Custom Development
-          </span>
+          {trustItems.map((item) => (
+            <span
+              key={item}
+              className="flex items-center gap-1.5"
+            >
+              <CheckCircle2
+                size={13}
+                className="text-z-accent"
+              />
 
-          <span>
-            ✓ Transparent Communication
-          </span>
-
-          <span>
-            ✓ India & Global Delivery
-          </span>
-
-          <span>
-            ✓ Long-Term Support
-          </span>
+              {item}
+            </span>
+          ))}
         </motion.div>
       </div>
     </section>
