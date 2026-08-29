@@ -7,6 +7,8 @@ import Link from "next/link";
 import { useLang } from "@/lib/providers";
 import api from "@/lib/api";
 
+type SupportedLang = "en" | "hi" | "pa";
+
 interface LocalizedText {
   en: string;
   hi?: string;
@@ -52,7 +54,7 @@ interface QuoteResult {
   recommendedPackage: PricingPackage | null;
 }
 
-const BUSINESS_TYPES = {
+const BUSINESS_TYPES: Record<SupportedLang, string[]> = {
   en: [
     "Startups",
     "Real Estate",
@@ -79,7 +81,10 @@ const BUSINESS_TYPES = {
   ],
 };
 
-const TIMELINES = {
+const TIMELINES: Record<
+  SupportedLang,
+  { key: string; label: string }[]
+> = {
   en: [
     { key: "rush", label: "ASAP (Rush)" },
     { key: "normal", label: "1-2 Months" },
@@ -97,7 +102,10 @@ const TIMELINES = {
   ],
 };
 
-const COMPLEXITY = {
+const COMPLEXITY: Record<
+  SupportedLang,
+  { key: string; label: string }[]
+> = {
   en: [
     { key: "basic", label: "Basic" },
     { key: "standard", label: "Standard" },
@@ -232,32 +240,27 @@ const FALLBACK_SERVICES: PricingService[] = [
 export default function PricingWizard() {
   const { t, lang } = useLang();
 
-  const currentLang =
-    lang === "hi" || lang === "pa" ? lang : "en";
+  // FIX: Explicitly normalize language to supported values.
+  const currentLang: SupportedLang =
+    (lang as string) === "hi"
+      ? "hi"
+      : (lang as string) === "pa"
+        ? "pa"
+        : "en";
 
   const [step, setStep] = useState(0);
-  const [services, setServices] =
-    useState<PricingService[]>([]);
-  const [loadingServices, setLoadingServices] =
-    useState(true);
-  const [loadingQuote, setLoadingQuote] =
-    useState(false);
+  const [services, setServices] = useState<PricingService[]>([]);
+  const [loadingServices, setLoadingServices] = useState(true);
+  const [loadingQuote, setLoadingQuote] = useState(false);
 
-  const [selectedServiceId, setSelectedServiceId] =
-    useState("");
-
+  const [selectedServiceId, setSelectedServiceId] = useState("");
   const [bizType, setBizType] = useState("");
-  const [complexity, setComplexity] =
-    useState("standard");
-
-  const [selectedFeatures, setSelectedFeatures] =
-    useState<string[]>([]);
-
+  const [complexity, setComplexity] = useState("standard");
+  const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
   const [budget, setBudget] = useState(25000);
   const [timeline, setTimeline] = useState("normal");
 
-  const [quote, setQuote] =
-    useState<QuoteResult | null>(null);
+  const [quote, setQuote] = useState<QuoteResult | null>(null);
 
   const steps = [
     t("pricing.step.service", "Service"),
@@ -269,9 +272,7 @@ export default function PricingWizard() {
   useEffect(() => {
     const loadServices = async () => {
       try {
-        const { data } = await api.get(
-          "/pricing/services"
-        );
+        const { data } = await api.get("/pricing/services");
 
         const receivedServices = data?.data;
 
@@ -295,8 +296,7 @@ export default function PricingWizard() {
 
   const selectedService =
     services.find(
-      (service) =>
-        service.id === selectedServiceId
+      (service) => service.id === selectedServiceId
     ) ?? null;
 
   const getLabel = (
@@ -304,17 +304,11 @@ export default function PricingWizard() {
   ) => {
     if (!value) return "";
 
-    if (
-      currentLang === "hi" &&
-      value.hi
-    ) {
+    if (currentLang === "hi" && value.hi) {
       return value.hi;
     }
 
-    if (
-      currentLang === "pa" &&
-      value.pa
-    ) {
+    if (currentLang === "pa" && value.pa) {
       return value.pa;
     }
 
@@ -322,26 +316,17 @@ export default function PricingWizard() {
   };
 
   const formatPrice = (amount: number) => {
-    return `₹${Number(amount || 0).toLocaleString(
-      "en-IN"
-    )}`;
+    return `₹${Number(amount || 0).toLocaleString("en-IN")}`;
   };
 
-  const businessTypes =
-    BUSINESS_TYPES[currentLang];
-
-  const timelines =
-    TIMELINES[currentLang];
-
-  const complexities =
-    COMPLEXITY[currentLang];
+  const businessTypes = BUSINESS_TYPES[currentLang];
+  const timelines = TIMELINES[currentLang];
+  const complexities = COMPLEXITY[currentLang];
 
   const toggleFeature = (featureId: string) => {
     setSelectedFeatures((previous) => {
       if (previous.includes(featureId)) {
-        return previous.filter(
-          (id) => id !== featureId
-        );
+        return previous.filter((id) => id !== featureId);
       }
 
       return [...previous, featureId];
@@ -357,17 +342,14 @@ export default function PricingWizard() {
     setQuote(null);
 
     try {
-      const { data } = await api.post(
-        "/pricing/calculate",
-        {
-          serviceId: selectedServiceId,
-          businessType: bizType,
-          complexity,
-          features: selectedFeatures,
-          timeline,
-          budget,
-        }
-      );
+      const { data } = await api.post("/pricing/calculate", {
+        serviceId: selectedServiceId,
+        businessType: bizType,
+        complexity,
+        features: selectedFeatures,
+        timeline,
+        budget,
+      });
 
       if (data?.data) {
         setQuote(data.data);
@@ -403,17 +385,11 @@ export default function PricingWizard() {
           className="mb-10"
         >
           <div className="mb-4 inline-block px-3 py-1 text-xs font-semibold rounded-full bg-z-accent/10 text-z-accent border border-z-border">
-            {t(
-              "pricing.badge",
-              "Transparent Pricing"
-            )}
+            {t("pricing.badge", "Transparent Pricing")}
           </div>
 
           <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-z-text leading-tight tracking-tight mb-4">
-            {t(
-              "pricing.title",
-              "Estimate Your Project"
-            )}
+            {t("pricing.title", "Estimate Your Project")}
           </h2>
 
           <p className="text-base text-slate-600 dark:text-z-muted max-w-xl leading-relaxed">
@@ -442,10 +418,7 @@ export default function PricingWizard() {
                 key={`${stepName}-${index}`}
                 type="button"
                 onClick={() => {
-                  if (
-                    index <= step &&
-                    !loadingQuote
-                  ) {
+                  if (index <= step && !loadingQuote) {
                     setStep(index);
                   }
                 }}
@@ -453,8 +426,8 @@ export default function PricingWizard() {
                   step === index
                     ? "border-z-accent text-z-accent"
                     : index < step
-                    ? "border-transparent text-slate-800 dark:text-z-text cursor-pointer"
-                    : "border-transparent text-slate-400 dark:text-z-muted cursor-not-allowed"
+                      ? "border-transparent text-slate-800 dark:text-z-text cursor-pointer"
+                      : "border-transparent text-slate-400 dark:text-z-muted cursor-not-allowed"
                 }`}
               >
                 {stepName}
@@ -467,21 +440,10 @@ export default function PricingWizard() {
             {step === 0 && (
               <motion.div
                 key="step-service"
-                initial={{
-                  opacity: 0,
-                  x: 20,
-                }}
-                animate={{
-                  opacity: 1,
-                  x: 0,
-                }}
-                exit={{
-                  opacity: 0,
-                  x: -20,
-                }}
-                transition={{
-                  duration: 0.25,
-                }}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.25 }}
               >
                 {loadingServices ? (
                   <div className="flex items-center justify-center py-12">
@@ -497,15 +459,12 @@ export default function PricingWizard() {
                         key={service.id}
                         type="button"
                         onClick={() => {
-                          setSelectedServiceId(
-                            service.id
-                          );
+                          setSelectedServiceId(service.id);
                           setSelectedFeatures([]);
                           setQuote(null);
                         }}
                         className={`p-4 rounded-xl border text-sm font-medium transition-all duration-200 text-left flex flex-col gap-2 ${
-                          selectedServiceId ===
-                          service.id
+                          selectedServiceId === service.id
                             ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
                             : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent/50 hover:text-slate-900 dark:hover:text-z-text"
                         }`}
@@ -515,21 +474,13 @@ export default function PricingWizard() {
                         </span>
 
                         <span className="text-xs leading-snug">
-                          {getLabel(
-                            service.label
-                          )}
+                          {getLabel(service.label)}
                         </span>
 
-                        {selectedServiceId ===
-                          service.id && (
+                        {selectedServiceId === service.id && (
                           <span className="text-[10px] text-z-accent font-bold">
-                            {formatPrice(
-                              service.baseMin
-                            )}{" "}
-                            —{" "}
-                            {formatPrice(
-                              service.baseMax
-                            )}
+                            {formatPrice(service.baseMin)} —{" "}
+                            {formatPrice(service.baseMax)}
                           </span>
                         )}
                       </button>
@@ -543,140 +494,92 @@ export default function PricingWizard() {
             {step === 1 && (
               <motion.div
                 key="step-business"
-                initial={{
-                  opacity: 0,
-                  x: 20,
-                }}
-                animate={{
-                  opacity: 1,
-                  x: 0,
-                }}
-                exit={{
-                  opacity: 0,
-                  x: -20,
-                }}
-                transition={{
-                  duration: 0.25,
-                }}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.25 }}
               >
                 <p className="text-sm font-medium text-slate-700 dark:text-z-muted mb-3">
-                  {t(
-                    "pricing.business_type",
-                    "Business Type"
-                  )}
+                  {t("pricing.business_type", "Business Type")}
                 </p>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
-                  {businessTypes.map(
-                    (business) => (
-                      <button
-                        key={business}
-                        type="button"
-                        onClick={() =>
-                          setBizType(business)
-                        }
-                        className={`p-3 rounded-xl border text-sm font-medium transition-all duration-200 text-left ${
-                          bizType === business
-                            ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
-                            : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent/50 hover:text-slate-900 dark:hover:text-z-text"
-                        }`}
-                      >
-                        {bizType === business && (
-                          <Check
-                            size={12}
-                            className="inline mr-1 text-z-accent"
-                          />
-                        )}
-
-                        {business}
-                      </button>
-                    )
-                  )}
+                  {businessTypes.map((business) => (
+                    <button
+                      key={business}
+                      type="button"
+                      onClick={() => setBizType(business)}
+                      className={`p-3 rounded-xl border text-sm font-medium transition-all duration-200 text-left ${
+                        bizType === business
+                          ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
+                          : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent/50 hover:text-slate-900 dark:hover:text-z-text"
+                      }`}
+                    >
+                      {bizType === business && (
+                        <Check
+                          size={12}
+                          className="inline mr-1 text-z-accent"
+                        />
+                      )}
+                      {business}
+                    </button>
+                  ))}
                 </div>
 
                 <p className="text-sm font-medium text-slate-700 dark:text-z-muted mb-3">
-                  {t(
-                    "pricing.complexity",
-                    "Project Complexity"
-                  )}
+                  {t("pricing.complexity", "Project Complexity")}
                 </p>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {complexities.map(
-                    (item) => (
-                      <button
-                        key={item.key}
-                        type="button"
-                        onClick={() =>
-                          setComplexity(
-                            item.key
-                          )
-                        }
-                        className={`p-3 rounded-xl border text-xs font-semibold transition-all duration-200 text-center ${
-                          complexity === item.key
-                            ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
-                            : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent/50 hover:text-slate-900 dark:hover:text-z-text"
-                        }`}
-                      >
-                        {complexity ===
-                          item.key && (
-                          <Check
-                            size={10}
-                            className="inline mr-1"
-                          />
-                        )}
-
-                        {item.label}
-                      </button>
-                    )
-                  )}
+                  {complexities.map((item) => (
+                    <button
+                      key={item.key}
+                      type="button"
+                      onClick={() => setComplexity(item.key)}
+                      className={`p-3 rounded-xl border text-xs font-semibold transition-all duration-200 text-center ${
+                        complexity === item.key
+                          ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
+                          : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent/50 hover:text-slate-900 dark:hover:text-z-text"
+                      }`}
+                    >
+                      {complexity === item.key && (
+                        <Check
+                          size={10}
+                          className="inline mr-1"
+                        />
+                      )}
+                      {item.label}
+                    </button>
+                  ))}
                 </div>
 
-                {/* SAFE FEATURES CHECK */}
-                {(selectedService?.features
-                  ?.length ?? 0) > 0 && (
+                {(selectedService?.features?.length ?? 0) > 0 && (
                   <>
                     <p className="text-sm font-medium text-slate-700 dark:text-z-muted mb-3 mt-6">
-                      {t(
-                        "pricing.addons",
-                        "Add-on Features"
-                      )}
+                      {t("pricing.addons", "Add-on Features")}
                     </p>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                      {selectedService?.features?.map(
-                        (feature) => (
-                          <button
-                            key={feature.id}
-                            type="button"
-                            onClick={() =>
-                              toggleFeature(
-                                feature.id
-                              )
-                            }
-                            className={`p-3 rounded-xl border text-xs font-medium transition-all text-left flex items-center justify-between ${
-                              selectedFeatures.includes(
-                                feature.id
-                              )
-                                ? "border-z-accent3 bg-z-accent3/10 text-slate-900 dark:text-z-text"
-                                : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent3/40 hover:text-slate-900 dark:hover:text-z-text"
-                            }`}
-                          >
-                            <span>
-                              {getLabel(
-                                feature.label
-                              )}
-                            </span>
+                      {selectedService?.features?.map((feature) => (
+                        <button
+                          key={feature.id}
+                          type="button"
+                          onClick={() => toggleFeature(feature.id)}
+                          className={`p-3 rounded-xl border text-xs font-medium transition-all text-left flex items-center justify-between ${
+                            selectedFeatures.includes(feature.id)
+                              ? "border-z-accent3 bg-z-accent3/10 text-slate-900 dark:text-z-text"
+                              : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent3/40 hover:text-slate-900 dark:hover:text-z-text"
+                          }`}
+                        >
+                          <span>
+                            {getLabel(feature.label)}
+                          </span>
 
-                            <span className="text-[10px] text-z-accent3 font-bold">
-                              +
-                              {formatPrice(
-                                feature.flatAdd
-                              )}
-                            </span>
-                          </button>
-                        )
-                      )}
+                          <span className="text-[10px] text-z-accent3 font-bold">
+                            +{formatPrice(feature.flatAdd)}
+                          </span>
+                        </button>
+                      ))}
                     </div>
                   </>
                 )}
@@ -687,21 +590,10 @@ export default function PricingWizard() {
             {step === 2 && (
               <motion.div
                 key="step-budget"
-                initial={{
-                  opacity: 0,
-                  x: 20,
-                }}
-                animate={{
-                  opacity: 1,
-                  x: 0,
-                }}
-                exit={{
-                  opacity: 0,
-                  x: -20,
-                }}
-                transition={{
-                  duration: 0.25,
-                }}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.25 }}
               >
                 <p className="text-sm font-medium text-slate-700 dark:text-z-muted mb-2">
                   {t(
@@ -721,11 +613,7 @@ export default function PricingWizard() {
                   step="5000"
                   value={budget}
                   onChange={(event) =>
-                    setBudget(
-                      Number(
-                        event.target.value
-                      )
-                    )
+                    setBudget(Number(event.target.value))
                   }
                   className="w-full accent-z-accent mb-1 cursor-pointer"
                 />
@@ -736,10 +624,7 @@ export default function PricingWizard() {
                 </div>
 
                 <p className="text-sm font-medium text-slate-700 dark:text-z-muted mb-3">
-                  {t(
-                    "pricing.timeline",
-                    "Timeline"
-                  )}
+                  {t("pricing.timeline", "Timeline")}
                 </p>
 
                 <div className="grid grid-cols-3 gap-3">
@@ -747,9 +632,7 @@ export default function PricingWizard() {
                     <button
                       key={item.key}
                       type="button"
-                      onClick={() =>
-                        setTimeline(item.key)
-                      }
+                      onClick={() => setTimeline(item.key)}
                       className={`p-3 rounded-xl border text-xs font-semibold transition-all text-center ${
                         timeline === item.key
                           ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
@@ -762,7 +645,6 @@ export default function PricingWizard() {
                           className="inline mr-1"
                         />
                       )}
-
                       {item.label}
                     </button>
                   ))}
@@ -774,21 +656,10 @@ export default function PricingWizard() {
             {step === 3 && (
               <motion.div
                 key="step-quote"
-                initial={{
-                  opacity: 0,
-                  x: 20,
-                }}
-                animate={{
-                  opacity: 1,
-                  x: 0,
-                }}
-                exit={{
-                  opacity: 0,
-                  x: -20,
-                }}
-                transition={{
-                  duration: 0.25,
-                }}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.25 }}
               >
                 {loadingQuote ? (
                   <div className="flex items-center justify-center py-12">
@@ -803,31 +674,20 @@ export default function PricingWizard() {
                       {quote?.service?.icon ||
                         selectedService?.icon ||
                         "💼"}{" "}
-                      {getLabel(
-                        quote?.service?.label
-                      ) ||
-                        getLabel(
-                          selectedService?.label
-                        ) ||
+                      {getLabel(quote?.service?.label) ||
+                        getLabel(selectedService?.label) ||
                         "Your Project"}
                     </div>
 
                     <div className="text-sm text-slate-600 dark:text-z-muted mb-4">
                       {quote?.recommendedPackage
-                        ? getLabel(
-                            quote
-                              .recommendedPackage
-                              .name
-                          )
+                        ? getLabel(quote.recommendedPackage.name)
                         : "Custom Package"}{" "}
                       — tailored for your needs
                     </div>
 
-                    {(
-                      quote
-                        ?.recommendedPackage
-                        ?.features?.length ?? 0
-                    ) > 0 && (
+                    {(quote?.recommendedPackage?.features?.length ?? 0) >
+                      0 && (
                       <div className="flex flex-wrap gap-2 mb-5">
                         {quote?.recommendedPackage?.features?.map(
                           (feature) => (
@@ -852,11 +712,9 @@ export default function PricingWizard() {
                         <div className="text-2xl font-extrabold text-z-accent">
                           {quote
                             ? `${formatPrice(
-                                quote.estimate
-                                  .min
+                                quote.estimate.min
                               )} — ${formatPrice(
-                                quote.estimate
-                                  .max
+                                quote.estimate.max
                               )}`
                             : `${formatPrice(
                                 fallbackMin
@@ -872,8 +730,7 @@ export default function PricingWizard() {
                         </div>
 
                         <div className="text-base font-bold text-slate-900 dark:text-z-text">
-                          {quote?.delivery ||
-                            "4-8 Weeks"}
+                          {quote?.delivery || "4-8 Weeks"}
                         </div>
                       </div>
                     </div>
@@ -901,16 +758,10 @@ export default function PricingWizard() {
               type="button"
               onClick={() =>
                 setStep((currentStep) =>
-                  Math.max(
-                    0,
-                    currentStep - 1
-                  )
+                  Math.max(0, currentStep - 1)
                 )
               }
-              disabled={
-                step === 0 ||
-                loadingQuote
-              }
+              disabled={step === 0 || loadingQuote}
               className="px-5 py-2.5 rounded-full text-sm font-semibold border border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:text-slate-900 dark:hover:text-z-text disabled:opacity-30 transition-all duration-200"
             >
               {t("pricing.back", "Back")}
@@ -923,19 +774,14 @@ export default function PricingWizard() {
                   if (step === 2) {
                     void getQuote();
                   } else {
-                    setStep(
-                      (currentStep) =>
-                        Math.min(
-                          3,
-                          currentStep + 1
-                        )
+                    setStep((currentStep) =>
+                      Math.min(3, currentStep + 1)
                     );
                   }
                 }}
                 disabled={
                   loadingQuote ||
-                  (step === 0 &&
-                    !selectedServiceId) ||
+                  (step === 0 && !selectedServiceId) ||
                   (step === 1 && !bizType)
                 }
                 className="px-6 py-2.5 rounded-full text-sm font-semibold bg-z-accent text-white hover:opacity-90 disabled:opacity-40 transition-all duration-200 flex items-center gap-2"
@@ -948,14 +794,8 @@ export default function PricingWizard() {
                 )}
 
                 {step === 2
-                  ? t(
-                      "pricing.get_quote",
-                      "Get Quote"
-                    )
-                  : t(
-                      "pricing.next",
-                      "Next"
-                    )}
+                  ? t("pricing.get_quote", "Get Quote")
+                  : t("pricing.next", "Next")}
 
                 <ArrowRight size={14} />
               </button>
