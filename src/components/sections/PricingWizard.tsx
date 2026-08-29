@@ -7,8 +7,10 @@ import {
   ArrowRight,
   Loader2,
   AlertCircle,
+  Sparkles,
 } from "lucide-react";
 import Link from "next/link";
+
 import { useLang } from "@/lib/providers";
 import api from "@/lib/api";
 
@@ -59,6 +61,10 @@ interface QuoteResult {
   recommendedPackage?: PricingPackage | null;
 }
 
+/* =========================================================
+   BUSINESS TYPES
+========================================================= */
+
 const BUSINESS_TYPES: Record<SupportedLang, string[]> = {
   en: [
     "Startups",
@@ -68,6 +74,7 @@ const BUSINESS_TYPES: Record<SupportedLang, string[]> = {
     "Manufacturing",
     "E-commerce",
   ],
+
   hi: [
     "स्टार्टअप",
     "रियल एस्टेट",
@@ -76,6 +83,7 @@ const BUSINESS_TYPES: Record<SupportedLang, string[]> = {
     "विनिर्माण",
     "ई-कॉमर्स",
   ],
+
   pa: [
     "ਸਟਾਰਟਅੱਪ",
     "ਰੀਅਲ ਅਸਟੇਟ",
@@ -86,6 +94,10 @@ const BUSINESS_TYPES: Record<SupportedLang, string[]> = {
   ],
 };
 
+/* =========================================================
+   TIMELINES
+========================================================= */
+
 const TIMELINES: Record<
   SupportedLang,
   { key: string; label: string }[]
@@ -95,17 +107,23 @@ const TIMELINES: Record<
     { key: "normal", label: "1–2 Months" },
     { key: "flexible", label: "Flexible" },
   ],
+
   hi: [
     { key: "rush", label: "जल्द से जल्द" },
     { key: "normal", label: "1–2 महीने" },
     { key: "flexible", label: "लचीला" },
   ],
+
   pa: [
     { key: "rush", label: "ਜਲਦੀ ਤੋਂ ਜਲਦੀ" },
     { key: "normal", label: "1–2 ਮਹੀਨੇ" },
     { key: "flexible", label: "ਲਚਕਦਾਰ" },
   ],
 };
+
+/* =========================================================
+   COMPLEXITY
+========================================================= */
 
 const COMPLEXITY: Record<
   SupportedLang,
@@ -117,12 +135,14 @@ const COMPLEXITY: Record<
     { key: "advanced", label: "Advanced" },
     { key: "enterprise", label: "Enterprise" },
   ],
+
   hi: [
     { key: "basic", label: "बेसिक" },
     { key: "standard", label: "स्टैंडर्ड" },
     { key: "advanced", label: "एडवांस्ड" },
     { key: "enterprise", label: "एंटरप्राइज़" },
   ],
+
   pa: [
     { key: "basic", label: "ਬੇਸਿਕ" },
     { key: "standard", label: "ਸਟੈਂਡਰਡ" },
@@ -131,141 +151,237 @@ const COMPLEXITY: Record<
   ],
 };
 
+/* =========================================================
+   FALLBACK SERVICES
+========================================================= */
+
 const FALLBACK_SERVICES: PricingService[] = [
   {
     id: "business-website",
+
     label: {
       en: "Website Development",
       hi: "वेबसाइट डेवलपमेंट",
       pa: "ਵੈੱਬਸਾਈਟ ਡਿਵੈਲਪਮੈਂਟ",
     },
+
     description: {
       en: "Professional business websites built for growth.",
       hi: "व्यवसाय के विकास के लिए प्रोफेशनल वेबसाइट।",
       pa: "ਬਿਜ਼ਨਸ ਵਿਕਾਸ ਲਈ ਪ੍ਰੋਫੈਸ਼ਨਲ ਵੈੱਬਸਾਈਟਾਂ।",
     },
+
     icon: "🌐",
+
     baseMin: 8000,
     baseMax: 25000,
+
     features: [],
     packages: [],
   },
+
   {
     id: "ecommerce",
+
     label: {
       en: "E-Commerce Solutions",
       hi: "ई-कॉमर्स समाधान",
       pa: "ਈ-ਕਾਮਰਸ ਹੱਲ",
     },
+
     description: {
       en: "Custom online stores and e-commerce platforms.",
       hi: "कस्टम ऑनलाइन स्टोर और ई-कॉमर्स प्लेटफॉर्म।",
       pa: "ਕਸਟਮ ਆਨਲਾਈਨ ਸਟੋਰ ਅਤੇ ਈ-ਕਾਮਰਸ ਪਲੇਟਫਾਰਮ।",
     },
+
     icon: "🛒",
+
     baseMin: 20000,
     baseMax: 80000,
+
     features: [],
     packages: [],
   },
+
   {
     id: "mobile-app",
+
     label: {
-      en: "Mobile Application Development",
+      en: "Mobile App Development",
       hi: "मोबाइल एप्लीकेशन डेवलपमेंट",
       pa: "ਮੋਬਾਈਲ ਐਪਲੀਕੇਸ਼ਨ ਡਿਵੈਲਪਮੈਂਟ",
     },
+
     description: {
       en: "Modern mobile applications for Android and iOS.",
       hi: "Android और iOS के लिए आधुनिक मोबाइल एप्लीकेशन।",
       pa: "Android ਅਤੇ iOS ਲਈ ਆਧੁਨਿਕ ਮੋਬਾਈਲ ਐਪਲੀਕੇਸ਼ਨ।",
     },
+
     icon: "📱",
+
     baseMin: 50000,
     baseMax: 200000,
+
     features: [],
     packages: [],
   },
+
+  {
+    id: "custom-software",
+
+    label: {
+      en: "Custom Software",
+      hi: "कस्टम सॉफ्टवेयर",
+      pa: "ਕਸਟਮ ਸਾਫਟਵੇਅਰ",
+    },
+
+    description: {
+      en: "Custom business software designed around your workflow.",
+      hi: "आपके बिजनेस वर्कफ्लो के अनुसार कस्टम सॉफ्टवेयर।",
+      pa: "ਤੁਹਾਡੇ ਬਿਜ਼ਨਸ ਵਰਕਫਲੋ ਲਈ ਕਸਟਮ ਸਾਫਟਵੇਅਰ।",
+    },
+
+    icon: "💻",
+
+    baseMin: 50000,
+    baseMax: 300000,
+
+    features: [],
+    packages: [],
+  },
+
   {
     id: "saas-platform",
+
     label: {
       en: "SaaS Development",
       hi: "SaaS डेवलपमेंट",
       pa: "SaaS ਡਿਵੈਲਪਮੈਂਟ",
     },
+
     description: {
       en: "Scalable SaaS platforms and custom web applications.",
       hi: "स्केलेबल SaaS प्लेटफॉर्म और कस्टम वेब एप्लीकेशन।",
       pa: "ਸਕੇਲੇਬਲ SaaS ਪਲੇਟਫਾਰਮ ਅਤੇ ਕਸਟਮ ਵੈੱਬ ਐਪਲੀਕੇਸ਼ਨ।",
     },
+
     icon: "☁️",
+
     baseMin: 80000,
     baseMax: 500000,
+
     features: [],
     packages: [],
   },
+
   {
     id: "seo-package",
+
     label: {
       en: "SEO Services",
       hi: "SEO सेवाएं",
       pa: "SEO ਸੇਵਾਵਾਂ",
     },
+
     description: {
-      en: "SEO strategies to improve visibility and leads.",
+      en: "SEO strategies to improve visibility and generate leads.",
       hi: "विजिबिलिटी और लीड बढ़ाने के लिए SEO रणनीतियां।",
       pa: "ਵਿਜ਼ਿਬਿਲਟੀ ਅਤੇ ਲੀਡ ਵਧਾਉਣ ਲਈ SEO ਰਣਨੀਤੀਆਂ।",
     },
+
     icon: "📈",
+
     baseMin: 5000,
     baseMax: 50000,
+
     features: [],
     packages: [],
   },
+
+  {
+    id: "digital-marketing",
+
+    label: {
+      en: "Digital Marketing",
+      hi: "डिजिटल मार्केटिंग",
+      pa: "ਡਿਜ਼ਿਟਲ ਮਾਰਕੀਟਿੰਗ",
+    },
+
+    description: {
+      en: "Digital campaigns designed to grow visibility and leads.",
+      hi: "विजिबिलिटी और लीड बढ़ाने के लिए डिजिटल कैंपेन।",
+      pa: "ਵਿਜ਼ਿਬਿਲਟੀ ਅਤੇ ਲੀਡ ਵਧਾਉਣ ਲਈ ਡਿਜ਼ਿਟਲ ਕੈਂਪੇਨ।",
+    },
+
+    icon: "📣",
+
+    baseMin: 8000,
+    baseMax: 75000,
+
+    features: [],
+    packages: [],
+  },
+
   {
     id: "ai-integration",
+
     label: {
       en: "AI Integration",
       hi: "AI इंटीग्रेशन",
       pa: "AI ਏਕੀਕਰਨ",
     },
+
     description: {
       en: "AI-powered automation and business integrations.",
       hi: "AI आधारित ऑटोमेशन और बिजनेस इंटीग्रेशन।",
       pa: "AI ਅਧਾਰਿਤ ਆਟੋਮੇਸ਼ਨ ਅਤੇ ਬਿਜ਼ਨਸ ਇੰਟੀਗ੍ਰੇਸ਼ਨ।",
     },
+
     icon: "🤖",
+
     baseMin: 30000,
     baseMax: 300000,
+
     features: [],
     packages: [],
   },
 ];
 
+/* =========================================================
+   COMPONENT
+========================================================= */
+
 export default function PricingWizard() {
   const { t, lang } = useLang();
 
-  const rawLang = lang as string;
-
   const currentLang: SupportedLang =
-    rawLang === "hi"
+    lang === "hi"
       ? "hi"
-      : rawLang === "pa"
+      : lang === "pa"
         ? "pa"
         : "en";
 
   const [step, setStep] = useState(0);
 
-  const [services, setServices] = useState<PricingService[]>([]);
-  const [loadingServices, setLoadingServices] = useState(true);
+  const [services, setServices] =
+    useState<PricingService[]>(FALLBACK_SERVICES);
 
-  const [loadingQuote, setLoadingQuote] = useState(false);
-  const [quoteError, setQuoteError] = useState("");
+  const [loadingServices, setLoadingServices] =
+    useState(true);
+
+  const [loadingQuote, setLoadingQuote] =
+    useState(false);
+
+  const [quoteError, setQuoteError] =
+    useState("");
 
   const [selectedServiceId, setSelectedServiceId] =
     useState("");
 
-  const [bizType, setBizType] = useState("");
+  const [bizType, setBizType] =
+    useState("");
 
   const [complexity, setComplexity] =
     useState("standard");
@@ -273,7 +389,8 @@ export default function PricingWizard() {
   const [selectedFeatures, setSelectedFeatures] =
     useState<string[]>([]);
 
-  const [budget, setBudget] = useState(25000);
+  const [budget, setBudget] =
+    useState(25000);
 
   const [timeline, setTimeline] =
     useState("normal");
@@ -288,38 +405,30 @@ export default function PricingWizard() {
     t("pricing.step.quote", "Quote"),
   ];
 
-  const businessTypes =
-    BUSINESS_TYPES[currentLang];
+  const selectedService =
+    services.find(
+      (service) =>
+        service.id === selectedServiceId
+    ) ?? null;
 
-  const timelines =
-    TIMELINES[currentLang];
-
-  const complexities =
-    COMPLEXITY[currentLang];
-
-  /*
-   * Load services
-   */
+  /* =======================================================
+     LOAD SERVICES
+  ======================================================= */
 
   useEffect(() => {
     let active = true;
 
-    const loadServices = async () => {
+    async function loadServices() {
       try {
         const { data } =
           await api.get("/pricing/services");
 
-        const receivedServices =
-          data?.data;
-
         if (
           active &&
-          Array.isArray(receivedServices) &&
-          receivedServices.length > 0
+          Array.isArray(data?.data) &&
+          data.data.length > 0
         ) {
-          setServices(receivedServices);
-        } else if (active) {
-          setServices(FALLBACK_SERVICES);
+          setServices(data.data);
         }
       } catch {
         if (active) {
@@ -330,7 +439,7 @@ export default function PricingWizard() {
           setLoadingServices(false);
         }
       }
-    };
+    }
 
     void loadServices();
 
@@ -339,9 +448,9 @@ export default function PricingWizard() {
     };
   }, []);
 
-  /*
-   * Reset language-dependent values
-   */
+  /* =======================================================
+     LANGUAGE RESET
+  ======================================================= */
 
   useEffect(() => {
     setBizType("");
@@ -349,31 +458,18 @@ export default function PricingWizard() {
     setQuote(null);
     setQuoteError("");
 
-    if (step > 1) {
-      setStep(1);
-    }
+    setStep((currentStep) =>
+      currentStep > 1 ? 1 : currentStep
+    );
   }, [currentLang]);
 
-  /*
-   * Selected service
-   */
+  /* =======================================================
+     TRANSLATION HELPER
+  ======================================================= */
 
-  const selectedService =
-    services.find(
-      (service) =>
-        service.id === selectedServiceId
-    ) ?? null;
-
-  /*
-   * Translation helper
-   */
-
-  const getLabel = (
-    value:
-      | LocalizedText
-      | undefined
-      | null
-  ) => {
+  function getLabel(
+    value?: LocalizedText | null
+  ) {
     if (!value) return "";
 
     if (
@@ -390,54 +486,26 @@ export default function PricingWizard() {
       return value.pa;
     }
 
-    return value.en || "";
-  };
+    return value.en ?? "";
+  }
 
-  /*
-   * Price formatter
-   */
+  /* =======================================================
+     PRICE FORMATTER
+  ======================================================= */
 
-  const formatPrice = (
-    amount: number
-  ) => {
+  function formatPrice(amount: number) {
     return `₹${Number(
       amount || 0
     ).toLocaleString("en-IN")}`;
-  };
+  }
 
-  /*
-   * Feature toggle
-   */
+  /* =======================================================
+     SELECT SERVICE
+  ======================================================= */
 
-  const toggleFeature = (
-    featureId: string
-  ) => {
-    setSelectedFeatures(
-      (previous) => {
-        if (
-          previous.includes(featureId)
-        ) {
-          return previous.filter(
-            (id) =>
-              id !== featureId
-          );
-        }
-
-        return [
-          ...previous,
-          featureId,
-        ];
-      }
-    );
-  };
-
-  /*
-   * Service selection
-   */
-
-  const selectService = (
+  function selectService(
     service: PricingService
-  ) => {
+  ) {
     setSelectedServiceId(service.id);
 
     setSelectedFeatures([]);
@@ -454,11 +522,25 @@ export default function PricingWizard() {
       );
 
     setBudget(recommendedBudget);
-  };
+  }
 
-  /*
-   * Quote fallback
-   */
+  /* =======================================================
+     FEATURE TOGGLE
+  ======================================================= */
+
+  function toggleFeature(featureId: string) {
+    setSelectedFeatures((previous) =>
+      previous.includes(featureId)
+        ? previous.filter(
+            (id) => id !== featureId
+          )
+        : [...previous, featureId]
+    );
+  }
+
+  /* =======================================================
+     FALLBACK ESTIMATE
+  ======================================================= */
 
   const fallbackMin = selectedService
     ? selectedService.baseMin
@@ -468,11 +550,11 @@ export default function PricingWizard() {
     ? selectedService.baseMax
     : Math.round(budget * 1.2);
 
-  /*
-   * Quote API
-   */
+  /* =======================================================
+     GET QUOTE
+  ======================================================= */
 
-  const getQuote = async () => {
+  async function getQuote() {
     if (
       !selectedServiceId ||
       !bizType
@@ -495,18 +577,23 @@ export default function PricingWizard() {
           {
             serviceId:
               selectedServiceId,
-            businessType: bizType,
+
+            businessType:
+              bizType,
+
             complexity,
+
             features:
               selectedFeatures,
+
             timeline,
+
             budget,
           }
         );
 
       if (
-        data?.data &&
-        data.data.estimate &&
+        data?.data?.estimate &&
         typeof data.data.estimate.min ===
           "number" &&
         typeof data.data.estimate.max ===
@@ -525,11 +612,11 @@ export default function PricingWizard() {
     } finally {
       setLoadingQuote(false);
     }
-  };
+  }
 
-  /*
-   * Contact URL with project details
-   */
+  /* =======================================================
+     ESTIMATE
+  ======================================================= */
 
   const estimateMin =
     quote?.estimate?.min ??
@@ -538,6 +625,10 @@ export default function PricingWizard() {
   const estimateMax =
     quote?.estimate?.max ??
     fallbackMax;
+
+  /* =======================================================
+     CONTACT URL
+  ======================================================= */
 
   const contactUrl =
     `/contact?service=${encodeURIComponent(
@@ -559,47 +650,112 @@ export default function PricingWizard() {
   return (
     <section
       id="pricing"
-      className="relative z-10 bg-slate-50 px-4 py-24 transition-colors duration-300 dark:bg-z-dark2 md:px-6"
+      className="
+        relative overflow-hidden
+        bg-slate-50
+        px-4 py-24
+        transition-colors duration-300
+        dark:bg-z-dark2
+        md:px-6 md:py-32
+      "
     >
-      <div className="mx-auto max-w-7xl">
+      {/* Background */}
 
-        {/* HEADING */}
+      <div
+        className="
+          pointer-events-none
+          absolute inset-0
+          overflow-hidden
+        "
+        aria-hidden="true"
+      >
+        <div
+          className="
+            absolute -left-32 top-20
+            h-96 w-96
+            rounded-full
+            bg-blue-500/[0.05]
+            blur-[130px]
+          "
+        />
+
+        <div
+          className="
+            absolute -right-32 bottom-0
+            h-96 w-96
+            rounded-full
+            bg-purple-500/[0.05]
+            blur-[130px]
+          "
+        />
+      </div>
+
+      <div className="relative mx-auto max-w-7xl">
+
+        {/* HEADER */}
 
         <motion.div
           initial={{
             opacity: 0,
-            y: 20,
+            y: 25,
           }}
           whileInView={{
             opacity: 1,
             y: 0,
           }}
-          transition={{
-            duration: 0.6,
-          }}
           viewport={{
             once: true,
           }}
-          className="mb-10"
+          transition={{
+            duration: 0.6,
+          }}
+          className="
+            mx-auto mb-12
+            max-w-3xl
+            text-center
+          "
         >
-          <div className="mb-4 inline-block rounded-full border border-z-border bg-z-accent/10 px-3 py-1 text-xs font-semibold text-z-accent">
-            {t(
-              "pricing.badge",
-              "Transparent Pricing"
-            )}
+          <div className="z-badge mx-auto mb-5 w-fit">
+            <Sparkles size={13} />
+
+            <span>
+              {t(
+                "pricing.badge",
+                "Transparent Pricing"
+              )}
+            </span>
           </div>
 
-          <h2 className="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-slate-900 dark:text-z-text md:text-5xl">
+          <h2
+            className="
+              text-4xl
+              font-extrabold
+              tracking-tight
+              text-slate-900
+              md:text-6xl
+              dark:text-z-text
+            "
+          >
             {t(
               "pricing.title",
               "Estimate Your Project"
             )}
           </h2>
 
-          <p className="max-w-xl text-base leading-relaxed text-slate-600 dark:text-z-muted">
+          <p
+            className="
+              mx-auto mt-5
+              max-w-2xl
+              text-base
+              leading-relaxed
+              text-slate-600
+              md:text-lg
+              dark:text-z-muted
+            "
+          >
             {t(
               "pricing.sub",
-              "Get a free estimate for website development, mobile apps, custom software, SaaS development, AI integration, or digital marketing services."
+              "Get a quick estimated investment range for your website, software, mobile app, SaaS, AI, SEO or digital marketing project."
             )}
           </p>
         </motion.div>
@@ -609,29 +765,38 @@ export default function PricingWizard() {
         <motion.div
           initial={{
             opacity: 0,
-            y: 20,
+            y: 25,
           }}
           whileInView={{
             opacity: 1,
             y: 0,
           }}
-          transition={{
-            duration: 0.6,
-            delay: 0.2,
-          }}
           viewport={{
             once: true,
           }}
-          className="max-w-3xl rounded-3xl border border-slate-200 bg-white p-6 shadow-xl backdrop-blur-xl dark:border-z-border dark:bg-z-dark3/60 dark:shadow-card md:p-10"
+          transition={{
+            duration: 0.6,
+          }}
+          className="
+            mx-auto
+            max-w-3xl
+            rounded-3xl
+            border border-slate-200/80
+            bg-white
+            p-5
+            shadow-[0_25px_70px_rgba(15,23,42,0.08)]
+
+            dark:border-white/10
+            dark:bg-white/[0.04]
+
+            md:p-10
+          "
         >
           {/* STEPS */}
 
-          <div className="mb-8 flex border-b border-slate-200 dark:border-z-border">
+          <div className="mb-8 flex border-b border-slate-200 dark:border-white/10">
             {steps.map(
-              (
-                stepName,
-                index
-              ) => (
+              (stepName, index) => (
                 <button
                   key={`${stepName}-${index}`}
                   type="button"
@@ -647,14 +812,26 @@ export default function PricingWizard() {
                       setStep(index);
                     }
                   }}
-                  className={`-mb-px flex-1 border-b-2 px-2 py-3 text-xs font-semibold tracking-wide transition-all duration-200 md:px-4 ${
-                    step === index
-                      ? "border-z-accent text-z-accent"
-                      : index < step
-                        ? "cursor-pointer border-transparent text-slate-800 dark:text-z-text"
-                        : "cursor-not-allowed border-transparent text-slate-400 dark:text-z-muted"
-                  }`}
+                  className={`
+                    -mb-px flex-1
+                    border-b-2
+                    px-2 py-3
+                    text-xs font-semibold
+                    transition-all
+
+                    ${
+                      step === index
+                        ? "border-z-accent text-z-accent"
+                        : index < step
+                          ? "border-transparent text-slate-700 dark:text-z-text"
+                          : "border-transparent text-slate-400 dark:text-z-muted"
+                    }
+                  `}
                 >
+                  <span className="mr-1 hidden sm:inline">
+                    {index + 1}.
+                  </span>
+
                   {stepName}
                 </button>
               )
@@ -663,11 +840,13 @@ export default function PricingWizard() {
 
           <AnimatePresence mode="wait">
 
-            {/* STEP 0 */}
+            {/* =================================================
+                STEP 0 — SERVICE
+            ================================================= */}
 
             {step === 0 && (
               <motion.div
-                key="step-service"
+                key="service"
                 initial={{
                   opacity: 0,
                   x: 20,
@@ -680,64 +859,63 @@ export default function PricingWizard() {
                   opacity: 0,
                   x: -20,
                 }}
-                transition={{
-                  duration: 0.25,
-                }}
               >
                 {loadingServices ? (
-                  <div className="flex justify-center py-12">
+                  <div className="flex justify-center py-16">
                     <Loader2
-                      size={24}
+                      size={28}
                       className="animate-spin text-z-accent"
                     />
                   </div>
                 ) : (
                   <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
                     {services.map(
-                      (
-                        service
-                      ) => (
+                      (service) => (
                         <button
-                          key={
-                            service.id
-                          }
+                          key={service.id}
                           type="button"
                           onClick={() =>
                             selectService(
                               service
                             )
                           }
-                          className={`flex flex-col gap-2 rounded-xl border p-4 text-left text-sm font-medium transition-all duration-200 ${
-                            selectedServiceId ===
-                            service.id
-                              ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
-                              : "border-slate-200 text-slate-600 hover:border-z-accent/50 hover:text-slate-900 dark:border-z-border dark:text-z-muted dark:hover:text-z-text"
-                          }`}
-                        >
-                          <span className="text-xl">
-                            {
-                              service.icon
+                          className={`
+                            flex min-h-[130px]
+                            flex-col
+                            rounded-2xl
+                            border p-4
+                            text-left
+                            transition-all duration-300
+
+                            hover:-translate-y-1
+
+                            ${
+                              selectedServiceId ===
+                              service.id
+                                ? "border-z-accent bg-z-accent/10 shadow-sm"
+                                : "border-slate-200 hover:border-z-accent/50 dark:border-white/10"
                             }
+                          `}
+                        >
+                          <span className="mb-3 text-2xl">
+                            {service.icon}
                           </span>
 
-                          <span className="text-xs leading-snug">
+                          <span className="text-sm font-bold text-slate-900 dark:text-z-text">
                             {getLabel(
                               service.label
                             )}
                           </span>
 
-                          {selectedServiceId ===
-                            service.id && (
-                            <span className="text-[10px] font-bold text-z-accent">
-                              {formatPrice(
-                                service.baseMin
-                              )}
-                              {" — "}
-                              {formatPrice(
-                                service.baseMax
-                              )}
-                            </span>
-                          )}
+                          <span className="mt-auto pt-2 text-[11px] font-semibold text-z-accent">
+                            {formatPrice(
+                              service.baseMin
+                            )}
+                            {" – "}
+                            {formatPrice(
+                              service.baseMax
+                            )}
+                          </span>
                         </button>
                       )
                     )}
@@ -746,11 +924,13 @@ export default function PricingWizard() {
               </motion.div>
             )}
 
-            {/* STEP 1 */}
+            {/* =================================================
+                STEP 1 — BUSINESS
+            ================================================= */}
 
             {step === 1 && (
               <motion.div
-                key="step-business"
+                key="business"
                 initial={{
                   opacity: 0,
                   x: 20,
@@ -763,58 +943,53 @@ export default function PricingWizard() {
                   opacity: 0,
                   x: -20,
                 }}
-                transition={{
-                  duration: 0.25,
-                }}
               >
-                <p className="mb-3 text-sm font-medium text-slate-700 dark:text-z-muted">
+                <p className="mb-3 text-sm font-bold text-slate-800 dark:text-z-text">
                   {t(
                     "pricing.business_type",
-                    "Business Type"
+                    "What type of business do you have?"
                   )}
                 </p>
 
-                <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-3">
-                  {businessTypes.map(
-                    (
-                      business
-                    ) => (
-                      <button
-                        key={
-                          business
-                        }
-                        type="button"
-                        onClick={() =>
-                          setBizType(
-                            business
-                          )
-                        }
-                        className={`rounded-xl border p-3 text-left text-sm font-medium transition-all duration-200 ${
+                <div className="mb-8 grid grid-cols-2 gap-3 md:grid-cols-3">
+                  {BUSINESS_TYPES[
+                    currentLang
+                  ].map((business) => (
+                    <button
+                      key={business}
+                      type="button"
+                      onClick={() =>
+                        setBizType(business)
+                      }
+                      className={`
+                        rounded-xl border
+                        p-3
+                        text-left text-sm
+                        font-semibold
+                        transition-all
+
+                        ${
                           bizType ===
                           business
-                            ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
-                            : "border-slate-200 text-slate-600 hover:border-z-accent/50 dark:border-z-border dark:text-z-muted"
-                        }`}
-                      >
-                        {bizType ===
-                          business && (
-                          <Check
-                            size={
-                              12
-                            }
-                            className="mr-1 inline text-z-accent"
-                          />
-                        )}
-
-                        {
-                          business
+                            ? "border-z-accent bg-z-accent/10 text-z-accent"
+                            : "border-slate-200 text-slate-600 hover:border-z-accent/50 dark:border-white/10 dark:text-z-muted"
                         }
-                      </button>
-                    )
-                  )}
+                      `}
+                    >
+                      {bizType ===
+                        business && (
+                        <Check
+                          size={14}
+                          className="mr-1 inline"
+                        />
+                      )}
+
+                      {business}
+                    </button>
+                  ))}
                 </div>
 
-                <p className="mb-3 text-sm font-medium text-slate-700 dark:text-z-muted">
+                <p className="mb-3 text-sm font-bold text-slate-800 dark:text-z-text">
                   {t(
                     "pricing.complexity",
                     "Project Complexity"
@@ -822,87 +997,84 @@ export default function PricingWizard() {
                 </p>
 
                 <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-                  {complexities.map(
-                    (
-                      item
-                    ) => (
-                      <button
-                        key={
+                  {COMPLEXITY[
+                    currentLang
+                  ].map((item) => (
+                    <button
+                      key={item.key}
+                      type="button"
+                      onClick={() =>
+                        setComplexity(
                           item.key
-                        }
-                        type="button"
-                        onClick={() =>
-                          setComplexity(
-                            item.key
-                          )
-                        }
-                        className={`rounded-xl border p-3 text-center text-xs font-semibold transition-all duration-200 ${
+                        )
+                      }
+                      className={`
+                        rounded-xl border
+                        p-3
+                        text-center text-xs
+                        font-bold
+                        transition-all
+
+                        ${
                           complexity ===
                           item.key
-                            ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
-                            : "border-slate-200 text-slate-600 hover:border-z-accent/50 dark:border-z-border dark:text-z-muted"
-                        }`}
-                      >
-                        {complexity ===
-                          item.key && (
-                          <Check
-                            size={
-                              10
-                            }
-                            className="mr-1 inline"
-                          />
-                        )}
-
-                        {
-                          item.label
+                            ? "border-z-accent bg-z-accent/10 text-z-accent"
+                            : "border-slate-200 text-slate-600 hover:border-z-accent/50 dark:border-white/10 dark:text-z-muted"
                         }
-                      </button>
-                    )
-                  )}
+                      `}
+                    >
+                      {item.label}
+                    </button>
+                  ))}
                 </div>
 
-                {(selectedService
-                  ?.features
-                  ?.length ??
-                  0) > 0 && (
-                  <>
-                    <p className="mb-3 mt-6 text-sm font-medium text-slate-700 dark:text-z-muted">
+                {/* ADDONS */}
+
+                {(selectedService?.features
+                  ?.length ?? 0) > 0 && (
+                  <div className="mt-8">
+                    <p className="mb-3 text-sm font-bold text-slate-800 dark:text-z-text">
                       {t(
                         "pricing.addons",
-                        "Add-on Features"
+                        "Optional Features"
                       )}
                     </p>
 
-                    <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+                    <div className="grid gap-3 md:grid-cols-2">
                       {selectedService?.features?.map(
-                        (
-                          feature
-                        ) => (
+                        (feature) => (
                           <button
-                            key={
-                              feature.id
-                            }
+                            key={feature.id}
                             type="button"
                             onClick={() =>
                               toggleFeature(
                                 feature.id
                               )
                             }
-                            className={`flex items-center justify-between rounded-xl border p-3 text-left text-xs font-medium transition-all ${
-                              selectedFeatures.includes(
-                                feature.id
-                              )
-                                ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
-                                : "border-slate-200 text-slate-600 hover:border-z-accent/50 dark:border-z-border dark:text-z-muted"
-                            }`}
+                            className={`
+                              flex items-center
+                              justify-between
+                              rounded-xl border
+                              p-4
+                              text-left
+                              transition-all
+
+                              ${
+                                selectedFeatures.includes(
+                                  feature.id
+                                )
+                                  ? "border-z-accent bg-z-accent/10"
+                                  : "border-slate-200 dark:border-white/10"
+                              }
+                            `}
                           >
-                            <span>
+                            <span className="text-sm font-semibold text-slate-700 dark:text-z-text">
                               {getLabel(
                                 feature.label
                               )}
                             </span>
 
-                            <span className="text-[10px] font-bold text-z-accent">
+                            <span className="text-xs font-bold text-z-accent">
                               +
                               {formatPrice(
                                 feature.flatAdd
@@ -912,16 +1084,18 @@ export default function PricingWizard() {
                         )
                       )}
                     </div>
-                  </>
+                  </div>
                 )}
               </motion.div>
             )}
 
-            {/* STEP 2 */}
+            {/* =================================================
+                STEP 2 — BUDGET
+            ================================================= */}
 
             {step === 2 && (
               <motion.div
-                key="step-budget"
+                key="budget"
                 initial={{
                   opacity: 0,
                   x: 20,
@@ -934,21 +1108,16 @@ export default function PricingWizard() {
                   opacity: 0,
                   x: -20,
                 }}
-                transition={{
-                  duration: 0.25,
-                }}
               >
-                <p className="mb-2 text-sm font-medium text-slate-700 dark:text-z-muted">
+                <p className="mb-3 text-center text-sm font-bold text-slate-700 dark:text-z-muted">
                   {t(
                     "pricing.budget",
                     "Estimated Project Budget"
                   )}
                 </p>
 
-                <div className="mb-4 text-center text-4xl font-extrabold text-z-accent">
-                  {formatPrice(
-                    budget
-                  )}
+                <div className="mb-6 text-center text-4xl font-extrabold text-z-accent md:text-5xl">
+                  {formatPrice(budget)}
                 </div>
 
                 <input
@@ -957,83 +1126,74 @@ export default function PricingWizard() {
                   max="500000"
                   step="5000"
                   value={budget}
-                  onChange={(
-                    event
-                  ) =>
+                  onChange={(event) =>
                     setBudget(
                       Number(
-                        event.target
-                          .value
+                        event.target.value
                       )
                     )
                   }
-                  className="mb-1 w-full cursor-pointer accent-z-accent"
+                  className="
+                    mb-2 w-full
+                    cursor-pointer
+                    accent-z-accent
+                  "
                 />
 
-                <div className="mb-6 flex justify-between text-xs text-slate-500 dark:text-z-muted">
-                  <span>
-                    ₹5,000
-                  </span>
+                <div className="mb-10 flex justify-between text-xs text-slate-500 dark:text-z-muted">
+                  <span>₹5,000</span>
 
-                  <span>
-                    ₹5,00,000+
-                  </span>
+                  <span>₹5,00,000+</span>
                 </div>
 
-                <p className="mb-3 text-sm font-medium text-slate-700 dark:text-z-muted">
+                <p className="mb-3 text-sm font-bold text-slate-800 dark:text-z-text">
                   {t(
                     "pricing.timeline",
-                    "Timeline"
+                    "When do you need the project?"
                   )}
                 </p>
 
                 <div className="grid grid-cols-3 gap-3">
-                  {timelines.map(
-                    (
-                      item
-                    ) => (
-                      <button
-                        key={
+                  {TIMELINES[
+                    currentLang
+                  ].map((item) => (
+                    <button
+                      key={item.key}
+                      type="button"
+                      onClick={() =>
+                        setTimeline(
                           item.key
-                        }
-                        type="button"
-                        onClick={() =>
-                          setTimeline(
-                            item.key
-                          )
-                        }
-                        className={`rounded-xl border p-3 text-center text-xs font-semibold transition-all ${
+                        )
+                      }
+                      className={`
+                        rounded-xl border
+                        p-3
+                        text-center text-xs
+                        font-bold
+                        transition-all
+
+                        ${
                           timeline ===
                           item.key
-                            ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
-                            : "border-slate-200 text-slate-600 hover:border-z-accent/50 dark:border-z-border dark:text-z-muted"
-                        }`}
-                      >
-                        {timeline ===
-                          item.key && (
-                          <Check
-                            size={
-                              10
-                            }
-                            className="mr-1 inline"
-                          />
-                        )}
-
-                        {
-                          item.label
+                            ? "border-z-accent bg-z-accent/10 text-z-accent"
+                            : "border-slate-200 text-slate-600 hover:border-z-accent/50 dark:border-white/10 dark:text-z-muted"
                         }
-                      </button>
-                    )
-                  )}
+                      `}
+                    >
+                      {item.label}
+                    </button>
+                  ))}
                 </div>
               </motion.div>
             )}
 
-            {/* STEP 3 */}
+            {/* =================================================
+                STEP 3 — QUOTE
+            ================================================= */}
 
             {step === 3 && (
               <motion.div
-                key="step-quote"
+                key="quote"
                 initial={{
                   opacity: 0,
                   x: 20,
@@ -1046,47 +1206,43 @@ export default function PricingWizard() {
                   opacity: 0,
                   x: -20,
                 }}
-                transition={{
-                  duration: 0.25,
-                }}
               >
                 {loadingQuote ? (
-                  <div className="flex flex-col items-center justify-center gap-3 py-12">
+                  <div className="flex flex-col items-center justify-center gap-4 py-16">
                     <Loader2
-                      size={28}
+                      size={32}
                       className="animate-spin text-z-accent"
                     />
 
                     <p className="text-sm text-z-muted">
-                      Calculating
-                      your estimate...
+                      Calculating your estimate...
                     </p>
                   </div>
                 ) : (
                   <>
                     {quoteError && (
-                      <div className="mb-4 flex items-start gap-2 rounded-xl border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-xs leading-relaxed text-amber-700 dark:text-amber-300">
+                      <div className="mb-5 flex gap-3 rounded-xl border border-amber-500/20 bg-amber-500/10 p-4 text-sm text-amber-700 dark:text-amber-300">
                         <AlertCircle
-                          size={
-                            15
-                          }
-                          className="mt-0.5 shrink-0"
+                          size={18}
+                          className="shrink-0"
                         />
 
                         <span>
-                          {
-                            quoteError
-                          }
+                          {quoteError}
                         </span>
                       </div>
                     )}
 
-                    <div className="rounded-2xl border border-z-accent/20 bg-z-accent/5 p-6">
-                      <div className="mb-1 text-lg font-bold text-slate-900 dark:text-z-text">
+                    <div className="rounded-3xl border border-z-accent/20 bg-z-accent/[0.05] p-6 md:p-8">
+
+                      <div className="mb-2 text-2xl">
                         {quote?.service
                           ?.icon ||
                           selectedService?.icon ||
-                          "💼"}{" "}
+                          "💼"}
+                      </div>
+
+                      <h3 className="text-xl font-extrabold text-slate-900 dark:text-z-text">
                         {getLabel(
                           quote?.service
                             ?.label
@@ -1095,9 +1251,9 @@ export default function PricingWizard() {
                             selectedService?.label
                           ) ||
                           "Your Project"}
-                      </div>
+                      </h3>
 
-                      <div className="mb-4 text-sm text-slate-600 dark:text-z-muted">
+                      <p className="mt-2 text-sm text-slate-600 dark:text-z-muted">
                         {quote
                           ?.recommendedPackage
                           ? getLabel(
@@ -1105,68 +1261,34 @@ export default function PricingWizard() {
                                 .recommendedPackage
                                 .name
                             )
-                          : "Custom Package"}
-                        {" — "}
-                        tailored for your
-                        needs
-                      </div>
+                          : "Custom solution tailored around your business requirements."}
+                      </p>
 
-                      {(quote
-                        ?.recommendedPackage
-                        ?.features
-                        ?.length ??
-                        0) >
-                        0 && (
-                        <div className="mb-5 flex flex-wrap gap-2">
-                          {quote?.recommendedPackage?.features?.map(
-                            (
-                              feature
-                            ) => (
-                              <span
-                                key={
-                                  feature
-                                }
-                                className="flex items-center gap-1 rounded-full border border-z-accent/20 bg-z-accent/10 px-3 py-1 text-xs font-medium text-z-accent"
-                              >
-                                <Check
-                                  size={
-                                    10
-                                  }
-                                />
+                      <div className="my-6 border-t border-slate-200 dark:border-white/10" />
 
-                                {
-                                  feature
-                                }
-                              </span>
-                            )
-                          )}
-                        </div>
-                      )}
-
-                      <div className="flex items-center justify-between border-t border-slate-200 pt-4 dark:border-z-border">
+                      <div className="grid gap-6 sm:grid-cols-2">
                         <div>
-                          <div className="mb-1 text-xs uppercase tracking-wide text-slate-500 dark:text-z-muted">
-                            Estimated
-                            Investment
+                          <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-z-muted">
+                            Estimated Investment
                           </div>
 
                           <div className="text-2xl font-extrabold text-z-accent">
                             {formatPrice(
                               estimateMin
                             )}
-                            {" — "}
+                            {" – "}
                             {formatPrice(
                               estimateMax
                             )}
                           </div>
                         </div>
 
-                        <div className="text-right">
-                          <div className="mb-1 text-xs uppercase tracking-wide text-slate-500 dark:text-z-muted">
-                            Delivery
+                        <div>
+                          <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-z-muted">
+                            Estimated Delivery
                           </div>
 
-                          <div className="text-base font-bold text-slate-900 dark:text-z-text">
+                          <div className="text-lg font-bold text-slate-900 dark:text-z-text">
                             {quote?.delivery ||
                               "4–8 Weeks"}
                           </div>
@@ -1175,10 +1297,23 @@ export default function PricingWizard() {
                     </div>
 
                     <Link
-                      href={
-                        contactUrl
-                      }
-                      className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-z-accent py-3.5 text-sm font-semibold text-white shadow-glow-sm transition-all duration-300 hover:opacity-90"
+                      href={contactUrl}
+                      className="
+                        group mt-5
+                        flex w-full
+                        items-center
+                        justify-center
+                        gap-2
+                        rounded-xl
+                        bg-z-accent
+                        px-6 py-4
+                        text-sm font-bold
+                        text-white
+                        shadow-lg
+                        transition-all duration-300
+                        hover:-translate-y-1
+                        hover:shadow-xl
+                      "
                     >
                       {t(
                         "pricing.consultation",
@@ -1186,7 +1321,11 @@ export default function PricingWizard() {
                       )}
 
                       <ArrowRight
-                        size={15}
+                        size={17}
+                        className="
+                          transition-transform
+                          group-hover:translate-x-1
+                        "
                       />
                     </Link>
                   </>
@@ -1197,26 +1336,39 @@ export default function PricingWizard() {
 
           {/* NAVIGATION */}
 
-          <div className="mt-6 flex justify-between">
+          <div className="mt-8 flex items-center justify-between">
+
             <button
               type="button"
-              onClick={() =>
-                setStep(
-                  (
-                    currentStep
-                  ) =>
-                    Math.max(
-                      0,
-                      currentStep -
-                        1
-                    )
-                )
-              }
               disabled={
                 step === 0 ||
                 loadingQuote
               }
-              className="rounded-full border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 transition-all duration-200 hover:text-slate-900 disabled:opacity-30 dark:border-z-border dark:text-z-muted dark:hover:text-z-text"
+              onClick={() =>
+                setStep(
+                  (currentStep) =>
+                    Math.max(
+                      0,
+                      currentStep - 1
+                    )
+                )
+              }
+              className="
+                rounded-full
+                border border-slate-200
+                px-5 py-2.5
+                text-sm font-semibold
+                text-slate-600
+                transition-all
+                hover:border-slate-300
+                hover:text-slate-900
+                disabled:cursor-not-allowed
+                disabled:opacity-30
+
+                dark:border-white/10
+                dark:text-z-muted
+                dark:hover:text-z-text
+              "
             >
               {t(
                 "pricing.back",
@@ -1227,25 +1379,6 @@ export default function PricingWizard() {
             {step < 3 && (
               <button
                 type="button"
-                onClick={() => {
-                  if (
-                    step === 2
-                  ) {
-                    void getQuote();
-                    return;
-                  }
-
-                  setStep(
-                    (
-                      currentStep
-                    ) =>
-                      Math.min(
-                        3,
-                        currentStep +
-                          1
-                      )
-                  );
-                }}
                 disabled={
                   loadingQuote ||
                   (step === 0 &&
@@ -1253,11 +1386,37 @@ export default function PricingWizard() {
                   (step === 1 &&
                     !bizType)
                 }
-                className="flex items-center gap-2 rounded-full bg-z-accent px-6 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:opacity-90 disabled:opacity-40"
+                onClick={() => {
+                  if (step === 2) {
+                    void getQuote();
+                    return;
+                  }
+
+                  setStep(
+                    (currentStep) =>
+                      Math.min(
+                        3,
+                        currentStep + 1
+                      )
+                  );
+                }}
+                className="
+                  flex items-center
+                  gap-2
+                  rounded-full
+                  bg-z-accent
+                  px-6 py-3
+                  text-sm font-bold
+                  text-white
+                  transition-all
+                  hover:opacity-90
+                  disabled:cursor-not-allowed
+                  disabled:opacity-40
+                "
               >
                 {loadingQuote && (
                   <Loader2
-                    size={14}
+                    size={15}
                     className="animate-spin"
                   />
                 )}
@@ -1272,9 +1431,7 @@ export default function PricingWizard() {
                       "Next"
                     )}
 
-                <ArrowRight
-                  size={14}
-                />
+                <ArrowRight size={15} />
               </button>
             )}
           </div>
