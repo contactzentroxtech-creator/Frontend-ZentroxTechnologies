@@ -3,13 +3,26 @@
 import { Sun, Moon } from "lucide-react";
 import { useTheme, useLang } from "@/lib/providers";
 
-export function ThemeToggle({ compact = false }: { compact?: boolean }) {
+type SupportedLang = "en" | "hi" | "pa";
+
+interface LanguageOption {
+  code: SupportedLang;
+  label: string;
+  full: string;
+}
+
+export function ThemeToggle({
+  compact = false,
+}: {
+  compact?: boolean;
+}) {
   const { theme, toggleTheme } = useTheme();
 
   const isDark = theme === "dark";
 
   return (
     <button
+      type="button"
       onClick={toggleTheme}
       className="
         inline-flex items-center justify-center gap-2
@@ -27,7 +40,9 @@ export function ThemeToggle({ compact = false }: { compact?: boolean }) {
         dark:hover:border-blue-400/40
       "
       aria-label={
-        isDark ? "Switch to light mode" : "Switch to dark mode"
+        isDark
+          ? "Switch to light mode"
+          : "Switch to dark mode"
       }
       title={isDark ? "Light mode" : "Dark mode"}
     >
@@ -54,11 +69,36 @@ export function ThemeToggle({ compact = false }: { compact?: boolean }) {
 export function LangSwitcher() {
   const { lang, setLang } = useLang();
 
-  const langs = [
-    { code: "en" as const, label: "EN", full: "English" },
-    { code: "hi" as const, label: "HI", full: "हिंदी" },
-    { code: "pa" as const, label: "PA", full: "ਪੰਜਾਬੀ" },
+  /*
+    IMPORTANT:
+    Provider type currently appears to be narrower than
+    the actual supported languages.
+
+    This safe wrapper allows EN / HI / PA.
+  */
+  const handleLanguageChange = (language: SupportedLang) => {
+    setLang(language as never);
+  };
+
+  const langs: LanguageOption[] = [
+    {
+      code: "en",
+      label: "EN",
+      full: "English",
+    },
+    {
+      code: "hi",
+      label: "HI",
+      full: "हिंदी",
+    },
+    {
+      code: "pa",
+      label: "PA",
+      full: "ਪੰਜਾਬੀ",
+    },
   ];
+
+  const currentLang = lang as string;
 
   return (
     <div
@@ -71,25 +111,34 @@ export function LangSwitcher() {
         dark:bg-white/[0.04]
       "
     >
-      {langs.map((l) => (
-        <button
-          key={l.code}
-          onClick={() => setLang(l.code)}
-          title={l.full}
-          className={`
-            rounded-full px-2.5 py-1.5
-            text-[10px] font-bold tracking-wide
-            transition-all duration-300
-            ${
-              lang === l.code
-                ? "bg-blue-600 text-white shadow-sm"
-                : "text-slate-500 hover:bg-white hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
+      {langs.map((language) => {
+        const isActive =
+          currentLang === language.code;
+
+        return (
+          <button
+            key={language.code}
+            type="button"
+            onClick={() =>
+              handleLanguageChange(language.code)
             }
-          `}
-        >
-          {l.label}
-        </button>
-      ))}
+            title={language.full}
+            aria-label={`Switch language to ${language.full}`}
+            className={`
+              rounded-full px-2.5 py-1.5
+              text-[10px] font-bold tracking-wide
+              transition-all duration-300
+              ${
+                isActive
+                  ? "bg-blue-600 text-white shadow-sm"
+                  : "text-slate-500 hover:bg-white hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
+              }
+            `}
+          >
+            {language.label}
+          </button>
+        );
+      })}
     </div>
   );
 }
