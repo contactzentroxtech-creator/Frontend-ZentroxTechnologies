@@ -12,33 +12,28 @@ module.exports = {
     extend: {
       colors: {
         z: {
-          /* Premium dark palette */
-          dark: "#0B0F14",
-          dark2: "#111820",
-          dark3: "#18212B",
-          dark4: "#202A35",
+          /*
+           * IMPORTANT:
+           * CSS variables use kar rahe hain so light/dark
+           * mode me puri website automatically update hogi.
+           */
 
-          /* Primary brand */
-          accent: "#2563EB",
+          dark: "rgb(var(--z-dark) / <alpha-value>)",
+          dark2: "rgb(var(--z-dark2) / <alpha-value>)",
+          dark3: "rgb(var(--z-dark3) / <alpha-value>)",
+          dark4: "rgb(var(--z-dark4) / <alpha-value>)",
 
-          /* Secondary premium blue */
-          accent2: "#1D4ED8",
+          accent: "rgb(var(--z-accent) / <alpha-value>)",
+          accent2: "rgb(var(--z-accent2) / <alpha-value>)",
+          accent3: "rgb(var(--z-accent3) / <alpha-value>)",
 
-          /* Elegant teal instead of neon green */
-          accent3: "#0F766E",
+          gold: "rgb(var(--z-gold) / <alpha-value>)",
 
-          /* Warm premium gold */
-          gold: "#D97706",
+          text: "rgb(var(--z-text) / <alpha-value>)",
+          muted: "rgb(var(--z-muted) / <alpha-value>)",
 
-          /* Text */
-          text: "#F8FAFC",
-          muted: "#94A3B8",
-
-          /* Borders */
-          border: "rgba(148,163,184,0.16)",
-
-          /* Subtle glow only */
-          glow: "rgba(37,99,235,0.12)",
+          border: "rgb(var(--z-border) / <alpha-value>)",
+          glow: "rgb(var(--z-glow) / <alpha-value>)",
         },
       },
 
@@ -47,15 +42,24 @@ module.exports = {
           "Plus Jakarta Sans",
           "Inter",
           "system-ui",
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "Segoe UI",
           "sans-serif",
         ],
-        mono: ["JetBrains Mono", "monospace"],
+
+        mono: [
+          "JetBrains Mono",
+          "ui-monospace",
+          "SFMono-Regular",
+          "monospace",
+        ],
       },
 
       animation: {
         float: "float 6s ease-in-out infinite",
         "pulse-glow": "pulseGlow 3s ease-in-out infinite",
-        "gradient-shift": "gradientShift 8s ease infinite",
+        "gradient-shift": "gradientShift 8s ease-in-out infinite",
         "slide-up": "slideUp 0.6s ease forwards",
         "fade-in": "fadeIn 0.5s ease forwards",
         "spin-slow": "spin 8s linear infinite",
@@ -144,16 +148,16 @@ module.exports = {
 
       backgroundImage: {
         "grid-pattern":
-          "linear-gradient(rgba(148,163,184,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.05) 1px, transparent 1px)",
+          "linear-gradient(rgb(var(--z-grid) / 0.08) 1px, transparent 1px), linear-gradient(90deg, rgb(var(--z-grid) / 0.08) 1px, transparent 1px)",
 
         "hero-glow":
-          "radial-gradient(ellipse 70% 55% at 50% 0%, rgba(37,99,235,0.10) 0%, transparent 72%)",
+          "radial-gradient(ellipse 70% 55% at 50% 0%, rgb(var(--z-accent) / 0.12) 0%, transparent 72%)",
 
         "card-glow":
-          "radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(37,99,235,0.06) 0%, transparent 60%)",
+          "radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgb(var(--z-accent) / 0.08) 0%, transparent 60%)",
 
         "accent-gradient":
-          "linear-gradient(135deg, #2563EB 0%, #1D4ED8 50%, #0F766E 100%)",
+          "linear-gradient(135deg, rgb(var(--z-accent)) 0%, rgb(var(--z-accent2)) 50%, rgb(var(--z-accent3)) 100%)",
       },
 
       backdropBlur: {
@@ -162,16 +166,16 @@ module.exports = {
 
       boxShadow: {
         "glow-accent":
-          "0 10px 35px rgba(37,99,235,0.12)",
+          "0 10px 35px rgb(var(--z-accent) / 0.18)",
 
         "glow-sm":
-          "0 6px 20px rgba(37,99,235,0.10)",
+          "0 6px 20px rgb(var(--z-accent) / 0.12)",
 
         card:
-          "0 8px 30px rgba(15,23,42,0.08)",
+          "0 8px 30px rgb(var(--z-shadow) / 0.10)",
 
         "card-hover":
-          "0 20px 50px rgba(15,23,42,0.14)",
+          "0 20px 50px rgb(var(--z-shadow) / 0.16)",
       },
     },
   },
