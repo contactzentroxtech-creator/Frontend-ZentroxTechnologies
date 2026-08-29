@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,38 +19,68 @@ import {
 import api from "@/lib/api";
 import { useLang } from "@/lib/providers";
 
-const makeSchema = (t: (k: string, f?: string) => string) =>
+type Language = "en" | "hi" | "pa";
+
+/* =========================================
+   VALIDATION SCHEMA
+========================================= */
+
+const makeSchema = (t: (key: string, fallback?: string) => string) =>
   z.object({
     name: z
       .string()
-      .min(2, t("validation.name_min", "Name must be at least 2 characters")),
+      .trim()
+      .min(
+        2,
+        t(
+          "validation.name_min",
+          "Name must be at least 2 characters"
+        )
+      ),
 
     phone: z
       .string()
+      .trim()
       .min(
         10,
-        t("validation.phone_invalid", "Enter a valid phone number")
+        t(
+          "validation.phone_invalid",
+          "Enter a valid phone number"
+        )
+      )
+      .max(
+        20,
+        t(
+          "validation.phone_invalid",
+          "Enter a valid phone number"
+        )
       ),
 
     email: z
       .string()
+      .trim()
       .email(
-        t("validation.email_invalid", "Enter a valid email")
+        t(
+          "validation.email_invalid",
+          "Enter a valid email"
+        )
       )
       .or(z.literal(""))
       .optional(),
 
-    service: z
-      .string()
-      .min(
-        1,
-        t("validation.service_required", "Please select a service")
-      ),
+    service: z.string().min(
+      1,
+      t(
+        "validation.service_required",
+        "Please select a service"
+      )
+    ),
 
     budget: z.string().optional(),
 
     message: z
       .string()
+      .trim()
       .min(
         10,
         t(
@@ -60,11 +90,21 @@ const makeSchema = (t: (k: string, f?: string) => string) =>
       )
       .max(
         1000,
-        t("validation.message_max", "Message too long")
+        t(
+          "validation.message_max",
+          "Message too long"
+        )
       ),
   });
 
-type FormData = z.infer<ReturnType<typeof makeSchema>>;
+type FormData = {
+  name: string;
+  phone: string;
+  email?: string;
+  service: string;
+  budget?: string;
+  message: string;
+};
 
 /* =========================================
    SERVICES
@@ -93,7 +133,7 @@ const SERVICES_HI = [
   "डिजिटल मार्केटिंग",
   "UI/UX डिजाइन",
   "सॉफ्टवेयर डेवलपमेंट",
-  "शनिवार लाइव क्लास",
+  "हमारा काम देखें",
   "रिमोट इंटर्नशिप",
   "अन्य",
 ];
@@ -107,7 +147,7 @@ const SERVICES_PA = [
   "ਡਿਜੀਟਲ ਮਾਰਕੀਟਿੰਗ",
   "UI/UX ਡਿਜ਼ਾਈਨ",
   "ਸੌਫਟਵੇਅਰ ਡਿਵੈਲਪਮੈਂਟ",
-  "ਸ਼ਨੀਵਾਰ ਲਾਈਵ ਕਲਾਸ",
+  "ਸਾਡਾ ਕੰਮ ਵੇਖੋ",
   "ਰਿਮੋਟ ਇੰਟਰਨਸ਼ਿਪ",
   "ਹੋਰ",
 ];
@@ -131,7 +171,7 @@ const BUDGETS_HI = [
   "₹25,000 — ₹50,000",
   "₹50,000 — ₹1,00,000",
   "₹1,00,000+",
-  "हम सुझाएंगे",
+  "हम सुझाव दें",
 ];
 
 const BUDGETS_PA = [
@@ -140,14 +180,8 @@ const BUDGETS_PA = [
   "₹25,000 — ₹50,000",
   "₹50,000 — ₹1,00,000",
   "₹1,00,000+",
-  "ਅਸੀਂ ਸੁਝਾਵਾਂਗੇ",
+  "ਸਾਨੂੰ ਸੁਝਾਅ ਦੇਣ ਦਿਓ",
 ];
-
-/* =========================================
-   LANGUAGE TYPE
-========================================= */
-
-type Language = "en" | "hi" | "pa";
 
 /* =========================================
    COMPONENT
@@ -159,23 +193,43 @@ export default function ContactPageClient() {
   const { t, lang } = useLang();
 
   /*
-   * FIX FOR NETLIFY TYPESCRIPT ERROR
-   *
-   * lang provider may currently be typed as only "en".
-   * We explicitly support all three languages here.
-   */
+    FIX:
+    String(lang) prevents TypeScript from incorrectly
+    treating lang as only "en".
+  */
 
-  const currentLang = lang as Language;
+  const langCode = String(lang);
 
-  const schema = makeSchema(t);
+  const currentLang: Language =
+    langCode === "hi"
+      ? "hi"
+      : langCode === "pa"
+        ? "pa"
+        : "en";
+
+  const schema = useMemo(
+    () => makeSchema(t),
+    [t]
+  );
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: {
+      errors,
+      isSubmitting,
+    },
     reset,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      name: "",
+      phone: "",
+      email: "",
+      service: "",
+      budget: "",
+      message: "",
+    },
   });
 
   /* =========================================
@@ -207,38 +261,49 @@ export default function ContactPageClient() {
   const CONTACT_INFO = [
     {
       icon: Mail,
-      label: t("contact.info.email", "Email"),
+      label: t(
+        "contact.info.email",
+        "Email"
+      ),
       value: "contact.zentroxtech@gmail.com",
       href: "mailto:contact.zentroxtech@gmail.com",
     },
-
     {
       icon: Phone,
-      label: t("contact.info.phone", "Phone / WhatsApp"),
+      label: t(
+        "contact.info.phone",
+        "Phone / WhatsApp"
+      ),
       value: "+91 89881 83513",
       href: "tel:+918988183513",
     },
-
     {
       icon: MapPin,
-      label: t("contact.info.location", "Location"),
+      label: t(
+        "contact.info.location",
+        "Location"
+      ),
       value: "Mohali & Chandigarh, Punjab",
       href: null,
     },
-
     {
       icon: Building2,
-      label: t("contact.info.registration", "Registration"),
+      label: t(
+        "contact.info.registration",
+        "Registration"
+      ),
       value: t(
         "contact.info.reg_value",
         "MSME Registered — India"
       ),
       href: null,
     },
-
     {
       icon: Clock,
-      label: t("contact.info.response", "Response Time"),
+      label: t(
+        "contact.info.response",
+        "Response Time"
+      ),
       value: t(
         "contact.info.response_value",
         "Within 24 hours"
@@ -251,7 +316,9 @@ export default function ContactPageClient() {
      FORM SUBMIT
   ========================================= */
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (
+    data: FormData
+  ) => {
     try {
       await api.post("/leads", data);
 
@@ -265,19 +332,39 @@ export default function ContactPageClient() {
           "Message sent! We'll contact you within 24 hours."
         )
       );
-    } catch (err: any) {
-      toast.error(
-        err?.response?.data?.message ||
-          t(
-            "common.error",
-            "Failed to send. Try WhatsApp instead."
-          )
+    } catch (error: unknown) {
+      let message = t(
+        "common.error",
+        "Failed to send. Try WhatsApp instead."
       );
+
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "response" in error
+      ) {
+        const apiError = error as {
+          response?: {
+            data?: {
+              message?: string;
+            };
+          };
+        };
+
+        if (
+          apiError.response?.data?.message
+        ) {
+          message =
+            apiError.response.data.message;
+        }
+      }
+
+      toast.error(message);
     }
   };
 
   /* =========================================
-     WHATSAPP URL
+     WHATSAPP
   ========================================= */
 
   const whatsappNumber =
@@ -291,29 +378,43 @@ export default function ContactPageClient() {
     )
   );
 
-  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
-
-  /* =========================================
-     UI
-  ========================================= */
+  const whatsappUrl =
+    `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 
   return (
-    <section className="relative z-10 py-20 px-4 md:px-6">
-      <div className="max-w-7xl mx-auto">
+    <section className="relative z-10 overflow-hidden bg-white px-4 py-20 text-slate-900 transition-colors duration-300 dark:bg-[#04050a] dark:text-white md:px-6">
+      {/* Background Effects */}
+
+      <div className="pointer-events-none absolute left-[-150px] top-[10%] h-[400px] w-[400px] rounded-full bg-blue-500/5 blur-[120px]" />
+
+      <div className="pointer-events-none absolute bottom-[5%] right-[-150px] h-[400px] w-[400px] rounded-full bg-purple-500/5 blur-[120px]" />
+
+      <div className="relative mx-auto max-w-7xl">
 
         {/* HEADER */}
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          initial={{
+            opacity: 0,
+            y: 20,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          transition={{
+            duration: 0.6,
+          }}
           className="mb-14 text-center"
         >
           <div className="z-badge mx-auto mb-4">
-            {t("contact.badge", "Get In Touch")}
+            {t(
+              "contact.badge",
+              "Get In Touch"
+            )}
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-extrabold text-white tracking-tight leading-tight mb-4">
+          <h1 className="mb-4 text-4xl font-extrabold leading-tight tracking-tight text-slate-900 dark:text-white md:text-6xl">
             {t(
               "contact.title",
               "Start Your Digital Journey"
@@ -322,11 +423,14 @@ export default function ContactPageClient() {
             <br />
 
             <span className="gradient-text">
-              {t("contact.title_today", "Today")}
+              {t(
+                "contact.title_today",
+                "Today"
+              )}
             </span>
           </h1>
 
-          <p className="text-base text-z-muted max-w-xl mx-auto leading-relaxed">
+          <p className="mx-auto max-w-xl text-base leading-relaxed text-slate-600 dark:text-z-muted">
             {t(
               "contact.sub",
               "Tell us about your project. First consultation is always free. Our team responds within 24 hours."
@@ -336,54 +440,65 @@ export default function ContactPageClient() {
 
         {/* MAIN GRID */}
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
 
           {/* CONTACT INFORMATION */}
 
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{
+              opacity: 0,
+              x: -30,
+            }}
+            animate={{
+              opacity: 1,
+              x: 0,
+            }}
             transition={{
               duration: 0.6,
               delay: 0.2,
             }}
           >
-            <h2 className="text-xl font-bold text-white mb-6">
+            <h2 className="mb-6 text-xl font-bold text-slate-900 dark:text-white">
               {t(
                 "contact.reach_us",
                 "Reach Us Directly"
               )}
             </h2>
 
-            <div className="flex flex-col gap-4 mb-8">
+            <div className="mb-8 flex flex-col gap-4">
 
               {CONTACT_INFO.map(
-                ({ icon: Icon, label, value, href }) => (
+                ({
+                  icon: Icon,
+                  label,
+                  value,
+                  href,
+                }) => (
                   <div
                     key={label}
-                    className="flex items-center gap-4 glass-card p-4"
+                    className="glass-card flex items-center gap-4 p-4"
                   >
-                    <div className="w-10 h-10 rounded-xl bg-z-accent/10 border border-z-accent/20 flex items-center justify-center flex-shrink-0">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-z-accent/20 bg-z-accent/10">
                       <Icon
                         size={18}
                         className="text-z-accent"
                       />
                     </div>
 
-                    <div>
-                      <div className="text-xs text-z-muted uppercase tracking-widest">
+                    <div className="min-w-0">
+                      <div className="text-xs uppercase tracking-widest text-z-muted">
                         {label}
                       </div>
 
                       {href ? (
                         <a
                           href={href}
-                          className="text-sm font-medium text-white hover:text-z-accent transition-colors"
+                          className="break-all text-sm font-medium text-slate-900 transition-colors hover:text-z-accent dark:text-white"
                         >
                           {value}
                         </a>
                       ) : (
-                        <div className="text-sm font-medium text-white">
+                        <div className="text-sm font-medium text-slate-900 dark:text-white">
                           {value}
                         </div>
                       )}
@@ -400,7 +515,7 @@ export default function ContactPageClient() {
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-3 w-full py-4 rounded-2xl bg-[#25d366] text-white font-semibold hover:bg-[#22c55e] transition-colors shadow-lg mb-4"
+              className="mb-4 flex w-full items-center justify-center gap-3 rounded-2xl bg-[#25D366] py-4 font-semibold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:bg-[#22C55E]"
             >
               <MessageCircle size={20} />
 
@@ -412,31 +527,32 @@ export default function ContactPageClient() {
 
             {/* COMPANY CARD */}
 
-            <div className="glass-card p-5 relative overflow-hidden">
+            <div className="glass-card relative overflow-hidden p-5">
 
-              <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute bottom-0 right-0 w-40 h-40 rounded-full bg-z-accent opacity-[0.06] blur-[40px]" />
+              <div className="pointer-events-none absolute inset-0">
+                <div className="absolute bottom-0 right-0 h-40 w-40 rounded-full bg-z-accent opacity-[0.06] blur-[40px]" />
               </div>
 
-              <div className="text-sm font-semibold text-white mb-1.5">
-                Zentrox Technologies
+              <div className="relative">
+                <div className="mb-1.5 text-sm font-semibold text-slate-900 dark:text-white">
+                  Zentrox Technologies
+                </div>
+
+                <div className="text-xs leading-relaxed text-z-muted">
+                  {t(
+                    "contact.brand_desc",
+                    "MSME Registered · Remote-First · Innovation-Driven"
+                  )}
+
+                  <br />
+
+                  {t(
+                    "contact.brand_locations",
+                    "Serving Mohali, Chandigarh, Punjab & clients worldwide"
+                  )}
+                </div>
               </div>
 
-              <div className="text-xs text-z-muted leading-relaxed">
-
-                {t(
-                  "contact.brand_desc",
-                  "MSME Registered · Remote-First · Innovation-Driven"
-                )}
-
-                <br />
-
-                {t(
-                  "contact.brand_locations",
-                  "Serving Mohali, Chandigarh, Haryana, Himachal Pradesh & Noida"
-                )}
-
-              </div>
             </div>
 
           </motion.div>
@@ -444,18 +560,20 @@ export default function ContactPageClient() {
           {/* CONTACT FORM */}
 
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{
+              opacity: 0,
+              x: 30,
+            }}
+            animate={{
+              opacity: 1,
+              x: 0,
+            }}
             transition={{
               duration: 0.6,
               delay: 0.3,
             }}
           >
-
             {submitted ? (
-
-              /* SUCCESS */
-
               <motion.div
                 initial={{
                   opacity: 0,
@@ -465,24 +583,23 @@ export default function ContactPageClient() {
                   opacity: 1,
                   scale: 1,
                 }}
-                className="glass-card p-10 text-center h-full flex flex-col items-center justify-center"
+                className="glass-card flex h-full min-h-[500px] flex-col items-center justify-center p-10 text-center"
               >
-
-                <div className="w-16 h-16 rounded-full bg-z-accent3/20 border border-z-accent3/30 flex items-center justify-center mb-4">
+                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-z-accent3/30 bg-z-accent3/20">
                   <Send
                     size={28}
                     className="text-z-accent3"
                   />
                 </div>
 
-                <h3 className="text-2xl font-bold text-white mb-2">
+                <h3 className="mb-2 text-2xl font-bold text-slate-900 dark:text-white">
                   {t(
                     "contact.success_title",
                     "Message Sent!"
                   )}
                 </h3>
 
-                <p className="text-z-muted text-sm leading-relaxed mb-6">
+                <p className="mb-6 text-sm leading-relaxed text-z-muted">
                   {t(
                     "contact.success",
                     "Message sent! We'll contact you within 24 hours."
@@ -490,29 +607,24 @@ export default function ContactPageClient() {
                 </p>
 
                 <button
+                  type="button"
                   onClick={() =>
                     setSubmitted(false)
                   }
-                  className="px-6 py-2.5 rounded-full bg-z-accent text-white text-sm font-semibold hover:bg-blue-500 transition-colors"
+                  className="rounded-full bg-z-accent px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
                 >
                   {t(
                     "contact.send_another",
                     "Send Another Message"
                   )}
                 </button>
-
               </motion.div>
-
             ) : (
-
-              /* FORM */
-
               <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="glass-card p-8 flex flex-col gap-4"
+                className="glass-card flex flex-col gap-4 p-6 md:p-8"
               >
-
-                <h2 className="text-xl font-bold text-white mb-2">
+                <h2 className="mb-2 text-xl font-bold text-slate-900 dark:text-white">
                   {t(
                     "contact.form_title",
                     "Send Us a Message"
@@ -521,12 +633,12 @@ export default function ContactPageClient() {
 
                 {/* NAME + PHONE */}
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 
                   <div>
-
                     <input
                       {...register("name")}
+                      autoComplete="name"
                       placeholder={
                         t(
                           "contact.name",
@@ -537,17 +649,17 @@ export default function ContactPageClient() {
                     />
 
                     {errors.name && (
-                      <p className="text-red-400 text-xs mt-1">
+                      <p className="mt-1 text-xs text-red-500">
                         {errors.name.message}
                       </p>
                     )}
-
                   </div>
 
                   <div>
-
                     <input
                       {...register("phone")}
+                      type="tel"
+                      autoComplete="tel"
                       placeholder={
                         t(
                           "contact.phone",
@@ -558,11 +670,10 @@ export default function ContactPageClient() {
                     />
 
                     {errors.phone && (
-                      <p className="text-red-400 text-xs mt-1">
+                      <p className="mt-1 text-xs text-red-500">
                         {errors.phone.message}
                       </p>
                     )}
-
                   </div>
 
                 </div>
@@ -570,10 +681,10 @@ export default function ContactPageClient() {
                 {/* EMAIL */}
 
                 <div>
-
                   <input
                     {...register("email")}
                     type="email"
+                    autoComplete="email"
                     placeholder={t(
                       "contact.email",
                       "Email Address (optional)"
@@ -582,22 +693,19 @@ export default function ContactPageClient() {
                   />
 
                   {errors.email && (
-                    <p className="text-red-400 text-xs mt-1">
+                    <p className="mt-1 text-xs text-red-500">
                       {errors.email.message}
                     </p>
                   )}
-
                 </div>
 
                 {/* SERVICE */}
 
                 <div>
-
                   <select
                     {...register("service")}
                     className="z-input"
                   >
-
                     <option value="">
                       {t(
                         "contact.service",
@@ -605,34 +713,32 @@ export default function ContactPageClient() {
                       ) + " *"}
                     </option>
 
-                    {services.map((service) => (
-                      <option
-                        key={service}
-                        value={service}
-                      >
-                        {service}
-                      </option>
-                    ))}
-
+                    {services.map(
+                      (service) => (
+                        <option
+                          key={service}
+                          value={service}
+                        >
+                          {service}
+                        </option>
+                      )
+                    )}
                   </select>
 
                   {errors.service && (
-                    <p className="text-red-400 text-xs mt-1">
+                    <p className="mt-1 text-xs text-red-500">
                       {errors.service.message}
                     </p>
                   )}
-
                 </div>
 
                 {/* BUDGET */}
 
                 <div>
-
                   <select
                     {...register("budget")}
                     className="z-input"
                   >
-
                     <option value="">
                       {t(
                         "contact.budget",
@@ -640,26 +746,25 @@ export default function ContactPageClient() {
                       )}
                     </option>
 
-                    {budgets.map((budget) => (
-                      <option
-                        key={budget}
-                        value={budget}
-                      >
-                        {budget}
-                      </option>
-                    ))}
-
+                    {budgets.map(
+                      (budget) => (
+                        <option
+                          key={budget}
+                          value={budget}
+                        >
+                          {budget}
+                        </option>
+                      )
+                    )}
                   </select>
-
                 </div>
 
                 {/* MESSAGE */}
 
                 <div>
-
                   <textarea
                     {...register("message")}
-                    rows={4}
+                    rows={5}
                     placeholder={
                       t(
                         "contact.message",
@@ -670,11 +775,10 @@ export default function ContactPageClient() {
                   />
 
                   {errors.message && (
-                    <p className="text-red-400 text-xs mt-1">
+                    <p className="mt-1 text-xs text-red-500">
                       {errors.message.message}
                     </p>
                   )}
-
                 </div>
 
                 {/* SUBMIT */}
@@ -682,12 +786,11 @@ export default function ContactPageClient() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-4 rounded-xl bg-z-accent text-white font-semibold text-sm hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-glow-sm flex items-center justify-center gap-2"
+                  className="shadow-glow-sm flex w-full items-center justify-center gap-2 rounded-xl bg-z-accent py-4 text-sm font-semibold text-white transition-all duration-300 hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-
                   {isSubmitting ? (
                     <>
-                      <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
 
                       {t(
                         "contact.sending",
@@ -704,28 +807,21 @@ export default function ContactPageClient() {
                       )}
                     </>
                   )}
-
                 </button>
 
                 {/* PRIVACY */}
 
-                <p className="text-[11px] text-z-muted text-center">
-
+                <p className="text-center text-[11px] text-z-muted">
                   {t(
                     "contact.privacy_note",
                     "By submitting, you agree to be contacted by Zentrox Technologies. No spam, ever."
                   )}
-
                 </p>
-
               </form>
-
             )}
-
           </motion.div>
 
         </div>
-
       </div>
     </section>
   );

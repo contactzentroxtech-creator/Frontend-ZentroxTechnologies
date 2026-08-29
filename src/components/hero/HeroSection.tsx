@@ -1,373 +1,1168 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useMotionValueEvent,
+} from "framer-motion";
 import {
   ArrowRight,
-  Play,
+  ChevronLeft,
+  ChevronRight,
+  CheckCircle2,
   Code2,
-  Sparkles,
-  TrendingUp,
-  Layers3,
-  ShieldCheck,
+  Globe2,
   Smartphone,
+  Bot,
+  BarChart3,
+  Sparkles,
 } from "lucide-react";
+
 import { useLang } from "@/lib/providers";
 
-export default function HeroSection() {
-  const [wordIdx, setWordIdx] = useState(0);
-  const [wordVisible, setWordVisible] = useState(true);
-  const { t, lang } = useLang();
+/* =========================================================
+   SERVICES DATA
+========================================================= */
 
-  const heroWords = t(
-    "hero.words",
-    "Custom Software|Web Experiences|Mobile Apps|Digital Growth"
-  )
-    .split("|")
-    .filter(Boolean);
+const SERVICES = [
+  {
+    id: 0,
+    title: "Website Development",
+    description:
+      "Fast, SEO-friendly, modern websites that build trust and scale your brand.",
+    icon: Globe2,
+    accent: "blue",
+  },
+  {
+    id: 1,
+    title: "Mobile App Development",
+    description:
+      "Cross-platform mobile apps for Android & iOS that engage users.",
+    icon: Smartphone,
+    accent: "cyan",
+  },
+  {
+    id: 2,
+    title: "Custom Software Development",
+    description:
+      "Scalable, secure, and high-performance software tailored to your business workflows.",
+    icon: Code2,
+    accent: "purple",
+  },
+  {
+    id: 3,
+    title: "AI Integration & Automation",
+    description:
+      "Smart AI solutions to automate tasks and improve business productivity.",
+    icon: Bot,
+    accent: "emerald",
+  },
+  {
+    id: 4,
+    title: "Digital Marketing & SEO",
+    description:
+      "Rank higher, get more traffic, generate leads and grow your business online.",
+    icon: BarChart3,
+    accent: "pink",
+  },
+];
+
+/* =========================================================
+   CARD POSITIONS
+========================================================= */
+
+function getCardStyle(index: number, activeIndex: number) {
+  const total = SERVICES.length;
+
+  let position = index - activeIndex;
+
+  if (position > total / 2) {
+    position -= total;
+  }
+
+  if (position < -total / 2) {
+    position += total;
+  }
+
+  const absPosition = Math.abs(position);
+
+  /* CENTER CARD */
+  if (position === 0) {
+    return {
+      x: "0%",
+      scale: 1,
+      rotateY: 0,
+      rotateZ: 0,
+      opacity: 1,
+      zIndex: 50,
+      filter: "blur(0px)",
+    };
+  }
+
+  /* LEFT */
+  if (position === -1) {
+    return {
+      x: "-108%",
+      scale: 0.88,
+      rotateY: 12,
+      rotateZ: -6,
+      opacity: 0.85,
+      zIndex: 30,
+      filter: "blur(0px)",
+    };
+  }
+
+  /* RIGHT */
+  if (position === 1) {
+    return {
+      x: "108%",
+      scale: 0.88,
+      rotateY: -12,
+      rotateZ: 6,
+      opacity: 0.85,
+      zIndex: 30,
+      filter: "blur(0px)",
+    };
+  }
+
+  /* FAR LEFT */
+  if (position === -2) {
+    return {
+      x: "-205%",
+      scale: 0.72,
+      rotateY: 18,
+      rotateZ: -8,
+      opacity: 0.45,
+      zIndex: 10,
+      filter: "blur(1px)",
+    };
+  }
+
+  /* FAR RIGHT */
+  if (position === 2) {
+    return {
+      x: "205%",
+      scale: 0.72,
+      rotateY: -18,
+      rotateZ: 8,
+      opacity: 0.45,
+      zIndex: 10,
+      filter: "blur(1px)",
+    };
+  }
+
+  return {
+    x: position > 0 ? "280%" : "-280%",
+    scale: 0.6,
+    rotateY: position > 0 ? -20 : 20,
+    opacity: 0,
+    zIndex: 0,
+    filter: "blur(4px)",
+  };
+}
+
+/* =========================================================
+   COMPONENT
+========================================================= */
+
+export default function HeroSection() {
+  const { t } = useLang();
+
+  const sectionRef = useRef<HTMLElement | null>(null);
+
+  const [activeIndex, setActiveIndex] = useState(2);
+  const [lastScrollStep, setLastScrollStep] = useState(-1);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end end"],
+  });
+
+  /* =========================================================
+     SCROLL → CHANGE CARDS
+  ========================================================= */
+
+  useMotionValueEvent(
+    scrollYProgress,
+    "change",
+    (latest) => {
+      /*
+       0 → 1 scroll progress
+       5 zones = cards change
+      */
+
+      const step = Math.min(
+        SERVICES.length - 1,
+        Math.floor(latest * SERVICES.length)
+      );
+
+      if (step !== lastScrollStep && latest > 0.05) {
+        setLastScrollStep(step);
+
+        setActiveIndex(step);
+      }
+    }
+  );
+
+  /* =========================================================
+     AUTO PLAY
+  ========================================================= */
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setWordVisible(false);
-
-      const timeout = setTimeout(() => {
-        setWordIdx((i) => (i + 1) % heroWords.length);
-        setWordVisible(true);
-      }, 350);
-
-      return () => clearTimeout(timeout);
-    }, 3200);
+      setActiveIndex((prev) => {
+        return (prev + 1) % SERVICES.length;
+      });
+    }, 6000);
 
     return () => clearInterval(interval);
-  }, [heroWords.length]);
+  }, []);
 
-  useEffect(() => {
-    setWordIdx(0);
-    setWordVisible(true);
-  }, [lang]);
+  function nextCard() {
+    setActiveIndex((prev) => {
+      return (prev + 1) % SERVICES.length;
+    });
+  }
+
+  function previousCard() {
+    setActiveIndex((prev) => {
+      return prev === 0
+        ? SERVICES.length - 1
+        : prev - 1;
+    });
+  }
 
   return (
     <section
-      aria-label="Zentrox Technologies digital solutions"
-      className="relative overflow-hidden px-4 pt-32 pb-20 md:px-6 md:pt-40 md:pb-28"
+      ref={sectionRef}
+      aria-label="Zentrox Technologies"
+      className="
+        relative
+        min-h-[180vh]
+        bg-white
+        transition-colors
+        duration-500
+        dark:bg-[#050914]
+      "
     >
-      {/* Soft premium background */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        aria-hidden="true"
-      >
-        <div className="absolute left-1/2 top-0 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-blue-400/10 blur-[140px]" />
+      {/* =====================================================
+          STICKY HERO
+      ====================================================== */}
 
-        <div className="absolute left-[5%] top-[25%] h-[300px] w-[300px] rounded-full bg-indigo-400/10 blur-[120px]" />
+      <div className="sticky top-0 flex min-h-screen items-center overflow-hidden">
 
-        <div className="absolute bottom-[5%] right-[5%] h-[350px] w-[350px] rounded-full bg-sky-300/10 blur-[130px]" />
+        {/* ===================================================
+            BACKGROUND
+        ==================================================== */}
 
         <div
-          className="absolute inset-0 opacity-[0.035]"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)",
-            backgroundSize: "28px 28px",
-          }}
-        />
-      </div>
+          className="pointer-events-none absolute inset-0"
+          aria-hidden="true"
+        >
+          {/* Dark grid */}
 
-      <div className="relative z-10 mx-auto max-w-7xl">
-        {/* Hero Content */}
-        <div className="mx-auto flex max-w-5xl flex-col items-center text-center">
-          <motion.div
-            initial={{ opacity: 0, y: -15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="z-badge mb-6"
-          >
-            <span className="h-2 w-2 rounded-full bg-emerald-500" />
-            {t("hero.badge", "Building Digital Experiences That Perform")}
-          </motion.div>
+          <div
+            className="
+              absolute inset-0
+              opacity-[0.06]
+              dark:opacity-[0.12]
+            "
+            style={{
+              backgroundImage: `
+                linear-gradient(
+                  rgba(100,116,139,.35) 1px,
+                  transparent 1px
+                ),
+                linear-gradient(
+                  90deg,
+                  rgba(100,116,139,.35) 1px,
+                  transparent 1px
+                )
+              `,
+              backgroundSize: "72px 72px",
+            }}
+          />
 
-          <motion.h1
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.75, delay: 0.1 }}
-            className="max-w-5xl text-5xl font-extrabold leading-[1.03] tracking-tight text-z-text md:text-7xl lg:text-8xl"
-          >
-            <span className="block">
-              {t("hero.line1", "Digital Solutions")}
-            </span>
+          {/* Center Glow */}
 
-            <span
-              className="gradient-text mt-2 block"
-              style={{
-                opacity: wordVisible ? 1 : 0,
-                transform: wordVisible
-                  ? "translateY(0)"
-                  : "translateY(8px)",
-                transition: "all 0.3s ease",
-                minHeight: "1.15em",
-              }}
-            >
-              {heroWords[wordIdx] || heroWords[0]}
-            </span>
+          <div
+            className="
+              absolute
+              left-1/2
+              top-[42%]
+              h-[700px]
+              w-[900px]
+              -translate-x-1/2
+              rounded-full
+              bg-blue-500/[0.07]
+              blur-[170px]
 
-            <span className="mt-3 block text-3xl font-bold text-z-text md:text-5xl lg:text-6xl">
-              {t("hero.line2", "Built Around Your Business Goals")}
-            </span>
-          </motion.h1>
+              dark:bg-blue-600/[0.12]
+            "
+          />
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="mt-7 max-w-3xl text-base leading-relaxed text-z-muted md:text-lg"
-          >
-            {t(
-              "hero.description",
-              "Zentrox Technologies helps businesses grow with custom software, high-performing websites, mobile applications, AI integration, SEO, and digital marketing solutions."
-            )}
-          </motion.p>
+          {/* Left Glow */}
 
-          {/* CTA */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
-            className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center"
-          >
-            <Link
-              href="/contact"
-              className="group inline-flex items-center justify-center gap-2 rounded-full bg-[#2563eb] px-7 py-4 text-sm font-semibold text-white shadow-lg shadow-blue-500/20 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/25"
-            >
-              {t("hero.cta_primary", "Start Your Project")}
-              <ArrowRight
-                size={17}
-                className="transition-transform duration-300 group-hover:translate-x-1"
-              />
-            </Link>
+          <div
+            className="
+              absolute
+              -left-40
+              bottom-0
+              h-[450px]
+              w-[450px]
+              rounded-full
+              bg-blue-500/[0.08]
+              blur-[130px]
 
-            <Link
-              href="/services"
-              className="group inline-flex items-center justify-center gap-2 rounded-full border border-z-border bg-white/40 px-7 py-4 text-sm font-semibold text-z-text backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-400 hover:text-blue-600 dark:bg-white/5"
-            >
-              <Play
-                size={15}
-                className="transition-transform duration-300 group-hover:scale-110"
-              />
-              {t("hero.cta_secondary", "Explore Our Services")}
-            </Link>
-          </motion.div>
+              dark:bg-blue-500/[0.14]
+            "
+          />
 
-          {/* Trust */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.7, delay: 0.5 }}
-            className="mt-7 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-z-muted"
-          >
-            <span>✓ Founded in 2023</span>
-            <span>✓ Custom Solutions</span>
-            <span>✓ Global Delivery</span>
-          </motion.div>
+          {/* Right Glow */}
+
+          <div
+            className="
+              absolute
+              -right-40
+              bottom-0
+              h-[450px]
+              w-[450px]
+              rounded-full
+              bg-cyan-500/[0.07]
+              blur-[130px]
+
+              dark:bg-cyan-500/[0.12]
+            "
+          />
+
+          {/* Blue floor glow */}
+
+          <div
+            className="
+              absolute
+              bottom-0
+              left-1/2
+              h-[220px]
+              w-[900px]
+              -translate-x-1/2
+              rounded-full
+              bg-blue-500/[0.06]
+              blur-[90px]
+
+              dark:bg-blue-600/[0.15]
+            "
+          />
+
+          {/* Stars */}
+
+          <div className="absolute left-[8%] top-[45%] h-1 w-1 rounded-full bg-blue-400 shadow-[0_0_12px_2px_rgba(59,130,246,.8)]" />
+
+          <div className="absolute right-[13%] top-[48%] h-1 w-1 rounded-full bg-cyan-400 shadow-[0_0_12px_2px_rgba(34,211,238,.8)]" />
+
+          <div className="absolute right-[6%] top-[65%] h-1 w-1 rounded-full bg-blue-400" />
+
+          <div className="absolute left-[18%] top-[70%] h-1 w-1 rounded-full bg-blue-400" />
         </div>
 
-        {/* Interactive Product Showcase */}
-        <motion.div
-          initial={{ opacity: 0, y: 45 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.45 }}
-          className="relative mx-auto mt-16 max-w-6xl md:mt-20"
-        >
-          <div className="relative overflow-hidden rounded-[32px] border border-z-border bg-white/55 p-4 shadow-2xl backdrop-blur-xl dark:bg-white/[0.04] md:p-6">
-            {/* Browser top */}
-            <div className="mb-5 flex items-center justify-between border-b border-z-border pb-4">
-              <div className="flex gap-2">
-                <span className="h-3 w-3 rounded-full bg-red-400/80" />
-                <span className="h-3 w-3 rounded-full bg-yellow-400/80" />
-                <span className="h-3 w-3 rounded-full bg-emerald-400/80" />
-              </div>
+        {/* ===================================================
+            CONTENT
+        ==================================================== */}
 
-              <div className="hidden rounded-full border border-z-border px-4 py-1.5 text-xs text-z-muted sm:block">
-                zentroxtechnologies.com
-              </div>
+        <div className="relative z-10 mx-auto w-full max-w-[1500px] px-4 pt-24 md:px-8 lg:px-12">
 
-              <div className="w-12" />
+          {/* =================================================
+              TOP HERO
+          ================================================= */}
+
+          <div className="mx-auto max-w-5xl text-center">
+
+            {/* Badge */}
+
+            <motion.div
+              initial={{
+                opacity: 0,
+                y: -20,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
+              transition={{
+                duration: 0.6,
+              }}
+              className="
+                mx-auto
+                mb-7
+                flex
+                w-fit
+                items-center
+                gap-2
+                rounded-full
+                border
+                border-blue-400/30
+                bg-blue-500/[0.06]
+                px-5
+                py-2.5
+                text-[11px]
+                font-bold
+                tracking-[0.12em]
+                text-slate-600
+
+                dark:bg-blue-500/[0.08]
+                dark:text-blue-200
+
+                md:text-xs
+              "
+            >
+              <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,1)]" />
+
+              {t(
+                "hero.badge",
+                "MOHALI & CHANDIGARH — MSME REGISTERED TECHNOLOGY COMPANY"
+              )}
+            </motion.div>
+
+            {/* Heading */}
+
+            <motion.h1
+              initial={{
+                opacity: 0,
+                y: 30,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
+              transition={{
+                duration: 0.8,
+                delay: 0.1,
+              }}
+              className="
+                font-extrabold
+                leading-[0.9]
+                tracking-tight
+              "
+            >
+              <span
+                className="
+                  block
+                  text-5xl
+                  text-slate-900
+
+                  dark:text-white
+
+                  sm:text-6xl
+                  md:text-7xl
+                  lg:text-8xl
+                "
+              >
+                {t("hero.line1", "We Build")}
+              </span>
+
+              <span
+                className="
+                  mt-3
+                  block
+                  bg-gradient-to-r
+                  from-blue-600
+                  via-blue-500
+                  to-cyan-400
+                  bg-clip-text
+                  text-5xl
+                  text-transparent
+
+                  dark:from-blue-500
+                  dark:via-blue-400
+                  dark:to-cyan-300
+
+                  sm:text-6xl
+                  md:text-7xl
+                  lg:text-8xl
+                "
+              >
+                {t(
+                  "hero.line2",
+                  "Digital Solutions"
+                )}
+              </span>
+            </motion.h1>
+
+            {/* Description */}
+
+            <motion.p
+              initial={{
+                opacity: 0,
+                y: 20,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
+              transition={{
+                duration: 0.7,
+                delay: 0.2,
+              }}
+              className="
+                mx-auto
+                mt-6
+                max-w-3xl
+                text-base
+                leading-relaxed
+                text-slate-600
+
+                dark:text-slate-300
+
+                md:text-lg
+              "
+            >
+              {t(
+                "hero.description",
+                "Custom Software, Websites, Mobile Apps, AI, SEO & Digital Marketing to grow your business in the modern world."
+              )}
+            </motion.p>
+
+            {/* Buttons */}
+
+            <motion.div
+              initial={{
+                opacity: 0,
+                y: 20,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
+              transition={{
+                duration: 0.7,
+                delay: 0.3,
+              }}
+              className="
+                mt-7
+                flex
+                flex-col
+                items-center
+                justify-center
+                gap-3
+
+                sm:flex-row
+              "
+            >
+              <Link
+                href="/contact"
+                className="
+                  group
+                  inline-flex
+                  items-center
+                  gap-3
+                  rounded-full
+                  bg-gradient-to-r
+                  from-blue-600
+                  to-blue-500
+                  px-7
+                  py-4
+                  text-sm
+                  font-bold
+                  text-white
+                  shadow-[0_12px_35px_rgba(37,99,235,.35)]
+                  transition-all
+                  duration-300
+
+                  hover:-translate-y-1
+                  hover:shadow-[0_18px_45px_rgba(37,99,235,.45)]
+                "
+              >
+                {t(
+                  "hero.cta_primary",
+                  "Start Your Project"
+                )}
+
+                <ArrowRight
+                  size={18}
+                  className="
+                    transition-transform
+                    duration-300
+                    group-hover:translate-x-1
+                  "
+                />
+              </Link>
+
+              <Link
+                href="/services"
+                className="
+                  group
+                  inline-flex
+                  items-center
+                  gap-3
+                  rounded-full
+                  border
+                  border-slate-300
+                  bg-white/50
+                  px-7
+                  py-4
+                  text-sm
+                  font-bold
+                  text-slate-800
+                  backdrop-blur-xl
+                  transition-all
+                  duration-300
+
+                  hover:-translate-y-1
+                  hover:border-blue-400
+
+                  dark:border-white/15
+                  dark:bg-white/[0.03]
+                  dark:text-white
+                  dark:hover:border-blue-400/60
+                "
+              >
+                <span className="flex h-5 w-5 items-center justify-center">
+                  <span className="h-0 w-0 border-y-[6px] border-l-[9px] border-y-transparent border-l-current" />
+                </span>
+
+                {t(
+                  "hero.cta_secondary",
+                  "View Our Work"
+                )}
+              </Link>
+            </motion.div>
+          </div>
+
+          {/* =================================================
+              3D SERVICES CAROUSEL
+          ================================================= */}
+
+          <div className="relative mt-8 md:mt-10">
+
+            {/* Glow behind center */}
+
+            <motion.div
+              animate={{
+                opacity: [0.3, 0.7, 0.3],
+                scale: [0.95, 1.05, 0.95],
+              }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+              }}
+              className="
+                pointer-events-none
+                absolute
+                left-1/2
+                top-1/2
+                h-[300px]
+                w-[500px]
+                -translate-x-1/2
+                -translate-y-1/2
+                rounded-full
+                bg-blue-500/[0.08]
+                blur-[90px]
+
+                dark:bg-blue-500/[0.16]
+              "
+            />
+
+            {/* Left Arrow */}
+
+            <button
+              onClick={previousCard}
+              aria-label="Previous service"
+              className="
+                absolute
+                left-0
+                top-1/2
+                z-[70]
+                hidden
+                h-12
+                w-12
+                -translate-y-1/2
+                items-center
+                justify-center
+                rounded-full
+                border
+                border-slate-300
+                bg-white/70
+                text-slate-700
+                shadow-lg
+                backdrop-blur-xl
+                transition-all
+
+                hover:scale-110
+                hover:border-blue-400
+
+                dark:border-white/15
+                dark:bg-white/[0.05]
+                dark:text-white
+
+                lg:flex
+              "
+            >
+              <ChevronLeft size={23} />
+            </button>
+
+            {/* Right Arrow */}
+
+            <button
+              onClick={nextCard}
+              aria-label="Next service"
+              className="
+                absolute
+                right-0
+                top-1/2
+                z-[70]
+                hidden
+                h-12
+                w-12
+                -translate-y-1/2
+                items-center
+                justify-center
+                rounded-full
+                border
+                border-slate-300
+                bg-white/70
+                text-slate-700
+                shadow-lg
+                backdrop-blur-xl
+                transition-all
+
+                hover:scale-110
+                hover:border-blue-400
+
+                dark:border-white/15
+                dark:bg-white/[0.05]
+                dark:text-white
+
+                lg:flex
+              "
+            >
+              <ChevronRight size={23} />
+            </button>
+
+            {/* CARDS AREA */}
+
+            <div
+              className="
+                relative
+                mx-auto
+                h-[310px]
+                w-full
+                max-w-[1180px]
+                overflow-visible
+
+                sm:h-[330px]
+                md:h-[360px]
+              "
+              style={{
+                perspective: "1800px",
+              }}
+            >
+              {SERVICES.map(
+                (service, index) => {
+                  const Icon = service.icon;
+
+                  const isActive =
+                    index === activeIndex;
+
+                  const cardStyle =
+                    getCardStyle(
+                      index,
+                      activeIndex
+                    );
+
+                  return (
+                    <motion.div
+                      key={service.id}
+                      animate={cardStyle}
+                      transition={{
+                        type: "spring",
+                        stiffness: 120,
+                        damping: 20,
+                        mass: 0.8,
+                      }}
+                      onClick={() =>
+                        setActiveIndex(index)
+                      }
+                      className="
+                        absolute
+                        left-1/2
+                        top-1/2
+                        w-[280px]
+                        -translate-x-1/2
+                        -translate-y-1/2
+                        cursor-pointer
+
+                        sm:w-[310px]
+                        md:w-[340px]
+                      "
+                      style={{
+                        transformStyle:
+                          "preserve-3d",
+                      }}
+                    >
+                      <div
+                        className={`
+                          relative
+                          min-h-[285px]
+                          overflow-hidden
+                          rounded-[24px]
+                          border
+                          p-6
+                          backdrop-blur-xl
+                          transition-all
+                          duration-500
+
+                          ${
+                            isActive
+                              ? `
+                                border-blue-400/70
+                                bg-white/80
+                                shadow-[0_20px_70px_rgba(37,99,235,.22)]
+                                dark:bg-[#111827]/85
+                                dark:shadow-[0_25px_90px_rgba(79,70,229,.32)]
+                              `
+                              : `
+                                border-slate-200
+                                bg-white/70
+                                shadow-xl
+                                dark:border-white/10
+                                dark:bg-[#0f172a]/75
+                              `
+                          }
+                        `}
+                      >
+                        {/* Active glow */}
+
+                        {isActive && (
+                          <>
+                            <div
+                              className="
+                                pointer-events-none
+                                absolute
+                                inset-0
+                                rounded-[24px]
+                                bg-gradient-to-br
+                                from-blue-500/[0.08]
+                                via-transparent
+                                to-purple-500/[0.08]
+                              "
+                            />
+
+                            <div
+                              className="
+                                absolute
+                                bottom-0
+                                left-1/2
+                                h-px
+                                w-2/3
+                                -translate-x-1/2
+                                bg-gradient-to-r
+                                from-transparent
+                                via-blue-400
+                                to-transparent
+                                shadow-[0_0_18px_rgba(96,165,250,.9)]
+                              "
+                            />
+                          </>
+                        )}
+
+                        <div className="relative z-10">
+
+                          {/* Icon */}
+
+                          <div
+                            className={`
+                              flex
+                              h-14
+                              w-14
+                              items-center
+                              justify-center
+                              rounded-2xl
+                              border
+
+                              ${
+                                service.accent ===
+                                "purple"
+                                  ? `
+                                    border-purple-400/30
+                                    bg-purple-500/10
+                                    text-purple-500
+                                  `
+                                  : ""
+                              }
+
+                              ${
+                                service.accent ===
+                                "blue"
+                                  ? `
+                                    border-blue-400/30
+                                    bg-blue-500/10
+                                    text-blue-500
+                                  `
+                                  : ""
+                              }
+
+                              ${
+                                service.accent ===
+                                "cyan"
+                                  ? `
+                                    border-cyan-400/30
+                                    bg-cyan-500/10
+                                    text-cyan-500
+                                  `
+                                  : ""
+                              }
+
+                              ${
+                                service.accent ===
+                                "emerald"
+                                  ? `
+                                    border-emerald-400/30
+                                    bg-emerald-500/10
+                                    text-emerald-500
+                                  `
+                                  : ""
+                              }
+
+                              ${
+                                service.accent ===
+                                "pink"
+                                  ? `
+                                    border-pink-400/30
+                                    bg-pink-500/10
+                                    text-pink-500
+                                  `
+                                  : ""
+                              }
+                            `}
+                          >
+                            <Icon size={27} />
+                          </div>
+
+                          {/* Title */}
+
+                          <h3
+                            className={`
+                              mt-6
+                              text-xl
+                              font-bold
+                              leading-tight
+                              text-slate-900
+                              dark:text-white
+
+                              ${
+                                isActive
+                                  ? "md:text-2xl"
+                                  : ""
+                              }
+                            `}
+                          >
+                            {service.title}
+                          </h3>
+
+                          {/* Description */}
+
+                          <p
+                            className="
+                              mt-4
+                              text-sm
+                              leading-7
+                              text-slate-600
+                              dark:text-slate-400
+                            "
+                          >
+                            {service.description}
+                          </p>
+
+                          {/* CTA */}
+
+                          <Link
+                            href="/services"
+                            onClick={(event) =>
+                              event.stopPropagation()
+                            }
+                            className="
+                              group
+                              mt-6
+                              inline-flex
+                              items-center
+                              gap-2
+                              text-sm
+                              font-semibold
+                              text-blue-600
+                              transition-all
+
+                              hover:gap-3
+
+                              dark:text-blue-400
+                            "
+                          >
+                            Explore Service
+
+                            <ArrowRight
+                              size={16}
+                              className="
+                                transition-transform
+                                group-hover:translate-x-1
+                              "
+                            />
+                          </Link>
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                }
+              )}
             </div>
 
-            <div className="grid gap-4 md:grid-cols-12">
-              {/* Main Dashboard */}
-              <motion.div
-                whileHover={{ y: -4 }}
-                transition={{ type: "spring", stiffness: 250, damping: 18 }}
-                className="relative overflow-hidden rounded-2xl border border-z-border bg-white/60 p-5 dark:bg-white/[0.03] md:col-span-7"
-              >
-                <div className="mb-8 flex items-center justify-between">
-                  <div>
-                    <p className="text-xs text-z-muted">
-                      Digital Growth Overview
-                    </p>
-                    <h3 className="mt-1 text-lg font-bold text-z-text">
-                      Your business, moving forward.
-                    </h3>
-                  </div>
+            {/* =================================================
+                DOTS
+            ================================================= */}
 
-                  <div className="rounded-xl bg-blue-500/10 p-2 text-blue-600">
-                    <TrendingUp size={20} />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-3 gap-3">
-                  {[
-                    {
-                      label: "Web",
-                      icon: Layers3,
-                      value: "Modern",
-                    },
-                    {
-                      label: "Software",
-                      icon: Code2,
-                      value: "Custom",
-                    },
-                    {
-                      label: "Growth",
-                      icon: TrendingUp,
-                      value: "Scalable",
-                    },
-                  ].map((item) => {
-                    const Icon = item.icon;
-
-                    return (
-                      <div
-                        key={item.label}
-                        className="rounded-xl border border-z-border bg-white/70 p-3 dark:bg-white/[0.04]"
-                      >
-                        <Icon size={17} className="mb-4 text-blue-600" />
-                        <p className="text-[10px] text-z-muted">
-                          {item.label}
-                        </p>
-                        <p className="mt-1 text-sm font-semibold text-z-text">
-                          {item.value}
-                        </p>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* Animated graph */}
-                <div className="mt-5 flex h-28 items-end gap-2 rounded-xl border border-z-border bg-gradient-to-br from-blue-500/[0.04] to-transparent p-4">
-                  {[35, 50, 42, 65, 58, 78, 72, 92].map((height, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ height: 0 }}
-                      animate={{ height: `${height}%` }}
-                      transition={{
-                        duration: 0.8,
-                        delay: 0.7 + index * 0.08,
+            <div className="mt-2 flex justify-center gap-3">
+              {SERVICES.map(
+                (service, index) => (
+                  <button
+                    key={service.id}
+                    onClick={() =>
+                      setActiveIndex(index)
+                    }
+                    aria-label={`Show ${service.title}`}
+                    className="
+                      group
+                      flex
+                      h-6
+                      items-center
+                      justify-center
+                    "
+                  >
+                    <motion.span
+                      animate={{
+                        width:
+                          index === activeIndex
+                            ? 20
+                            : 9,
+                        opacity:
+                          index === activeIndex
+                            ? 1
+                            : 0.4,
                       }}
-                      className="flex-1 rounded-t-lg bg-gradient-to-t from-blue-600/70 to-blue-400"
+                      className="
+                        h-2.5
+                        rounded-full
+                        bg-blue-500
+                        shadow-[0_0_12px_rgba(59,130,246,.6)]
+
+                        dark:bg-blue-400
+                      "
                     />
-                  ))}
-                </div>
-              </motion.div>
-
-              {/* Side Cards */}
-              <div className="flex flex-col gap-4 md:col-span-5">
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  className="rounded-2xl border border-z-border bg-white/60 p-5 shadow-sm dark:bg-white/[0.03]"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="rounded-xl bg-violet-500/10 p-2.5 text-violet-600">
-                      <Sparkles size={20} />
-                    </div>
-
-                    <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-[10px] font-semibold text-emerald-600">
-                      SMART TECH
-                    </span>
-                  </div>
-
-                  <h3 className="mt-5 text-base font-bold text-z-text">
-                    AI Integration
-                  </h3>
-
-                  <p className="mt-2 text-sm leading-relaxed text-z-muted">
-                    Automate workflows and build smarter digital experiences.
-                  </p>
-                </motion.div>
-
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  className="rounded-2xl border border-z-border bg-white/60 p-5 shadow-sm dark:bg-white/[0.03]"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="rounded-xl bg-sky-500/10 p-2.5 text-sky-600">
-                      <Smartphone size={20} />
-                    </div>
-
-                    <div>
-                      <p className="text-sm font-bold text-z-text">
-                        Mobile Experiences
-                      </p>
-
-                      <p className="mt-1 text-xs text-z-muted">
-                        Android & iOS solutions
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  className="rounded-2xl border border-z-border bg-white/60 p-5 shadow-sm dark:bg-white/[0.03]"
-                >
-                  <div className="flex items-center gap-3">
-                    <ShieldCheck size={22} className="text-emerald-600" />
-
-                    <div>
-                      <p className="text-sm font-semibold text-z-text">
-                        Built for Long-Term Growth
-                      </p>
-
-                      <p className="text-xs text-z-muted">
-                        Strategy, technology & support.
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              </div>
+                  </button>
+                )
+              )}
             </div>
           </div>
 
-          {/* Floating subtle 3D elements */}
-          <motion.div
-            animate={{
-              y: [0, -12, 0],
-              rotate: [0, 4, 0],
-            }}
-            transition={{
-              duration: 5,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-            className="absolute -left-5 top-1/4 hidden rounded-2xl border border-z-border bg-white/80 p-4 shadow-xl backdrop-blur-xl dark:bg-[#20242c]/90 lg:block"
-          >
-            <Code2 size={22} className="text-blue-600" />
-          </motion.div>
+          {/* =================================================
+              TRUST BAR
+          ================================================= */}
 
           <motion.div
+            initial={{
+              opacity: 0,
+              y: 25,
+            }}
             animate={{
-              y: [0, 12, 0],
-              rotate: [0, -4, 0],
+              opacity: 1,
+              y: 0,
             }}
             transition={{
-              duration: 6,
-              repeat: Infinity,
-              ease: "easeInOut",
+              duration: 0.7,
+              delay: 0.5,
             }}
-            className="absolute -right-5 bottom-1/4 hidden rounded-2xl border border-z-border bg-white/80 p-4 shadow-xl backdrop-blur-xl dark:bg-[#20242c]/90 lg:block"
+            className="
+              mx-auto
+              mt-7
+              mb-5
+              grid
+              max-w-5xl
+              grid-cols-2
+              overflow-hidden
+              rounded-2xl
+              border
+              border-slate-200
+              bg-white/70
+              shadow-lg
+              backdrop-blur-xl
+
+              dark:border-white/10
+              dark:bg-[#0d1525]/70
+
+              md:grid-cols-4
+            "
           >
-            <Sparkles size={22} className="text-violet-600" />
+            {[
+              "Founded in 2023",
+              "Custom Solutions",
+              "Cutting-edge Technology",
+              "Global Delivery",
+            ].map((item, index) => (
+              <div
+                key={item}
+                className={`
+                  flex
+                  items-center
+                  justify-center
+                  gap-2
+                  px-4
+                  py-5
+                  text-center
+                  text-sm
+                  font-medium
+                  text-slate-700
+
+                  dark:text-slate-300
+
+                  ${
+                    index !== 3
+                      ? `
+                        md:border-r
+                        md:border-slate-200
+                        dark:md:border-white/10
+                      `
+                      : ""
+                  }
+                `}
+              >
+                <CheckCircle2
+                  size={20}
+                  className="shrink-0 text-blue-500"
+                />
+
+                <span>{item}</span>
+              </div>
+            ))}
           </motion.div>
-        </motion.div>
+
+          {/* Scroll Hint */}
+
+          <div
+            className="
+              mt-3
+              pb-5
+              text-center
+              text-[10px]
+              font-semibold
+              uppercase
+              tracking-[0.25em]
+              text-slate-400
+
+              dark:text-slate-600
+            "
+          >
+            Scroll to explore services
+          </div>
+        </div>
       </div>
     </section>
   );

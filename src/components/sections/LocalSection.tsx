@@ -1,287 +1,689 @@
 "use client";
 
+import { MouseEvent, useState } from "react";
 import { motion } from "framer-motion";
-import { Users, BookOpen, Award } from "lucide-react";
+import {
+  Globe2,
+  MapPin,
+  BriefcaseBusiness,
+  Code2,
+  Rocket,
+  ShieldCheck,
+  ArrowUpRight,
+} from "lucide-react";
+
 import { useLang } from "@/lib/providers";
-import { MouseEvent, useState, useEffect } from "react";
 
 type Language = "en" | "hi" | "pa";
 
-// Individual Card Component with clean client-side protection
-// for spotlight animations
-function Card({ card, index }: { card: any; index: number }) {
-  const Icon = card.icon;
-  const [coords, setCoords] = useState({ x: 0, y: 0 });
-  const [isMounted, setIsMounted] = useState(false);
+type CardData = {
+  icon: typeof Globe2;
+  color: string;
+  title: string;
+  desc: string;
+  cta: string;
+};
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+/* =========================================================
+   GROWTH CARD
+========================================================= */
+
+function GrowthCard({
+  card,
+  index,
+}: {
+  card: CardData;
+  index: number;
+}) {
+  const Icon = card.icon;
+
+  const [coords, setCoords] = useState({
+    x: 50,
+    y: 50,
+  });
 
   function handleMouseMove({
     currentTarget,
     clientX,
     clientY,
   }: MouseEvent<HTMLDivElement>) {
-    const { left, top } = currentTarget.getBoundingClientRect();
+    const rect = currentTarget.getBoundingClientRect();
 
     setCoords({
-      x: clientX - left,
-      y: clientY - top,
+      x: clientX - rect.left,
+      y: clientY - rect.top,
     });
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
+    <motion.article
+      initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: 0.7,
-        delay: index * 0.15,
-        ease: [0.21, 1.02, 0.43, 1.01],
+      viewport={{
+        once: true,
+        margin: "-40px",
       }}
-      viewport={{ once: true }}
+      transition={{
+        duration: 0.55,
+        delay: index * 0.1,
+        ease: [0.22, 1, 0.36, 1],
+      }}
+      whileHover={{
+        y: -6,
+      }}
       onMouseMove={handleMouseMove}
-      className="group relative overflow-hidden rounded-2xl border border-slate-200 dark:border-gray-800 bg-white dark:bg-[#080c15]/80 backdrop-blur-md p-8 shadow-sm dark:shadow-xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:border-slate-300 dark:hover:border-gray-700"
-    >
-      {/* Interactive Spotlight Glow Effect */}
-      {isMounted && (
-        <div
-          className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-100 transition duration-300"
-          style={{
-            background: `radial-gradient(
-              450px circle at ${coords.x}px ${coords.y}px,
-              ${card.color}15,
-              transparent 80%
-            )`,
-          }}
-        />
-      )}
+      className="
+        group relative overflow-hidden
+        rounded-3xl
+        border border-slate-200/80
+        bg-white
+        p-6
+        shadow-[0_10px_35px_rgba(15,23,42,0.06)]
+        transition-all duration-500
 
+        hover:border-slate-300
+        hover:shadow-[0_25px_60px_rgba(15,23,42,0.12)]
+
+        dark:border-white/10
+        dark:bg-white/[0.045]
+        dark:hover:bg-white/[0.07]
+
+        md:p-7
+      "
+    >
+      {/* Dynamic Mouse Spotlight */}
       <div
-        className="relative z-10 w-12 h-12 rounded-xl flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3"
+        className="
+          pointer-events-none
+          absolute inset-0
+          opacity-0
+          transition-opacity duration-500
+          group-hover:opacity-100
+        "
         style={{
-          background: `${card.color}18`,
-          border: `1px solid ${card.color}40`,
+          background: `radial-gradient(
+            350px circle at ${coords.x}px ${coords.y}px,
+            ${card.color}18,
+            transparent 65%
+          )`,
+        }}
+      />
+
+      {/* Top Accent */}
+      <div
+        className="
+          absolute left-0 top-0
+          h-1 w-0
+          transition-all duration-500
+          group-hover:w-full
+        "
+        style={{
+          backgroundColor: card.color,
+        }}
+      />
+
+      {/* Icon */}
+      <div
+        className="
+          relative z-10
+          mb-6
+          flex h-12 w-12
+          items-center justify-center
+          rounded-2xl
+          border
+          transition-transform duration-300
+          group-hover:scale-110
+          group-hover:rotate-3
+        "
+        style={{
+          backgroundColor: `${card.color}12`,
+          borderColor: `${card.color}28`,
         }}
       >
-        <Icon size={24} style={{ color: card.color }} />
+        <Icon
+          size={22}
+          style={{
+            color: card.color,
+          }}
+        />
       </div>
 
-      <h3 className="relative z-10 text-xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">
+      {/* Title */}
+      <h3
+        className="
+          relative z-10
+          text-xl font-bold
+          tracking-tight
+          text-slate-900
+          dark:text-z-text
+        "
+      >
         {card.title}
       </h3>
 
-      <p className="relative z-10 text-sm text-slate-600 dark:text-gray-400 leading-relaxed">
+      {/* Description */}
+      <p
+        className="
+          relative z-10
+          mt-3
+          text-sm
+          leading-relaxed
+          text-slate-600
+          dark:text-z-muted
+        "
+      >
         {card.desc}
       </p>
-    </motion.div>
+
+      {/* CTA */}
+      <div
+        className="
+          relative z-10
+          mt-6
+          flex items-center gap-2
+          text-sm font-semibold
+        "
+        style={{
+          color: card.color,
+        }}
+      >
+        <span>{card.cta}</span>
+
+        <ArrowUpRight
+          size={16}
+          className="
+            transition-transform duration-300
+            group-hover:-translate-y-1
+            group-hover:translate-x-1
+          "
+        />
+      </div>
+    </motion.article>
   );
 }
+
+/* =========================================================
+   MAIN COMPONENT
+========================================================= */
 
 export default function LocalSection() {
   const { t, lang } = useLang();
 
-  // IMPORTANT:
-  // Explicitly tell TypeScript that the language can be
-  // English, Hindi, or Punjabi.
   const currentLang = lang as Language;
 
-  // Target locations
-  const CITIES_EN = [
+  /* =======================================================
+     LOCATIONS
+  ======================================================= */
+
+  const LOCATIONS_EN = [
     "Mohali",
     "Chandigarh",
     "Punjab",
+    "Haryana",
     "Himachal Pradesh",
     "Delhi NCR",
     "India",
     "United States",
     "United Kingdom",
     "Australia",
+    "Canada",
+    "Worldwide",
   ];
 
-  const CITIES_HI = [
+  const LOCATIONS_HI = [
     "मोहाली",
     "चंडीगढ़",
     "पंजाब",
+    "हरियाणा",
     "हिमाचल प्रदेश",
     "दिल्ली एनसीआर",
     "भारत",
     "संयुक्त राज्य",
     "यूनाइटेड किंगडम",
     "ऑस्ट्रेलिया",
+    "कनाडा",
+    "विश्वभर",
   ];
 
-  const CITIES_PA = [
+  const LOCATIONS_PA = [
     "ਮੋਹਾਲੀ",
     "ਚੰਡੀਗੜ੍ਹ",
     "ਪੰਜਾਬ",
+    "ਹਰਿਆਣਾ",
     "ਹਿਮਾਚਲ ਪ੍ਰਦੇਸ਼",
     "ਦਿੱਲੀ ਐਨਸੀਆਰ",
     "ਭਾਰਤ",
     "ਸੰਯੁਕਤ ਰਾਜ",
     "ਯੂਨਾਈਟਿਡ ਕਿੰਗਡਮ",
     "ਆਸਟ੍ਰੇਲੀਆ",
+    "ਕੈਨੇਡਾ",
+    "ਦੁਨੀਆ ਭਰ",
   ];
 
-  // Business types
-  const BIZ_EN = [
+  /* =======================================================
+     INDUSTRIES
+  ======================================================= */
+
+  const INDUSTRIES_EN = [
+    "Startups",
     "Healthcare",
     "Real Estate",
-    "Education",
-    "Startups",
-    "Manufacturing",
     "E-commerce",
+    "Education",
+    "Manufacturing",
+    "Professional Services",
+    "Growing Businesses",
   ];
 
-  const BIZ_HI = [
+  const INDUSTRIES_HI = [
+    "स्टार्टअप",
     "स्वास्थ्य सेवा",
     "रियल एस्टेट",
-    "शिक्षा",
-    "स्टार्टअप",
-    "विनिर्माण",
     "ई-कॉमर्स",
+    "शिक्षा",
+    "विनिर्माण",
+    "प्रोफेशनल सर्विसेज",
+    "बढ़ते व्यवसाय",
   ];
 
-  const BIZ_PA = [
+  const INDUSTRIES_PA = [
+    "ਸਟਾਰਟਅੱਪ",
     "ਸਿਹਤ ਸੰਭਾਲ",
     "ਰੀਅਲ ਅਸਟੇਟ",
-    "ਸਿੱਖਿਆ",
-    "ਸਟਾਰਟਅੱਪ",
-    "ਨਿਰਮਾਣ",
     "ਈ-ਕਾਮਰਸ",
+    "ਸਿੱਖਿਆ",
+    "ਨਿਰਮਾਣ",
+    "ਪ੍ਰੋਫੈਸ਼ਨਲ ਸਰਵਿਸਿਜ਼",
+    "ਵਧ ਰਹੇ ਬਿਜ਼ਨਸ",
   ];
 
-  // FIXED LANGUAGE LOGIC
-  const cities =
+  /* =======================================================
+     LANGUAGE DATA
+  ======================================================= */
+
+  const locations =
     currentLang === "hi"
-      ? CITIES_HI
+      ? LOCATIONS_HI
       : currentLang === "pa"
-        ? CITIES_PA
-        : CITIES_EN;
+        ? LOCATIONS_PA
+        : LOCATIONS_EN;
 
-  const bizTypes =
+  const industries =
     currentLang === "hi"
-      ? BIZ_HI
+      ? INDUSTRIES_HI
       : currentLang === "pa"
-        ? BIZ_PA
-        : BIZ_EN;
+        ? INDUSTRIES_PA
+        : INDUSTRIES_EN;
 
-  const marqueeItems = [...cities, ...bizTypes];
-  const doubledMarqueeItems = [...marqueeItems, ...marqueeItems];
+  const marqueeItems = [
+    ...locations,
+    ...industries,
+  ];
 
-  const LOCAL_CARDS = [
+  const loopItems = [
+    ...marqueeItems,
+    ...marqueeItems,
+  ];
+
+  /* =======================================================
+     CARDS
+  ======================================================= */
+
+  const cards: CardData[] = [
     {
-      icon: Users,
-      color: "#3b7bff",
-      title: t("local.card1.title", "Professional Website Development"),
-      desc: t(
-        "local.card1.desc",
-        "Responsive, fast, and scalable websites tailored to represent your brand and convert visitors into customers."
-      ),
-    },
-    {
-      icon: BookOpen,
-      color: "#7c3aed",
-      title: t("local.card2.title", "Custom Software & Mobile Apps"),
-      desc: t(
-        "local.card2.desc",
-        "Tailored enterprise software, robust SaaS platforms, and native Mobile Application services that improve efficiency."
-      ),
-    },
-    {
-      icon: Award,
-      color: "#06d6a0",
+      icon: Globe2,
+      color: "#2563eb",
+
       title: t(
-        "local.card3.title",
-        "SEO & Digital Marketing Services"
+        "global.card1.title",
+        "India & Global Digital Delivery"
       ),
+
       desc: t(
-        "local.card3.desc",
-        "Data-driven SEO strategies and comprehensive Digital Marketing Services campaigns to increase online visibility and generate leads."
+        "global.card1.desc",
+        "From businesses across India to international companies, we build scalable digital solutions designed for modern markets and long-term growth."
+      ),
+
+      cta: t(
+        "global.card1.cta",
+        "Built for modern businesses"
+      ),
+    },
+
+    {
+      icon: Code2,
+      color: "#7c3aed",
+
+      title: t(
+        "global.card2.title",
+        "Custom Technology Solutions"
+      ),
+
+      desc: t(
+        "global.card2.desc",
+        "Websites, custom software, mobile apps, SaaS platforms and AI-powered workflows tailored around your exact business requirements."
+      ),
+
+      cta: t(
+        "global.card2.cta",
+        "Built around your goals"
+      ),
+    },
+
+    {
+      icon: Rocket,
+      color: "#ea580c",
+
+      title: t(
+        "global.card3.title",
+        "Affordable Growth-Focused Services"
+      ),
+
+      desc: t(
+        "global.card3.desc",
+        "Professional technology and digital marketing services designed to deliver strong value, better visibility and more opportunities for growing businesses."
+      ),
+
+      cta: t(
+        "global.card3.cta",
+        "Designed for growth"
+      ),
+    },
+  ];
+
+  /* =======================================================
+     TRUST ITEMS
+  ======================================================= */
+
+  const trustItems = [
+    {
+      icon: MapPin,
+      text: t(
+        "global.trust.location",
+        "India & Worldwide"
+      ),
+    },
+
+    {
+      icon: BriefcaseBusiness,
+      text: t(
+        "global.trust.business",
+        "Business-Focused"
+      ),
+    },
+
+    {
+      icon: ShieldCheck,
+      text: t(
+        "global.trust.delivery",
+        "Reliable Delivery"
       ),
     },
   ];
 
   return (
-    <section className="relative z-10 pt-16 pb-24 px-4 md:px-6 bg-white dark:bg-[#04050a] text-slate-900 dark:text-white transition-colors duration-300 overflow-hidden">
-      {/* Decorative ambient background */}
-      <div className="absolute top-1/4 -left-32 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
+    <section
+      aria-label="Zentrox Technologies global digital services"
+      className="
+        relative overflow-hidden
+        px-4 py-20
+        md:px-6 md:py-28
+      "
+    >
+      {/* ===================================================
+          BACKGROUND
+      =================================================== */}
 
-      <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl pointer-events-none" />
+      <div
+        className="pointer-events-none absolute inset-0"
+        aria-hidden="true"
+      >
+        <div
+          className="
+            absolute -left-32 top-1/4
+            h-96 w-96
+            rounded-full
+            bg-blue-500/[0.05]
+            blur-[130px]
+          "
+        />
 
-      <div className="max-w-7xl mx-auto">
+        <div
+          className="
+            absolute -right-32 bottom-1/4
+            h-96 w-96
+            rounded-full
+            bg-orange-400/[0.05]
+            blur-[130px]
+          "
+        />
+      </div>
+
+      {/* ===================================================
+          HEADER
+      =================================================== */}
+
+      <div className="relative mx-auto max-w-7xl">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{
-            duration: 0.8,
-            ease: [0.16, 1, 0.3, 1],
+          initial={{
+            opacity: 0,
+            y: 25,
           }}
-          viewport={{ once: true }}
-          className="mb-14 text-center md:text-left flex flex-col items-center md:items-start"
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{
+            once: true,
+          }}
+          transition={{
+            duration: 0.65,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+          className="
+            mx-auto mb-14
+            max-w-3xl
+            text-center
+          "
         >
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider mb-4 bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-900/30 cursor-default"
-          >
-            {t("local.badge", "Remote-First Excellence")}
-          </motion.div>
+          <div className="z-badge mx-auto mb-5 w-fit">
+            <Globe2 size={14} />
 
-          <h2 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white leading-tight tracking-tight mb-5 max-w-2xl">
+            <span>
+              {t(
+                "global.badge",
+                "India to Worldwide Digital Delivery"
+              )}
+            </span>
+          </div>
+
+          <h2
+            className="
+              text-4xl
+              font-extrabold
+              tracking-tight
+              text-slate-900
+              md:text-6xl
+              dark:text-z-text
+            "
+          >
             {t(
-              "local.title",
-              "Your Digital Growth Partner in Mohali, Chandigarh & Beyond"
+              "global.title",
+              "Built in India. Designed for Businesses Everywhere."
             )}
           </h2>
 
-          <p className="text-base md:text-lg text-slate-600 dark:text-gray-400 max-w-xl leading-relaxed">
+          <p
+            className="
+              mx-auto mt-6
+              max-w-2xl
+              text-base
+              leading-relaxed
+              text-slate-600
+              md:text-lg
+              dark:text-z-muted
+            "
+          >
             {t(
-              "local.sub",
-              "Operating as a remote-first company from Mohali, we deliver premium software development service and Digital Marketing Services solutions for businesses in India and worldwide."
+              "global.sub",
+              "Zentrox Technologies helps startups and established businesses across Mohali, Chandigarh, Punjab, Haryana, Himachal Pradesh, India and worldwide build stronger digital products and grow online."
             )}
           </p>
+
+          {/* Trust Indicators */}
+
+          <div
+            className="
+              mt-8
+              flex flex-wrap
+              justify-center
+              gap-3
+            "
+          >
+            {trustItems.map((item) => {
+              const Icon = item.icon;
+
+              return (
+                <div
+                  key={item.text}
+                  className="
+                    flex items-center gap-2
+                    rounded-full
+                    border border-slate-200
+                    bg-white
+                    px-4 py-2
+                    text-xs font-semibold
+                    text-slate-600
+                    shadow-sm
+
+                    dark:border-white/10
+                    dark:bg-white/[0.04]
+                    dark:text-z-muted
+                  "
+                >
+                  <Icon
+                    size={14}
+                    className="text-blue-600"
+                  />
+
+                  {item.text}
+                </div>
+              );
+            })}
+          </div>
         </motion.div>
       </div>
 
-      {/* Infinite Moving Marquee */}
-      <div className="w-full overflow-hidden relative mb-16 py-2">
-        {/* Soft fading edges */}
-        <div className="absolute top-0 bottom-0 left-0 w-24 bg-gradient-to-r from-white dark:from-[#04050a] to-transparent z-10 pointer-events-none" />
+      {/* ===================================================
+          MARQUEE
+      =================================================== */}
 
-        <div className="absolute top-0 bottom-0 right-0 w-24 bg-gradient-to-l from-white dark:from-[#04050a] to-transparent z-10 pointer-events-none" />
+      <div
+        className="
+          relative mb-16
+          w-full overflow-hidden
+        "
+      >
+        {/* Left Fade */}
+
+        <div
+          className="
+            pointer-events-none
+            absolute left-0 top-0
+            z-10 h-full w-16
+
+            bg-gradient-to-r
+            from-white
+            to-transparent
+
+            dark:from-[#0b0f19]
+
+            md:w-40
+          "
+        />
+
+        {/* Right Fade */}
+
+        <div
+          className="
+            pointer-events-none
+            absolute right-0 top-0
+            z-10 h-full w-16
+
+            bg-gradient-to-l
+            from-white
+            to-transparent
+
+            dark:from-[#0b0f19]
+
+            md:w-40
+          "
+        />
 
         <motion.div
-          className="flex gap-4 w-max px-4"
-          animate={{ x: ["0%", "-50%"] }}
+          className="
+            flex w-max
+            gap-4
+            px-4
+          "
+          animate={{
+            x: ["0%", "-50%"],
+          }}
           transition={{
-            ease: "linear",
-            duration: 35,
+            duration: 38,
             repeat: Infinity,
+            ease: "linear",
           }}
         >
-          {doubledMarqueeItems.map((item, i) => (
-            <motion.div
-              key={`${item}-${i}`}
-              whileHover={{ scale: 1.03 }}
-              className="flex items-center gap-2.5 px-6 py-3.5 rounded-xl border border-slate-200 dark:border-gray-800 bg-white dark:bg-[#080c15] text-sm font-semibold text-slate-700 dark:text-gray-300 shadow-sm hover:border-blue-500 dark:hover:border-blue-500 transition-colors duration-200 cursor-default whitespace-nowrap"
+          {loopItems.map((item, index) => (
+            <div
+              key={`${item}-${index}`}
+              className="
+                flex items-center gap-2.5
+                whitespace-nowrap
+                rounded-2xl
+                border border-slate-200
+                bg-white
+                px-5 py-3
+                text-sm font-semibold
+                text-slate-700
+                shadow-sm
+
+                dark:border-white/10
+                dark:bg-white/[0.045]
+                dark:text-z-muted
+              "
             >
-              <span className="w-2 h-2 rounded-full bg-blue-500 dark:bg-emerald-400 shadow-[0_0_8px_rgba(59,123,255,0.5)]" />
+              <span className="h-2 w-2 rounded-full bg-blue-500" />
 
               {item}
-            </motion.div>
+            </div>
           ))}
         </motion.div>
       </div>
 
-      {/* Cards */}
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {LOCAL_CARDS.map((card, i) => (
-            <Card
-              key={`${card.title}-${i}`}
+      {/* ===================================================
+          GROWTH CARDS
+      =================================================== */}
+
+      <div
+        className="
+          relative mx-auto
+          max-w-7xl
+        "
+      >
+        <div
+          className="
+            grid grid-cols-1
+            gap-5
+            md:grid-cols-3
+          "
+        >
+          {cards.map((card, index) => (
+            <GrowthCard
+              key={`${card.title}-${index}`}
               card={card}
-              index={i}
+              index={index}
             />
           ))}
         </div>
