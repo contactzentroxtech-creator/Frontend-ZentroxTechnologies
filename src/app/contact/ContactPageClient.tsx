@@ -21,6 +21,10 @@ import { useLang } from "@/lib/providers";
 
 type Language = "en" | "hi" | "pa";
 
+/* =========================================
+   VALIDATION SCHEMA
+========================================= */
+
 const makeSchema = (t: (key: string, fallback?: string) => string) =>
   z.object({
     name: z
@@ -179,15 +183,27 @@ const BUDGETS_PA = [
   "ਸਾਨੂੰ ਸੁਝਾਅ ਦੇਣ ਦਿਓ",
 ];
 
+/* =========================================
+   COMPONENT
+========================================= */
+
 export default function ContactPageClient() {
   const [submitted, setSubmitted] = useState(false);
 
   const { t, lang } = useLang();
 
+  /*
+    FIX:
+    String(lang) prevents TypeScript from incorrectly
+    treating lang as only "en".
+  */
+
+  const langCode = String(lang);
+
   const currentLang: Language =
-    lang === "hi"
+    langCode === "hi"
       ? "hi"
-      : lang === "pa"
+      : langCode === "pa"
         ? "pa"
         : "en";
 
@@ -362,7 +378,8 @@ export default function ContactPageClient() {
     )
   );
 
-  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+  const whatsappUrl =
+    `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 
   return (
     <section className="relative z-10 overflow-hidden bg-white px-4 py-20 text-slate-900 transition-colors duration-300 dark:bg-[#04050a] dark:text-white md:px-6">
