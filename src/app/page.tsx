@@ -17,10 +17,30 @@ import FloatingCTA from "@/components/ui/FloatingCTA";
 import CursorEffect from "@/components/ui/CursorEffect";
 
 export const metadata: Metadata = {
-  title: "Zentrox Technologies | Software Development & Digital Growth Partner",
+  title:
+    "Zentrox Technologies | Software, Web & Digital Marketing Services",
 
   description:
-    "Zentrox Technologies provides custom software development, website development, mobile app development, SaaS solutions, AI integration, SEO, digital marketing and UI/UX design for businesses in India and worldwide.",
+    "Zentrox Technologies delivers custom software development, website development, mobile app development, SaaS solutions, AI integration, SEO, UI/UX design and digital marketing services for businesses in India and worldwide.",
+
+  keywords: [
+    "software development company",
+    "website development company",
+    "mobile app development",
+    "custom software development",
+    "SaaS development",
+    "AI integration services",
+    "SEO services",
+    "digital marketing services",
+    "website development India",
+    "software development India",
+    "digital agency Mohali",
+    "website development Chandigarh",
+    "digital marketing Punjab",
+    "IT services India",
+    "affordable software development",
+    "global software development company",
+  ],
 
   alternates: {
     canonical: "https://zentroxtechnologies.com/",
@@ -28,10 +48,10 @@ export const metadata: Metadata = {
 
   openGraph: {
     title:
-      "Zentrox Technologies | Software Development & Digital Growth Partner",
+      "Zentrox Technologies | Software, Web & Digital Growth Partner",
 
     description:
-      "Custom software, websites, mobile apps, SaaS, AI integration, SEO and digital marketing solutions for growing businesses worldwide.",
+      "Custom software, websites, mobile apps, SaaS, AI integration, SEO and digital marketing services for businesses in India and worldwide.",
 
     url: "https://zentroxtechnologies.com/",
 
@@ -46,53 +66,52 @@ export const metadata: Metadata = {
     card: "summary_large_image",
 
     title:
-      "Zentrox Technologies | Software Development & Digital Growth Partner",
+      "Zentrox Technologies | Software, Web & Digital Growth Partner",
 
     description:
-      "Custom software, websites, mobile apps, SaaS, AI integration, SEO and digital marketing solutions for growing businesses.",
+      "Custom software, websites, mobile apps, SaaS, AI integration, SEO and digital marketing solutions for growing businesses worldwide.",
   },
 };
 
 export default function HomePage() {
   return (
     <>
-      {/* Premium Cursor Effect */}
+      {/* Optional desktop cursor effect */}
       <CursorEffect />
 
-      {/* Header / Navigation */}
+      {/* Website Navigation */}
       <Navbar />
 
-      {/* Main Website Content */}
       <main>
-        {/* Hero Section */}
+        {/* Hero */}
         <HeroSection />
 
-        {/* Company Statistics */}
+        {/* Trust & Company Statistics */}
         <StatsSection />
 
-        {/* Services */}
+        {/* Core Digital Services */}
         <ServicesSection />
 
-        {/* Local Business Section */}
+        {/* Industries & Global Service Coverage */}
         <LocalSection />
 
-        {/* Pricing & Quote */}
+        {/* Interactive Project Estimator */}
         <PricingWizard />
 
-        {/* Testimonials */}
+        {/* Client Testimonials */}
         <TestimonialsSection />
 
-        {/* Final Call To Action */}
+        {/* Final Lead Generation CTA */}
         <CTASection />
       </main>
 
-      {/* Footer */}
+      {/* Website Footer */}
       <Footer />
 
-      {/* Website Popup System */}
+      {/* Promotional / Lead Generation Popup */}
       <PopupManager />
 
-      {/* Floating WhatsApp / CTA */}
+      {/* WhatsApp / Quick Contact CTA */}
       <FloatingCTA />
     </>
   );
