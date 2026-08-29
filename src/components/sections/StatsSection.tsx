@@ -2,6 +2,13 @@
 
 import { useRef, useEffect, useState } from "react";
 import { motion, useInView } from "framer-motion";
+import {
+  CheckCircle2,
+  FolderCheck,
+  Globe2,
+  Star,
+  Sparkles,
+} from "lucide-react";
 import { useLang } from "@/lib/providers";
 import api from "@/lib/api";
 
@@ -18,15 +25,21 @@ function AnimatedCounter({
 
   useEffect(() => {
     if (!inView || target === 0) return;
+
     let start = 0;
     const step = target / 60;
+
     const timer = setInterval(() => {
       start += step;
+
       if (start >= target) {
         setCount(target);
         clearInterval(timer);
-      } else setCount(Math.floor(start));
+      } else {
+        setCount(Math.floor(start));
+      }
     }, 20);
+
     return () => clearInterval(timer);
   }, [inView, target]);
 
@@ -47,7 +60,6 @@ interface StatItem {
   settingKey?: string;
 }
 
-// SEO FIX: Updated labels to match targeted keywords and factual company history
 const DEFAULT_STATS: StatItem[] = [
   {
     num: 200,
@@ -78,6 +90,13 @@ const DEFAULT_STATS: StatItem[] = [
   },
 ];
 
+const STAT_ICONS = [
+  FolderCheck,
+  Globe2,
+  Sparkles,
+  Star,
+];
+
 export default function StatsSection() {
   const { t } = useLang();
   const [stats, setStats] = useState<StatItem[]>(DEFAULT_STATS);
@@ -87,14 +106,31 @@ export default function StatsSection() {
       .get("/cms/settings")
       .then(({ data }) => {
         if (!data?.data) return;
+
         const cms = data.data;
+
         setStats(
           DEFAULT_STATS.map((s) => {
             if (!s.settingKey || !cms[s.settingKey]) return s;
+
             const val = cms[s.settingKey];
-            if (s.custom !== undefined) return { ...s, custom: String(val) };
+
+            if (s.custom !== undefined) {
+              return {
+                ...s,
+                custom: String(val),
+              };
+            }
+
             const num = Number(val);
-            if (!isNaN(num) && num > 0) return { ...s, num };
+
+            if (!isNaN(num) && num > 0) {
+              return {
+                ...s,
+                num,
+              };
+            }
+
             return s;
           })
         );
@@ -103,34 +139,84 @@ export default function StatsSection() {
   }, []);
 
   return (
-    <section className="relative z-10 border-y border-slate-200/60 dark:border-z-border bg-slate-50/70 dark:bg-z-dark3/40 backdrop-blur-md transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-14">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-6">
-          {stats.map((s, i) => (
-            <motion.div
-              key={s.labelKey}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              viewport={{ once: true }}
-              className="text-center relative group"
-            >
-              {/* Premium typography with responsive light/dark gradients */}
-              <div className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-slate-900 via-z-accent to-z-accent2 dark:from-white dark:via-z-text dark:to-z-accent bg-clip-text text-transparent tracking-tight">
-                {s.custom ? (
-                  s.custom
-                ) : (
-                  <AnimatedCounter target={s.num ?? 0} suffix={s.suffix} />
-                )}
-              </div>
+    <section className="relative overflow-hidden px-4 py-16 md:px-6 md:py-20">
+      
+      {/* Soft background decoration */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute left-[10%] top-1/2 h-64 w-64 -translate-y-1/2 rounded-full bg-blue-400/[0.05] blur-[100px]" />
+        <div className="absolute right-[10%] top-1/2 h-64 w-64 -translate-y-1/2 rounded-full bg-purple-400/[0.05] blur-[100px]" />
+      </div>
 
-              {/* Scannable, clearly legible label colors */}
-              <div className="text-[11px] font-bold text-slate-500 dark:text-z-muted uppercase tracking-widest mt-2.5 transition-colors duration-300">
-                {t(s.labelKey, s.label)}
-              </div>
-            </motion.div>
-          ))}
+      <div className="relative mx-auto max-w-7xl">
+
+        {/* Top trust line */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mb-10 flex flex-col items-center justify-center gap-2 text-center"
+        >
+          <div className="flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-z-text">
+            <CheckCircle2 size={17} className="text-z-accent" />
+            Building digital solutions that create real business impact
+          </div>
+
+          <p className="text-sm text-slate-500 dark:text-z-muted">
+            Strategy, technology and growth — working together.
+          </p>
+        </motion.div>
+
+        {/* Stats */}
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-5">
+          {stats.map((s, i) => {
+            const Icon = STAT_ICONS[i];
+
+            return (
+              <motion.div
+                key={s.labelKey}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{
+                  duration: 0.5,
+                  delay: i * 0.08,
+                }}
+                whileHover={{
+                  y: -6,
+                  scale: 1.02,
+                }}
+                className="group relative overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-5 text-center shadow-[0_8px_30px_rgba(15,23,42,0.05)] transition-all duration-300 hover:border-z-accent/30 hover:shadow-[0_20px_50px_rgba(15,23,42,0.10)] dark:border-white/10 dark:bg-white/[0.04] dark:hover:bg-white/[0.07]"
+              >
+                {/* Hover glow */}
+                <div className="absolute -right-12 -top-12 h-28 w-28 rounded-full bg-z-accent opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-10" />
+
+                {/* Icon */}
+                <div className="relative mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-2xl bg-z-accent/10 text-z-accent transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
+                  <Icon size={19} />
+                </div>
+
+                {/* Number */}
+                <div className="relative text-3xl font-extrabold tracking-tight text-slate-900 md:text-4xl dark:text-z-text">
+                  {s.custom ? (
+                    s.custom
+                  ) : (
+                    <AnimatedCounter
+                      target={s.num ?? 0}
+                      suffix={s.suffix}
+                    />
+                  )}
+                </div>
+
+                {/* Label */}
+                <div className="relative mt-2 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 md:text-[11px] dark:text-z-muted">
+                  {t(s.labelKey, s.label)}
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
+
       </div>
     </section>
   );
