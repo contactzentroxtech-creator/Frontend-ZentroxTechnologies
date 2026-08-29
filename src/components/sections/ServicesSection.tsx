@@ -8,13 +8,13 @@ import {
   Smartphone,
   Bot,
   BarChart3,
-  ShoppingCart,
   Cloud,
   Palette,
   Code2,
   Users,
   Cable,
   Sparkles,
+  Megaphone,
 } from "lucide-react";
 import Link from "next/link";
 import { useLang } from "@/lib/providers";
@@ -81,7 +81,7 @@ const SERVICES = [
       "Data-driven SEO strategies that improve visibility, attract qualified traffic, and generate more leads.",
   },
   {
-    icon: ShoppingCart,
+    icon: Megaphone,
     color: "#8b5cf6",
     href: "/services#marketing",
     titleKey: "service.marketing.title",
@@ -150,17 +150,16 @@ function ServiceCard({
       style={{ perspective: "1000px" }}
     >
       <Link href={service.href} className="block h-full">
-        <div className="relative h-full min-h-[260px] overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-6 shadow-[0_8px_30px_rgba(15,23,42,0.05)] transition-all duration-500 group-hover:border-slate-300 group-hover:shadow-[0_25px_60px_rgba(15,23,42,0.12)] dark:bg-white/[0.04] dark:border-white/10 dark:group-hover:bg-white/[0.07]">
-          
+        <div className="relative h-full min-h-[260px] overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-6 shadow-[0_8px_30px_rgba(15,23,42,0.05)] transition-all duration-500 group-hover:border-slate-300 group-hover:shadow-[0_25px_60px_rgba(15,23,42,0.12)] dark:border-white/10 dark:bg-white/[0.04] dark:group-hover:bg-white/[0.07]">
           {/* Soft background glow */}
           <div
             className="absolute -right-16 -top-16 h-36 w-36 rounded-full opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-20"
             style={{ backgroundColor: service.color }}
           />
 
-          {/* Number */}
+          {/* Service Number */}
           <div className="absolute right-5 top-5 text-xs font-bold text-slate-300 dark:text-white/10">
-            0{index + 1}
+            {String(index + 1).padStart(2, "0")}
           </div>
 
           {/* Icon */}
@@ -175,15 +174,15 @@ function ServiceCard({
           </div>
 
           {/* Content */}
-          <h3 className="relative text-lg font-bold tracking-tight text-slate-900 dark:text-z-text mb-3">
+          <h3 className="relative mb-3 text-lg font-bold tracking-tight text-slate-900 dark:text-z-text">
             {t(service.titleKey, service.titleFB)}
           </h3>
 
-          <p className="relative text-sm leading-relaxed text-slate-600 dark:text-z-muted">
+          <p className="relative pr-1 text-sm leading-relaxed text-slate-600 dark:text-z-muted">
             {t(service.descKey, service.descFB)}
           </p>
 
-          {/* Explore */}
+          {/* Explore Service */}
           <div
             className="absolute bottom-6 left-6 flex items-center gap-2 text-sm font-semibold transition-all duration-300 group-hover:gap-3"
             style={{ color: service.color }}
@@ -198,7 +197,7 @@ function ServiceCard({
             </span>
           </div>
 
-          {/* Bottom accent */}
+          {/* Bottom Accent */}
           <div
             className="absolute bottom-0 left-0 h-1 w-0 transition-all duration-500 group-hover:w-full"
             style={{ backgroundColor: service.color }}
@@ -211,6 +210,7 @@ function ServiceCard({
 
 export default function ServicesSection() {
   const ref = useRef<HTMLDivElement>(null);
+
   const inView = useInView(ref, {
     once: true,
     margin: "-100px",
@@ -223,14 +223,17 @@ export default function ServicesSection() {
       id="services"
       className="relative overflow-hidden px-4 py-24 md:px-6 md:py-32"
     >
-      {/* Background decoration */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      {/* Background Decoration */}
+      <div
+        className="pointer-events-none absolute inset-0 overflow-hidden"
+        aria-hidden="true"
+      >
         <div className="absolute left-[5%] top-[20%] h-[350px] w-[350px] rounded-full bg-blue-400/[0.06] blur-[120px]" />
         <div className="absolute right-[5%] bottom-[10%] h-[350px] w-[350px] rounded-full bg-purple-400/[0.05] blur-[120px]" />
       </div>
 
       <div className="relative mx-auto max-w-7xl">
-        {/* Header */}
+        {/* Section Header */}
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 25 }}
@@ -240,13 +243,17 @@ export default function ServicesSection() {
         >
           <div className="z-badge mx-auto mb-5 w-fit">
             <Sparkles size={13} />
+
             <span>
               {t("services.badge", "Everything You Need To Grow")}
             </span>
           </div>
 
           <h2 className="mb-5 text-4xl font-extrabold tracking-tight text-slate-900 md:text-6xl dark:text-z-text">
-            {t("services.title", "Technology That Moves Your Business Forward")}
+            {t(
+              "services.title",
+              "Technology That Moves Your Business Forward"
+            )}
           </h2>
 
           <p className="mx-auto max-w-2xl text-base leading-relaxed text-slate-600 md:text-lg dark:text-z-muted">
@@ -258,7 +265,7 @@ export default function ServicesSection() {
         </motion.div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {SERVICES.map((service, index) => (
             <ServiceCard
               key={service.titleKey}
@@ -281,6 +288,7 @@ export default function ServicesSection() {
             className="group inline-flex items-center gap-3 rounded-full bg-slate-900 px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-slate-900/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:bg-white dark:text-slate-900"
           >
             {t("services.view_all", "Explore All Services")}
+
             <ArrowUpRight
               size={17}
               className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
