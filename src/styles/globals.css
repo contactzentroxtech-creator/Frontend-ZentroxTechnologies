@@ -603,3 +603,332 @@ body::before {
     transition-duration: 0.01ms !important;
   }
 }
+/* =========================================================
+   ZENTROX MASTER PREMIUM UI OVERRIDE
+   This layer removes old neon / cyberpunk appearance
+========================================================= */
+
+:root {
+  --brand-primary: #2563eb;
+  --brand-primary-dark: #1d4ed8;
+  --brand-secondary: #0f766e;
+
+  --surface-main: #0b0f14;
+  --surface-1: #111820;
+  --surface-2: #18212b;
+  --surface-3: #202a35;
+
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+
+  --border-premium: rgba(148, 163, 184, 0.14);
+}
+
+/* =========================================================
+   REMOVE OLD NEON FEEL
+========================================================= */
+
+body {
+  background: #0b0f14 !important;
+}
+
+/* Old neon gradients */
+.gradient-text {
+  background: linear-gradient(
+    135deg,
+    #f8fafc 0%,
+    #cbd5e1 45%,
+    #94a3b8 100%
+  ) !important;
+
+  background-size: 100% !important;
+
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+
+  animation: none !important;
+}
+
+/* Premium colored text version */
+.brand-gradient {
+  background: linear-gradient(
+    135deg,
+    #2563eb,
+    #1d4ed8,
+    #0f766e
+  ) !important;
+
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+/* =========================================================
+   FORCE ZENTROX TAILWIND COLORS
+========================================================= */
+
+.bg-z-dark {
+  background-color: #0b0f14 !important;
+}
+
+.bg-z-dark2 {
+  background-color: #111820 !important;
+}
+
+.bg-z-dark3 {
+  background-color: #18212b !important;
+}
+
+.bg-z-dark4 {
+  background-color: #202a35 !important;
+}
+
+.bg-z-accent {
+  background-color: #2563eb !important;
+}
+
+.bg-z-accent2 {
+  background-color: #1d4ed8 !important;
+}
+
+.bg-z-accent3 {
+  background-color: #0f766e !important;
+}
+
+.text-z-accent {
+  color: #2563eb !important;
+}
+
+.text-z-accent2 {
+  color: #1d4ed8 !important;
+}
+
+.text-z-accent3 {
+  color: #14b8a6 !important;
+}
+
+.border-z-border {
+  border-color: rgba(148, 163, 184, 0.14) !important;
+}
+
+/* =========================================================
+   REMOVE EXCESSIVE GLOWS
+========================================================= */
+
+.shadow-glow-accent {
+  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.14) !important;
+}
+
+.shadow-glow-sm {
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.1) !important;
+}
+
+/* =========================================================
+   PREMIUM CARDS
+========================================================= */
+
+.glass-card {
+  background: rgba(17, 24, 32, 0.88) !important;
+
+  border: 1px solid rgba(148, 163, 184, 0.14) !important;
+
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.025) !important;
+
+  backdrop-filter: blur(16px) !important;
+}
+
+/* =========================================================
+   BUTTON SYSTEM
+========================================================= */
+
+/* Primary */
+.bg-z-accent,
+button.bg-z-accent,
+a.bg-z-accent {
+  background: linear-gradient(
+    135deg,
+    #2563eb,
+    #1d4ed8
+  ) !important;
+
+  color: #ffffff !important;
+
+  box-shadow:
+    0 8px 24px rgba(37, 99, 235, 0.22) !important;
+}
+
+/* Secondary buttons */
+button.bg-z-dark3,
+a.bg-z-dark3 {
+  background: #18212b !important;
+
+  color: #f8fafc !important;
+
+  border: 1px solid rgba(148, 163, 184, 0.2) !important;
+
+  box-shadow: none !important;
+}
+
+/* Hover */
+button:hover,
+a:hover {
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.25s ease !important;
+}
+
+/* =========================================================
+   OLD BLUE / NEON BACKGROUND BLOBS
+========================================================= */
+
+.bg-z-accent\/10,
+.bg-z-accent\/20,
+.bg-z-accent\/30 {
+  background-color: rgba(37, 99, 235, 0.08) !important;
+}
+
+.bg-z-accent2\/10,
+.bg-z-accent2\/20 {
+  background-color: rgba(29, 78, 216, 0.06) !important;
+}
+
+.bg-z-accent3\/10,
+.bg-z-accent3\/20 {
+  background-color: rgba(15, 118, 110, 0.05) !important;
+}
+
+/* =========================================================
+   HERO AREA
+========================================================= */
+
+.hero-section,
+section[class*="hero"] {
+  background:
+    radial-gradient(
+      ellipse at top,
+      rgba(37, 99, 235, 0.07),
+      transparent 48%
+    ) !important;
+}
+
+/* =========================================================
+   GRID - MUCH SUBTLER
+========================================================= */
+
+.grid-bg {
+  opacity: 0.45 !important;
+
+  background-image:
+    linear-gradient(
+      rgba(148, 163, 184, 0.035) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(148, 163, 184, 0.035) 1px,
+      transparent 1px
+    ) !important;
+}
+
+.grid-bg::after {
+  background:
+    radial-gradient(
+      ellipse 65% 45% at 50% 0%,
+      rgba(37, 99, 235, 0.05),
+      transparent 70%
+    ) !important;
+}
+
+/* =========================================================
+   NAVBAR PREMIUM
+========================================================= */
+
+nav {
+  border-color: rgba(148, 163, 184, 0.12) !important;
+}
+
+/* =========================================================
+   REMOVE CYBER GLOW
+========================================================= */
+
+.btn-glow::after {
+  background: linear-gradient(
+    135deg,
+    rgba(37, 99, 235, 0.1),
+    rgba(15, 118, 110, 0.05)
+  ) !important;
+}
+
+/* =========================================================
+   TILE HOVER
+========================================================= */
+
+.tile-glow::before {
+  background:
+    radial-gradient(
+      circle at var(--mx) var(--my),
+      rgba(37, 99, 235, 0.06),
+      transparent 65%
+    ) !important;
+}
+
+/* =========================================================
+   BADGES
+========================================================= */
+
+.z-badge {
+  color: #60a5fa !important;
+
+  background: rgba(37, 99, 235, 0.07) !important;
+
+  border-color: rgba(37, 99, 235, 0.18) !important;
+}
+
+/* =========================================================
+   INPUTS
+========================================================= */
+
+.z-input {
+  background: #111820 !important;
+
+  border-color: rgba(148, 163, 184, 0.16) !important;
+
+  color: #f8fafc !important;
+}
+
+.z-input:focus {
+  border-color: #2563eb !important;
+
+  box-shadow:
+    0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+}
+
+/* =========================================================
+   CUSTOM CURSOR - SUBTLE
+========================================================= */
+
+.custom-cursor {
+  background: #2563eb !important;
+
+  box-shadow: none !important;
+}
+
+.cursor-ring {
+  border-color: rgba(37, 99, 235, 0.3) !important;
+}
+
+/* =========================================================
+   REMOVE EXCESSIVE ANIMATION FEEL
+========================================================= */
+
+.gradient-text {
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-pulse-glow {
+    animation-duration: 4s !important;
+  }
+}
