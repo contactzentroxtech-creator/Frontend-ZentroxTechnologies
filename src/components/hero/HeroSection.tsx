@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -18,28 +18,47 @@ import { useLang } from "@/lib/providers";
 export default function HeroSection() {
   const [wordIdx, setWordIdx] = useState(0);
   const [wordVisible, setWordVisible] = useState(true);
+
   const { t, lang } = useLang();
 
-  const heroWords = t(
-    "hero.words",
-    "Custom Software|Web Experiences|Mobile Apps|Digital Growth"
-  )
-    .split("|")
-    .filter(Boolean);
+  const heroWords = useMemo(() => {
+    const words = t(
+      "hero.words",
+      "Custom Software|Web Experiences|Mobile Apps|Digital Growth"
+    )
+      .split("|")
+      .map((word) => word.trim())
+      .filter(Boolean);
+
+    return words.length > 0
+      ? words
+      : ["Custom Software", "Web Experiences", "Mobile Apps", "Digital Growth"];
+  }, [t, lang]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    if (heroWords.length <= 1) return;
+
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
+    const intervalId = setInterval(() => {
       setWordVisible(false);
 
-      const timeout = setTimeout(() => {
-        setWordIdx((i) => (i + 1) % heroWords.length);
+      timeoutId = setTimeout(() => {
+        setWordIdx((currentIndex) => {
+          return (currentIndex + 1) % heroWords.length;
+        });
+
         setWordVisible(true);
       }, 350);
-
-      return () => clearTimeout(timeout);
     }, 3200);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(intervalId);
+
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, [heroWords.length]);
 
   useEffect(() => {
@@ -52,7 +71,7 @@ export default function HeroSection() {
       aria-label="Zentrox Technologies digital solutions"
       className="relative overflow-hidden px-4 pt-32 pb-20 md:px-6 md:pt-40 md:pb-28"
     >
-      {/* Soft premium background */}
+      {/* Background Effects */}
       <div
         className="pointer-events-none absolute inset-0"
         aria-hidden="true"
@@ -83,7 +102,11 @@ export default function HeroSection() {
             className="z-badge mb-6"
           >
             <span className="h-2 w-2 rounded-full bg-emerald-500" />
-            {t("hero.badge", "Building Digital Experiences That Perform")}
+
+            {t(
+              "hero.badge",
+              "Building Digital Experiences That Perform"
+            )}
           </motion.div>
 
           <motion.h1
@@ -107,11 +130,14 @@ export default function HeroSection() {
                 minHeight: "1.15em",
               }}
             >
-              {heroWords[wordIdx] || heroWords[0]}
+              {heroWords[wordIdx] ?? heroWords[0]}
             </span>
 
             <span className="mt-3 block text-3xl font-bold text-z-text md:text-5xl lg:text-6xl">
-              {t("hero.line2", "Built Around Your Business Goals")}
+              {t(
+                "hero.line2",
+                "Built Around Your Business Goals"
+              )}
             </span>
           </motion.h1>
 
@@ -127,7 +153,7 @@ export default function HeroSection() {
             )}
           </motion.p>
 
-          {/* CTA */}
+          {/* CTA Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -139,6 +165,7 @@ export default function HeroSection() {
               className="group inline-flex items-center justify-center gap-2 rounded-full bg-[#2563eb] px-7 py-4 text-sm font-semibold text-white shadow-lg shadow-blue-500/20 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/25"
             >
               {t("hero.cta_primary", "Start Your Project")}
+
               <ArrowRight
                 size={17}
                 className="transition-transform duration-300 group-hover:translate-x-1"
@@ -153,20 +180,32 @@ export default function HeroSection() {
                 size={15}
                 className="transition-transform duration-300 group-hover:scale-110"
               />
-              {t("hero.cta_secondary", "Explore Our Services")}
+
+              {t(
+                "hero.cta_secondary",
+                "Explore Our Services"
+              )}
             </Link>
           </motion.div>
 
-          {/* Trust */}
+          {/* Trust Points */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.7, delay: 0.5 }}
             className="mt-7 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-z-muted"
           >
-            <span>✓ Founded in 2023</span>
-            <span>✓ Custom Solutions</span>
-            <span>✓ Global Delivery</span>
+            <span>
+              ✓ {t("hero.trust_founded", "Founded in 2023")}
+            </span>
+
+            <span>
+              ✓ {t("hero.trust_custom", "Custom Solutions")}
+            </span>
+
+            <span>
+              ✓ {t("hero.trust_global", "Global Delivery")}
+            </span>
           </motion.div>
         </div>
 
@@ -178,7 +217,7 @@ export default function HeroSection() {
           className="relative mx-auto mt-16 max-w-6xl md:mt-20"
         >
           <div className="relative overflow-hidden rounded-[32px] border border-z-border bg-white/55 p-4 shadow-2xl backdrop-blur-xl dark:bg-white/[0.04] md:p-6">
-            {/* Browser top */}
+            {/* Browser Header */}
             <div className="mb-5 flex items-center justify-between border-b border-z-border pb-4">
               <div className="flex gap-2">
                 <span className="h-3 w-3 rounded-full bg-red-400/80" />
@@ -197,7 +236,11 @@ export default function HeroSection() {
               {/* Main Dashboard */}
               <motion.div
                 whileHover={{ y: -4 }}
-                transition={{ type: "spring", stiffness: 250, damping: 18 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 250,
+                  damping: 18,
+                }}
                 className="relative overflow-hidden rounded-2xl border border-z-border bg-white/60 p-5 dark:bg-white/[0.03] md:col-span-7"
               >
                 <div className="mb-8 flex items-center justify-between">
@@ -205,6 +248,7 @@ export default function HeroSection() {
                     <p className="text-xs text-z-muted">
                       Digital Growth Overview
                     </p>
+
                     <h3 className="mt-1 text-lg font-bold text-z-text">
                       Your business, moving forward.
                     </h3>
@@ -240,10 +284,15 @@ export default function HeroSection() {
                         key={item.label}
                         className="rounded-xl border border-z-border bg-white/70 p-3 dark:bg-white/[0.04]"
                       >
-                        <Icon size={17} className="mb-4 text-blue-600" />
+                        <Icon
+                          size={17}
+                          className="mb-4 text-blue-600"
+                        />
+
                         <p className="text-[10px] text-z-muted">
                           {item.label}
                         </p>
+
                         <p className="mt-1 text-sm font-semibold text-z-text">
                           {item.value}
                         </p>
@@ -252,24 +301,26 @@ export default function HeroSection() {
                   })}
                 </div>
 
-                {/* Animated graph */}
+                {/* Animated Graph */}
                 <div className="mt-5 flex h-28 items-end gap-2 rounded-xl border border-z-border bg-gradient-to-br from-blue-500/[0.04] to-transparent p-4">
-                  {[35, 50, 42, 65, 58, 78, 72, 92].map((height, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ height: 0 }}
-                      animate={{ height: `${height}%` }}
-                      transition={{
-                        duration: 0.8,
-                        delay: 0.7 + index * 0.08,
-                      }}
-                      className="flex-1 rounded-t-lg bg-gradient-to-t from-blue-600/70 to-blue-400"
-                    />
-                  ))}
+                  {[35, 50, 42, 65, 58, 78, 72, 92].map(
+                    (height, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ height: 0 }}
+                        animate={{ height: `${height}%` }}
+                        transition={{
+                          duration: 0.8,
+                          delay: 0.7 + index * 0.08,
+                        }}
+                        className="flex-1 rounded-t-lg bg-gradient-to-t from-blue-600/70 to-blue-400"
+                      />
+                    )
+                  )}
                 </div>
               </motion.div>
 
-              {/* Side Cards */}
+              {/* Right Side Cards */}
               <div className="flex flex-col gap-4 md:col-span-5">
                 <motion.div
                   whileHover={{ scale: 1.02 }}
@@ -320,7 +371,10 @@ export default function HeroSection() {
                   className="rounded-2xl border border-z-border bg-white/60 p-5 shadow-sm dark:bg-white/[0.03]"
                 >
                   <div className="flex items-center gap-3">
-                    <ShieldCheck size={22} className="text-emerald-600" />
+                    <ShieldCheck
+                      size={22}
+                      className="text-emerald-600"
+                    />
 
                     <div>
                       <p className="text-sm font-semibold text-z-text">
@@ -337,7 +391,7 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* Floating subtle 3D elements */}
+          {/* Floating Elements */}
           <motion.div
             animate={{
               y: [0, -12, 0],
