@@ -136,8 +136,8 @@ const FALLBACK_SERVICES: PricingService[] = [
     },
     description: {
       en: "Professional business websites built for growth.",
-      hi: "",
-      pa: "",
+      hi: "व्यवसाय के विकास के लिए प्रोफेशनल वेबसाइट।",
+      pa: "ਬਿਜ਼ਨਸ ਵਿਕਾਸ ਲਈ ਪ੍ਰੋਫੈਸ਼ਨਲ ਵੈੱਬਸਾਈਟਾਂ।",
     },
     icon: "🌐",
     baseMin: 8000,
@@ -154,8 +154,8 @@ const FALLBACK_SERVICES: PricingService[] = [
     },
     description: {
       en: "Custom online stores and e-commerce platforms.",
-      hi: "",
-      pa: "",
+      hi: "कस्टम ऑनलाइन स्टोर और ई-कॉमर्स प्लेटफॉर्म।",
+      pa: "ਕਸਟਮ ਆਨਲਾਈਨ ਸਟੋਰ ਅਤੇ ਈ-ਕਾਮਰਸ ਪਲੇਟਫਾਰਮ।",
     },
     icon: "🛒",
     baseMin: 20000,
@@ -172,8 +172,8 @@ const FALLBACK_SERVICES: PricingService[] = [
     },
     description: {
       en: "Modern mobile applications for Android and iOS.",
-      hi: "",
-      pa: "",
+      hi: "Android और iOS के लिए आधुनिक मोबाइल एप्लीकेशन।",
+      pa: "Android ਅਤੇ iOS ਲਈ ਆਧੁਨਿਕ ਮੋਬਾਈਲ ਐਪਲੀਕੇਸ਼ਨ।",
     },
     icon: "📱",
     baseMin: 50000,
@@ -190,8 +190,8 @@ const FALLBACK_SERVICES: PricingService[] = [
     },
     description: {
       en: "Scalable SaaS platforms and custom web applications.",
-      hi: "",
-      pa: "",
+      hi: "स्केलेबल SaaS प्लेटफॉर्म और कस्टम वेब एप्लीकेशन।",
+      pa: "ਸਕੇਲੇਬਲ SaaS ਪਲੇਟਫਾਰਮ ਅਤੇ ਕਸਟਮ ਵੈੱਬ ਐਪਲੀਕੇਸ਼ਨ।",
     },
     icon: "☁️",
     baseMin: 80000,
@@ -208,8 +208,8 @@ const FALLBACK_SERVICES: PricingService[] = [
     },
     description: {
       en: "SEO strategies to improve visibility and leads.",
-      hi: "",
-      pa: "",
+      hi: "विजिबिलिटी और लीड बढ़ाने के लिए SEO रणनीतियां।",
+      pa: "ਵਿਜ਼ਿਬਿਲਟੀ ਅਤੇ ਲੀਡ ਵਧਾਉਣ ਲਈ SEO ਰਣਨੀਤੀਆਂ।",
     },
     icon: "📈",
     baseMin: 5000,
@@ -226,8 +226,8 @@ const FALLBACK_SERVICES: PricingService[] = [
     },
     description: {
       en: "AI-powered automation and business integrations.",
-      hi: "",
-      pa: "",
+      hi: "AI आधारित ऑटोमेशन और बिजनेस इंटीग्रेशन।",
+      pa: "AI ਅਧਾਰਿਤ ਆਟੋਮੇਸ਼ਨ ਅਤੇ ਬਿਜ਼ਨਸ ਇੰਟੀਗ੍ਰੇਸ਼ਨ।",
     },
     icon: "🤖",
     baseMin: 30000,
@@ -240,13 +240,15 @@ const FALLBACK_SERVICES: PricingService[] = [
 export default function PricingWizard() {
   const { t, lang } = useLang();
 
-  // FIX: Explicitly normalize language to supported values.
+  // SAFE LANGUAGE NORMALIZATION
+  const rawLang = lang as string;
+
   const currentLang: SupportedLang =
-    (lang as string) === "hi"
+    rawLang === "hi"
       ? "hi"
-      : (lang as string) === "pa"
-        ? "pa"
-        : "en";
+      : rawLang === "pa"
+      ? "pa"
+      : "en";
 
   const [step, setStep] = useState(0);
   const [services, setServices] = useState<PricingService[]>([]);
@@ -291,7 +293,7 @@ export default function PricingWizard() {
       }
     };
 
-    loadServices();
+    void loadServices();
   }, []);
 
   const selectedService =
@@ -340,6 +342,7 @@ export default function PricingWizard() {
 
     setLoadingQuote(true);
     setQuote(null);
+    setStep(3);
 
     try {
       const { data } = await api.post("/pricing/calculate", {
@@ -358,7 +361,6 @@ export default function PricingWizard() {
       setQuote(null);
     } finally {
       setLoadingQuote(false);
-      setStep(3);
     }
   };
 
@@ -376,7 +378,7 @@ export default function PricingWizard() {
       className="relative z-10 py-24 px-4 md:px-6 bg-slate-50 dark:bg-z-dark2 transition-colors duration-300"
     >
       <div className="max-w-7xl mx-auto">
-        {/* Heading */}
+        {/* HEADING */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -400,18 +402,15 @@ export default function PricingWizard() {
           </p>
         </motion.div>
 
-        {/* Pricing Wizard */}
+        {/* PRICING WIZARD */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{
-            duration: 0.6,
-            delay: 0.2,
-          }}
+          transition={{ duration: 0.6, delay: 0.2 }}
           viewport={{ once: true }}
           className="bg-white dark:bg-z-dark3/60 border border-slate-200 dark:border-z-border backdrop-blur-xl shadow-xl dark:shadow-card p-6 md:p-10 max-w-3xl rounded-3xl"
         >
-          {/* Steps */}
+          {/* STEPS */}
           <div className="flex border-b border-slate-200 dark:border-z-border mb-8">
             {steps.map((stepName, index) => (
               <button
@@ -426,8 +425,8 @@ export default function PricingWizard() {
                   step === index
                     ? "border-z-accent text-z-accent"
                     : index < step
-                      ? "border-transparent text-slate-800 dark:text-z-text cursor-pointer"
-                      : "border-transparent text-slate-400 dark:text-z-muted cursor-not-allowed"
+                    ? "border-transparent text-slate-800 dark:text-z-text cursor-pointer"
+                    : "border-transparent text-slate-400 dark:text-z-muted cursor-not-allowed"
                 }`}
               >
                 {stepName}
@@ -469,9 +468,7 @@ export default function PricingWizard() {
                             : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent/50 hover:text-slate-900 dark:hover:text-z-text"
                         }`}
                       >
-                        <span className="text-xl">
-                          {service.icon}
-                        </span>
+                        <span className="text-xl">{service.icon}</span>
 
                         <span className="text-xs leading-snug">
                           {getLabel(service.label)}
@@ -512,7 +509,7 @@ export default function PricingWizard() {
                       className={`p-3 rounded-xl border text-sm font-medium transition-all duration-200 text-left ${
                         bizType === business
                           ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
-                          : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent/50 hover:text-slate-900 dark:hover:text-z-text"
+                          : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent/50"
                       }`}
                     >
                       {bizType === business && (
@@ -521,6 +518,7 @@ export default function PricingWizard() {
                           className="inline mr-1 text-z-accent"
                         />
                       )}
+
                       {business}
                     </button>
                   ))}
@@ -539,15 +537,13 @@ export default function PricingWizard() {
                       className={`p-3 rounded-xl border text-xs font-semibold transition-all duration-200 text-center ${
                         complexity === item.key
                           ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
-                          : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent/50 hover:text-slate-900 dark:hover:text-z-text"
+                          : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent/50"
                       }`}
                     >
                       {complexity === item.key && (
-                        <Check
-                          size={10}
-                          className="inline mr-1"
-                        />
+                        <Check size={10} className="inline mr-1" />
                       )}
+
                       {item.label}
                     </button>
                   ))}
@@ -568,12 +564,10 @@ export default function PricingWizard() {
                           className={`p-3 rounded-xl border text-xs font-medium transition-all text-left flex items-center justify-between ${
                             selectedFeatures.includes(feature.id)
                               ? "border-z-accent3 bg-z-accent3/10 text-slate-900 dark:text-z-text"
-                              : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent3/40 hover:text-slate-900 dark:hover:text-z-text"
+                              : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent3/40"
                           }`}
                         >
-                          <span>
-                            {getLabel(feature.label)}
-                          </span>
+                          <span>{getLabel(feature.label)}</span>
 
                           <span className="text-[10px] text-z-accent3 font-bold">
                             +{formatPrice(feature.flatAdd)}
@@ -596,10 +590,7 @@ export default function PricingWizard() {
                 transition={{ duration: 0.25 }}
               >
                 <p className="text-sm font-medium text-slate-700 dark:text-z-muted mb-2">
-                  {t(
-                    "pricing.budget",
-                    "Estimated Project Budget"
-                  )}
+                  {t("pricing.budget", "Estimated Project Budget")}
                 </p>
 
                 <div className="text-4xl font-extrabold text-z-accent text-center mb-4">
@@ -636,15 +627,13 @@ export default function PricingWizard() {
                       className={`p-3 rounded-xl border text-xs font-semibold transition-all text-center ${
                         timeline === item.key
                           ? "border-z-accent bg-z-accent/10 text-slate-900 dark:text-z-text"
-                          : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent/50 hover:text-slate-900 dark:hover:text-z-text"
+                          : "border-slate-200 dark:border-z-border text-slate-600 dark:text-z-muted hover:border-z-accent/50"
                       }`}
                     >
                       {timeline === item.key && (
-                        <Check
-                          size={10}
-                          className="inline mr-1"
-                        />
+                        <Check size={10} className="inline mr-1" />
                       )}
+
                       {item.label}
                     </button>
                   ))}
@@ -681,13 +670,15 @@ export default function PricingWizard() {
 
                     <div className="text-sm text-slate-600 dark:text-z-muted mb-4">
                       {quote?.recommendedPackage
-                        ? getLabel(quote.recommendedPackage.name)
+                        ? getLabel(
+                            quote.recommendedPackage.name
+                          )
                         : "Custom Package"}{" "}
                       — tailored for your needs
                     </div>
 
-                    {(quote?.recommendedPackage?.features?.length ?? 0) >
-                      0 && (
+                    {(quote?.recommendedPackage?.features?.length ??
+                      0) > 0 && (
                       <div className="flex flex-wrap gap-2 mb-5">
                         {quote?.recommendedPackage?.features?.map(
                           (feature) => (
@@ -718,9 +709,7 @@ export default function PricingWizard() {
                               )}`
                             : `${formatPrice(
                                 fallbackMin
-                              )} — ${formatPrice(
-                                fallbackMax
-                              )}`}
+                              )} — ${formatPrice(fallbackMax)}`}
                         </div>
                       </div>
 
@@ -752,7 +741,7 @@ export default function PricingWizard() {
             )}
           </AnimatePresence>
 
-          {/* Navigation */}
+          {/* NAVIGATION */}
           <div className="flex justify-between mt-6">
             <button
               type="button"
