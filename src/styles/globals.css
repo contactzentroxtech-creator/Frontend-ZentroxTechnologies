@@ -1,29 +1,47 @@
-@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @import "./theme.css";
 
+/* =========================================================
+   ZENTROX TECHNOLOGIES — PREMIUM GLOBAL THEME
+   Clean • Professional • International SaaS Agency
+========================================================= */
+
 :root {
-  --z-dark: #04050a;
-  --z-dark2: #080c15;
-  --z-dark3: #0d1220;
-  --z-accent: #3b7bff;
-  --z-accent2: #7c3aed;
-  --z-accent3: #06d6a0;
-  --z-gold: #f59e0b;
-  --z-text: #e8eaf6;
-  --z-muted: #8892b0;
-  --z-border: rgba(59, 123, 255, 0.15);
+  --z-dark: #0b0f14;
+  --z-dark2: #111820;
+  --z-dark3: #18212b;
+  --z-dark4: #202a35;
+
+  --z-accent: #2563eb;
+  --z-accent2: #1d4ed8;
+  --z-accent3: #0f766e;
+  --z-gold: #d97706;
+
+  --z-text: #f8fafc;
+  --z-muted: #94a3b8;
+
+  --z-border: rgba(148, 163, 184, 0.16);
+  --z-glow: rgba(37, 99, 235, 0.12);
+
   --mx: 50%;
   --my: 50%;
 }
+
+/* =========================================================
+   BASE
+========================================================= */
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
+
 html {
   scroll-behavior: smooth;
 }
@@ -31,292 +49,570 @@ html {
 body {
   background: var(--z-dark);
   color: var(--z-text);
-  font-family: "Plus Jakarta Sans", sans-serif;
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-/* Scrollbar */
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 6px;
 }
+
 ::-webkit-scrollbar-track {
-  background: var(--z-dark2);
+  background: var(--z-dark);
 }
+
 ::-webkit-scrollbar-thumb {
-  background: rgba(59, 123, 255, 0.4);
-  border-radius: 2px;
+  background: rgba(148, 163, 184, 0.35);
+  border-radius: 999px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(59, 123, 255, 0.7);
+  background: rgba(148, 163, 184, 0.55);
 }
 
-/* Selection */
+/* =========================================================
+   SELECTION
+========================================================= */
+
 ::selection {
-  background: rgba(59, 123, 255, 0.3);
-  color: #fff;
+  background: rgba(37, 99, 235, 0.22);
+  color: #ffffff;
 }
 
-/* Noise overlay */
+/* =========================================================
+   SUBTLE BACKGROUND TEXTURE
+========================================================= */
+
 body::before {
   content: "";
   position: fixed;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+
+  background-image:
+    radial-gradient(
+      circle at 20% 10%,
+      rgba(37, 99, 235, 0.035),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(15, 118, 110, 0.025),
+      transparent 30%
+    );
+
   pointer-events: none;
   z-index: 0;
-  opacity: 0.35;
 }
 
-/* Grid background */
+/* =========================================================
+   GRID BACKGROUND
+========================================================= */
+
 .grid-bg {
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background-image: linear-gradient(
-      rgba(59, 123, 255, 0.04) 1px,
+
+  background-image:
+    linear-gradient(
+      rgba(148, 163, 184, 0.035) 1px,
       transparent 1px
     ),
-    linear-gradient(90deg, rgba(59, 123, 255, 0.04) 1px, transparent 1px);
-  background-size: 60px 60px;
+    linear-gradient(
+      90deg,
+      rgba(148, 163, 184, 0.035) 1px,
+      transparent 1px
+    );
+
+  background-size: 70px 70px;
 }
 
 .grid-bg::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    ellipse 80% 60% at 50% 0%,
-    rgba(59, 123, 255, 0.08) 0%,
-    transparent 70%
-  );
+
+  background:
+    radial-gradient(
+      ellipse 70% 50% at 50% 0%,
+      rgba(37, 99, 235, 0.07),
+      transparent 70%
+    );
 }
 
-/* Glass card */
+/* =========================================================
+   PREMIUM GLASS CARD
+========================================================= */
+
 .glass-card {
-  background: rgba(8, 12, 21, 0.85);
-  border: 1px solid rgba(59, 123, 255, 0.15);
+  background: rgba(17, 24, 32, 0.78);
+  border: 1px solid rgba(148, 163, 184, 0.14);
   border-radius: 20px;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  box-shadow:
+    0 10px 35px rgba(0, 0, 0, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.025);
 }
 
-/* Gradient text */
+/* =========================================================
+   PREMIUM GRADIENT TEXT
+========================================================= */
+
 .gradient-text {
-  background: linear-gradient(135deg, #3b7bff 0%, #7c3aed 50%, #06d6a0 100%);
-  background-size: 200% auto;
+  background: linear-gradient(
+    135deg,
+    #2563eb 0%,
+    #1d4ed8 55%,
+    #0f766e 100%
+  );
+
+  background-size: 160% auto;
+
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: gradientShift 4s linear infinite;
+
+  animation: gradientShift 8s ease infinite;
 }
 
 @keyframes gradientShift {
   0% {
-    background-position: 0%;
+    background-position: 0% 50%;
   }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
   100% {
-    background-position: 200%;
+    background-position: 0% 50%;
   }
 }
 
-/* Glow button */
+/* =========================================================
+   BUTTON EFFECT
+========================================================= */
+
 .btn-glow {
   position: relative;
   overflow: hidden;
+  isolation: isolate;
 }
+
 .btn-glow::after {
   content: "";
+
   position: absolute;
-  inset: -2px;
-  background: linear-gradient(135deg, #3b7bff, #7c3aed, #06d6a0);
-  z-index: -1;
-  border-radius: inherit;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(37, 99, 235, 0.12),
+      rgba(15, 118, 110, 0.08)
+    );
+
   opacity: 0;
-  transition: opacity 0.3s;
+
+  transition: opacity 0.3s ease;
+
+  z-index: -1;
 }
+
 .btn-glow:hover::after {
   opacity: 1;
 }
 
-/* Tile hover glow */
+/* =========================================================
+   CARD HOVER SPOTLIGHT
+========================================================= */
+
 .tile-glow {
   position: relative;
   overflow: hidden;
 }
+
 .tile-glow::before {
   content: "";
+
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    circle at var(--mx) var(--my),
-    rgba(59, 123, 255, 0.08) 0%,
-    transparent 60%
-  );
+
+  background:
+    radial-gradient(
+      circle at var(--mx) var(--my),
+      rgba(37, 99, 235, 0.055) 0%,
+      transparent 60%
+    );
+
   opacity: 0;
-  transition: opacity 0.3s;
+
+  transition: opacity 0.35s ease;
+
   pointer-events: none;
   z-index: 0;
 }
+
 .tile-glow:hover::before {
   opacity: 1;
 }
 
-/* Animated border */
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
 @keyframes borderSpin {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
 }
 
-/* Floating animation */
 @keyframes float {
   0%,
   100% {
-    transform: translateY(0) rotate(var(--rot, 0deg));
+    transform:
+      translateY(0)
+      rotate(var(--rot, 0deg));
   }
+
   50% {
-    transform: translateY(-12px) rotate(var(--rot, 0deg));
+    transform:
+      translateY(-10px)
+      rotate(var(--rot, 0deg));
   }
 }
 
-/* Reveal animations */
-.reveal {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
-}
-.reveal.visible {
-  opacity: 1;
-  transform: none;
-}
-
-/* Admin sidebar */
-.admin-sidebar-link.active {
-  background: rgba(59, 123, 255, 0.12);
-  border-color: rgba(59, 123, 255, 0.3);
-  color: #fff;
-}
-
-/* Code syntax */
-.code-kw {
-  color: #bb86fc;
-}
-.code-fn {
-  color: #06d6a0;
-}
-.code-str {
-  color: #ffb74d;
-}
-.code-num {
-  color: #3b7bff;
-}
-.code-cm {
-  color: #546e7a;
-}
-
-/* Form inputs */
-.z-input {
-  width: 100%;
-  padding: 12px 16px;
-  background: rgba(4, 5, 10, 0.8);
-  border: 1px solid rgba(59, 123, 255, 0.15);
-  border-radius: 12px;
-  color: #e8eaf6;
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-size: 0.875rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  outline: none;
-}
-.z-input:focus {
-  border-color: #3b7bff;
-  box-shadow: 0 0 0 3px rgba(59, 123, 255, 0.1);
-}
-.z-input::placeholder {
-  color: #8892b0;
-}
-
-/* Progress bar */
 @keyframes progressFill {
   from {
     width: 0;
   }
 }
 
-/* Custom cursor */
-.custom-cursor {
-  position: fixed;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #3b7bff;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-  mix-blend-mode: screen;
-  transition: width 0.2s, height 0.2s, background 0.2s;
-}
-.cursor-ring {
-  position: fixed;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 1px solid rgba(59, 123, 255, 0.5);
-  pointer-events: none;
-  z-index: 9998;
-  transform: translate(-50%, -50%);
+/* =========================================================
+   REVEAL ANIMATION
+========================================================= */
+
+.reveal {
+  opacity: 0;
+
+  transform: translateY(30px);
+
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
 }
 
-/* Badge */
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* =========================================================
+   ADMIN SIDEBAR
+========================================================= */
+
+.admin-sidebar-link.active {
+  background: rgba(37, 99, 235, 0.1);
+  border-color: rgba(37, 99, 235, 0.25);
+  color: #ffffff;
+}
+
+/* =========================================================
+   CODE SYNTAX
+========================================================= */
+
+.code-kw {
+  color: #818cf8;
+}
+
+.code-fn {
+  color: #2dd4bf;
+}
+
+.code-str {
+  color: #f59e0b;
+}
+
+.code-num {
+  color: #60a5fa;
+}
+
+.code-cm {
+  color: #64748b;
+}
+
+/* =========================================================
+   FORM INPUTS
+========================================================= */
+
+.z-input {
+  width: 100%;
+
+  padding: 12px 16px;
+
+  background: rgba(11, 15, 20, 0.75);
+
+  border:
+    1px solid
+    rgba(148, 163, 184, 0.16);
+
+  border-radius: 12px;
+
+  color: var(--z-text);
+
+  font-family:
+    "Plus Jakarta Sans",
+    system-ui,
+    sans-serif;
+
+  font-size: 0.875rem;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+
+  outline: none;
+}
+
+.z-input:hover {
+  border-color:
+    rgba(148, 163, 184, 0.28);
+}
+
+.z-input:focus {
+  background: rgba(11, 15, 20, 0.95);
+
+  border-color: #2563eb;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(37, 99, 235, 0.1);
+}
+
+.z-input::placeholder {
+  color: var(--z-muted);
+}
+
+/* =========================================================
+   CUSTOM CURSOR
+========================================================= */
+
+.custom-cursor {
+  position: fixed;
+
+  width: 10px;
+  height: 10px;
+
+  border-radius: 50%;
+
+  background: #2563eb;
+
+  pointer-events: none;
+
+  z-index: 9999;
+
+  transform: translate(-50%, -50%);
+
+  mix-blend-mode: screen;
+
+  transition:
+    width 0.2s ease,
+    height 0.2s ease,
+    background 0.2s ease;
+}
+
+.cursor-ring {
+  position: fixed;
+
+  width: 34px;
+  height: 34px;
+
+  border-radius: 50%;
+
+  border:
+    1px solid
+    rgba(37, 99, 235, 0.35);
+
+  pointer-events: none;
+
+  z-index: 9998;
+
+  transform: translate(-50%, -50%);
+
+  transition:
+    width 0.2s ease,
+    height 0.2s ease;
+}
+
+/* =========================================================
+   BADGE
+========================================================= */
+
 .z-badge {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
+
   font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #3b7bff;
-  border: 1px solid rgba(59, 123, 255, 0.3);
-  background: rgba(59, 123, 255, 0.08);
-  border-radius: 100px;
-  padding: 5px 14px;
+
+  color: #2563eb;
+
+  border:
+    1px solid
+    rgba(37, 99, 235, 0.22);
+
+  background:
+    rgba(37, 99, 235, 0.06);
+
+  border-radius: 999px;
+
+  padding: 6px 14px;
 }
 
-/* Swiper customization */
+/* =========================================================
+   SWIPER
+========================================================= */
+
 .swiper-pagination-bullet {
-  background: rgba(59, 123, 255, 0.4) !important;
+  background:
+    rgba(148, 163, 184, 0.5)
+    !important;
+
+  opacity: 1 !important;
 }
+
 .swiper-pagination-bullet-active {
-  background: #3b7bff !important;
+  background:
+    #2563eb
+    !important;
 }
 
-/* ── Light mode code colors ── */
+/* =========================================================
+   LIGHT MODE
+========================================================= */
+
+:root.light {
+  --z-dark: #ffffff;
+  --z-dark2: #f8fafc;
+  --z-dark3: #f1f5f9;
+  --z-dark4: #e2e8f0;
+
+  --z-text: #0f172a;
+  --z-muted: #64748b;
+
+  --z-border:
+    rgba(15, 23, 42, 0.1);
+}
+
+:root.light body {
+  background: #ffffff;
+  color: #0f172a;
+}
+
+:root.light body::before {
+  background-image:
+    radial-gradient(
+      circle at 20% 10%,
+      rgba(37, 99, 235, 0.035),
+      transparent 30%
+    );
+}
+
+:root.light .grid-bg {
+  background-image:
+    linear-gradient(
+      rgba(15, 23, 42, 0.035) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(15, 23, 42, 0.035) 1px,
+      transparent 1px
+    );
+}
+
+:root.light .glass-card {
+  background:
+    rgba(255, 255, 255, 0.78);
+
+  border-color:
+    rgba(15, 23, 42, 0.08);
+
+  box-shadow:
+    0 10px 35px
+    rgba(15, 23, 42, 0.06);
+}
+
+/* =========================================================
+   LIGHT MODE CODE COLORS
+========================================================= */
+
 :root.light .code-kw {
-  color: #7c3aed;
-}
-:root.light .code-fn {
-  color: #0d7d5e;
-}
-:root.light .code-str {
-  color: #c2500a;
-}
-:root.light .code-num {
-  color: #1d4ed8;
-}
-:root.light .code-cm {
-  color: #6b7280;
+  color: #4f46e5;
 }
 
-/* ── Light mode cursor ── */
+:root.light .code-fn {
+  color: #0f766e;
+}
+
+:root.light .code-str {
+  color: #b45309;
+}
+
+:root.light .code-num {
+  color: #2563eb;
+}
+
+:root.light .code-cm {
+  color: #64748b;
+}
+
+/* =========================================================
+   LIGHT MODE CURSOR
+========================================================= */
+
 :root.light .custom-cursor {
   mix-blend-mode: multiply;
-  background: #3b7bff;
+  background: #2563eb;
 }
+
 :root.light .cursor-ring {
-  border-color: rgba(59, 123, 255, 0.4);
+  border-color:
+    rgba(37, 99, 235, 0.35);
+}
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+
+    scroll-behavior: auto !important;
+
+    transition-duration: 0.01ms !important;
+  }
 }
