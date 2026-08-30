@@ -17,8 +17,6 @@ import {
 
 import { useLang } from "@/lib/providers";
 
-type Language = "en" | "hi" | "pa";
-
 type CardData = {
   icon: typeof Globe2;
   color: string;
@@ -58,15 +56,15 @@ function GrowthCard({ card, index }: { card: CardData; index: number }) {
       className="
         group relative h-full
         overflow-hidden rounded-[28px]
-        border border-slate-200/70
+        border border-slate-200/60
         bg-white/85 p-6
-        shadow-[0_8px_30px_rgba(15,23,42,0.05)]
+        shadow-[0_8px_30px_rgba(15,23,42,0.04)]
         backdrop-blur-sm
         transition-all duration-500
-        hover:border-blue-200/80
-        hover:shadow-[0_25px_70px_rgba(15,23,42,0.10)]
-        dark:border-white/[0.06]
-        dark:bg-[#1e293b]/70
+        hover:border-blue-300/60
+        hover:shadow-[0_25px_70px_rgba(15,23,42,0.08)]
+        dark:border-white/8
+        dark:bg-[#1a1e2b]/80
         dark:hover:border-blue-400/20
         md:p-7
       "
@@ -75,14 +73,14 @@ function GrowthCard({ card, index }: { card: CardData; index: number }) {
       <div
         className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
         style={{
-          background: `radial-gradient(450px circle at ${spotlight.x}px ${spotlight.y}px, ${card.color}15, transparent 65%)`,
+          background: `radial-gradient(450px circle at ${spotlight.x}px ${spotlight.y}px, ${card.color}12, transparent 65%)`,
         }}
       />
 
       {/* Background glow blob */}
       <div
         className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full blur-3xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-        style={{ backgroundColor: `${card.color}18` }}
+        style={{ backgroundColor: `${card.color}15` }}
       />
 
       {/* Top accent bar */}
@@ -149,11 +147,10 @@ function GrowthCard({ card, index }: { card: CardData; index: number }) {
 ========================================================= */
 
 export default function LocalSection() {
-  const { t, lang } = useLang();
-  const currentLang = lang as Language;
+  const { t } = useLang();
 
-  /* ===== LOCATIONS ===== */
-  const LOCATIONS_EN = [
+  // ── Only English – no Hindi/Punjabi ──
+  const LOCATIONS = [
     "Mohali",
     "Chandigarh",
     "Punjab",
@@ -168,38 +165,7 @@ export default function LocalSection() {
     "Worldwide",
   ];
 
-  const LOCATIONS_HI = [
-    "मोहाली",
-    "चंडीगढ़",
-    "पंजाब",
-    "हरियाणा",
-    "हिमाचल प्रदेश",
-    "दिल्ली एनसीआर",
-    "भारत",
-    "अमेरिका",
-    "यूके",
-    "कनाडा",
-    "ऑस्ट्रेलिया",
-    "विश्वभर",
-  ];
-
-  const LOCATIONS_PA = [
-    "ਮੋਹਾਲੀ",
-    "ਚੰਡੀਗੜ੍ਹ",
-    "ਪੰਜਾਬ",
-    "ਹਰਿਆਣਾ",
-    "ਹਿਮਾਚਲ ਪ੍ਰਦੇਸ਼",
-    "ਦਿੱਲੀ ਐਨਸੀਆਰ",
-    "ਭਾਰਤ",
-    "ਅਮਰੀਕਾ",
-    "ਯੂਕੇ",
-    "ਕੈਨੇਡਾ",
-    "ਆਸਟ੍ਰੇਲੀਆ",
-    "ਦੁਨੀਆ ਭਰ",
-  ];
-
-  /* ===== INDUSTRIES ===== */
-  const INDUSTRIES_EN = [
+  const INDUSTRIES = [
     "Startups",
     "Healthcare",
     "Real Estate",
@@ -210,43 +176,7 @@ export default function LocalSection() {
     "Growing Businesses",
   ];
 
-  const INDUSTRIES_HI = [
-    "स्टार्टअप",
-    "स्वास्थ्य सेवा",
-    "रियल एस्टेट",
-    "ई-कॉमर्स",
-    "शिक्षा",
-    "विनिर्माण",
-    "प्रोफेशनल सर्विसेज",
-    "बढ़ते व्यवसाय",
-  ];
-
-  const INDUSTRIES_PA = [
-    "ਸਟਾਰਟਅੱਪ",
-    "ਸਿਹਤ ਸੰਭਾਲ",
-    "ਰੀਅਲ ਅਸਟੇਟ",
-    "ਈ-ਕਾਮਰਸ",
-    "ਸਿੱਖਿਆ",
-    "ਨਿਰਮਾਣ",
-    "ਪ੍ਰੋਫੈਸ਼ਨਲ ਸਰਵਿਸਿਜ਼",
-    "ਵਧ ਰਹੇ ਬਿਜ਼ਨਸ",
-  ];
-
-  const locations =
-    currentLang === "hi"
-      ? LOCATIONS_HI
-      : currentLang === "pa"
-      ? LOCATIONS_PA
-      : LOCATIONS_EN;
-
-  const industries =
-    currentLang === "hi"
-      ? INDUSTRIES_HI
-      : currentLang === "pa"
-      ? INDUSTRIES_PA
-      : INDUSTRIES_EN;
-
-  const marqueeItems = [...locations, ...industries];
+  const marqueeItems = [...LOCATIONS, ...INDUSTRIES];
   const loopItems = [...marqueeItems, ...marqueeItems];
 
   /* ===== CARDS DATA ===== */
@@ -317,19 +247,19 @@ export default function LocalSection() {
   return (
     <section
       aria-labelledby="global-heading"
-      className="relative overflow-hidden bg-slate-50/60 px-4 py-20 dark:bg-transparent md:px-6 md:py-28"
+      className="relative overflow-hidden bg-white px-4 py-16 transition-colors duration-300 dark:bg-[#111827] md:px-6 md:py-20 lg:py-24"
     >
       {/* Background elements */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-        <div className="absolute -left-40 top-[15%] h-[500px] w-[500px] rounded-full bg-blue-500/[0.06] blur-[150px] dark:bg-blue-400/[0.07]" />
-        <div className="absolute -right-40 bottom-[10%] h-[500px] w-[500px] rounded-full bg-orange-400/[0.05] blur-[150px] dark:bg-orange-400/[0.05]" />
+        <div className="absolute -left-40 top-[15%] h-[500px] w-[500px] rounded-full bg-blue-500/[0.05] blur-[150px] dark:bg-blue-400/[0.05]" />
+        <div className="absolute -right-40 bottom-[10%] h-[500px] w-[500px] rounded-full bg-orange-400/[0.04] blur-[150px] dark:bg-orange-400/[0.04]" />
         {/* Subtle grid */}
         <div
-          className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]"
+          className="absolute inset-0 opacity-[0.03] dark:opacity-[0.04]"
           style={{
             backgroundImage: `
-              linear-gradient(rgba(100,116,139,.4) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(100,116,139,.4) 1px, transparent 1px)
+              linear-gradient(rgba(100,116,139,.3) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(100,116,139,.3) 1px, transparent 1px)
             `,
             backgroundSize: "70px 70px",
           }}
@@ -345,7 +275,7 @@ export default function LocalSection() {
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
           className="mx-auto max-w-4xl text-center"
         >
-          <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-blue-50/60 px-4 py-1.5 text-[11px] font-bold tracking-[0.1em] text-blue-700 backdrop-blur-sm dark:border-blue-400/20 dark:bg-blue-400/[0.06] dark:text-blue-200">
+          <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-blue-50/60 px-4 py-1.5 text-[11px] font-bold tracking-[0.1em] text-blue-700 backdrop-blur-sm dark:border-blue-400/20 dark:bg-blue-400/[0.05] dark:text-blue-200">
             <Globe2 size={13} />
             <span>{t("global.badge", "Digital Solutions for India & Worldwide")}</span>
           </div>
@@ -371,7 +301,7 @@ export default function LocalSection() {
               return (
                 <div
                   key={item.text}
-                  className="flex items-center gap-2 rounded-full border border-slate-200/70 bg-white/80 px-4 py-2.5 text-xs font-semibold text-slate-600 shadow-sm backdrop-blur-sm dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300"
+                  className="flex items-center gap-2 rounded-full border border-slate-200/60 bg-white/80 px-4 py-2.5 text-xs font-semibold text-slate-600 shadow-sm backdrop-blur-sm dark:border-white/8 dark:bg-white/[0.04] dark:text-slate-300"
                 >
                   <Icon size={14} className="text-blue-600 dark:text-blue-400" />
                   {item.text}
@@ -382,9 +312,9 @@ export default function LocalSection() {
         </motion.div>
 
         {/* ===== MARQUEE ===== */}
-        <div className="relative mt-16 overflow-hidden">
-          <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-20 bg-gradient-to-r from-slate-50 to-transparent dark:from-[#0b0f19] md:w-40" />
-          <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-20 bg-gradient-to-l from-slate-50 to-transparent dark:from-[#0b0f19] md:w-40" />
+        <div className="relative mt-14 overflow-hidden">
+          <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-20 bg-gradient-to-r from-white to-transparent dark:from-[#111827] md:w-40" />
+          <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-20 bg-gradient-to-l from-white to-transparent dark:from-[#111827] md:w-40" />
 
           <motion.div
             className="flex w-max gap-4 px-4"
@@ -398,7 +328,7 @@ export default function LocalSection() {
             {loopItems.map((item, index) => (
               <div
                 key={`${item}-${index}`}
-                className="flex items-center gap-2.5 whitespace-nowrap rounded-2xl border border-slate-200/70 bg-white/80 px-5 py-3.5 text-sm font-semibold text-slate-700 shadow-sm backdrop-blur-sm dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300"
+                className="flex items-center gap-2.5 whitespace-nowrap rounded-2xl border border-slate-200/60 bg-white/80 px-5 py-3.5 text-sm font-semibold text-slate-700 shadow-sm backdrop-blur-sm dark:border-white/8 dark:bg-white/[0.04] dark:text-slate-300"
               >
                 <span className="h-2 w-2 rounded-full bg-blue-500" />
                 {item}
@@ -413,10 +343,10 @@ export default function LocalSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mx-auto mt-20 max-w-3xl text-center"
+          className="mx-auto mt-16 max-w-3xl text-center"
         >
           <div className="mb-4 flex justify-center">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-500/10 text-blue-600 dark:bg-blue-400/10 dark:text-blue-400">
               <Users size={20} />
             </div>
           </div>
