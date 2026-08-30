@@ -40,116 +40,117 @@ const LangContext = createContext<LangCtx>({
   loadingTranslations: false,
 });
 
-// ─── ENGLISH TRANSLATIONS ────────────────────────────────────────────────────
+// ─── SEO-OPTIMIZED ENGLISH TRANSLATIONS ────────────────────────────────────
 
 const STATIC_FALLBACKS: Record<string, string> = {
   // ─── NAVBAR ──────────────────────────────────────────────────────────────
   "nav.services": "Services",
   "nav.courses": "Courses",
   "nav.blog": "Blog",
-  "nav.about": "About",
+  "nav.about": "About Us",
   "nav.contact": "Contact",
   "nav.login": "Login",
   "nav.get_started": "Get Started",
 
   // ─── HERO ────────────────────────────────────────────────────────────────
-  "hero.badge": "Mohali & Chandigarh — MSME Registered Technology Company",
+  "hero.badge":
+    "Mohali & Chandigarh — MSME Registered Technology Company",
   "hero.line1": "We Build",
   "hero.line2": "Grow Faster.",
   "hero.sub":
-    "We create custom software, high-performance websites, mobile apps and digital growth systems that help ambitious businesses move forward.",
+    "Zentrox Technologies delivers custom software, high‑performance websites, mobile apps and AI‑driven digital growth solutions for ambitious businesses.",
   "hero.cta_primary": "Start Your Project",
   "hero.cta_secondary": "Explore Our Services",
 
-  // ─── SERVICES ────────────────────────────────────────────────────────────
+  // ─── SERVICES SECTION ───────────────────────────────────────────────────
   "services.badge": "Everything You Need To Grow",
   "services.title": "Technology That Moves Your Business Forward",
   "services.sub":
-    "From building powerful digital products to helping your business attract more customers, Zentrox Technologies brings strategy, design, development, AI, and digital growth together under one team.",
+    "Zentrox Technologies combines strategy, design, development, AI and digital marketing under one roof to help you build powerful digital products and attract more customers.",
   "services.view_all": "Explore All Services",
   "services.cta_title": "Not Sure Which Service You Need?",
   "services.cta_sub":
-    "Tell us about your business goals and our team will help you find the right digital solution.",
+    "Tell us about your business goals and our team will recommend the right digital solution — from websites and apps to AI and SEO.",
   "services.explore": "Explore Service",
 
-  // ─── SERVICE ITEMS ───────────────────────────────────────────────────────
+  // ─── INDIVIDUAL SERVICES (SEO-optimised) ──────────────────────────────
   "service.software.title": "Custom Software Development",
   "service.software.desc":
-    "Tailored software solutions designed around your business processes, challenges, and long-term growth.",
+    "Tailored software solutions designed around your business processes, challenges and long‑term growth goals.",
 
   "service.web.title": "Web Application Development",
   "service.web.desc":
-    "Fast, modern, scalable web applications built for excellent user experience and measurable business results.",
+    "Modern, scalable web applications built for excellent user experience and measurable business results.",
 
   "service.saas.title": "SaaS Development",
   "service.saas.desc":
-    "From MVP to scalable SaaS platforms, we help turn your product ideas into reliable digital businesses.",
+    "From MVP to full‑scale SaaS platforms, we turn your product ideas into reliable digital businesses.",
 
   "service.android.title": "Mobile App Development",
   "service.android.desc":
-    "High-performance mobile applications with intuitive interfaces and smooth experiences across devices.",
+    "High‑performance mobile apps for Android and iOS with intuitive interfaces and seamless user experiences.",
 
   "service.design.title": "UI/UX Design",
   "service.design.desc":
-    "Human-centered digital experiences that look professional, feel intuitive, and help users take action.",
+    "Human‑centred digital experiences that look professional, feel intuitive and drive user action.",
 
   "service.seo.title": "SEO & Local SEO",
   "service.seo.desc":
-    "Data-driven SEO strategies that improve visibility, attract qualified traffic, and generate more leads.",
+    "Data‑driven SEO strategies that boost visibility, attract qualified traffic and generate more leads for your business.",
 
   "service.marketing.title": "Digital Marketing",
   "service.marketing.desc":
-    "Smart digital campaigns that strengthen your brand, generate leads, and support sustainable business growth.",
+    "Smart digital campaigns that strengthen your brand, generate leads and support sustainable business growth.",
 
   "service.ai.title": "AI Integration & Automation",
   "service.ai.desc":
-    "Intelligent AI integration and automation workflows that reduce repetitive work and improve business efficiency.",
+    "Intelligent AI integrations and automation workflows that reduce repetitive work and improve efficiency.",
 
   "service.crm.title": "CRM Development",
   "service.crm.desc":
-    "Custom CRM systems that organize customer data, streamline sales, and improve business relationships.",
+    "Custom CRM systems that organise customer data, streamline sales and improve business relationships.",
 
   "service.api.title": "API Integration",
   "service.api.desc":
-    "Connect your software, platforms, and workflows with reliable integrations built for efficiency.",
+    "Reliable integrations that connect your software, platforms and workflows for seamless data flow.",
 
-  // ─── STATS ───────────────────────────────────────────────────────────────
+  // ─── STATS ──────────────────────────────────────────────────────────────
   "stats.trust": "Built for Real Business Growth",
   "stats.title": "Results That Reflect Our Commitment",
   "stats.description":
-    "Helping businesses build stronger digital products, improve their online presence, and move forward with confidence.",
+    "Zentrox Technologies helps businesses build stronger digital products, improve online presence and move forward with confidence.",
   "stats.projects": "Digital Solutions Delivered",
   "stats.clients": "Businesses Supported",
   "stats.years": "Years of Digital Experience",
   "stats.rating": "Client Satisfaction",
-  "stats.trust1": "Custom-Built Solutions",
+  "stats.trust1": "Custom‑Built Solutions",
   "stats.trust2": "Transparent Communication",
   "stats.trust3": "India & Global Delivery",
-  "stats.trust4": "Long-Term Support",
+  "stats.trust4": "Long‑Term Support",
 
-  // ─── LOCAL / GLOBAL ──────────────────────────────────────────────────────
+  // ─── LOCAL / GLOBAL ─────────────────────────────────────────────────────
   "global.badge": "Digital Solutions for India & Worldwide",
   "global.title": "Built in India. Ready for Business Anywhere.",
   "global.sub":
     "From Mohali and Chandigarh to businesses across India and international markets, Zentrox Technologies creates modern websites, software, AI solutions and digital growth systems designed around real business goals.",
 
   "global.trust.location": "India & Worldwide",
-  "global.trust.business": "Business-Focused Solutions",
+  "global.trust.business": "Business‑Focused Solutions",
   "global.trust.delivery": "Reliable Project Delivery",
 
   "global.why.title": "One Technology Partner for Your Digital Growth",
   "global.why.sub":
     "We combine strategy, design, development and digital growth so your business can move forward without managing multiple disconnected teams.",
 
-  "global.footer1": "Strategy-led digital solutions",
+  "global.footer1": "Strategy‑led digital solutions",
   "global.footer2": "Designed for real business outcomes",
-  "global.footer3": "India-based. Globally connected.",
+  "global.footer3": "India‑based. Globally connected.",
 
   "global.card1.title": "Local Understanding. Global Delivery.",
   "global.card1.desc":
     "We understand the needs of businesses in India while building digital solutions ready for customers, teams and markets worldwide.",
   "global.card1.point1": "Serving businesses across India",
-  "global.card1.point2": "Remote-first global collaboration",
+  "global.card1.point2": "Remote‑first global collaboration",
   "global.card1.point3": "Solutions built for scalable growth",
 
   "global.card2.title": "Technology Built Around Your Business",
@@ -159,7 +160,7 @@ const STATIC_FALLBACKS: Record<string, string> = {
   "global.card2.point2": "Mobile apps and SaaS platforms",
   "global.card2.point3": "AI and automation workflows",
 
-  "global.card3.title": "Built for Long-Term Growth",
+  "global.card3.title": "Built for Long‑Term Growth",
   "global.card3.desc":
     "Our goal is not just to launch a project. We help businesses create stronger digital foundations that can evolve as they grow.",
   "global.card3.point1": "Clear communication and strategy",
@@ -189,14 +190,14 @@ const STATIC_FALLBACKS: Record<string, string> = {
   "testimonials.badge": "Client Stories",
   "testimonials.title": "Trusted by Businesses Building Their Digital Future",
   "testimonials.sub":
-    "We work with startups, growing businesses, and organizations across multiple industries to build practical digital solutions designed for growth.",
+    "We work with startups, growing businesses, and organisations across multiple industries to build practical digital solutions designed for growth.",
 
   // ─── CTA ──────────────────────────────────────────────────────────────────
   "cta.badge": "Let's Build Something Great Together",
   "cta.title": "Ready to Build Something Great?",
   "cta.title2": "Let's Grow Your Business Together",
   "cta.sub":
-    "Whether you need a website, custom software, mobile application, SaaS platform, AI automation, SEO, or digital marketing services — our team is ready to help you build and grow.",
+    "Whether you need a website, custom software, mobile app, SaaS platform, AI automation, SEO or digital marketing services — our team is ready to help you build and grow.",
   "cta.primary": "Get a Free Consultation",
   "cta.secondary": "Explore Our Services",
 
@@ -221,7 +222,7 @@ const STATIC_FALLBACKS: Record<string, string> = {
   "contact.reach_us": "Reach Us Directly",
   "contact.form_title": "Send Us a Message",
   "contact.whatsapp_cta": "Chat on WhatsApp",
-  "contact.brand_desc": "MSME Registered · Innovation-Driven · Client-Focused",
+  "contact.brand_desc": "MSME Registered · Innovation‑Driven · Client‑Focused",
   "contact.brand_locations": "Serving Mohali, Chandigarh, Punjab and Worldwide",
 
   // ─── VALIDATION ──────────────────────────────────────────────────────────
@@ -233,7 +234,7 @@ const STATIC_FALLBACKS: Record<string, string> = {
   "validation.message_max": "Your message is too long",
 
   // ─── FOOTER ──────────────────────────────────────────────────────────────
-  "footer.msme": "Remote-first · Innovation-driven · MSME Registered",
+  "footer.msme": "Remote‑first · Innovation‑driven · MSME Registered",
   "footer.copy": "All rights reserved. MSME Registered — India.",
 
   // ─── COMMON ──────────────────────────────────────────────────────────────
@@ -243,7 +244,8 @@ const STATIC_FALLBACKS: Record<string, string> = {
   "common.cancel": "Cancel",
   "common.close": "Close",
   "common.learn_more": "Learn More",
-  "whatsapp.message": "Hi Zentrox Technologies, I need help with my project.",
+  "whatsapp.message":
+    "Hi Zentrox Technologies, I need help with my project.",
 };
 
 export { STATIC_FALLBACKS };
