@@ -58,36 +58,40 @@ function TestimonialCard({
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
       viewport={{ once: true }}
-      className="glass-card p-6 flex flex-col gap-4 transition-all duration-300 hover:-translate-y-1 hover:border-z-accent/30"
+      className="
+        flex flex-col gap-4 rounded-2xl
+        border border-slate-200/60
+        bg-white/80 p-6
+        shadow-[0_8px_30px_rgba(15,23,42,0.04)]
+        backdrop-blur-sm
+        transition-all duration-300
+        hover:-translate-y-1
+        hover:border-blue-300/60
+        hover:shadow-[0_20px_60px_rgba(15,23,42,0.08)]
+        dark:border-white/8
+        dark:bg-[#1a1e2b]/80
+      "
     >
-      <div
-        className="flex gap-0.5"
-        aria-label="5 star testimonial rating"
-      >
+      <div className="flex gap-0.5" aria-label="5 star testimonial rating">
         {Array.from({ length: 5 }).map((_, i) => (
-          <Star
-            key={i}
-            size={14}
-            className="text-z-gold fill-z-gold"
-          />
+          <Star key={i} size={14} className="text-amber-400 fill-amber-400" />
         ))}
       </div>
 
-      <p className="text-sm text-slate-600 dark:text-z-muted leading-relaxed flex-1">
+      <p className="flex-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
         “{testimonial.text}”
       </p>
 
-      <div className="flex items-center gap-3 pt-4 border-t border-slate-200 dark:border-z-border">
-        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-z-accent to-z-accent2 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+      <div className="flex items-center gap-3 border-t border-slate-200/60 pt-4 dark:border-white/8">
+        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 text-xs font-bold text-white shadow-md">
           {testimonial.initials}
         </div>
 
         <div className="min-w-0">
-          <div className="text-sm font-semibold text-slate-900 dark:text-z-text truncate">
+          <div className="truncate text-sm font-semibold text-slate-900 dark:text-white">
             {testimonial.name}
           </div>
-
-          <div className="text-xs text-slate-500 dark:text-z-muted truncate">
+          <div className="truncate text-xs text-slate-500 dark:text-slate-400">
             {testimonial.role}
           </div>
         </div>
@@ -102,9 +106,9 @@ export function TestimonialsSection() {
   return (
     <section
       id="testimonials"
-      className="relative z-10 py-24 px-4 md:px-6 bg-white dark:bg-transparent transition-colors duration-300"
+      className="relative bg-white px-4 py-16 transition-colors duration-300 dark:bg-[#111827] md:px-6 md:py-20 lg:py-24"
     >
-      <div className="max-w-7xl mx-auto">
+      <div className="mx-auto max-w-7xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -112,18 +116,19 @@ export function TestimonialsSection() {
           viewport={{ once: true }}
           className="mb-12 max-w-3xl"
         >
-          <div className="z-badge mb-4">
-            {t("testimonials.badge", "Client Stories")}
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-blue-50/60 px-4 py-1.5 text-[11px] font-bold tracking-[0.1em] text-blue-700 backdrop-blur-sm dark:border-blue-400/20 dark:bg-blue-400/[0.05] dark:text-blue-200">
+            <Sparkles size={13} />
+            <span>{t("testimonials.badge", "Client Stories")}</span>
           </div>
 
-          <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-z-text leading-tight tracking-tight mb-4">
+          <h2 className="text-3xl font-extrabold leading-tight tracking-tight text-slate-900 dark:text-white md:text-4xl lg:text-5xl">
             {t(
               "testimonials.title",
               "Trusted by Businesses Building Their Digital Future"
             )}
           </h2>
 
-          <p className="text-base md:text-lg text-slate-600 dark:text-z-muted leading-relaxed">
+          <p className="mt-4 text-base leading-relaxed text-slate-600 dark:text-slate-300 md:text-lg">
             {t(
               "testimonials.sub",
               "We work with startups, growing businesses, and organizations across multiple industries to build practical digital solutions designed for growth."
@@ -131,7 +136,7 @@ export function TestimonialsSection() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {TESTIMONIALS.map((testimonial, i) => (
             <TestimonialCard
               key={`${testimonial.name}-${i}`}
@@ -146,7 +151,7 @@ export function TestimonialsSection() {
 }
 
 /* =========================================================
-   CTA SECTION – Premium Redesign
+   CTA SECTION – Premium Redesign with Reduced Spacing
 ========================================================= */
 
 export function CTASection() {
@@ -178,34 +183,33 @@ export function CTASection() {
       onMouseMove={handleMouseMove}
       className="
         relative z-10 overflow-hidden
-        py-24 px-4 md:px-6
+        px-4 py-16
         bg-gradient-to-br from-slate-50 via-white to-blue-50/30
-        dark:from-[#0b0f19] dark:via-[#111827] dark:to-blue-950/20
+        dark:from-[#111827] dark:via-[#1a1e2b] dark:to-blue-950/20
         transition-colors duration-500
+        md:px-6 md:py-20 lg:py-24
       "
       style={{ transformStyle: "preserve-3d" }}
     >
-      {/* ===== Background Elements ===== */}
-
-      {/* Main glow */}
+      {/* Background Elements */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
         <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-            w-[800px] h-[800px] rounded-full
-            bg-blue-500/10 dark:bg-blue-400/10
-            blur-[160px]"
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
+            h-[800px] w-[800px] rounded-full
+            bg-blue-500/10 blur-[160px]
+            dark:bg-blue-400/10"
         />
         <div
-          className="absolute top-0 right-0
-            w-[500px] h-[500px] rounded-full
-            bg-purple-500/8 dark:bg-purple-400/8
-            blur-[140px]"
+          className="absolute right-0 top-0
+            h-[500px] w-[500px] rounded-full
+            bg-purple-500/8 blur-[140px]
+            dark:bg-purple-400/8"
         />
         <div
           className="absolute bottom-0 left-0
-            w-[500px] h-[500px] rounded-full
-            bg-teal-500/8 dark:bg-teal-400/8
-            blur-[140px]"
+            h-[500px] w-[500px] rounded-full
+            bg-teal-500/8 blur-[140px]
+            dark:bg-teal-400/8"
         />
       </div>
 
@@ -244,7 +248,7 @@ export function CTASection() {
         );
       })}
 
-      {/* ===== Spotlight overlay ===== */}
+      {/* Spotlight overlay */}
       {isHovering && (
         <div
           className="pointer-events-none absolute inset-0 transition-opacity duration-300"
@@ -254,8 +258,8 @@ export function CTASection() {
         />
       )}
 
-      {/* ===== Content ===== */}
-      <div className="relative z-10 max-w-4xl mx-auto text-center">
+      {/* Content */}
+      <div className="relative z-10 mx-auto max-w-4xl text-center">
         <motion.div
           initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -281,7 +285,7 @@ export function CTASection() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.15 }}
             viewport={{ once: true }}
-            className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.08] tracking-tight text-slate-900 dark:text-white"
+            className="text-4xl font-extrabold leading-[1.08] tracking-tight text-slate-900 dark:text-white md:text-5xl lg:text-6xl"
           >
             {t("cta.title", "Ready to Build Something Great?")}
             <br />
@@ -310,21 +314,11 @@ export function CTASection() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.35 }}
             viewport={{ once: true }}
-            className="mt-10 flex flex-col sm:flex-row gap-4 justify-center"
+            className="mt-10 flex flex-col justify-center gap-4 sm:flex-row"
           >
             <Link
               href="/contact"
-              className="
-                group inline-flex items-center justify-center gap-2
-                px-8 py-4 rounded-full
-                bg-gradient-to-r from-blue-600 to-blue-700
-                text-sm font-bold text-white
-                shadow-lg shadow-blue-600/25
-                transition-all duration-300
-                hover:-translate-y-1 hover:scale-105
-                hover:shadow-xl hover:shadow-blue-600/35
-                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-              "
+              className="group inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-blue-700 px-8 py-4 text-sm font-bold text-white shadow-lg shadow-blue-600/25 transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:shadow-xl hover:shadow-blue-600/35 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
               {t("cta.primary", "Get a Free Consultation")}
               <ArrowRight
@@ -335,20 +329,7 @@ export function CTASection() {
 
             <Link
               href="/services"
-              className="
-                group inline-flex items-center justify-center gap-2
-                px-8 py-4 rounded-full
-                border-2 border-slate-200/80
-                bg-white/70 backdrop-blur-sm
-                text-sm font-bold text-slate-700
-                transition-all duration-300
-                hover:-translate-y-1 hover:scale-105
-                hover:border-blue-300 hover:bg-white hover:text-blue-600
-                hover:shadow-lg
-                dark:border-white/10 dark:bg-white/5
-                dark:text-slate-200 dark:hover:border-blue-400/30
-                dark:hover:bg-white/10 dark:hover:text-blue-300
-              "
+              className="group inline-flex items-center justify-center gap-2 rounded-full border-2 border-slate-200/80 bg-white/70 px-8 py-4 text-sm font-bold text-slate-700 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:border-blue-300 hover:bg-white hover:text-blue-600 hover:shadow-lg dark:border-white/10 dark:bg-white/5 dark:text-slate-200 dark:hover:border-blue-400/30 dark:hover:bg-white/10 dark:hover:text-blue-300"
             >
               {t("cta.secondary", "Explore Our Services")}
             </Link>
@@ -360,7 +341,7 @@ export function CTASection() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.45 }}
             viewport={{ once: true }}
-            className="mt-10 flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-sm text-slate-500 dark:text-slate-400"
+            className="mt-10 flex flex-wrap items-center justify-center gap-4 text-sm text-slate-500 dark:text-slate-400 sm:gap-6"
           >
             <span className="flex items-center gap-1.5">
               <CheckCircle2 size={15} className="text-blue-500" />
