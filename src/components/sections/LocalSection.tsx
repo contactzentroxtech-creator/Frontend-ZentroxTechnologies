@@ -47,7 +47,7 @@ export default function LocalSection() {
       <div ref={ref} className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="mx-auto mb-10 max-w-3xl text-center">
-          <span className="text-xs font-medium uppercase tracking-wider text-amber-600">
+          <span className="text-xs font-medium uppercase tracking-wider text-blue-600">
             {t("global.badge")}
           </span>
           <h2
@@ -66,7 +66,7 @@ export default function LocalSection() {
           {INDUSTRIES.map((industry) => (
             <div
               key={industry}
-              className="rounded-lg border border-gray-200/80 bg-white px-4 py-3 text-center text-sm font-medium text-slate-700 shadow-sm transition-all hover:border-gray-300 hover:shadow-md"
+              className="rounded-lg border border-gray-200/80 bg-white px-4 py-3 text-center text-sm font-medium text-slate-700 shadow-sm transition-all hover:border-blue-300 hover:shadow-md"
             >
               {industry}
             </div>
