@@ -20,7 +20,7 @@ export default function CTASection() {
     >
       {/* Background decorative */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -top-1/4 -right-1/4 h-[500px] w-[500px] rounded-full bg-amber-500/10 blur-[120px]" />
+        <div className="absolute -top-1/4 -right-1/4 h-[500px] w-[500px] rounded-full bg-blue-500/10 blur-[120px]" />
         <div className="absolute -bottom-1/4 -left-1/4 h-[400px] w-[400px] rounded-full bg-blue-500/10 blur-[120px]" />
       </div>
 
@@ -30,7 +30,7 @@ export default function CTASection() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
         >
-          <span className="inline-block text-xs font-medium uppercase tracking-wider text-amber-400">
+          <span className="inline-block text-xs font-medium uppercase tracking-wider text-blue-400">
             {t("cta.badge")}
           </span>
           <h2
@@ -46,7 +46,7 @@ export default function CTASection() {
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <Link
               href="/contact"
-              className="group inline-flex items-center gap-2 rounded-full bg-amber-500 px-6 py-3 text-sm font-medium text-slate-900 transition-all hover:bg-amber-400 hover:shadow-lg hover:-translate-y-0.5"
+              className="group inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-medium text-white transition-all hover:bg-blue-700 hover:shadow-lg hover:-translate-y-0.5"
             >
               {t("cta.primary")}
               <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
@@ -69,15 +69,15 @@ export default function CTASection() {
 
           <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-xs text-white/40">
             <span className="flex items-center gap-1.5">
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-500" />
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-blue-500" />
               MSME Registered
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-500" />
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-blue-500" />
               Remote-First
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-500" />
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-blue-500" />
               Innovation-Driven
             </span>
           </div>
