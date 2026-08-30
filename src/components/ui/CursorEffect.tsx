@@ -34,9 +34,13 @@ export default function CursorEffect() {
       }
     };
 
+    // Smooth follow animation with slight easing for a premium feel
     const animate = () => {
-      rx += (mx - rx) * 0.12;
-      ry += (my - ry) * 0.12;
+      // Slightly faster follow for better responsiveness
+      const easing = 0.18;
+      rx += (mx - rx) * easing;
+      ry += (my - ry) * easing;
+
       if (ringRef.current) {
         ringRef.current.style.left = `${rx}px`;
         ringRef.current.style.top = `${ry}px`;
@@ -49,19 +53,28 @@ export default function CursorEffect() {
       const isInteractive = el.closest(
         "a,button,input,select,textarea,[data-cursor]"
       );
+
       if (cursorRef.current && ringRef.current) {
         if (isInteractive) {
-          cursorRef.current.style.width = "20px";
-          cursorRef.current.style.height = "20px";
-          cursorRef.current.style.background = "#06d6a0";
-          ringRef.current.style.width = "48px";
-          ringRef.current.style.height = "48px";
+          // On interactive elements: dot shrinks slightly, ring expands with a subtle glow
+          cursorRef.current.style.width = "6px";
+          cursorRef.current.style.height = "6px";
+          cursorRef.current.style.backgroundColor = "#2563eb";
+          ringRef.current.style.width = "52px";
+          ringRef.current.style.height = "52px";
+          ringRef.current.style.borderColor = "rgba(37,99,235,0.4)";
+          ringRef.current.style.boxShadow = "0 0 20px rgba(37,99,235,0.15)";
+          ringRef.current.style.backgroundColor = "rgba(37,99,235,0.04)";
         } else {
-          cursorRef.current.style.width = "12px";
-          cursorRef.current.style.height = "12px";
-          cursorRef.current.style.background = "#3b7bff";
-          ringRef.current.style.width = "36px";
-          ringRef.current.style.height = "36px";
+          // Default state: dot at normal size, ring subtle and clean
+          cursorRef.current.style.width = "8px";
+          cursorRef.current.style.height = "8px";
+          cursorRef.current.style.backgroundColor = "#2563eb";
+          ringRef.current.style.width = "40px";
+          ringRef.current.style.height = "40px";
+          ringRef.current.style.borderColor = "rgba(37,99,235,0.3)";
+          ringRef.current.style.boxShadow = "none";
+          ringRef.current.style.backgroundColor = "transparent";
         }
       }
     };
@@ -82,35 +95,42 @@ export default function CursorEffect() {
 
   return (
     <>
+      {/* Main dot cursor */}
       <div
         ref={cursorRef}
         className="custom-cursor"
         style={{
           position: "fixed",
-          width: 12,
-          height: 12,
+          width: 8,
+          height: 8,
           borderRadius: "50%",
-          background: "#3b7bff",
+          backgroundColor: "#2563eb",
           pointerEvents: "none",
           zIndex: 9999,
-          transform: "translate(-50%,-50%)",
-          /* FIX: Removed mixBlendMode: 'screen' so it stays visible on white background */
-          transition: "width .2s, height .2s, background .2s",
+          transform: "translate(-50%, -50%)",
+          transition:
+            "width 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94), height 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94), background-color 0.25s ease",
+          willChange: "transform, width, height",
+          boxShadow: "0 0 12px rgba(37,99,235,0.3)",
         }}
       />
+      {/* Outer ring */}
       <div
         ref={ringRef}
         className="cursor-ring"
         style={{
           position: "fixed",
-          width: 36,
-          height: 36,
+          width: 40,
+          height: 40,
           borderRadius: "50%",
-          border: "1px solid rgba(59,123,255,0.5)",
+          border: "1.5px solid rgba(37,99,235,0.3)",
           pointerEvents: "none",
           zIndex: 9998,
-          transform: "translate(-50%,-50%)",
-          transition: "width .3s, height .3s",
+          transform: "translate(-50%, -50%)",
+          transition:
+            "width 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94), height 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease",
+          willChange: "transform, width, height",
+          backgroundColor: "transparent",
         }}
       />
     </>

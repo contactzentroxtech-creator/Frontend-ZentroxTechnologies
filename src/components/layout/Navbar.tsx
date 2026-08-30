@@ -12,10 +12,11 @@ import {
   LogOut,
   ShieldCheck,
   ArrowRight,
+  User,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 import { useLang } from "@/lib/providers";
 import { useAuthStore } from "@/store/authStore";
 
@@ -53,9 +54,7 @@ export default function Navbar() {
       setScrolled(window.scrollY > 20);
     };
 
-    window.addEventListener("scroll", handleScroll, {
-      passive: true,
-    });
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -76,7 +75,7 @@ export default function Navbar() {
 
   const isAdmin = user?.role === "admin";
 
-  // Navigation links
+  // Navigation links - INTERNSHIP REMOVED
   const navLinks = useMemo<NavLink[]>(
     () => [
       {
@@ -86,10 +85,6 @@ export default function Navbar() {
       {
         label: t("nav.services"),
         href: "/services",
-      },
-      {
-        label: t("nav.internship"),
-        href: "/internship",
       },
       {
         label: t("nav.blog"),
@@ -111,41 +106,78 @@ export default function Navbar() {
     if (href === "/") {
       return pathname === "/";
     }
-
     return pathname.startsWith(href.split("#")[0]);
+  };
+
+  // Variants for staggered children
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.06,
+        delayChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: -6 },
+    visible: { opacity: 1, y: 0 },
   };
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
-        scrolled
-          ? "border-b border-slate-200/70 bg-white/80 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-[#1b1d22]/80"
-          : "bg-transparent"
-      }`}
+      className={`
+        fixed inset-x-0 top-0 z-50 transition-all duration-500
+        ${
+          scrolled
+            ? `
+              border-b border-slate-200/60
+              bg-white/75 shadow-[0_4px_30px_rgba(0,0,0,0.04)]
+              backdrop-blur-xl supports-backdrop-blur:bg-white/70
+              dark:border-white/8
+              dark:bg-[#14161b]/80
+              dark:shadow-[0_4px_30px_rgba(0,0,0,0.3)]
+            `
+            : "bg-transparent"
+        }
+      `}
     >
+      {/* Accent glow line - subtle decorative element */}
+      {scrolled && (
+        <motion.div
+          initial={{ scaleX: 0, opacity: 0 }}
+          animate={{ scaleX: 1, opacity: 1 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="absolute bottom-0 left-0 h-[2px] w-full bg-gradient-to-r from-transparent via-blue-500/40 to-transparent"
+        />
+      )}
+
       <nav className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-4 md:px-6">
         {/* ================= LOGO ================= */}
         <Link
           href="/"
           className="group relative z-10 flex flex-shrink-0 items-center gap-2.5"
         >
-          <div className="relative">
-            <div className="absolute inset-0 scale-110 rounded-full bg-blue-500/10 opacity-0 blur-md transition-opacity duration-300 group-hover:opacity-100" />
-
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            transition={{ type: "spring", stiffness: 300, damping: 15 }}
+            className="relative"
+          >
+            <div className="absolute inset-0 scale-110 rounded-full bg-blue-500/15 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100" />
             <Image
               src="/Zentrox-Logo1.png"
               alt="Zentrox Technologies"
-              width={42}
-              height={42}
+              width={44}
+              height={44}
               priority
-              className="relative transition-transform duration-300 group-hover:scale-105"
+              className="relative"
             />
-          </div>
+          </motion.div>
 
-          <span className="hidden text-[17px] font-extrabold tracking-tight sm:block">
-            <span className="text-slate-900 dark:text-white">
-              Zentrox
-            </span>{" "}
+          <span className="hidden text-[18px] font-extrabold tracking-tight sm:block">
+            <span className="text-slate-900 dark:text-white">Zentrox</span>
             <span className="text-blue-600 dark:text-blue-400">
               Technologies
             </span>
@@ -153,7 +185,12 @@ export default function Navbar() {
         </Link>
 
         {/* ================= DESKTOP NAVIGATION ================= */}
-        <div className="hidden items-center gap-1 lg:flex">
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+          className="hidden items-center gap-0.5 lg:flex"
+        >
           {navLinks.map((link) =>
             link.children ? (
               <div
@@ -162,56 +199,41 @@ export default function Navbar() {
                 onMouseEnter={() => setDropdownOpen(link.label)}
                 onMouseLeave={() => setDropdownOpen(null)}
               >
-                <button
-                  className="
-                    flex items-center gap-1 rounded-full px-3.5 py-2
+                <motion.button
+                  variants={itemVariants}
+                  className={`
+                    flex items-center gap-1 rounded-full px-4 py-2
                     text-sm font-medium text-slate-600
                     transition-all duration-300
-                    hover:bg-slate-100 hover:text-slate-950
+                    hover:bg-slate-100/70 hover:text-slate-950
                     dark:text-slate-400
-                    dark:hover:bg-white/[0.06]
-                    dark:hover:text-white
-                  "
+                    dark:hover:bg-white/[0.06] dark:hover:text-white
+                  `}
                 >
                   {link.label}
-
                   <ChevronDown
                     size={14}
                     className={`transition-transform duration-300 ${
                       dropdownOpen === link.label ? "rotate-180" : ""
                     }`}
                   />
-                </button>
+                </motion.button>
 
                 <AnimatePresence>
                   {dropdownOpen === link.label && (
                     <motion.div
-                      initial={{
-                        opacity: 0,
-                        y: -8,
-                        scale: 0.98,
-                      }}
-                      animate={{
-                        opacity: 1,
-                        y: 0,
-                        scale: 1,
-                      }}
-                      exit={{
-                        opacity: 0,
-                        y: -8,
-                        scale: 0.98,
-                      }}
-                      transition={{
-                        duration: 0.2,
-                      }}
+                      initial={{ opacity: 0, y: -8, scale: 0.97 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -8, scale: 0.97 }}
+                      transition={{ duration: 0.2 }}
                       className="
                         absolute left-0 top-full mt-2 w-52
                         overflow-hidden rounded-2xl
-                        border border-slate-200/80
-                        bg-white/95 p-2 shadow-xl
+                        border border-slate-200/60
+                        bg-white/90 p-1.5 shadow-xl
                         backdrop-blur-xl
-                        dark:border-white/10
-                        dark:bg-[#20232a]/95
+                        dark:border-white/8
+                        dark:bg-[#1b1e24]/95
                       "
                     >
                       {link.children.map((child) => (
@@ -222,10 +244,9 @@ export default function Navbar() {
                             block rounded-xl px-4 py-2.5
                             text-sm text-slate-600
                             transition-all
-                            hover:bg-blue-50 hover:text-blue-600
+                            hover:bg-blue-50/70 hover:text-blue-600
                             dark:text-slate-400
-                            dark:hover:bg-white/[0.05]
-                            dark:hover:text-blue-300
+                            dark:hover:bg-white/[0.05] dark:hover:text-blue-300
                           "
                         >
                           {child.label}
@@ -236,31 +257,42 @@ export default function Navbar() {
                 </AnimatePresence>
               </div>
             ) : (
-              <Link
-                key={link.label}
-                href={link.href}
-                className={`
-                  relative rounded-full px-3.5 py-2
-                  text-sm font-medium transition-all duration-300
-                  ${
-                    isActive(link.href)
-                      ? "bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-300"
-                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-white/[0.06] dark:hover:text-white"
-                  }
-                `}
-              >
-                {link.label}
-
-                {isActive(link.href) && (
-                  <motion.span
-                    layoutId="navbar-active"
-                    className="absolute bottom-0 left-1/2 h-0.5 w-5 -translate-x-1/2 rounded-full bg-blue-600 dark:bg-blue-400"
-                  />
-                )}
-              </Link>
+              <motion.div key={link.label} variants={itemVariants}>
+                <Link
+                  href={link.href}
+                  className={`
+                    relative rounded-full px-4 py-2
+                    text-sm font-medium transition-all duration-300
+                    ${
+                      isActive(link.href)
+                        ? `
+                          bg-blue-50/80 text-blue-700
+                          shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)]
+                          dark:bg-blue-500/10 dark:text-blue-300
+                        `
+                        : `
+                          text-slate-600 hover:bg-slate-100/70
+                          hover:text-slate-950
+                          dark:text-slate-400 dark:hover:bg-white/[0.06]
+                          dark:hover:text-white
+                        `
+                    }
+                  `}
+                >
+                  {link.label}
+                  {/* Active indicator dot instead of line */}
+                  {isActive(link.href) && (
+                    <motion.span
+                      layoutId="navbar-active-dot"
+                      className="absolute -bottom-0.5 left-1/2 h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-blue-600 dark:bg-blue-400"
+                      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                    />
+                  )}
+                </Link>
+              </motion.div>
             )
           )}
-        </div>
+        </motion.div>
 
         {/* ================= DESKTOP ACTIONS ================= */}
         <div className="hidden items-center gap-2 lg:flex">
@@ -271,71 +303,53 @@ export default function Navbar() {
               className="relative"
               onMouseLeave={() => setUserMenuOpen(false)}
             >
-              <button
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
                 onMouseEnter={() => setUserMenuOpen(true)}
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
                 className="
                   flex items-center gap-2 rounded-full
-                  border border-slate-200/80 bg-white/70
-                  py-1.5 pl-2 pr-3
+                  border border-slate-200/60 bg-white/60
+                  py-1.5 pl-1.5 pr-3
                   shadow-sm backdrop-blur-md
                   transition-all duration-300
-                  hover:border-blue-300 hover:shadow-md
-                  dark:border-white/10
-                  dark:bg-white/[0.04]
+                  hover:border-blue-300/60 hover:shadow-md
+                  dark:border-white/8 dark:bg-white/[0.04]
                 "
               >
-                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 text-[10px] font-bold text-white">
+                <div className="relative flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 text-[10px] font-bold text-white shadow-sm shadow-blue-500/20">
                   {user.name?.[0]?.toUpperCase()}
+                  <span className="absolute inset-0 rounded-full ring-2 ring-white/30" />
                 </div>
-
                 <span className="max-w-[90px] truncate text-sm font-semibold text-slate-700 dark:text-slate-200">
                   {user.name?.split(" ")[0]}
                 </span>
-
-                <ChevronDown
-                  size={13}
-                  className="text-slate-400"
-                />
-              </button>
+                <ChevronDown size={13} className="text-slate-400" />
+              </motion.button>
 
               <AnimatePresence>
                 {userMenuOpen && (
                   <motion.div
-                    initial={{
-                      opacity: 0,
-                      y: -8,
-                      scale: 0.98,
-                    }}
-                    animate={{
-                      opacity: 1,
-                      y: 0,
-                      scale: 1,
-                    }}
-                    exit={{
-                      opacity: 0,
-                      y: -8,
-                      scale: 0.98,
-                    }}
-                    transition={{
-                      duration: 0.2,
-                    }}
+                    initial={{ opacity: 0, y: -8, scale: 0.97 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -8, scale: 0.97 }}
+                    transition={{ duration: 0.2 }}
                     className="
                       absolute right-0 top-full mt-3 w-56
                       overflow-hidden rounded-2xl
-                      border border-slate-200/80
-                      bg-white/95 p-2 shadow-xl
+                      border border-slate-200/60
+                      bg-white/90 p-1.5 shadow-xl
                       backdrop-blur-xl
-                      dark:border-white/10
-                      dark:bg-[#20232a]/95
+                      dark:border-white/8
+                      dark:bg-[#1b1e24]/95
                     "
                   >
                     {/* User Info */}
-                    <div className="mb-2 border-b border-slate-100 px-3 py-2.5 dark:border-white/10">
+                    <div className="mb-1 border-b border-slate-100 px-3 py-2.5 dark:border-white/8">
                       <p className="truncate text-sm font-bold text-slate-900 dark:text-white">
                         {user.name}
                       </p>
-
                       <p className="mt-0.5 text-[11px] font-medium capitalize text-blue-600 dark:text-blue-400">
                         {user.role}
                       </p>
@@ -348,17 +362,12 @@ export default function Navbar() {
                         className="
                           flex items-center gap-2.5 rounded-xl px-3 py-2.5
                           text-sm text-slate-600 transition-colors
-                          hover:bg-blue-50 hover:text-blue-600
+                          hover:bg-blue-50/70 hover:text-blue-600
                           dark:text-slate-400
-                          dark:hover:bg-white/[0.05]
-                          dark:hover:text-blue-300
+                          dark:hover:bg-white/[0.05] dark:hover:text-blue-300
                         "
                       >
-                        <ShieldCheck
-                          size={16}
-                          className="text-blue-600"
-                        />
-
+                        <ShieldCheck size={16} className="text-blue-600" />
                         Admin Panel
                       </Link>
                     )}
@@ -369,14 +378,12 @@ export default function Navbar() {
                       className="
                         flex items-center gap-2.5 rounded-xl px-3 py-2.5
                         text-sm text-slate-600 transition-colors
-                        hover:bg-slate-50 hover:text-slate-900
+                        hover:bg-slate-50/70 hover:text-slate-900
                         dark:text-slate-400
-                        dark:hover:bg-white/[0.05]
-                        dark:hover:text-white
+                        dark:hover:bg-white/[0.05] dark:hover:text-white
                       "
                     >
                       <LayoutDashboard size={16} />
-
                       Dashboard
                     </Link>
 
@@ -387,13 +394,12 @@ export default function Navbar() {
                         flex w-full items-center gap-2.5 rounded-xl
                         px-3 py-2.5 text-sm text-slate-600
                         transition-colors
-                        hover:bg-red-50 hover:text-red-600
+                        hover:bg-red-50/70 hover:text-red-600
                         dark:text-slate-400
                         dark:hover:bg-red-500/10
                       "
                     >
                       <LogOut size={16} />
-
                       Logout
                     </button>
                   </motion.div>
@@ -402,7 +408,6 @@ export default function Navbar() {
             </div>
           ) : (
             <>
-              {/* Login */}
               <Link
                 href="/auth/login"
                 className="
@@ -414,41 +419,40 @@ export default function Navbar() {
                 Login
               </Link>
 
-              {/* Get Started */}
-              <Link
-                href="/contact"
-                className="
-                  group flex items-center gap-2 rounded-full
-                  bg-blue-600 px-5 py-2.5
-                  text-sm font-semibold text-white
-                  shadow-lg shadow-blue-500/20
-                  transition-all duration-300
-                  hover:-translate-y-0.5
-                  hover:bg-blue-700
-                  hover:shadow-xl hover:shadow-blue-500/25
-                "
-              >
-                {t("nav.get_started")}
-
-                <ArrowRight
-                  size={15}
-                  className="transition-transform duration-300 group-hover:translate-x-0.5"
-                />
-              </Link>
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
+                <Link
+                  href="/contact"
+                  className="
+                    group flex items-center gap-2 rounded-full
+                    bg-blue-600 px-5 py-2.5
+                    text-sm font-semibold text-white
+                    shadow-lg shadow-blue-500/25
+                    transition-all duration-300
+                    hover:-translate-y-0.5 hover:bg-blue-700
+                    hover:shadow-xl hover:shadow-blue-500/30
+                  "
+                >
+                  {t("nav.get_started")}
+                  <ArrowRight
+                    size={15}
+                    className="transition-transform duration-300 group-hover:translate-x-0.5"
+                  />
+                </Link>
+              </motion.div>
             </>
           )}
         </div>
 
         {/* ================= MOBILE MENU BUTTON ================= */}
-        <button
+        <motion.button
+          whileTap={{ scale: 0.92 }}
           className="
             flex h-10 w-10 items-center justify-center
-            rounded-full border border-slate-200
-            bg-white/70 text-slate-700
+            rounded-full border border-slate-200/60
+            bg-white/60 text-slate-700
             shadow-sm backdrop-blur-md
-            transition-all hover:border-blue-300
-            dark:border-white/10
-            dark:bg-white/[0.05]
+            transition-all hover:border-blue-300/60
+            dark:border-white/8 dark:bg-white/[0.04]
             dark:text-slate-200
             lg:hidden
           "
@@ -457,53 +461,37 @@ export default function Navbar() {
           aria-expanded={mobileOpen}
         >
           {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
+        </motion.button>
       </nav>
 
       {/* ================= MOBILE MENU ================= */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{
-              opacity: 0,
-              y: -12,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-            exit={{
-              opacity: 0,
-              y: -12,
-            }}
-            transition={{
-              duration: 0.25,
-            }}
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
             className="
-              border-t border-slate-200/70
-              bg-white/95 shadow-xl backdrop-blur-xl
-              dark:border-white/10
-              dark:bg-[#1b1d22]/95
+              overflow-hidden border-t border-slate-200/60
+              bg-white/90 shadow-xl backdrop-blur-xl
+              dark:border-white/8 dark:bg-[#14161b]/95
               lg:hidden
             "
           >
             <div className="mx-auto max-w-7xl px-4 py-5">
               {/* Mobile Navigation */}
-              <div className="flex flex-col gap-1">
+              <motion.div
+                initial="hidden"
+                animate="visible"
+                variants={containerVariants}
+                className="flex flex-col gap-1"
+              >
                 {navLinks.map((link, index) => (
                   <motion.div
                     key={link.label}
-                    initial={{
-                      opacity: 0,
-                      x: -10,
-                    }}
-                    animate={{
-                      opacity: 1,
-                      x: 0,
-                    }}
-                    transition={{
-                      delay: index * 0.04,
-                    }}
+                    variants={itemVariants}
+                    transition={{ delay: index * 0.04 }}
                   >
                     <Link
                       href={link.href}
@@ -513,19 +501,17 @@ export default function Navbar() {
                         transition-all
                         ${
                           isActive(link.href)
-                            ? "bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-300"
-                            : "text-slate-600 hover:bg-slate-50 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-white/[0.05] dark:hover:text-white"
+                            ? "bg-blue-50/80 text-blue-700 dark:bg-blue-500/10 dark:text-blue-300"
+                            : "text-slate-600 hover:bg-slate-50/70 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-white/[0.05] dark:hover:text-white"
                         }
                       `}
                     >
                       {link.label}
-
                       {isActive(link.href) && (
                         <span className="h-2 w-2 rounded-full bg-blue-600" />
                       )}
                     </Link>
 
-                    {/* Mobile Dropdown Children */}
                     {link.children?.map((child) => (
                       <Link
                         key={child.href}
@@ -534,10 +520,8 @@ export default function Navbar() {
                           ml-4 mt-1 block rounded-lg
                           px-4 py-2 text-sm
                           text-slate-500
-                          hover:bg-slate-50
-                          hover:text-blue-600
-                          dark:text-slate-400
-                          dark:hover:bg-white/[0.05]
+                          hover:bg-slate-50/70 hover:text-blue-600
+                          dark:text-slate-400 dark:hover:bg-white/[0.05]
                         "
                       >
                         {child.label}
@@ -545,71 +529,74 @@ export default function Navbar() {
                     ))}
                   </motion.div>
                 ))}
-              </div>
+              </motion.div>
 
               {/* Theme */}
-              <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-5 dark:border-white/10">
+              <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-5 dark:border-white/8">
                 <span className="text-sm font-semibold text-slate-600 dark:text-slate-300">
                   Appearance
                 </span>
-
                 <ThemeToggle />
               </div>
 
               {/* Logged In User */}
               {user ? (
-                <div className="mt-5 flex flex-col gap-2">
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="mt-5 flex flex-col gap-2"
+                >
                   {isAdmin && (
                     <Link
                       href="/admin"
                       className="
                         flex items-center justify-center gap-2
-                        rounded-full border border-blue-200
+                        rounded-full border border-blue-200/60
                         py-3 text-sm font-semibold text-blue-600
                         dark:border-blue-500/20 dark:text-blue-300
                       "
                     >
                       <ShieldCheck size={16} />
-
                       Admin Panel
                     </Link>
                   )}
-
                   <Link
                     href="/dashboard"
                     className="
                       flex items-center justify-center gap-2
-                      rounded-full border border-slate-200
+                      rounded-full border border-slate-200/60
                       py-3 text-sm font-semibold text-slate-700
                       dark:border-white/10 dark:text-slate-300
                     "
                   >
                     <LayoutDashboard size={16} />
-
                     Dashboard
                   </Link>
-
                   <button
                     onClick={handleLogout}
                     className="
                       flex items-center justify-center gap-2
-                      rounded-full border border-red-200
+                      rounded-full border border-red-200/60
                       py-3 text-sm font-semibold text-red-600
                       dark:border-red-500/20
                     "
                   >
                     <LogOut size={16} />
-
                     Logout
                   </button>
-                </div>
+                </motion.div>
               ) : (
-                /* Not Logged In */
-                <div className="mt-5 grid grid-cols-2 gap-3">
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="mt-5 grid grid-cols-2 gap-3"
+                >
                   <Link
                     href="/auth/login"
                     className="
-                      rounded-full border border-slate-200
+                      rounded-full border border-slate-200/60
                       py-3 text-center text-sm font-semibold
                       text-slate-700
                       dark:border-white/10 dark:text-slate-300
@@ -617,7 +604,6 @@ export default function Navbar() {
                   >
                     Login
                   </Link>
-
                   <Link
                     href="/contact"
                     className="
@@ -628,10 +614,9 @@ export default function Navbar() {
                     "
                   >
                     Get Started
-
                     <ArrowRight size={15} />
                   </Link>
-                </div>
+                </motion.div>
               )}
             </div>
           </motion.div>

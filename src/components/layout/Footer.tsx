@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image"; // 1. Imported Next.js Image component
+import Image from "next/image";
 import {
   Mail,
   Phone,
@@ -12,18 +12,19 @@ import {
   Youtube,
   Linkedin,
   Twitter,
+  Sparkles,
 } from "lucide-react";
 import { useLang } from "@/lib/providers";
 
 const services = [
-  "website development",
+  "Website Development",
   "Mobile Apps",
   "SaaS Development",
   "AI Integration",
   "SEO Services",
   "Digital Marketing Services",
   "UI/UX Design",
-  "software development service",
+  "Software Development",
 ];
 
 const company = [
@@ -37,94 +38,81 @@ const company = [
 const learning = [
   { label: "All Courses", href: "/courses" },
   { label: "View Our Work", href: "/#classes" },
-  { label: "Remote Internship", href: "/internship" },
   { label: "Student Dashboard", href: "/dashboard" },
   { label: "Verify Certificate", href: "/verify" },
 ];
 
 const locations = [
-  {
-    label: "website development — Mohali",
-    href: "/locations/web-development-mohali",
-  },
-  { label: "SEO Company — Chandigarh", href: "/locations/seo-chandigarh" },
-  {
-    label: "Software — Himachal Pradesh",
-    href: "/locations/software-himachal",
-  },
-  {
-    label: "Digital Marketing Services — Haryana",
-    href: "/locations/digital-marketing-haryana",
-  },
-  {
-    label: "App Development — Noida",
-    href: "/locations/app-development-noida",
-  },
+  { label: "Web Development — Mohali", href: "/locations/web-development-mohali" },
+  { label: "SEO — Chandigarh", href: "/locations/seo-chandigarh" },
+  { label: "Software — Himachal Pradesh", href: "/locations/software-himachal" },
+  { label: "Digital Marketing — Haryana", href: "/locations/digital-marketing-haryana" },
+  { label: "App Development — Noida", href: "/locations/app-development-noida" },
 ];
 
-// Added social media links array (Replace # with your actual URLs)
 const socialLinks = [
   { label: "Instagram", icon: Instagram, href: "#" },
   { label: "LinkedIn", icon: Linkedin, href: "#" },
   { label: "Facebook", icon: Facebook, href: "#" },
   { label: "YouTube", icon: Youtube, href: "#" },
-  { label: "Twitter / Discord", icon: Twitter, href: "#" },
+  { label: "Twitter / X", icon: Twitter, href: "#" },
 ];
 
 export default function Footer() {
   const { t } = useLang();
 
   return (
-    <footer className="relative z-10 border-t border-z-border bg-[rgba(4,5,10,0.95)]">
-      <div className="max-w-7xl mx-auto px-4 md:px-6 pt-16 pb-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-12 mb-12">
-          {/* Brand */}
+    <footer className="relative z-10 border-t border-slate-200/60 bg-white/80 backdrop-blur-md transition-colors duration-300 dark:border-white/8 dark:bg-[#111827]/90">
+      <div className="mx-auto max-w-7xl px-4 pt-16 pb-8 md:px-6">
+        <div className="mb-12 grid grid-cols-2 gap-8 lg:grid-cols-5 lg:gap-12">
+          {/* Brand Column */}
           <div className="col-span-2 lg:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              {/* 2. Swapped the ZT box for the Image component */}
-              <div className="relative w-8 h-8 flex items-center justify-center">
+            <div className="mb-4 flex items-center gap-3">
+              <div className="relative flex h-20 w-20 items-center justify-center">
                 <Image
-                  src="/Zentrox-Logo1.png" // Path to your file in the public folder
+                  src="/Zentrox-Logo1.png"
                   alt="Zentrox Technologies Logo"
-                  width={52}
-                  height={52}
+                  width={80}
+                  height={80}
                   className="object-contain"
-                  priority // Ensures logo loads immediately without layout shifts
+                  priority
                 />
               </div>
-              <span className="font-extrabold text-md text-z-text">
-                Zentrox<span className="text-z-accent"> Technologies</span>
+              <span className="text-lg font-extrabold text-slate-900 dark:text-white">
+                Zentrox
+                <span className="text-blue-600 dark:text-blue-400">
+                  Technologies
+                </span>
               </span>
             </div>
 
-            <p className="text-sm text-z-muted leading-relaxed mb-4">
+            <p className="mb-4 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
               MSME-registered technology company building futuristic digital
-              solutions for growing businesses.
+              solutions for growing businesses in India and worldwide.
             </p>
 
-            <div className="flex flex-col gap-2 mb-6">
+            <div className="mb-6 flex flex-col gap-2">
               <a
                 href="mailto:contact.zentroxtech@gmail.com"
-                className="flex items-center gap-2 text-xs text-z-muted hover:text-z-text transition-colors"
+                className="group flex items-center gap-2.5 text-sm text-slate-600 transition-colors hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400"
               >
-                <Mail size={13} className="text-z-accent" />
+                <Mail size={15} className="text-blue-600 transition-transform group-hover:scale-110 dark:text-blue-400" />
                 contact.zentroxtech@gmail.com
               </a>
               <a
                 href="tel:+918988183513"
-                className="flex items-center gap-2 text-xs text-z-muted hover:text-z-text transition-colors"
+                className="group flex items-center gap-2.5 text-sm text-slate-600 transition-colors hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400"
               >
-                <Phone size={13} className="text-z-accent" />
+                <Phone size={15} className="text-blue-600 transition-transform group-hover:scale-110 dark:text-blue-400" />
                 +91 89881 83513
               </a>
-              <span className="flex items-center gap-2 text-xs text-z-muted">
-                <MapPin size={13} className="text-z-accent" />
+              <span className="flex items-center gap-2.5 text-sm text-slate-600 dark:text-slate-400">
+                <MapPin size={15} className="text-blue-600 dark:text-blue-400" />
                 Mohali & Chandigarh, Punjab
               </span>
             </div>
 
-            {/* Added Social Media Section */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               {socialLinks.map((social) => {
                 const Icon = social.icon;
                 return (
@@ -134,25 +122,26 @@ export default function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social.label}
-                    className="w-8 h-8 rounded-full border border-z-border flex items-center justify-center text-z-muted hover:text-z-accent hover:border-z-accent transition-all duration-300"
+                    className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200/60 bg-white/60 text-slate-500 transition-all duration-300 hover:-translate-y-0.5 hover:border-blue-300 hover:bg-white hover:text-blue-600 hover:shadow-md dark:border-white/8 dark:bg-white/5 dark:text-slate-400 dark:hover:border-blue-400/30 dark:hover:text-blue-400"
                   >
-                    <Icon size={14} />
+                    <Icon size={15} />
                   </a>
                 );
               })}
             </div>
           </div>
 
+          {/* Services */}
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-widest text-z-muted mb-4">
+            <h4 className="mb-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
               {t("nav.services", "Services")}
             </h4>
-            <ul className="flex flex-col gap-2">
+            <ul className="flex flex-col gap-1.5">
               {services.map((s) => (
                 <li key={s}>
                   <Link
                     href="/services"
-                    className="text-sm text-z-muted hover:text-z-text transition-colors"
+                    className="text-sm text-slate-600 transition-colors hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400"
                   >
                     {s}
                   </Link>
@@ -161,16 +150,17 @@ export default function Footer() {
             </ul>
           </div>
 
+          {/* Company */}
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-widest text-z-muted mb-4">
+            <h4 className="mb-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
               Company
             </h4>
-            <ul className="flex flex-col gap-2">
+            <ul className="flex flex-col gap-1.5">
               {company.map((c) => (
                 <li key={c.href}>
                   <Link
                     href={c.href}
-                    className="text-sm text-z-muted hover:text-z-text transition-colors"
+                    className="text-sm text-slate-600 transition-colors hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400"
                   >
                     {c.label}
                   </Link>
@@ -179,16 +169,17 @@ export default function Footer() {
             </ul>
           </div>
 
+          {/* Learning */}
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-widest text-z-muted mb-4">
+            <h4 className="mb-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
               Learning
             </h4>
-            <ul className="flex flex-col gap-2">
+            <ul className="flex flex-col gap-1.5">
               {learning.map((l) => (
                 <li key={l.href}>
                   <Link
                     href={l.href}
-                    className="text-sm text-z-muted hover:text-z-text transition-colors"
+                    className="text-sm text-slate-600 transition-colors hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400"
                   >
                     {l.label}
                   </Link>
@@ -197,20 +188,21 @@ export default function Footer() {
             </ul>
           </div>
 
+          {/* Locations */}
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-widest text-z-muted mb-4">
+            <h4 className="mb-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
               Locations
             </h4>
-            <ul className="flex flex-col gap-2">
+            <ul className="flex flex-col gap-1.5">
               {locations.map((l) => (
                 <li key={l.href}>
                   <Link
                     href={l.href}
-                    className="text-xs text-z-muted hover:text-z-text transition-colors flex items-start gap-1"
+                    className="group flex items-start gap-1.5 text-sm text-slate-600 transition-colors hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400"
                   >
                     <ArrowUpRight
-                      size={11}
-                      className="mt-0.5 flex-shrink-0 text-z-accent"
+                      size={13}
+                      className="mt-0.5 flex-shrink-0 text-blue-600 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 dark:text-blue-400"
                     />
                     {l.label}
                   </Link>
@@ -220,17 +212,16 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-z-border pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-z-muted text-center md:text-left">
+        <div className="flex flex-col items-center justify-between gap-4 border-t border-slate-200/60 pt-6 dark:border-white/8 md:flex-row">
+          <p className="text-center text-xs text-slate-500 dark:text-slate-400 md:text-left">
             © {new Date().getFullYear()} Zentrox Technologies.{" "}
             {t("footer.copy", "All rights reserved. MSME Registered — India.")}
           </p>
-          <div className="flex items-center gap-1 text-xs text-z-muted">
-            <span className="w-1.5 h-1.5 rounded-full bg-z-accent3 animate-pulse-glow" />
-            {t(
-              "footer.msme",
-              "Remote-first · Innovation-driven · MSME Registered"
-            )}
+          <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+            <span className="flex items-center gap-1.5">
+              <Sparkles size={12} className="text-blue-500" />
+              {t("footer.msme", "Remote-first · Innovation-driven · MSME Registered")}
+            </span>
           </div>
         </div>
       </div>

@@ -84,7 +84,7 @@ export default function HomePage() {
       <Navbar />
 
       <main>
-        {/* Hero */}
+        {/* Hero Section */}
         <HeroSection />
 
         {/* Trust & Company Statistics */}

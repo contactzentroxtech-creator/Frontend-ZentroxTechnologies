@@ -8,7 +8,6 @@ import {
   Globe2,
   Star,
   Sparkles,
-  ArrowUpRight,
 } from "lucide-react";
 
 import { useLang } from "@/lib/providers";
@@ -31,6 +30,7 @@ interface StatConfig {
   icon: typeof FolderCheck;
   iconClass: string;
   accent: string;
+  borderColor: string;
 }
 
 /* =========================================================
@@ -46,47 +46,35 @@ function AnimatedCounter({
 }) {
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
-
-  const inView = useInView(ref, {
-    once: true,
-    amount: 0.5,
-  });
+  const inView = useInView(ref, { once: true, amount: 0.5 });
 
   useEffect(() => {
     if (!inView || target <= 0) return;
 
     let animationFrame: number;
-
-    const duration = 1400;
+    const duration = 1600;
     const startTime = performance.now();
 
     const animate = (currentTime: number) => {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
-
-      const easedProgress =
-        1 - Math.pow(1 - progress, 4);
-
+      const easedProgress = 1 - Math.pow(1 - progress, 4);
       setCount(Math.floor(target * easedProgress));
 
       if (progress < 1) {
-        animationFrame =
-          requestAnimationFrame(animate);
+        animationFrame = requestAnimationFrame(animate);
       } else {
         setCount(target);
       }
     };
 
-    animationFrame =
-      requestAnimationFrame(animate);
+    animationFrame = requestAnimationFrame(animate);
 
-    return () => {
-      cancelAnimationFrame(animationFrame);
-    };
+    return () => cancelAnimationFrame(animationFrame);
   }, [inView, target]);
 
   return (
-    <div ref={ref}>
+    <div ref={ref} className="tabular-nums">
       {count}
       {suffix}
     </div>
@@ -108,7 +96,7 @@ const DEFAULT_STATS: StatItem[] = [
   {
     num: 150,
     suffix: "+",
-    label: "Clients & Businesses Supported",
+    label: "Businesses Supported",
     labelKey: "stats.clients",
     settingKey: "stats_clients",
   },
@@ -136,116 +124,162 @@ const STAT_CONFIG: StatConfig[] = [
     icon: FolderCheck,
     iconClass:
       "bg-blue-500/10 text-blue-600 dark:bg-blue-400/10 dark:text-blue-300",
-    accent:
-      "from-blue-500/10 via-transparent to-transparent",
+    accent: "from-blue-500/15 via-transparent to-transparent",
+    borderColor: "border-blue-500/20 dark:border-blue-400/15",
   },
   {
     icon: Globe2,
     iconClass:
-      "bg-orange-500/10 text-orange-600 dark:bg-orange-400/10 dark:text-orange-300",
-    accent:
-      "from-orange-500/10 via-transparent to-transparent",
+      "bg-teal-500/10 text-teal-600 dark:bg-teal-400/10 dark:text-teal-300",
+    accent: "from-teal-500/15 via-transparent to-transparent",
+    borderColor: "border-teal-500/20 dark:border-teal-400/15",
   },
   {
     icon: Sparkles,
     iconClass:
-      "bg-violet-500/10 text-violet-600 dark:bg-violet-400/10 dark:text-violet-300",
-    accent:
-      "from-violet-500/10 via-transparent to-transparent",
+      "bg-indigo-500/10 text-indigo-600 dark:bg-indigo-400/10 dark:text-indigo-300",
+    accent: "from-indigo-500/15 via-transparent to-transparent",
+    borderColor: "border-indigo-500/20 dark:border-indigo-400/15",
   },
   {
     icon: Star,
     iconClass:
       "bg-amber-500/10 text-amber-600 dark:bg-amber-400/10 dark:text-amber-300",
-    accent:
-      "from-amber-500/10 via-transparent to-transparent",
+    accent: "from-amber-500/15 via-transparent to-transparent",
+    borderColor: "border-amber-500/20 dark:border-amber-400/15",
   },
 ];
 
 /* =========================================================
-   COMPONENT
+   STAT CARD
+========================================================= */
+
+function StatCard({
+  stat,
+  config,
+  index,
+}: {
+  stat: StatItem;
+  config: StatConfig;
+  index: number;
+}) {
+  const { t } = useLang();
+  const Icon = config.icon;
+
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.25 }}
+      transition={{
+        duration: 0.55,
+        delay: index * 0.08,
+        ease: [0.22, 1, 0.36, 1],
+      }}
+      whileHover={{ y: -6 }}
+      className="group relative min-h-[200px] overflow-hidden rounded-[24px] border border-slate-200/60 bg-white/85 p-6 shadow-[0_8px_30px_rgba(15,23,42,0.04)] backdrop-blur-sm transition-all duration-300 hover:border-blue-300/60 hover:shadow-[0_20px_60px_rgba(15,23,42,0.08)] dark:border-white/8 dark:bg-[#1a1e2b]/80 dark:hover:border-blue-400/20 sm:p-7 md:min-h-[220px]"
+    >
+      {/* Glow overlay */}
+      <div
+        className={`
+          pointer-events-none absolute inset-0
+          bg-gradient-to-br ${config.accent}
+          opacity-0 transition-opacity duration-500
+          group-hover:opacity-100
+        `}
+      />
+
+      {/* Top section */}
+      <div className="relative flex items-start justify-between">
+        <div
+          className={`
+            flex h-12 w-12 items-center justify-center
+            rounded-2xl border transition-all duration-300
+            group-hover:scale-110 group-hover:rotate-3
+            ${config.iconClass} ${config.borderColor}
+          `}
+        >
+          <Icon size={22} />
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="relative mt-8 md:mt-10">
+        <div className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl md:text-[44px] dark:text-white">
+          {stat.custom ? (
+            stat.custom
+          ) : (
+            <AnimatedCounter target={stat.num ?? 0} suffix={stat.suffix} />
+          )}
+        </div>
+        <p className="mt-3 text-[10px] font-bold uppercase leading-relaxed tracking-[0.1em] text-slate-500 sm:text-[11px] dark:text-slate-400">
+          {t(stat.labelKey, stat.label)}
+        </p>
+      </div>
+
+      {/* Bottom accent bar */}
+      <div
+        className="
+          absolute bottom-0 left-0 h-[3px] w-full
+          origin-left scale-x-0
+          bg-gradient-to-r from-blue-600 via-blue-400 to-transparent
+          transition-transform duration-500
+          group-hover:scale-x-100
+        "
+      />
+    </motion.article>
+  );
+}
+
+/* =========================================================
+   MAIN COMPONENT
 ========================================================= */
 
 export default function StatsSection() {
   const { t } = useLang();
+  const [stats, setStats] = useState<StatItem[]>(DEFAULT_STATS);
 
-  const [stats, setStats] =
-    useState<StatItem[]>(DEFAULT_STATS);
-
-  /* =======================================================
-     LOAD CMS STATS
-  ======================================================= */
-
+  // Load CMS stats
   useEffect(() => {
     let mounted = true;
 
     const loadStats = async () => {
       try {
-        const { data } =
-          await api.get("/cms/settings");
-
+        const { data } = await api.get("/cms/settings");
         if (!mounted || !data?.data) return;
 
         const cms = data.data;
-
-        const updatedStats =
-          DEFAULT_STATS.map((stat) => {
-            if (
-              !stat.settingKey ||
-              cms[stat.settingKey] === undefined ||
-              cms[stat.settingKey] === null
-            ) {
-              return stat;
-            }
-
-            const value =
-              cms[stat.settingKey];
-
-            /* Custom stat such as rating */
-
-            if (stat.custom !== undefined) {
-              const rating =
-                String(value).trim();
-
-              if (!rating) {
-                return stat;
-              }
-
-              return {
-                ...stat,
-                custom: rating.includes("★")
-                  ? rating
-                  : `${rating}★`,
-              };
-            }
-
-            /* Numeric stats */
-
-            const numericValue =
-              Number(value);
-
-            if (
-              Number.isFinite(numericValue) &&
-              numericValue > 0
-            ) {
-              return {
-                ...stat,
-                num: numericValue,
-              };
-            }
-
+        const updatedStats = DEFAULT_STATS.map((stat) => {
+          if (!stat.settingKey || cms[stat.settingKey] === undefined || cms[stat.settingKey] === null) {
             return stat;
-          });
+          }
+          const value = cms[stat.settingKey];
+
+          if (stat.custom !== undefined) {
+            const rating = String(value).trim();
+            if (!rating) return stat;
+            return {
+              ...stat,
+              custom: rating.includes("★") ? rating : `${rating}★`,
+            };
+          }
+
+          const numericValue = Number(value);
+          if (Number.isFinite(numericValue) && numericValue > 0) {
+            return { ...stat, num: numericValue };
+          }
+          return stat;
+        });
 
         if (mounted) {
           setStats(updatedStats);
         }
       } catch {
-        // Safe fallback to default stats
+        // Keep default stats
       }
     };
 
-    void loadStats();
+    loadStats();
 
     return () => {
       mounted = false;
@@ -253,192 +287,88 @@ export default function StatsSection() {
   }, []);
 
   const trustItems = [
-    t(
-      "stats.trust1",
-      "Custom Development"
-    ),
-    t(
-      "stats.trust2",
-      "Transparent Communication"
-    ),
-    t(
-      "stats.trust3",
-      "India & Global Delivery"
-    ),
-    t(
-      "stats.trust4",
-      "Long-Term Support"
-    ),
+    t("stats.trust1", "Custom-Built Solutions"),
+    t("stats.trust2", "Transparent Communication"),
+    t("stats.trust3", "India & Global Delivery"),
+    t("stats.trust4", "Long-Term Support"),
   ];
 
   return (
     <section
       aria-label="Zentrox Technologies achievements"
-      className="relative overflow-hidden px-4 py-16 md:px-6 md:py-24"
+      className="relative overflow-hidden bg-white px-4 py-16 transition-colors duration-300 dark:bg-[#111827] sm:px-6 md:py-20 lg:py-24"
     >
-      {/* Background */}
-
-      <div
-        className="pointer-events-none absolute inset-0 overflow-hidden"
-        aria-hidden="true"
-      >
-        <div className="absolute left-[5%] top-1/2 h-72 w-72 -translate-y-1/2 rounded-full bg-blue-500/[0.06] blur-[120px]" />
-
-        <div className="absolute right-[5%] top-1/2 h-72 w-72 -translate-y-1/2 rounded-full bg-orange-500/[0.05] blur-[120px]" />
+      {/* Background elements */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+        <div
+          className="
+            absolute left-[5%] top-1/2 h-[400px] w-[400px]
+            -translate-y-1/2 rounded-full
+            bg-blue-500/[0.05] blur-[140px]
+            dark:bg-blue-400/[0.05]
+          "
+        />
+        <div
+          className="
+            absolute right-[5%] top-1/2 h-[400px] w-[400px]
+            -translate-y-1/2 rounded-full
+            bg-teal-500/[0.04] blur-[140px]
+            dark:bg-teal-400/[0.04]
+          "
+        />
       </div>
 
       <div className="relative mx-auto max-w-7xl">
-
         {/* Header */}
-
         <motion.div
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{
-            once: true,
-            amount: 0.4,
-          }}
-          transition={{
-            duration: 0.6,
-          }}
-          className="mx-auto mb-10 max-w-2xl text-center md:mb-14"
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.35 }}
+          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+          className="mx-auto mb-12 max-w-3xl text-center md:mb-14"
         >
-          <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/15 bg-blue-500/[0.05] px-4 py-2 text-xs font-semibold text-blue-700 dark:text-blue-300">
-            <CheckCircle2 size={15} />
-
-            {t(
-              "stats.trust",
-              "Technology Built Around Real Business Growth"
-            )}
+          <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-blue-50/60 px-4 py-1.5 text-[11px] font-bold tracking-[0.1em] text-blue-700 backdrop-blur-sm dark:border-blue-400/20 dark:bg-blue-400/[0.05] dark:text-blue-200">
+            <CheckCircle2 size={13} aria-hidden="true" />
+            <span>{t("stats.trust")}</span>
           </div>
 
-          <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-slate-600 dark:text-z-muted md:text-base">
-            {t(
-              "stats.description",
-              "Helping businesses in India and worldwide build stronger digital products, improve online visibility and scale with confidence."
-            )}
+          <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl md:text-5xl dark:text-white">
+            {t("stats.title")}
+          </h2>
+
+          <p className="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base dark:text-slate-300">
+            {t("stats.description")}
           </p>
         </motion.div>
 
-        {/* Stats Grid */}
-
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4 md:gap-5">
+        {/* Stats grid */}
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-5">
           {stats.map((stat, index) => {
-            const config =
-              STAT_CONFIG[index];
-
-            const Icon =
-              config.icon;
-
-            return (
-              <motion.article
-                key={stat.labelKey}
-                initial={{
-                  opacity: 0,
-                  y: 28,
-                }}
-                whileInView={{
-                  opacity: 1,
-                  y: 0,
-                }}
-                viewport={{
-                  once: true,
-                  amount: 0.25,
-                }}
-                transition={{
-                  duration: 0.55,
-                  delay: index * 0.08,
-                }}
-                whileHover={{
-                  y: -6,
-                }}
-                className="group relative min-h-[190px] overflow-hidden rounded-[24px] border border-slate-200/80 bg-white p-4 shadow-[0_10px_35px_rgba(15,23,42,0.06)] transition-all duration-300 hover:border-slate-300 hover:shadow-[0_20px_55px_rgba(15,23,42,0.10)] dark:border-white/10 dark:bg-white/[0.045] dark:hover:border-white/15 sm:p-5 md:min-h-[220px] md:p-6"
-              >
-                {/* Hover Gradient */}
-
-                <div
-                  className={`absolute inset-0 bg-gradient-to-br ${config.accent} opacity-0 transition-opacity duration-500 group-hover:opacity-100`}
-                />
-
-                {/* Top */}
-
-                <div className="relative flex items-start justify-between">
-                  <div
-                    className={`flex h-11 w-11 items-center justify-center rounded-2xl transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3 ${config.iconClass}`}
-                  >
-                    <Icon size={20} />
-                  </div>
-
-                  <ArrowUpRight
-                    size={18}
-                    className="text-slate-300 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-z-accent dark:text-slate-600"
-                  />
-                </div>
-
-                {/* Content */}
-
-                <div className="relative mt-7 md:mt-9">
-                  <div className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-z-text sm:text-4xl md:text-5xl">
-                    {stat.custom ? (
-                      stat.custom
-                    ) : (
-                      <AnimatedCounter
-                        target={stat.num ?? 0}
-                        suffix={stat.suffix}
-                      />
-                    )}
-                  </div>
-
-                  <p className="mt-3 text-[10px] font-bold uppercase leading-relaxed tracking-[0.12em] text-slate-500 dark:text-z-muted sm:text-[11px]">
-                    {t(
-                      stat.labelKey,
-                      stat.label
-                    )}
-                  </p>
-                </div>
-
-                {/* Bottom Accent */}
-
-                <div className="absolute bottom-0 left-0 h-1 w-full origin-left scale-x-0 bg-gradient-to-r from-z-accent via-blue-400 to-transparent transition-transform duration-500 group-hover:scale-x-100" />
-              </motion.article>
-            );
+            const config = STAT_CONFIG[index] || STAT_CONFIG[0];
+            return <StatCard key={stat.labelKey} stat={stat} config={config} index={index} />;
           })}
         </div>
 
-        {/* Trust Footer */}
-
+        {/* Trust items */}
         <motion.div
-          initial={{
-            opacity: 0,
-          }}
-          whileInView={{
-            opacity: 1,
-          }}
-          viewport={{
-            once: true,
-          }}
-          transition={{
-            duration: 0.6,
-            delay: 0.2,
-          }}
-          className="mt-10 flex flex-wrap justify-center gap-x-6 gap-y-3 text-xs text-slate-500 dark:text-z-muted md:mt-12"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="
+            mx-auto mt-12 flex max-w-5xl flex-wrap
+            items-center justify-center gap-x-8 gap-y-4
+            rounded-2xl border border-slate-200/60
+            bg-white/80 px-6 py-5
+            text-xs text-slate-600
+            backdrop-blur-md
+            dark:border-white/8 dark:bg-[#1a1e2b]/80 dark:text-slate-300
+            md:mt-14
+          "
         >
           {trustItems.map((item) => (
-            <span
-              key={item}
-              className="flex items-center gap-1.5"
-            >
-              <CheckCircle2
-                size={13}
-                className="text-z-accent"
-              />
-
+            <span key={item} className="flex items-center gap-2 font-medium">
+              <CheckCircle2 size={14} className="shrink-0 text-blue-500 dark:text-blue-400" />
               {item}
             </span>
           ))}

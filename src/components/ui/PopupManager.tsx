@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Zap } from "lucide-react";
+import { X, Sparkles, Rocket, Gift, Zap, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import api from "@/lib/api";
 
@@ -18,20 +18,25 @@ interface PopupData {
   showOnce: boolean;
 }
 
+const POPUP_META = {
+  lead: { icon: Sparkles, badge: "Special Offer" },
+  discount: { icon: Gift, badge: "Limited Time" },
+  internship: { icon: Rocket, badge: "Internship Open" },
+  default: { icon: Zap, badge: "Special Offer" },
+};
+
 export default function PopupManager() {
   const [popups, setPopups] = useState<PopupData[]>([]);
   const [activePopup, setActivePopup] = useState<PopupData | null>(null);
   const [dismissed, setDismissed] = useState<Set<string>>(new Set());
   const triggered = useRef(false);
 
-  // Load active popups from DB
   useEffect(() => {
     const load = async () => {
       try {
         const { data } = await api.get("/cms/popups/active");
         setPopups(data.data || []);
       } catch {
-        // Fallback to static default popup if API unavailable
         setPopups([
           {
             _id: "default",
@@ -54,7 +59,6 @@ export default function PopupManager() {
   useEffect(() => {
     if (!popups.length) return;
 
-    // Check session storage for already-shown popups
     const shown = new Set<string>(
       JSON.parse(sessionStorage.getItem("zt_shown_popups") || "[]")
     );
@@ -80,7 +84,6 @@ export default function PopupManager() {
       }
     };
 
-    // Time-based triggers
     const timePopups = popups.filter((p) => p.trigger === "time");
     const timers = timePopups
       .filter((p) => !shown.has(p._id) && !dismissed.has(p._id))
@@ -93,7 +96,6 @@ export default function PopupManager() {
         }, (p.triggerValue || 30) * 1000)
       );
 
-    // Scroll-based triggers
     const onScroll = () => findAndShow(window.scrollY);
     window.addEventListener("scroll", onScroll, { passive: true });
 
@@ -123,99 +125,70 @@ export default function PopupManager() {
     <AnimatePresence>
       {activePopup && (
         <>
-          {/* Backdrop overlay */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
             onClick={() => dismiss(activePopup)}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200]"
+            className="fixed inset-0 z-[200] bg-black/40 backdrop-blur-sm"
           />
 
-          {/* Popup Container */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            transition={{ type: "spring", damping: 20 }}
+            transition={{ type: "spring", damping: 20, stiffness: 300 }}
             className="fixed inset-0 z-[201] flex items-center justify-center p-4"
           >
-            <div className="glass-card max-w-md w-full p-8 relative overflow-hidden">
-              <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-0 right-0 w-48 h-48 rounded-full bg-z-accent opacity-[0.07] blur-[60px]" />
-              </div>
+            <div className="relative mx-4 w-full max-w-md overflow-hidden rounded-3xl border border-slate-200/60 bg-white/95 p-8 shadow-2xl shadow-slate-900/10 backdrop-blur-xl dark:border-white/8 dark:bg-[#1a1e2b]/95 dark:shadow-black/40">
+              <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-blue-500/10 blur-[80px] dark:bg-blue-400/10" />
 
-              {/* Close Button */}
               <button
                 onClick={() => dismiss(activePopup)}
-                className="absolute top-4 right-4 text-z-muted hover:text-white transition-colors"
+                className="absolute right-4 top-4 rounded-full p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-900 dark:text-slate-500 dark:hover:bg-white/10 dark:hover:text-white"
+                aria-label="Close popup"
               >
                 <X size={18} />
               </button>
 
-              {/* Icon */}
-              <div className="w-12 h-12 rounded-2xl bg-z-accent/15 border border-z-accent/30 flex items-center justify-center mb-5">
-                <Zap size={24} className="text-z-accent" />
+              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-blue-200/60 bg-gradient-to-br from-blue-50 to-indigo-50 dark:border-blue-400/20 dark:from-blue-500/10 dark:to-indigo-500/10">
+                {(() => {
+                  const meta = POPUP_META[activePopup.type as keyof typeof POPUP_META] || POPUP_META.default;
+                  const Icon = meta.icon;
+                  return <Icon size={26} className="text-blue-600 dark:text-blue-400" />;
+                })()}
               </div>
 
-              {/* Tag / Badge */}
-              <div className="z-badge mb-4">
-                {activePopup.type === "discount"
-                  ? "Limited Time"
-                  : activePopup.type === "internship"
-                  ? "Internship Open"
-                  : "Special Offer"}
+              <div className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-blue-200/60 bg-blue-50/80 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-blue-700 dark:border-blue-400/20 dark:bg-blue-400/10 dark:text-blue-300">
+                {(() => {
+                  const meta = POPUP_META[activePopup.type as keyof typeof POPUP_META] || POPUP_META.default;
+                  return meta.badge;
+                })()}
               </div>
 
-              {/* Content */}
-              <h3 className="text-2xl font-extrabold text-white mb-2">
+              <h3 className="mb-2 text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">
                 {activePopup.title}
               </h3>
-              <p className="text-sm text-z-muted leading-relaxed mb-6">
+
+              <p className="mb-7 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
                 {activePopup.content}
               </p>
 
-              {/* FIXED CTA BUTTON ELEMENT */}
               {activePopup.ctaText && activePopup.ctaLink && (
                 <Link
                   href={activePopup.ctaLink}
                   onClick={() => dismiss(activePopup)}
-                  className="
-                    w-full
-                    flex
-                    items-center
-                    justify-center
-                    gap-2
-                    py-3.5
-                    rounded-xl
-                    bg-blue-600
-                    hover:bg-blue-700
-                    !text-white
-                    font-semibold
-                    text-sm
-                    no-underline
-                    transition-all
-                    duration-300
-                    shadow-lg
-                    mb-3
-                  "
-                  style={{
-                    color: "#ffffff",
-                    backgroundColor: "#2563eb",
-                    opacity: 1,
-                    visibility: "visible",
-                  }}
+                  className="group mb-3 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-600/20 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-600/30 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >
-                  <span className="text-white font-semibold">
-                    {activePopup.ctaText}
-                  </span>
+                  {activePopup.ctaText}
+                  <ArrowRight size={17} className="transition-transform group-hover:translate-x-1" />
                 </Link>
               )}
 
-              {/* Skip Button */}
               <button
                 onClick={() => dismiss(activePopup)}
-                className="w-full text-xs text-z-muted hover:text-white transition-colors py-2"
+                className="w-full py-1 text-center text-sm font-medium text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
               >
                 No thanks, I'll skip this
               </button>
