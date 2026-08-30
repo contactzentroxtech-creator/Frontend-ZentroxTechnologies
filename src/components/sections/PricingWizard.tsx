@@ -21,16 +21,10 @@ import {
   Megaphone,
   Bot,
   ShoppingCart,
-  Laptop,
 } from "lucide-react";
 import Link from "next/link";
-
 import { useLang } from "@/lib/providers";
 import api from "@/lib/api";
-
-/* =========================================================
-   TYPES – English Only
-========================================================= */
 
 interface PricingFeature {
   id: string;
@@ -50,7 +44,7 @@ interface PricingService {
   id: string;
   label: string;
   description: string;
-  iconKey: string; // key to map to Lucide icon
+  iconKey: string;
   baseMin: number;
   baseMax: number;
   features?: PricingFeature[];
@@ -71,10 +65,6 @@ interface QuoteResult {
   recommendedPackage?: PricingPackage | null;
 }
 
-/* =========================================================
-   ICON MAPPING
-========================================================= */
-
 const ICON_MAP: Record<string, any> = {
   "business-website": Globe2,
   ecommerce: ShoppingCart,
@@ -86,10 +76,6 @@ const ICON_MAP: Record<string, any> = {
   "ai-integration": Bot,
 };
 
-/* =========================================================
-   BUSINESS TYPES – English Only
-========================================================= */
-
 const BUSINESS_TYPES = [
   "Startups",
   "Real Estate",
@@ -99,19 +85,11 @@ const BUSINESS_TYPES = [
   "E-commerce",
 ];
 
-/* =========================================================
-   TIMELINES – English Only
-========================================================= */
-
 const TIMELINES = [
   { key: "rush", label: "ASAP (Rush)" },
   { key: "normal", label: "1–2 Months" },
   { key: "flexible", label: "Flexible" },
 ];
-
-/* =========================================================
-   COMPLEXITY – English Only
-========================================================= */
 
 const COMPLEXITY = [
   { key: "basic", label: "Basic" },
@@ -119,10 +97,6 @@ const COMPLEXITY = [
   { key: "advanced", label: "Advanced" },
   { key: "enterprise", label: "Enterprise" },
 ];
-
-/* =========================================================
-   FALLBACK SERVICES – English Only, No Emojis
-========================================================= */
 
 const FALLBACK_SERVICES: PricingService[] = [
   {
@@ -207,42 +181,27 @@ const FALLBACK_SERVICES: PricingService[] = [
   },
 ];
 
-/* =========================================================
-   STEP PROGRESS
-========================================================= */
-
-function StepProgress({
-  current,
-  total,
-}: {
-  current: number;
-  total: number;
-}) {
+function StepProgress({ current, total }: { current: number; total: number }) {
   return (
-    <div className="flex items-center justify-center gap-2 mb-8">
+    <div className="mb-8 flex items-center justify-center gap-2">
       {Array.from({ length: total }).map((_, idx) => (
         <div key={idx} className="flex items-center">
           <div
-            className={`
-              flex h-10 w-10 items-center justify-center rounded-full
-              text-sm font-bold transition-colors
-              ${
-                idx < current
-                  ? "bg-blue-600 text-white dark:bg-blue-400"
-                  : idx === current
-                  ? "border-2 border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400"
-                  : "bg-slate-200 text-slate-500 dark:bg-slate-700 dark:text-slate-400"
-              }
-            `}
+            className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold transition-colors ${
+              idx < current
+                ? "bg-blue-600 text-white dark:bg-blue-400"
+                : idx === current
+                ? "border-2 border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400"
+                : "bg-slate-200 text-slate-500 dark:bg-slate-700 dark:text-slate-400"
+            }`}
           >
             {idx < current ? <Check size={16} /> : idx + 1}
           </div>
           {idx < total - 1 && (
             <div
-              className={`
-                h-1 w-10 transition-colors
-                ${idx < current ? "bg-blue-600 dark:bg-blue-400" : "bg-slate-200 dark:bg-slate-700"}
-              `}
+              className={`h-1 w-10 transition-colors ${
+                idx < current ? "bg-blue-600 dark:bg-blue-400" : "bg-slate-200 dark:bg-slate-700"
+              }`}
             />
           )}
         </div>
@@ -250,10 +209,6 @@ function StepProgress({
     </div>
   );
 }
-
-/* =========================================================
-   MAIN COMPONENT
-========================================================= */
 
 export default function PricingWizard() {
   const { t } = useLang();
@@ -280,7 +235,6 @@ export default function PricingWizard() {
 
   const selectedService = services.find((s) => s.id === selectedServiceId) ?? null;
 
-  // Load services
   useEffect(() => {
     let active = true;
     async function loadServices() {
@@ -364,22 +318,16 @@ export default function PricingWizard() {
     `&estimateMin=${estimateMin}` +
     `&estimateMax=${estimateMax}`;
 
-  // Budget presets
   const budgetPresets = [5000, 25000, 50000, 100000, 200000, 500000];
 
   return (
-    <section
-      id="pricing"
-      className="relative overflow-hidden bg-white px-4 py-16 transition-colors duration-300 dark:bg-[#111827] md:px-6 md:py-20 lg:py-24"
-    >
-      {/* Background decorative */}
+    <section className="relative overflow-hidden bg-white px-4 py-16 transition-colors duration-300 dark:bg-[#111827] md:px-6 md:py-20 lg:py-24">
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
         <div className="absolute -left-32 top-20 h-96 w-96 rounded-full bg-blue-500/[0.05] blur-[130px] dark:bg-blue-400/[0.05]" />
         <div className="absolute -right-32 bottom-0 h-96 w-96 rounded-full bg-purple-500/[0.05] blur-[130px] dark:bg-purple-400/[0.05]" />
       </div>
 
       <div className="relative mx-auto max-w-7xl">
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -402,7 +350,6 @@ export default function PricingWizard() {
           </p>
         </motion.div>
 
-        {/* Wizard Card */}
         <motion.div
           initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -410,10 +357,8 @@ export default function PricingWizard() {
           transition={{ duration: 0.6 }}
           className="mx-auto max-w-3xl rounded-3xl border border-slate-200/60 bg-white/80 p-6 shadow-[0_25px_70px_rgba(15,23,42,0.06)] backdrop-blur-md dark:border-white/8 dark:bg-[#1a1e2b]/80 dark:shadow-[0_25px_70px_rgba(0,0,0,0.3)] md:p-10"
         >
-          {/* Step Progress */}
           <StepProgress current={step} total={steps.length} />
 
-          {/* Step Content */}
           <AnimatePresence mode="wait">
             {step === 0 && (
               <motion.div
@@ -436,14 +381,11 @@ export default function PricingWizard() {
                           key={service.id}
                           type="button"
                           onClick={() => selectService(service)}
-                          className={`
-                            group flex min-h-[140px] flex-col items-center justify-center rounded-2xl border p-4 text-center transition-all duration-300 hover:-translate-y-1
-                            ${
-                              selectedServiceId === service.id
-                                ? "border-blue-600 bg-blue-50/60 shadow-md dark:border-blue-400/30 dark:bg-blue-400/10"
-                                : "border-slate-200 bg-white/60 hover:border-blue-300/60 hover:shadow-md dark:border-white/8 dark:bg-white/[0.04] dark:hover:border-blue-400/20"
-                            }
-                          `}
+                          className={`group flex min-h-[140px] flex-col items-center justify-center rounded-2xl border p-4 text-center transition-all duration-300 hover:-translate-y-1 ${
+                            selectedServiceId === service.id
+                              ? "border-blue-600 bg-blue-50/60 shadow-md dark:border-blue-400/30 dark:bg-blue-400/10"
+                              : "border-slate-200 bg-white/60 hover:border-blue-300/60 hover:shadow-md dark:border-white/8 dark:bg-white/[0.04] dark:hover:border-blue-400/20"
+                          }`}
                         >
                           <Icon size={28} className="mb-2 text-blue-600 dark:text-blue-400" />
                           <span className="text-sm font-bold text-slate-900 dark:text-white">
@@ -479,14 +421,11 @@ export default function PricingWizard() {
                         key={business}
                         type="button"
                         onClick={() => setBizType(business)}
-                        className={`
-                          rounded-xl border p-3 text-center text-sm font-semibold transition-all
-                          ${
-                            bizType === business
-                              ? "border-blue-600 bg-blue-50/60 text-blue-700 dark:border-blue-400/30 dark:bg-blue-400/10 dark:text-blue-300"
-                              : "border-slate-200 bg-white/60 text-slate-600 hover:border-blue-300/60 dark:border-white/8 dark:bg-white/[0.04] dark:text-slate-300"
-                          }
-                        `}
+                        className={`rounded-xl border p-3 text-center text-sm font-semibold transition-all ${
+                          bizType === business
+                            ? "border-blue-600 bg-blue-50/60 text-blue-700 dark:border-blue-400/30 dark:bg-blue-400/10 dark:text-blue-300"
+                            : "border-slate-200 bg-white/60 text-slate-600 hover:border-blue-300/60 dark:border-white/8 dark:bg-white/[0.04] dark:text-slate-300"
+                        }`}
                       >
                         {bizType === business && <Check size={14} className="mr-1 inline" />}
                         {business}
@@ -506,14 +445,11 @@ export default function PricingWizard() {
                         key={item.key}
                         type="button"
                         onClick={() => setComplexity(item.key)}
-                        className={`
-                          rounded-xl border p-3 text-center text-xs font-bold transition-all
-                          ${
-                            complexity === item.key
-                              ? "border-blue-600 bg-blue-50/60 text-blue-700 dark:border-blue-400/30 dark:bg-blue-400/10 dark:text-blue-300"
-                              : "border-slate-200 bg-white/60 text-slate-600 hover:border-blue-300/60 dark:border-white/8 dark:bg-white/[0.04] dark:text-slate-300"
-                          }
-                        `}
+                        className={`rounded-xl border p-3 text-center text-xs font-bold transition-all ${
+                          complexity === item.key
+                            ? "border-blue-600 bg-blue-50/60 text-blue-700 dark:border-blue-400/30 dark:bg-blue-400/10 dark:text-blue-300"
+                            : "border-slate-200 bg-white/60 text-slate-600 hover:border-blue-300/60 dark:border-white/8 dark:bg-white/[0.04] dark:text-slate-300"
+                        }`}
                       >
                         {item.label}
                       </button>
@@ -532,14 +468,11 @@ export default function PricingWizard() {
                           key={feature.id}
                           type="button"
                           onClick={() => toggleFeature(feature.id)}
-                          className={`
-                            flex items-center justify-between rounded-xl border p-4 text-left transition-all
-                            ${
-                              selectedFeatures.includes(feature.id)
-                                ? "border-blue-600 bg-blue-50/60 dark:border-blue-400/30 dark:bg-blue-400/10"
-                                : "border-slate-200 bg-white/60 hover:border-blue-300/60 dark:border-white/8 dark:bg-white/[0.04]"
-                            }
-                          `}
+                          className={`flex items-center justify-between rounded-xl border p-4 text-left transition-all ${
+                            selectedFeatures.includes(feature.id)
+                              ? "border-blue-600 bg-blue-50/60 dark:border-blue-400/30 dark:bg-blue-400/10"
+                              : "border-slate-200 bg-white/60 hover:border-blue-300/60 dark:border-white/8 dark:bg-white/[0.04]"
+                          }`}
                         >
                           <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">
                             {feature.label}
@@ -573,21 +506,17 @@ export default function PricingWizard() {
                   </div>
                 </div>
 
-                {/* Budget Presets */}
                 <div className="mb-4 flex flex-wrap justify-center gap-2">
                   {budgetPresets.map((val) => (
                     <button
                       key={val}
                       type="button"
                       onClick={() => setBudget(val)}
-                      className={`
-                        rounded-full border px-3 py-1.5 text-xs font-medium transition-all
-                        ${
-                          budget === val
-                            ? "border-blue-600 bg-blue-600 text-white"
-                            : "border-slate-200 bg-white/60 text-slate-600 hover:border-blue-300/60 dark:border-white/8 dark:bg-white/[0.04] dark:text-slate-300"
-                        }
-                      `}
+                      className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-all ${
+                        budget === val
+                          ? "border-blue-600 bg-blue-600 text-white"
+                          : "border-slate-200 bg-white/60 text-slate-600 hover:border-blue-300/60 dark:border-white/8 dark:bg-white/[0.04] dark:text-slate-300"
+                      }`}
                     >
                       {formatPrice(val)}
                     </button>
@@ -624,14 +553,11 @@ export default function PricingWizard() {
                         key={item.key}
                         type="button"
                         onClick={() => setTimeline(item.key)}
-                        className={`
-                          rounded-xl border p-3 text-center text-xs font-bold transition-all
-                          ${
-                            timeline === item.key
-                              ? "border-blue-600 bg-blue-50/60 text-blue-700 dark:border-blue-400/30 dark:bg-blue-400/10 dark:text-blue-300"
-                              : "border-slate-200 bg-white/60 text-slate-600 hover:border-blue-300/60 dark:border-white/8 dark:bg-white/[0.04] dark:text-slate-300"
-                          }
-                        `}
+                        className={`rounded-xl border p-3 text-center text-xs font-bold transition-all ${
+                          timeline === item.key
+                            ? "border-blue-600 bg-blue-50/60 text-blue-700 dark:border-blue-400/30 dark:bg-blue-400/10 dark:text-blue-300"
+                            : "border-slate-200 bg-white/60 text-slate-600 hover:border-blue-300/60 dark:border-white/8 dark:bg-white/[0.04] dark:text-slate-300"
+                        }`}
                       >
                         {item.label}
                       </button>
@@ -717,7 +643,6 @@ export default function PricingWizard() {
             )}
           </AnimatePresence>
 
-          {/* Navigation Buttons */}
           <div className="mt-8 flex items-center justify-between">
             <button
               type="button"
@@ -731,11 +656,7 @@ export default function PricingWizard() {
             {step < 3 && (
               <button
                 type="button"
-                disabled={
-                  loadingQuote ||
-                  (step === 0 && !selectedServiceId) ||
-                  (step === 1 && !bizType)
-                }
+                disabled={loadingQuote || (step === 0 && !selectedServiceId) || (step === 1 && !bizType)}
                 onClick={() => {
                   if (step === 2) {
                     getQuote();
