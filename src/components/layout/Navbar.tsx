@@ -75,7 +75,7 @@ export default function Navbar() {
 
   const isAdmin = user?.role === "admin";
 
-  // Navigation links
+  // Navigation links - INTERNSHIP REMOVED
   const navLinks = useMemo<NavLink[]>(
     () => [
       {
@@ -85,10 +85,6 @@ export default function Navbar() {
       {
         label: t("nav.services"),
         href: "/services",
-      },
-      {
-        label: t("nav.internship"),
-        href: "/internship",
       },
       {
         label: t("nav.blog"),
