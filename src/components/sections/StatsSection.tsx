@@ -13,10 +13,6 @@ import {
 import { useLang } from "@/lib/providers";
 import api from "@/lib/api";
 
-/* =========================================================
-   TYPES
-========================================================= */
-
 interface StatItem {
   num?: number;
   suffix?: string;
@@ -25,10 +21,6 @@ interface StatItem {
   custom?: string;
   settingKey?: string;
 }
-
-/* =========================================================
-   ANIMATED COUNTER
-========================================================= */
 
 function AnimatedCounter({
   target,
@@ -74,10 +66,6 @@ function AnimatedCounter({
   );
 }
 
-/* =========================================================
-   DEFAULT STATS
-========================================================= */
-
 const DEFAULT_STATS: StatItem[] = [
   {
     num: 200,
@@ -108,17 +96,12 @@ const DEFAULT_STATS: StatItem[] = [
   },
 ];
 
-/* =========================================================
-   MAIN COMPONENT
-========================================================= */
-
 export default function StatsSection() {
   const { t } = useLang();
   const [stats, setStats] = useState<StatItem[]>(DEFAULT_STATS);
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.2 });
 
-  // Load CMS stats
   useEffect(() => {
     let mounted = true;
 
@@ -185,7 +168,7 @@ export default function StatsSection() {
         <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-12">
           {/* Left Content */}
           <div>
-            <span className="text-xs font-medium uppercase tracking-wider text-amber-600">
+            <span className="text-xs font-medium uppercase tracking-wider text-blue-600">
               {t("stats.trust")}
             </span>
             <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
@@ -198,7 +181,7 @@ export default function StatsSection() {
             <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm text-slate-500">
               {locations.map((loc) => (
                 <span key={loc} className="flex items-center gap-1.5">
-                  <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-blue-600" />
                   {loc}
                 </span>
               ))}
@@ -213,7 +196,7 @@ export default function StatsSection() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.4, delay: index * 0.08 }}
-                className="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm transition-all hover:border-gray-300 hover:shadow-md"
+                className="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm transition-all hover:border-blue-300 hover:shadow-md"
               >
                 <div className="text-3xl font-semibold text-slate-900 sm:text-4xl">
                   {stat.custom ? (
