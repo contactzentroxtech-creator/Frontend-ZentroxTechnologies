@@ -8,6 +8,11 @@ import {
   Loader2,
   AlertCircle,
   Sparkles,
+  Building2,
+  Layers,
+  Clock,
+  Wallet,
+  Briefcase,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -74,7 +79,6 @@ const BUSINESS_TYPES: Record<SupportedLang, string[]> = {
     "Manufacturing",
     "E-commerce",
   ],
-
   hi: [
     "स्टार्टअप",
     "रियल एस्टेट",
@@ -83,7 +87,6 @@ const BUSINESS_TYPES: Record<SupportedLang, string[]> = {
     "विनिर्माण",
     "ई-कॉमर्स",
   ],
-
   pa: [
     "ਸਟਾਰਟਅੱਪ",
     "ਰੀਅਲ ਅਸਟੇਟ",
@@ -107,13 +110,11 @@ const TIMELINES: Record<
     { key: "normal", label: "1–2 Months" },
     { key: "flexible", label: "Flexible" },
   ],
-
   hi: [
     { key: "rush", label: "जल्द से जल्द" },
     { key: "normal", label: "1–2 महीने" },
     { key: "flexible", label: "लचीला" },
   ],
-
   pa: [
     { key: "rush", label: "ਜਲਦੀ ਤੋਂ ਜਲਦੀ" },
     { key: "normal", label: "1–2 ਮਹੀਨੇ" },
@@ -135,14 +136,12 @@ const COMPLEXITY: Record<
     { key: "advanced", label: "Advanced" },
     { key: "enterprise", label: "Enterprise" },
   ],
-
   hi: [
     { key: "basic", label: "बेसिक" },
     { key: "standard", label: "स्टैंडर्ड" },
     { key: "advanced", label: "एडवांस्ड" },
     { key: "enterprise", label: "एंटरप्राइज़" },
   ],
-
   pa: [
     { key: "basic", label: "ਬੇਸਿਕ" },
     { key: "standard", label: "ਸਟੈਂਡਰਡ" },
@@ -174,7 +173,6 @@ const FALLBACK_SERVICES: PricingService[] = [
     features: [],
     packages: [],
   },
-
   {
     id: "ecommerce",
     label: {
@@ -193,7 +191,6 @@ const FALLBACK_SERVICES: PricingService[] = [
     features: [],
     packages: [],
   },
-
   {
     id: "mobile-app",
     label: {
@@ -212,7 +209,6 @@ const FALLBACK_SERVICES: PricingService[] = [
     features: [],
     packages: [],
   },
-
   {
     id: "custom-software",
     label: {
@@ -231,7 +227,6 @@ const FALLBACK_SERVICES: PricingService[] = [
     features: [],
     packages: [],
   },
-
   {
     id: "saas-platform",
     label: {
@@ -250,7 +245,6 @@ const FALLBACK_SERVICES: PricingService[] = [
     features: [],
     packages: [],
   },
-
   {
     id: "seo-package",
     label: {
@@ -269,7 +263,6 @@ const FALLBACK_SERVICES: PricingService[] = [
     features: [],
     packages: [],
   },
-
   {
     id: "digital-marketing",
     label: {
@@ -288,7 +281,6 @@ const FALLBACK_SERVICES: PricingService[] = [
     features: [],
     packages: [],
   },
-
   {
     id: "ai-integration",
     label: {
@@ -310,60 +302,72 @@ const FALLBACK_SERVICES: PricingService[] = [
 ];
 
 /* =========================================================
-   COMPONENT
+   STEP PROGRESS
+========================================================= */
+
+function StepProgress({
+  current,
+  total,
+}: {
+  current: number;
+  total: number;
+}) {
+  return (
+    <div className="flex items-center justify-center gap-2 mb-8">
+      {Array.from({ length: total }).map((_, idx) => (
+        <div key={idx} className="flex items-center">
+          <div
+            className={`
+              flex h-10 w-10 items-center justify-center rounded-full
+              text-sm font-bold transition-colors
+              ${
+                idx < current
+                  ? "bg-blue-600 text-white dark:bg-blue-400"
+                  : idx === current
+                  ? "border-2 border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400"
+                  : "bg-slate-200 text-slate-500 dark:bg-slate-700 dark:text-slate-400"
+              }
+            `}
+          >
+            {idx < current ? <Check size={16} /> : idx + 1}
+          </div>
+          {idx < total - 1 && (
+            <div
+              className={`
+                h-1 w-10 transition-colors
+                ${idx < current ? "bg-blue-600 dark:bg-blue-400" : "bg-slate-200 dark:bg-slate-700"}
+              `}
+            />
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* =========================================================
+   MAIN COMPONENT
 ========================================================= */
 
 export default function PricingWizard() {
   const { t, lang } = useLang();
 
-  /*
-    IMPORTANT FIX:
-    String(lang) avoids TypeScript error:
-    "types 'en' and 'hi' have no overlap"
-  */
   const language = String(lang);
-
   const currentLang: SupportedLang =
-    language === "hi"
-      ? "hi"
-      : language === "pa"
-        ? "pa"
-        : "en";
+    language === "hi" ? "hi" : language === "pa" ? "pa" : "en";
 
   const [step, setStep] = useState(0);
-
-  const [services, setServices] =
-    useState<PricingService[]>(FALLBACK_SERVICES);
-
-  const [loadingServices, setLoadingServices] =
-    useState(true);
-
-  const [loadingQuote, setLoadingQuote] =
-    useState(false);
-
-  const [quoteError, setQuoteError] =
-    useState("");
-
-  const [selectedServiceId, setSelectedServiceId] =
-    useState("");
-
-  const [bizType, setBizType] =
-    useState("");
-
-  const [complexity, setComplexity] =
-    useState("standard");
-
-  const [selectedFeatures, setSelectedFeatures] =
-    useState<string[]>([]);
-
-  const [budget, setBudget] =
-    useState(25000);
-
-  const [timeline, setTimeline] =
-    useState("normal");
-
-  const [quote, setQuote] =
-    useState<QuoteResult | null>(null);
+  const [services, setServices] = useState<PricingService[]>(FALLBACK_SERVICES);
+  const [loadingServices, setLoadingServices] = useState(true);
+  const [loadingQuote, setLoadingQuote] = useState(false);
+  const [quoteError, setQuoteError] = useState("");
+  const [selectedServiceId, setSelectedServiceId] = useState("");
+  const [bizType, setBizType] = useState("");
+  const [complexity, setComplexity] = useState("standard");
+  const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
+  const [budget, setBudget] = useState(25000);
+  const [timeline, setTimeline] = useState("normal");
+  const [quote, setQuote] = useState<QuoteResult | null>(null);
 
   const steps = [
     t("pricing.step.service", "Service"),
@@ -372,321 +376,136 @@ export default function PricingWizard() {
     t("pricing.step.quote", "Quote"),
   ];
 
-  const selectedService =
-    services.find(
-      (service) =>
-        service.id === selectedServiceId
-    ) ?? null;
+  const selectedService = services.find((s) => s.id === selectedServiceId) ?? null;
 
-  /* =======================================================
-     LOAD SERVICES
-  ======================================================= */
-
+  // Load services
   useEffect(() => {
     let active = true;
-
     async function loadServices() {
       try {
-        const { data } =
-          await api.get("/pricing/services");
-
-        if (
-          active &&
-          Array.isArray(data?.data) &&
-          data.data.length > 0
-        ) {
+        const { data } = await api.get("/pricing/services");
+        if (active && Array.isArray(data?.data) && data.data.length > 0) {
           setServices(data.data);
         }
       } catch {
-        if (active) {
-          setServices(FALLBACK_SERVICES);
-        }
+        if (active) setServices(FALLBACK_SERVICES);
       } finally {
-        if (active) {
-          setLoadingServices(false);
-        }
+        if (active) setLoadingServices(false);
       }
     }
-
-    void loadServices();
-
+    loadServices();
     return () => {
       active = false;
     };
   }, []);
 
-  /* =======================================================
-     LANGUAGE RESET
-  ======================================================= */
-
+  // Reset on language change
   useEffect(() => {
     setBizType("");
     setSelectedFeatures([]);
     setQuote(null);
     setQuoteError("");
-
-    setStep((currentStep) =>
-      currentStep > 1 ? 1 : currentStep
-    );
+    setStep((cur) => (cur > 1 ? 1 : cur));
   }, [currentLang]);
 
-  /* =======================================================
-     TRANSLATION HELPER
-  ======================================================= */
-
-  function getLabel(
-    value?: LocalizedText | null
-  ) {
+  function getLabel(value?: LocalizedText | null) {
     if (!value) return "";
-
-    if (
-      currentLang === "hi" &&
-      value.hi
-    ) {
-      return value.hi;
-    }
-
-    if (
-      currentLang === "pa" &&
-      value.pa
-    ) {
-      return value.pa;
-    }
-
+    if (currentLang === "hi" && value.hi) return value.hi;
+    if (currentLang === "pa" && value.pa) return value.pa;
     return value.en ?? "";
   }
 
-  /* =======================================================
-     PRICE FORMATTER
-  ======================================================= */
-
   function formatPrice(amount: number) {
-    return `₹${Number(
-      amount || 0
-    ).toLocaleString("en-IN")}`;
+    return `₹${Number(amount || 0).toLocaleString("en-IN")}`;
   }
 
-  /* =======================================================
-     SELECT SERVICE
-  ======================================================= */
-
-  function selectService(
-    service: PricingService
-  ) {
+  function selectService(service: PricingService) {
     setSelectedServiceId(service.id);
     setSelectedFeatures([]);
     setQuote(null);
     setQuoteError("");
-
-    const recommendedBudget =
-      Math.round(
-        (service.baseMin +
-          service.baseMax) /
-          2
-      );
-
-    setBudget(recommendedBudget);
+    const recommended = Math.round((service.baseMin + service.baseMax) / 2);
+    setBudget(recommended);
   }
 
-  /* =======================================================
-     FEATURE TOGGLE
-  ======================================================= */
-
   function toggleFeature(featureId: string) {
-    setSelectedFeatures((previous) =>
-      previous.includes(featureId)
-        ? previous.filter(
-            (id) => id !== featureId
-          )
-        : [...previous, featureId]
+    setSelectedFeatures((prev) =>
+      prev.includes(featureId) ? prev.filter((id) => id !== featureId) : [...prev, featureId]
     );
   }
 
-  /* =======================================================
-     FALLBACK ESTIMATE
-  ======================================================= */
-
-  const fallbackMin = selectedService
-    ? selectedService.baseMin
-    : Math.round(budget * 0.8);
-
-  const fallbackMax = selectedService
-    ? selectedService.baseMax
-    : Math.round(budget * 1.2);
-
-  /* =======================================================
-     GET QUOTE
-  ======================================================= */
+  const fallbackMin = selectedService ? selectedService.baseMin : Math.round(budget * 0.8);
+  const fallbackMax = selectedService ? selectedService.baseMax : Math.round(budget * 1.2);
 
   async function getQuote() {
-    if (
-      !selectedServiceId ||
-      !bizType
-    ) {
-      return;
-    }
-
+    if (!selectedServiceId || !bizType) return;
     setLoadingQuote(true);
     setQuote(null);
     setQuoteError("");
     setStep(3);
 
     try {
-      const { data } =
-        await api.post(
-          "/pricing/calculate",
-          {
-            serviceId:
-              selectedServiceId,
-            businessType:
-              bizType,
-            complexity,
-            features:
-              selectedFeatures,
-            timeline,
-            budget,
-          }
-        );
+      const { data } = await api.post("/pricing/calculate", {
+        serviceId: selectedServiceId,
+        businessType: bizType,
+        complexity,
+        features: selectedFeatures,
+        timeline,
+        budget,
+      });
 
-      if (
-        data?.data?.estimate &&
-        typeof data.data.estimate.min ===
-          "number" &&
-        typeof data.data.estimate.max ===
-          "number"
-      ) {
+      if (data?.data?.estimate && typeof data.data.estimate.min === "number" && typeof data.data.estimate.max === "number") {
         setQuote(data.data);
       } else {
-        setQuoteError(
-          "Live pricing is currently unavailable. Showing an approximate estimate."
-        );
+        setQuoteError("Live pricing is currently unavailable. Showing an approximate estimate.");
       }
     } catch {
-      setQuoteError(
-        "Unable to connect to our pricing service. Showing an approximate estimate."
-      );
+      setQuoteError("Unable to connect to our pricing service. Showing an approximate estimate.");
     } finally {
       setLoadingQuote(false);
     }
   }
 
-  const estimateMin =
-    quote?.estimate?.min ??
-    fallbackMin;
-
-  const estimateMax =
-    quote?.estimate?.max ??
-    fallbackMax;
+  const estimateMin = quote?.estimate?.min ?? fallbackMin;
+  const estimateMax = quote?.estimate?.max ?? fallbackMax;
 
   const contactUrl =
-    `/contact?service=${encodeURIComponent(
-      selectedServiceId
-    )}` +
-    `&business=${encodeURIComponent(
-      bizType
-    )}` +
-    `&complexity=${encodeURIComponent(
-      complexity
-    )}` +
+    `/contact?service=${encodeURIComponent(selectedServiceId)}` +
+    `&business=${encodeURIComponent(bizType)}` +
+    `&complexity=${encodeURIComponent(complexity)}` +
     `&budget=${budget}` +
-    `&timeline=${encodeURIComponent(
-      timeline
-    )}` +
+    `&timeline=${encodeURIComponent(timeline)}` +
     `&estimateMin=${estimateMin}` +
     `&estimateMax=${estimateMax}`;
 
   return (
     <section
       id="pricing"
-      className="
-        relative overflow-hidden
-        bg-slate-50
-        px-4 py-24
-        transition-colors duration-300
-        dark:bg-z-dark2
-        md:px-6 md:py-32
-      "
+      className="relative overflow-hidden bg-slate-50/60 px-4 py-24 transition-colors duration-300 dark:bg-[#0b0f19] md:px-6 md:py-32"
     >
-      <div
-        className="
-          pointer-events-none
-          absolute inset-0
-          overflow-hidden
-        "
-        aria-hidden="true"
-      >
-        <div
-          className="
-            absolute -left-32 top-20
-            h-96 w-96
-            rounded-full
-            bg-blue-500/[0.05]
-            blur-[130px]
-          "
-        />
-
-        <div
-          className="
-            absolute -right-32 bottom-0
-            h-96 w-96
-            rounded-full
-            bg-purple-500/[0.05]
-            blur-[130px]
-          "
-        />
+      {/* Background decorative */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+        <div className="absolute -left-32 top-20 h-96 w-96 rounded-full bg-blue-500/[0.05] blur-[130px] dark:bg-blue-400/[0.06]" />
+        <div className="absolute -right-32 bottom-0 h-96 w-96 rounded-full bg-purple-500/[0.05] blur-[130px] dark:bg-purple-400/[0.06]" />
       </div>
 
       <div className="relative mx-auto max-w-7xl">
-
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="
-            mx-auto mb-12
-            max-w-3xl
-            text-center
-          "
+          className="mx-auto mb-12 max-w-3xl text-center"
         >
-          <div className="z-badge mx-auto mb-5 w-fit">
+          <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-blue-50/60 px-4 py-1.5 text-[11px] font-bold tracking-[0.1em] text-blue-700 backdrop-blur-sm dark:border-blue-400/20 dark:bg-blue-400/[0.06] dark:text-blue-200">
             <Sparkles size={13} />
-
-            <span>
-              {t(
-                "pricing.badge",
-                "Transparent Pricing"
-              )}
-            </span>
+            <span>{t("pricing.badge", "Transparent Pricing")}</span>
           </div>
-
-          <h2
-            className="
-              text-4xl
-              font-extrabold
-              tracking-tight
-              text-slate-900
-              md:text-6xl
-              dark:text-z-text
-            "
-          >
-            {t(
-              "pricing.title",
-              "Estimate Your Project"
-            )}
+          <h2 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white md:text-5xl lg:text-6xl">
+            {t("pricing.title", "Estimate Your Project")}
           </h2>
-
-          <p
-            className="
-              mx-auto mt-5
-              max-w-2xl
-              text-base
-              leading-relaxed
-              text-slate-600
-              md:text-lg
-              dark:text-z-muted
-            "
-          >
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-slate-600 dark:text-slate-300 md:text-lg">
             {t(
               "pricing.sub",
               "Get a quick estimated investment range for your website, software, mobile app, SaaS, AI, SEO or digital marketing project."
@@ -694,132 +513,60 @@ export default function PricingWizard() {
           </p>
         </motion.div>
 
+        {/* Wizard Card */}
         <motion.div
           initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="
-            mx-auto
-            max-w-3xl
-            rounded-3xl
-            border border-slate-200/80
-            bg-white
-            p-5
-            shadow-[0_25px_70px_rgba(15,23,42,0.08)]
-            dark:border-white/10
-            dark:bg-white/[0.04]
-            md:p-10
-          "
+          className="mx-auto max-w-3xl rounded-3xl border border-slate-200/70 bg-white/80 p-6 shadow-[0_25px_70px_rgba(15,23,42,0.08)] backdrop-blur-md dark:border-white/10 dark:bg-[#1e293b]/70 dark:shadow-[0_25px_70px_rgba(0,0,0,0.3)] md:p-10"
         >
-          {/* STEPS */}
+          {/* Step Progress */}
+          <StepProgress current={step} total={steps.length} />
 
-          <div className="mb-8 flex border-b border-slate-200 dark:border-white/10">
-            {steps.map((stepName, index) => (
-              <button
-                key={`${stepName}-${index}`}
-                type="button"
-                disabled={
-                  index > step ||
-                  loadingQuote
-                }
-                onClick={() => {
-                  if (
-                    index <= step &&
-                    !loadingQuote
-                  ) {
-                    setStep(index);
-                  }
-                }}
-                className={`
-                  -mb-px flex-1
-                  border-b-2
-                  px-2 py-3
-                  text-xs font-semibold
-                  transition-all
-                  ${
-                    step === index
-                      ? "border-z-accent text-z-accent"
-                      : index < step
-                        ? "border-transparent text-slate-700 dark:text-z-text"
-                        : "border-transparent text-slate-400 dark:text-z-muted"
-                  }
-                `}
-              >
-                <span className="mr-1 hidden sm:inline">
-                  {index + 1}.
-                </span>
-
-                {stepName}
-              </button>
-            ))}
-          </div>
-
+          {/* Step Content */}
           <AnimatePresence mode="wait">
-
-            {/* STEP 0 */}
-
             {step === 0 && (
               <motion.div
                 key="service"
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
               >
                 {loadingServices ? (
                   <div className="flex justify-center py-16">
-                    <Loader2
-                      size={28}
-                      className="animate-spin text-z-accent"
-                    />
+                    <Loader2 size={28} className="animate-spin text-blue-600 dark:text-blue-400" />
                   </div>
                 ) : (
                   <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
-                    {services.map(
-                      (service) => (
-                        <button
-                          key={service.id}
-                          type="button"
-                          onClick={() =>
-                            selectService(service)
+                    {services.map((service) => (
+                      <button
+                        key={service.id}
+                        type="button"
+                        onClick={() => selectService(service)}
+                        className={`
+                          group flex min-h-[140px] flex-col items-center justify-center rounded-2xl border p-4 text-center transition-all duration-300 hover:-translate-y-1
+                          ${
+                            selectedServiceId === service.id
+                              ? "border-blue-600 bg-blue-50/60 shadow-md dark:border-blue-400/30 dark:bg-blue-400/10"
+                              : "border-slate-200 bg-white/60 hover:border-blue-300/60 hover:shadow-md dark:border-white/10 dark:bg-white/[0.04] dark:hover:border-blue-400/20"
                           }
-                          className={`
-                            flex min-h-[130px]
-                            flex-col
-                            rounded-2xl
-                            border p-4
-                            text-left
-                            transition-all duration-300
-                            hover:-translate-y-1
-                            ${
-                              selectedServiceId === service.id
-                                ? "border-z-accent bg-z-accent/10 shadow-sm"
-                                : "border-slate-200 hover:border-z-accent/50 dark:border-white/10"
-                            }
-                          `}
-                        >
-                          <span className="mb-3 text-2xl">
-                            {service.icon}
-                          </span>
-
-                          <span className="text-sm font-bold text-slate-900 dark:text-z-text">
-                            {getLabel(service.label)}
-                          </span>
-
-                          <span className="mt-auto pt-2 text-[11px] font-semibold text-z-accent">
-                            {formatPrice(service.baseMin)}
-                            {" – "}
-                            {formatPrice(service.baseMax)}
-                          </span>
-                        </button>
-                      )
-                    )}
+                        `}
+                      >
+                        <span className="text-3xl mb-2">{service.icon}</span>
+                        <span className="text-sm font-bold text-slate-900 dark:text-white">
+                          {getLabel(service.label)}
+                        </span>
+                        <span className="mt-1 text-xs font-semibold text-blue-600 dark:text-blue-400">
+                          {formatPrice(service.baseMin)} – {formatPrice(service.baseMax)}
+                        </span>
+                      </button>
+                    ))}
                   </div>
                 )}
               </motion.div>
             )}
-
-            {/* STEP 1 */}
 
             {step === 1 && (
               <motion.div
@@ -827,140 +574,94 @@ export default function PricingWizard() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
               >
-                <p className="mb-3 text-sm font-bold text-slate-800 dark:text-z-text">
-                  {t(
-                    "pricing.business_type",
-                    "What type of business do you have?"
-                  )}
-                </p>
-
-                <div className="mb-8 grid grid-cols-2 gap-3 md:grid-cols-3">
-                  {BUSINESS_TYPES[currentLang].map(
-                    (business) => (
+                <div className="mb-6">
+                  <p className="mb-3 flex items-center gap-2 text-sm font-bold text-slate-800 dark:text-slate-200">
+                    <Briefcase size={16} className="text-blue-600 dark:text-blue-400" />
+                    {t("pricing.business_type", "What type of business do you have?")}
+                  </p>
+                  <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+                    {BUSINESS_TYPES[currentLang].map((business) => (
                       <button
                         key={business}
                         type="button"
-                        onClick={() =>
-                          setBizType(business)
-                        }
+                        onClick={() => setBizType(business)}
                         className={`
-                          rounded-xl border
-                          p-3 text-left
-                          text-sm font-semibold
-                          transition-all
+                          rounded-xl border p-3 text-center text-sm font-semibold transition-all
                           ${
                             bizType === business
-                              ? "border-z-accent bg-z-accent/10 text-z-accent"
-                              : "border-slate-200 text-slate-600 hover:border-z-accent/50 dark:border-white/10 dark:text-z-muted"
+                              ? "border-blue-600 bg-blue-50/60 text-blue-700 dark:border-blue-400/30 dark:bg-blue-400/10 dark:text-blue-300"
+                              : "border-slate-200 bg-white/60 text-slate-600 hover:border-blue-300/60 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300"
                           }
                         `}
                       >
-                        {bizType === business && (
-                          <Check
-                            size={14}
-                            className="mr-1 inline"
-                          />
-                        )}
-
+                        {bizType === business && <Check size={14} className="mr-1 inline" />}
                         {business}
                       </button>
-                    )
-                  )}
+                    ))}
+                  </div>
                 </div>
 
-                <p className="mb-3 text-sm font-bold text-slate-800 dark:text-z-text">
-                  {t(
-                    "pricing.complexity",
-                    "Project Complexity"
-                  )}
-                </p>
-
-                <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-                  {COMPLEXITY[currentLang].map(
-                    (item) => (
+                <div className="mb-6">
+                  <p className="mb-3 flex items-center gap-2 text-sm font-bold text-slate-800 dark:text-slate-200">
+                    <Layers size={16} className="text-blue-600 dark:text-blue-400" />
+                    {t("pricing.complexity", "Project Complexity")}
+                  </p>
+                  <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+                    {COMPLEXITY[currentLang].map((item) => (
                       <button
                         key={item.key}
                         type="button"
-                        onClick={() =>
-                          setComplexity(item.key)
-                        }
+                        onClick={() => setComplexity(item.key)}
                         className={`
-                          rounded-xl border
-                          p-3 text-center
-                          text-xs font-bold
-                          transition-all
+                          rounded-xl border p-3 text-center text-xs font-bold transition-all
                           ${
                             complexity === item.key
-                              ? "border-z-accent bg-z-accent/10 text-z-accent"
-                              : "border-slate-200 text-slate-600 hover:border-z-accent/50 dark:border-white/10 dark:text-z-muted"
+                              ? "border-blue-600 bg-blue-50/60 text-blue-700 dark:border-blue-400/30 dark:bg-blue-400/10 dark:text-blue-300"
+                              : "border-slate-200 bg-white/60 text-slate-600 hover:border-blue-300/60 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300"
                           }
                         `}
                       >
                         {item.label}
                       </button>
-                    )
-                  )}
+                    ))}
+                  </div>
                 </div>
 
-                {(selectedService?.features?.length ??
-                  0) > 0 && (
+                {selectedService?.features && selectedService.features.length > 0 && (
                   <div className="mt-8">
-                    <p className="mb-3 text-sm font-bold text-slate-800 dark:text-z-text">
-                      {t(
-                        "pricing.addons",
-                        "Optional Features"
-                      )}
+                    <p className="mb-3 text-sm font-bold text-slate-800 dark:text-slate-200">
+                      {t("pricing.addons", "Optional Features")}
                     </p>
-
                     <div className="grid gap-3 md:grid-cols-2">
-                      {selectedService?.features?.map(
-                        (feature) => (
-                          <button
-                            key={feature.id}
-                            type="button"
-                            onClick={() =>
-                              toggleFeature(
-                                feature.id
-                              )
+                      {selectedService.features.map((feature) => (
+                        <button
+                          key={feature.id}
+                          type="button"
+                          onClick={() => toggleFeature(feature.id)}
+                          className={`
+                            flex items-center justify-between rounded-xl border p-4 text-left transition-all
+                            ${
+                              selectedFeatures.includes(feature.id)
+                                ? "border-blue-600 bg-blue-50/60 dark:border-blue-400/30 dark:bg-blue-400/10"
+                                : "border-slate-200 bg-white/60 hover:border-blue-300/60 dark:border-white/10 dark:bg-white/[0.04]"
                             }
-                            className={`
-                              flex items-center
-                              justify-between
-                              rounded-xl border
-                              p-4 text-left
-                              transition-all
-                              ${
-                                selectedFeatures.includes(
-                                  feature.id
-                                )
-                                  ? "border-z-accent bg-z-accent/10"
-                                  : "border-slate-200 dark:border-white/10"
-                              }
-                            `}
-                          >
-                            <span className="text-sm font-semibold text-slate-700 dark:text-z-text">
-                              {getLabel(
-                                feature.label
-                              )}
-                            </span>
-
-                            <span className="text-xs font-bold text-z-accent">
-                              +
-                              {formatPrice(
-                                feature.flatAdd
-                              )}
-                            </span>
-                          </button>
-                        )
-                      )}
+                          `}
+                        >
+                          <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+                            {getLabel(feature.label)}
+                          </span>
+                          <span className="text-xs font-bold text-blue-600 dark:text-blue-400">
+                            +{formatPrice(feature.flatAdd)}
+                          </span>
+                        </button>
+                      ))}
                     </div>
                   </div>
                 )}
               </motion.div>
             )}
-
-            {/* STEP 2 */}
 
             {step === 2 && (
               <motion.div
@@ -968,74 +669,64 @@ export default function PricingWizard() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
               >
-                <p className="mb-3 text-center text-sm font-bold text-slate-700 dark:text-z-muted">
-                  {t(
-                    "pricing.budget",
-                    "Estimated Project Budget"
-                  )}
-                </p>
-
-                <div className="mb-6 text-center text-4xl font-extrabold text-z-accent md:text-5xl">
-                  {formatPrice(budget)}
+                <div className="mb-6 text-center">
+                  <p className="mb-2 flex items-center justify-center gap-2 text-sm font-bold text-slate-700 dark:text-slate-300">
+                    <Wallet size={16} className="text-blue-600 dark:text-blue-400" />
+                    {t("pricing.budget", "Estimated Project Budget")}
+                  </p>
+                  <div className="text-4xl font-extrabold text-blue-600 dark:text-blue-400 md:text-5xl">
+                    {formatPrice(budget)}
+                  </div>
                 </div>
 
-                <input
-                  type="range"
-                  min="5000"
-                  max="500000"
-                  step="5000"
-                  value={budget}
-                  onChange={(event) =>
-                    setBudget(
-                      Number(event.target.value)
-                    )
-                  }
-                  className="mb-2 w-full cursor-pointer accent-z-accent"
-                />
-
-                <div className="mb-10 flex justify-between text-xs text-slate-500 dark:text-z-muted">
-                  <span>₹5,000</span>
-                  <span>₹5,00,000+</span>
+                <div className="mb-6">
+                  <input
+                    type="range"
+                    min="5000"
+                    max="500000"
+                    step="5000"
+                    value={budget}
+                    onChange={(e) => setBudget(Number(e.target.value))}
+                    className="w-full cursor-pointer accent-blue-600 dark:accent-blue-400"
+                    style={{
+                      background: `linear-gradient(to right, #2563eb 0%, #2563eb ${(budget - 5000) / (500000 - 5000) * 100}%, #e2e8f0 ${(budget - 5000) / (500000 - 5000) * 100}%, #e2e8f0 100%)`,
+                    }}
+                  />
+                  <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400">
+                    <span>₹5,000</span>
+                    <span>₹5,00,000+</span>
+                  </div>
                 </div>
 
-                <p className="mb-3 text-sm font-bold text-slate-800 dark:text-z-text">
-                  {t(
-                    "pricing.timeline",
-                    "When do you need the project?"
-                  )}
-                </p>
-
-                <div className="grid grid-cols-3 gap-3">
-                  {TIMELINES[currentLang].map(
-                    (item) => (
+                <div>
+                  <p className="mb-3 flex items-center gap-2 text-sm font-bold text-slate-800 dark:text-slate-200">
+                    <Clock size={16} className="text-blue-600 dark:text-blue-400" />
+                    {t("pricing.timeline", "When do you need the project?")}
+                  </p>
+                  <div className="grid grid-cols-3 gap-3">
+                    {TIMELINES[currentLang].map((item) => (
                       <button
                         key={item.key}
                         type="button"
-                        onClick={() =>
-                          setTimeline(item.key)
-                        }
+                        onClick={() => setTimeline(item.key)}
                         className={`
-                          rounded-xl border
-                          p-3 text-center
-                          text-xs font-bold
-                          transition-all
+                          rounded-xl border p-3 text-center text-xs font-bold transition-all
                           ${
                             timeline === item.key
-                              ? "border-z-accent bg-z-accent/10 text-z-accent"
-                              : "border-slate-200 text-slate-600 hover:border-z-accent/50 dark:border-white/10 dark:text-z-muted"
+                              ? "border-blue-600 bg-blue-50/60 text-blue-700 dark:border-blue-400/30 dark:bg-blue-400/10 dark:text-blue-300"
+                              : "border-slate-200 bg-white/60 text-slate-600 hover:border-blue-300/60 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300"
                           }
                         `}
                       >
                         {item.label}
                       </button>
-                    )
-                  )}
+                    ))}
+                  </div>
                 </div>
               </motion.div>
             )}
-
-            {/* STEP 3 */}
 
             {step === 3 && (
               <motion.div
@@ -1043,55 +734,32 @@ export default function PricingWizard() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
               >
                 {loadingQuote ? (
                   <div className="flex flex-col items-center justify-center gap-4 py-16">
-                    <Loader2
-                      size={32}
-                      className="animate-spin text-z-accent"
-                    />
-
-                    <p className="text-sm text-z-muted">
+                    <Loader2 size={32} className="animate-spin text-blue-600 dark:text-blue-400" />
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
                       Calculating your estimate...
                     </p>
                   </div>
                 ) : (
                   <>
                     {quoteError && (
-                      <div className="mb-5 flex gap-3 rounded-xl border border-amber-500/20 bg-amber-500/10 p-4 text-sm text-amber-700 dark:text-amber-300">
-                        <AlertCircle
-                          size={18}
-                          className="shrink-0"
-                        />
-
+                      <div className="mb-5 flex gap-3 rounded-xl border border-amber-500/30 bg-amber-50/60 p-4 text-sm text-amber-700 backdrop-blur-sm dark:border-amber-400/20 dark:bg-amber-400/10 dark:text-amber-300">
+                        <AlertCircle size={18} className="shrink-0" />
                         <span>{quoteError}</span>
                       </div>
                     )}
 
-                    <div className="rounded-3xl border border-z-accent/20 bg-z-accent/[0.05] p-6 md:p-8">
-
-                      <div className="mb-2 text-2xl">
-                        {quote?.service?.icon ||
-                          selectedService?.icon ||
-                          "💼"}
-                      </div>
-
-                      <h3 className="text-xl font-extrabold text-slate-900 dark:text-z-text">
-                        {getLabel(
-                          quote?.service?.label
-                        ) ||
-                          getLabel(
-                            selectedService?.label
-                          ) ||
-                          "Your Project"}
+                    <div className="rounded-3xl border border-blue-200/60 bg-gradient-to-br from-blue-50/80 to-white/80 p-6 backdrop-blur-sm dark:border-blue-400/20 dark:from-blue-400/10 dark:to-[#1e293b]/80 md:p-8">
+                      <div className="mb-2 text-2xl">{quote?.service?.icon || selectedService?.icon || "💼"}</div>
+                      <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">
+                        {getLabel(quote?.service?.label) || getLabel(selectedService?.label) || "Your Project"}
                       </h3>
-
-                      <p className="mt-2 text-sm text-slate-600 dark:text-z-muted">
+                      <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
                         {quote?.recommendedPackage
-                          ? getLabel(
-                              quote.recommendedPackage
-                                .name
-                            )
+                          ? getLabel(quote.recommendedPackage.name)
                           : "Custom solution tailored around your business requirements."}
                       </p>
 
@@ -1099,29 +767,19 @@ export default function PricingWizard() {
 
                       <div className="grid gap-6 sm:grid-cols-2">
                         <div>
-                          <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-z-muted">
+                          <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                             Estimated Investment
                           </div>
-
-                          <div className="text-2xl font-extrabold text-z-accent">
-                            {formatPrice(
-                              estimateMin
-                            )}
-                            {" – "}
-                            {formatPrice(
-                              estimateMax
-                            )}
+                          <div className="text-2xl font-extrabold text-blue-600 dark:text-blue-400">
+                            {formatPrice(estimateMin)} – {formatPrice(estimateMax)}
                           </div>
                         </div>
-
                         <div>
-                          <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-z-muted">
+                          <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                             Estimated Delivery
                           </div>
-
-                          <div className="text-lg font-bold text-slate-900 dark:text-z-text">
-                            {quote?.delivery ||
-                              "4–8 Weeks"}
+                          <div className="text-lg font-bold text-slate-900 dark:text-white">
+                            {quote?.delivery || "4–8 Weeks"}
                           </div>
                         </div>
                       </div>
@@ -1129,79 +787,26 @@ export default function PricingWizard() {
 
                     <Link
                       href={contactUrl}
-                      className="
-                        group mt-5
-                        flex w-full
-                        items-center
-                        justify-center
-                        gap-2
-                        rounded-xl
-                        bg-z-accent
-                        px-6 py-4
-                        text-sm font-bold
-                        text-white
-                        shadow-lg
-                        transition-all duration-300
-                        hover:-translate-y-1
-                        hover:shadow-xl
-                      "
+                      className="group mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4 text-sm font-bold text-white shadow-lg shadow-blue-600/20 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
                     >
-                      {t(
-                        "pricing.consultation",
-                        "Get Free Consultation"
-                      )}
-
-                      <ArrowRight
-                        size={17}
-                        className="transition-transform group-hover:translate-x-1"
-                      />
+                      {t("pricing.consultation", "Get Free Consultation")}
+                      <ArrowRight size={17} className="transition-transform group-hover:translate-x-1" />
                     </Link>
                   </>
                 )}
               </motion.div>
             )}
-
           </AnimatePresence>
 
-          {/* NAVIGATION */}
-
+          {/* Navigation Buttons */}
           <div className="mt-8 flex items-center justify-between">
-
             <button
               type="button"
-              disabled={
-                step === 0 ||
-                loadingQuote
-              }
-              onClick={() =>
-                setStep(
-                  (currentStep) =>
-                    Math.max(
-                      0,
-                      currentStep - 1
-                    )
-                )
-              }
-              className="
-                rounded-full
-                border border-slate-200
-                px-5 py-2.5
-                text-sm font-semibold
-                text-slate-600
-                transition-all
-                hover:border-slate-300
-                hover:text-slate-900
-                disabled:cursor-not-allowed
-                disabled:opacity-30
-                dark:border-white/10
-                dark:text-z-muted
-                dark:hover:text-z-text
-              "
+              disabled={step === 0 || loadingQuote}
+              onClick={() => setStep((cur) => Math.max(0, cur - 1))}
+              className="rounded-full border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 transition-all hover:border-slate-300 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-30 dark:border-white/10 dark:text-slate-400 dark:hover:text-white"
             >
-              {t(
-                "pricing.back",
-                "Back"
-              )}
+              {t("pricing.back", "Back")}
             </button>
 
             {step < 3 && (
@@ -1209,60 +814,23 @@ export default function PricingWizard() {
                 type="button"
                 disabled={
                   loadingQuote ||
-                  (step === 0 &&
-                    !selectedServiceId) ||
-                  (step === 1 &&
-                    !bizType)
+                  (step === 0 && !selectedServiceId) ||
+                  (step === 1 && !bizType)
                 }
                 onClick={() => {
                   if (step === 2) {
-                    void getQuote();
+                    getQuote();
                     return;
                   }
-
-                  setStep(
-                    (currentStep) =>
-                      Math.min(
-                        3,
-                        currentStep + 1
-                      )
-                  );
+                  setStep((cur) => Math.min(3, cur + 1));
                 }}
-                className="
-                  flex items-center
-                  gap-2
-                  rounded-full
-                  bg-z-accent
-                  px-6 py-3
-                  text-sm font-bold
-                  text-white
-                  transition-all
-                  hover:opacity-90
-                  disabled:cursor-not-allowed
-                  disabled:opacity-40
-                "
+                className="flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-blue-600/20 transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
               >
-                {loadingQuote && (
-                  <Loader2
-                    size={15}
-                    className="animate-spin"
-                  />
-                )}
-
-                {step === 2
-                  ? t(
-                      "pricing.get_quote",
-                      "Get Quote"
-                    )
-                  : t(
-                      "pricing.next",
-                      "Next"
-                    )}
-
+                {loadingQuote && <Loader2 size={15} className="animate-spin" />}
+                {step === 2 ? t("pricing.get_quote", "Get Quote") : t("pricing.next", "Next")}
                 <ArrowRight size={15} />
               </button>
             )}
-
           </div>
         </motion.div>
       </div>
