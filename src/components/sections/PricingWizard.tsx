@@ -13,29 +13,34 @@ import {
   Clock,
   Wallet,
   Briefcase,
+  Globe2,
+  Smartphone,
+  Code2,
+  Cloud,
+  BarChart3,
+  Megaphone,
+  Bot,
+  ShoppingCart,
+  Laptop,
 } from "lucide-react";
 import Link from "next/link";
 
 import { useLang } from "@/lib/providers";
 import api from "@/lib/api";
 
-type SupportedLang = "en" | "hi" | "pa";
-
-interface LocalizedText {
-  en: string;
-  hi?: string;
-  pa?: string;
-}
+/* =========================================================
+   TYPES – English Only
+========================================================= */
 
 interface PricingFeature {
   id: string;
-  label: LocalizedText;
+  label: string;
   flatAdd: number;
   multiplier: number;
 }
 
 interface PricingPackage {
-  name: LocalizedText;
+  name: string;
   minBudget: number;
   features: string[];
   deliveryWeeks: string;
@@ -43,9 +48,9 @@ interface PricingPackage {
 
 interface PricingService {
   id: string;
-  label: LocalizedText;
-  description: LocalizedText;
-  icon: string;
+  label: string;
+  description: string;
+  iconKey: string; // key to map to Lucide icon
   baseMin: number;
   baseMax: number;
   features?: PricingFeature[];
@@ -55,7 +60,7 @@ interface PricingService {
 interface QuoteResult {
   service?: {
     id: string;
-    label: LocalizedText;
+    label: string;
     icon: string;
   };
   estimate?: {
@@ -67,107 +72,64 @@ interface QuoteResult {
 }
 
 /* =========================================================
-   BUSINESS TYPES
+   ICON MAPPING
 ========================================================= */
 
-const BUSINESS_TYPES: Record<SupportedLang, string[]> = {
-  en: [
-    "Startups",
-    "Real Estate",
-    "Education",
-    "Healthcare",
-    "Manufacturing",
-    "E-commerce",
-  ],
-  hi: [
-    "स्टार्टअप",
-    "रियल एस्टेट",
-    "शिक्षा",
-    "स्वास्थ्य सेवा",
-    "विनिर्माण",
-    "ई-कॉमर्स",
-  ],
-  pa: [
-    "ਸਟਾਰਟਅੱਪ",
-    "ਰੀਅਲ ਅਸਟੇਟ",
-    "ਸਿੱਖਿਆ",
-    "ਸਿਹਤ ਸੰਭਾਲ",
-    "ਨਿਰਮਾਣ",
-    "ਈ-ਕਾਮਰਸ",
-  ],
+const ICON_MAP: Record<string, any> = {
+  "business-website": Globe2,
+  ecommerce: ShoppingCart,
+  "mobile-app": Smartphone,
+  "custom-software": Code2,
+  "saas-platform": Cloud,
+  "seo-package": BarChart3,
+  "digital-marketing": Megaphone,
+  "ai-integration": Bot,
 };
 
 /* =========================================================
-   TIMELINES
+   BUSINESS TYPES – English Only
 ========================================================= */
 
-const TIMELINES: Record<
-  SupportedLang,
-  { key: string; label: string }[]
-> = {
-  en: [
-    { key: "rush", label: "ASAP (Rush)" },
-    { key: "normal", label: "1–2 Months" },
-    { key: "flexible", label: "Flexible" },
-  ],
-  hi: [
-    { key: "rush", label: "जल्द से जल्द" },
-    { key: "normal", label: "1–2 महीने" },
-    { key: "flexible", label: "लचीला" },
-  ],
-  pa: [
-    { key: "rush", label: "ਜਲਦੀ ਤੋਂ ਜਲਦੀ" },
-    { key: "normal", label: "1–2 ਮਹੀਨੇ" },
-    { key: "flexible", label: "ਲਚਕਦਾਰ" },
-  ],
-};
+const BUSINESS_TYPES = [
+  "Startups",
+  "Real Estate",
+  "Education",
+  "Healthcare",
+  "Manufacturing",
+  "E-commerce",
+];
 
 /* =========================================================
-   COMPLEXITY
+   TIMELINES – English Only
 ========================================================= */
 
-const COMPLEXITY: Record<
-  SupportedLang,
-  { key: string; label: string }[]
-> = {
-  en: [
-    { key: "basic", label: "Basic" },
-    { key: "standard", label: "Standard" },
-    { key: "advanced", label: "Advanced" },
-    { key: "enterprise", label: "Enterprise" },
-  ],
-  hi: [
-    { key: "basic", label: "बेसिक" },
-    { key: "standard", label: "स्टैंडर्ड" },
-    { key: "advanced", label: "एडवांस्ड" },
-    { key: "enterprise", label: "एंटरप्राइज़" },
-  ],
-  pa: [
-    { key: "basic", label: "ਬੇਸਿਕ" },
-    { key: "standard", label: "ਸਟੈਂਡਰਡ" },
-    { key: "advanced", label: "ਐਡਵਾਂਸਡ" },
-    { key: "enterprise", label: "ਐਂਟਰਪ੍ਰਾਈਜ਼" },
-  ],
-};
+const TIMELINES = [
+  { key: "rush", label: "ASAP (Rush)" },
+  { key: "normal", label: "1–2 Months" },
+  { key: "flexible", label: "Flexible" },
+];
 
 /* =========================================================
-   FALLBACK SERVICES
+   COMPLEXITY – English Only
+========================================================= */
+
+const COMPLEXITY = [
+  { key: "basic", label: "Basic" },
+  { key: "standard", label: "Standard" },
+  { key: "advanced", label: "Advanced" },
+  { key: "enterprise", label: "Enterprise" },
+];
+
+/* =========================================================
+   FALLBACK SERVICES – English Only, No Emojis
 ========================================================= */
 
 const FALLBACK_SERVICES: PricingService[] = [
   {
     id: "business-website",
-    label: {
-      en: "Website Development",
-      hi: "वेबसाइट डेवलपमेंट",
-      pa: "ਵੈੱਬਸਾਈਟ ਡਿਵੈਲਪਮੈਂਟ",
-    },
-    description: {
-      en: "Professional business websites built for growth.",
-      hi: "व्यवसाय के विकास के लिए प्रोफेशनल वेबसाइट।",
-      pa: "ਬਿਜ਼ਨਸ ਵਿਕਾਸ ਲਈ ਪ੍ਰੋਫੈਸ਼ਨਲ ਵੈੱਬਸਾਈਟਾਂ।",
-    },
-    icon: "🌐",
+    label: "Website Development",
+    description: "Professional business websites built for growth.",
+    iconKey: "business-website",
     baseMin: 8000,
     baseMax: 25000,
     features: [],
@@ -175,17 +137,9 @@ const FALLBACK_SERVICES: PricingService[] = [
   },
   {
     id: "ecommerce",
-    label: {
-      en: "E-Commerce Solutions",
-      hi: "ई-कॉमर्स समाधान",
-      pa: "ਈ-ਕਾਮਰਸ ਹੱਲ",
-    },
-    description: {
-      en: "Custom online stores and e-commerce platforms.",
-      hi: "कस्टम ऑनलाइन स्टोर और ई-कॉमर्स प्लेटफॉर्म।",
-      pa: "ਕਸਟਮ ਆਨਲਾਈਨ ਸਟੋਰ ਅਤੇ ਈ-ਕਾਮਰਸ ਪਲੇਟਫਾਰਮ।",
-    },
-    icon: "🛒",
+    label: "E-Commerce Solutions",
+    description: "Custom online stores and e-commerce platforms.",
+    iconKey: "ecommerce",
     baseMin: 20000,
     baseMax: 80000,
     features: [],
@@ -193,17 +147,9 @@ const FALLBACK_SERVICES: PricingService[] = [
   },
   {
     id: "mobile-app",
-    label: {
-      en: "Mobile App Development",
-      hi: "मोबाइल एप्लीकेशन डेवलपमेंट",
-      pa: "ਮੋਬਾਈਲ ਐਪਲੀਕੇਸ਼ਨ ਡਿਵੈਲਪਮੈਂਟ",
-    },
-    description: {
-      en: "Modern mobile applications for Android and iOS.",
-      hi: "Android और iOS के लिए आधुनिक मोबाइल एप्लीकेशन।",
-      pa: "Android ਅਤੇ iOS ਲਈ ਆਧੁਨਿਕ ਮੋਬਾਈਲ ਐਪਲੀਕੇਸ਼ਨ।",
-    },
-    icon: "📱",
+    label: "Mobile App Development",
+    description: "Modern mobile applications for Android and iOS.",
+    iconKey: "mobile-app",
     baseMin: 50000,
     baseMax: 200000,
     features: [],
@@ -211,17 +157,9 @@ const FALLBACK_SERVICES: PricingService[] = [
   },
   {
     id: "custom-software",
-    label: {
-      en: "Custom Software",
-      hi: "कस्टम सॉफ्टवेयर",
-      pa: "ਕਸਟਮ ਸਾਫਟਵੇਅਰ",
-    },
-    description: {
-      en: "Custom business software designed around your workflow.",
-      hi: "आपके बिजनेस वर्कफ्लो के अनुसार कस्टम सॉफ्टवेयर।",
-      pa: "ਤੁਹਾਡੇ ਬਿਜ਼ਨਸ ਵਰਕਫਲੋ ਲਈ ਕਸਟਮ ਸਾਫਟਵੇਅਰ।",
-    },
-    icon: "💻",
+    label: "Custom Software",
+    description: "Custom business software designed around your workflow.",
+    iconKey: "custom-software",
     baseMin: 50000,
     baseMax: 300000,
     features: [],
@@ -229,17 +167,9 @@ const FALLBACK_SERVICES: PricingService[] = [
   },
   {
     id: "saas-platform",
-    label: {
-      en: "SaaS Development",
-      hi: "SaaS डेवलपमेंट",
-      pa: "SaaS ਡਿਵੈਲਪਮੈਂਟ",
-    },
-    description: {
-      en: "Scalable SaaS platforms and custom web applications.",
-      hi: "स्केलेबल SaaS प्लेटफॉर्म और कस्टम वेब एप्लीकेशन।",
-      pa: "ਸਕੇਲੇਬਲ SaaS ਪਲੇਟਫਾਰਮ ਅਤੇ ਕਸਟਮ ਵੈੱਬ ਐਪਲੀਕੇਸ਼ਨ।",
-    },
-    icon: "☁️",
+    label: "SaaS Development",
+    description: "Scalable SaaS platforms and custom web applications.",
+    iconKey: "saas-platform",
     baseMin: 80000,
     baseMax: 500000,
     features: [],
@@ -247,17 +177,9 @@ const FALLBACK_SERVICES: PricingService[] = [
   },
   {
     id: "seo-package",
-    label: {
-      en: "SEO Services",
-      hi: "SEO सेवाएं",
-      pa: "SEO ਸੇਵਾਵਾਂ",
-    },
-    description: {
-      en: "SEO strategies to improve visibility and generate leads.",
-      hi: "विजिबिलिटी और लीड बढ़ाने के लिए SEO रणनीतियां।",
-      pa: "ਵਿਜ਼ਿਬਿਲਟੀ ਅਤੇ ਲੀਡ ਵਧਾਉਣ ਲਈ SEO ਰਣਨੀਤੀਆਂ।",
-    },
-    icon: "📈",
+    label: "SEO Services",
+    description: "SEO strategies to improve visibility and generate leads.",
+    iconKey: "seo-package",
     baseMin: 5000,
     baseMax: 50000,
     features: [],
@@ -265,17 +187,9 @@ const FALLBACK_SERVICES: PricingService[] = [
   },
   {
     id: "digital-marketing",
-    label: {
-      en: "Digital Marketing",
-      hi: "डिजिटल मार्केटिंग",
-      pa: "ਡਿਜ਼ਿਟਲ ਮਾਰਕੀਟਿੰਗ",
-    },
-    description: {
-      en: "Digital campaigns designed to grow visibility and leads.",
-      hi: "विजिबिलिटी और लीड बढ़ाने के लिए डिजिटल कैंपेन।",
-      pa: "ਵਿਜ਼ਿਬਿਲਟੀ ਅਤੇ ਲੀਡ ਵਧਾਉਣ ਲਈ ਡਿਜ਼ਿਟਲ ਕੈਂਪੇਨ।",
-    },
-    icon: "📣",
+    label: "Digital Marketing",
+    description: "Digital campaigns designed to grow visibility and leads.",
+    iconKey: "digital-marketing",
     baseMin: 8000,
     baseMax: 75000,
     features: [],
@@ -283,17 +197,9 @@ const FALLBACK_SERVICES: PricingService[] = [
   },
   {
     id: "ai-integration",
-    label: {
-      en: "AI Integration",
-      hi: "AI इंटीग्रेशन",
-      pa: "AI ਏਕੀਕਰਨ",
-    },
-    description: {
-      en: "AI-powered automation and business integrations.",
-      hi: "AI आधारित ऑटोमेशन और बिजनेस इंटीग्रेशन।",
-      pa: "AI ਅਧਾਰਿਤ ਆਟੋਮੇਸ਼ਨ ਅਤੇ ਬਿਜ਼ਨਸ ਇੰਟੀਗ੍ਰੇਸ਼ਨ।",
-    },
-    icon: "🤖",
+    label: "AI Integration",
+    description: "AI-powered automation and business integrations.",
+    iconKey: "ai-integration",
     baseMin: 30000,
     baseMax: 300000,
     features: [],
@@ -350,11 +256,7 @@ function StepProgress({
 ========================================================= */
 
 export default function PricingWizard() {
-  const { t, lang } = useLang();
-
-  const language = String(lang);
-  const currentLang: SupportedLang =
-    language === "hi" ? "hi" : language === "pa" ? "pa" : "en";
+  const { t } = useLang();
 
   const [step, setStep] = useState(0);
   const [services, setServices] = useState<PricingService[]>(FALLBACK_SERVICES);
@@ -398,22 +300,6 @@ export default function PricingWizard() {
       active = false;
     };
   }, []);
-
-  // Reset on language change
-  useEffect(() => {
-    setBizType("");
-    setSelectedFeatures([]);
-    setQuote(null);
-    setQuoteError("");
-    setStep((cur) => (cur > 1 ? 1 : cur));
-  }, [currentLang]);
-
-  function getLabel(value?: LocalizedText | null) {
-    if (!value) return "";
-    if (currentLang === "hi" && value.hi) return value.hi;
-    if (currentLang === "pa" && value.pa) return value.pa;
-    return value.en ?? "";
-  }
 
   function formatPrice(amount: number) {
     return `₹${Number(amount || 0).toLocaleString("en-IN")}`;
@@ -478,15 +364,18 @@ export default function PricingWizard() {
     `&estimateMin=${estimateMin}` +
     `&estimateMax=${estimateMax}`;
 
+  // Budget presets
+  const budgetPresets = [5000, 25000, 50000, 100000, 200000, 500000];
+
   return (
     <section
       id="pricing"
-      className="relative overflow-hidden bg-slate-50/60 px-4 py-24 transition-colors duration-300 dark:bg-[#0b0f19] md:px-6 md:py-32"
+      className="relative overflow-hidden bg-white px-4 py-16 transition-colors duration-300 dark:bg-[#111827] md:px-6 md:py-20 lg:py-24"
     >
       {/* Background decorative */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-        <div className="absolute -left-32 top-20 h-96 w-96 rounded-full bg-blue-500/[0.05] blur-[130px] dark:bg-blue-400/[0.06]" />
-        <div className="absolute -right-32 bottom-0 h-96 w-96 rounded-full bg-purple-500/[0.05] blur-[130px] dark:bg-purple-400/[0.06]" />
+        <div className="absolute -left-32 top-20 h-96 w-96 rounded-full bg-blue-500/[0.05] blur-[130px] dark:bg-blue-400/[0.05]" />
+        <div className="absolute -right-32 bottom-0 h-96 w-96 rounded-full bg-purple-500/[0.05] blur-[130px] dark:bg-purple-400/[0.05]" />
       </div>
 
       <div className="relative mx-auto max-w-7xl">
@@ -498,7 +387,7 @@ export default function PricingWizard() {
           transition={{ duration: 0.6 }}
           className="mx-auto mb-12 max-w-3xl text-center"
         >
-          <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-blue-50/60 px-4 py-1.5 text-[11px] font-bold tracking-[0.1em] text-blue-700 backdrop-blur-sm dark:border-blue-400/20 dark:bg-blue-400/[0.06] dark:text-blue-200">
+          <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-blue-50/60 px-4 py-1.5 text-[11px] font-bold tracking-[0.1em] text-blue-700 backdrop-blur-sm dark:border-blue-400/20 dark:bg-blue-400/[0.05] dark:text-blue-200">
             <Sparkles size={13} />
             <span>{t("pricing.badge", "Transparent Pricing")}</span>
           </div>
@@ -519,7 +408,7 @@ export default function PricingWizard() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mx-auto max-w-3xl rounded-3xl border border-slate-200/70 bg-white/80 p-6 shadow-[0_25px_70px_rgba(15,23,42,0.08)] backdrop-blur-md dark:border-white/10 dark:bg-[#1e293b]/70 dark:shadow-[0_25px_70px_rgba(0,0,0,0.3)] md:p-10"
+          className="mx-auto max-w-3xl rounded-3xl border border-slate-200/60 bg-white/80 p-6 shadow-[0_25px_70px_rgba(15,23,42,0.06)] backdrop-blur-md dark:border-white/8 dark:bg-[#1a1e2b]/80 dark:shadow-[0_25px_70px_rgba(0,0,0,0.3)] md:p-10"
         >
           {/* Step Progress */}
           <StepProgress current={step} total={steps.length} />
@@ -540,29 +429,32 @@ export default function PricingWizard() {
                   </div>
                 ) : (
                   <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
-                    {services.map((service) => (
-                      <button
-                        key={service.id}
-                        type="button"
-                        onClick={() => selectService(service)}
-                        className={`
-                          group flex min-h-[140px] flex-col items-center justify-center rounded-2xl border p-4 text-center transition-all duration-300 hover:-translate-y-1
-                          ${
-                            selectedServiceId === service.id
-                              ? "border-blue-600 bg-blue-50/60 shadow-md dark:border-blue-400/30 dark:bg-blue-400/10"
-                              : "border-slate-200 bg-white/60 hover:border-blue-300/60 hover:shadow-md dark:border-white/10 dark:bg-white/[0.04] dark:hover:border-blue-400/20"
-                          }
-                        `}
-                      >
-                        <span className="text-3xl mb-2">{service.icon}</span>
-                        <span className="text-sm font-bold text-slate-900 dark:text-white">
-                          {getLabel(service.label)}
-                        </span>
-                        <span className="mt-1 text-xs font-semibold text-blue-600 dark:text-blue-400">
-                          {formatPrice(service.baseMin)} – {formatPrice(service.baseMax)}
-                        </span>
-                      </button>
-                    ))}
+                    {services.map((service) => {
+                      const Icon = ICON_MAP[service.iconKey] || Globe2;
+                      return (
+                        <button
+                          key={service.id}
+                          type="button"
+                          onClick={() => selectService(service)}
+                          className={`
+                            group flex min-h-[140px] flex-col items-center justify-center rounded-2xl border p-4 text-center transition-all duration-300 hover:-translate-y-1
+                            ${
+                              selectedServiceId === service.id
+                                ? "border-blue-600 bg-blue-50/60 shadow-md dark:border-blue-400/30 dark:bg-blue-400/10"
+                                : "border-slate-200 bg-white/60 hover:border-blue-300/60 hover:shadow-md dark:border-white/8 dark:bg-white/[0.04] dark:hover:border-blue-400/20"
+                            }
+                          `}
+                        >
+                          <Icon size={28} className="mb-2 text-blue-600 dark:text-blue-400" />
+                          <span className="text-sm font-bold text-slate-900 dark:text-white">
+                            {service.label}
+                          </span>
+                          <span className="mt-1 text-xs font-semibold text-blue-600 dark:text-blue-400">
+                            {formatPrice(service.baseMin)} – {formatPrice(service.baseMax)}
+                          </span>
+                        </button>
+                      );
+                    })}
                   </div>
                 )}
               </motion.div>
@@ -582,7 +474,7 @@ export default function PricingWizard() {
                     {t("pricing.business_type", "What type of business do you have?")}
                   </p>
                   <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
-                    {BUSINESS_TYPES[currentLang].map((business) => (
+                    {BUSINESS_TYPES.map((business) => (
                       <button
                         key={business}
                         type="button"
@@ -592,7 +484,7 @@ export default function PricingWizard() {
                           ${
                             bizType === business
                               ? "border-blue-600 bg-blue-50/60 text-blue-700 dark:border-blue-400/30 dark:bg-blue-400/10 dark:text-blue-300"
-                              : "border-slate-200 bg-white/60 text-slate-600 hover:border-blue-300/60 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300"
+                              : "border-slate-200 bg-white/60 text-slate-600 hover:border-blue-300/60 dark:border-white/8 dark:bg-white/[0.04] dark:text-slate-300"
                           }
                         `}
                       >
@@ -609,7 +501,7 @@ export default function PricingWizard() {
                     {t("pricing.complexity", "Project Complexity")}
                   </p>
                   <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-                    {COMPLEXITY[currentLang].map((item) => (
+                    {COMPLEXITY.map((item) => (
                       <button
                         key={item.key}
                         type="button"
@@ -619,7 +511,7 @@ export default function PricingWizard() {
                           ${
                             complexity === item.key
                               ? "border-blue-600 bg-blue-50/60 text-blue-700 dark:border-blue-400/30 dark:bg-blue-400/10 dark:text-blue-300"
-                              : "border-slate-200 bg-white/60 text-slate-600 hover:border-blue-300/60 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300"
+                              : "border-slate-200 bg-white/60 text-slate-600 hover:border-blue-300/60 dark:border-white/8 dark:bg-white/[0.04] dark:text-slate-300"
                           }
                         `}
                       >
@@ -645,12 +537,12 @@ export default function PricingWizard() {
                             ${
                               selectedFeatures.includes(feature.id)
                                 ? "border-blue-600 bg-blue-50/60 dark:border-blue-400/30 dark:bg-blue-400/10"
-                                : "border-slate-200 bg-white/60 hover:border-blue-300/60 dark:border-white/10 dark:bg-white/[0.04]"
+                                : "border-slate-200 bg-white/60 hover:border-blue-300/60 dark:border-white/8 dark:bg-white/[0.04]"
                             }
                           `}
                         >
                           <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">
-                            {getLabel(feature.label)}
+                            {feature.label}
                           </span>
                           <span className="text-xs font-bold text-blue-600 dark:text-blue-400">
                             +{formatPrice(feature.flatAdd)}
@@ -681,6 +573,27 @@ export default function PricingWizard() {
                   </div>
                 </div>
 
+                {/* Budget Presets */}
+                <div className="mb-4 flex flex-wrap justify-center gap-2">
+                  {budgetPresets.map((val) => (
+                    <button
+                      key={val}
+                      type="button"
+                      onClick={() => setBudget(val)}
+                      className={`
+                        rounded-full border px-3 py-1.5 text-xs font-medium transition-all
+                        ${
+                          budget === val
+                            ? "border-blue-600 bg-blue-600 text-white"
+                            : "border-slate-200 bg-white/60 text-slate-600 hover:border-blue-300/60 dark:border-white/8 dark:bg-white/[0.04] dark:text-slate-300"
+                        }
+                      `}
+                    >
+                      {formatPrice(val)}
+                    </button>
+                  ))}
+                </div>
+
                 <div className="mb-6">
                   <input
                     type="range"
@@ -706,7 +619,7 @@ export default function PricingWizard() {
                     {t("pricing.timeline", "When do you need the project?")}
                   </p>
                   <div className="grid grid-cols-3 gap-3">
-                    {TIMELINES[currentLang].map((item) => (
+                    {TIMELINES.map((item) => (
                       <button
                         key={item.key}
                         type="button"
@@ -716,7 +629,7 @@ export default function PricingWizard() {
                           ${
                             timeline === item.key
                               ? "border-blue-600 bg-blue-50/60 text-blue-700 dark:border-blue-400/30 dark:bg-blue-400/10 dark:text-blue-300"
-                              : "border-slate-200 bg-white/60 text-slate-600 hover:border-blue-300/60 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300"
+                              : "border-slate-200 bg-white/60 text-slate-600 hover:border-blue-300/60 dark:border-white/8 dark:bg-white/[0.04] dark:text-slate-300"
                           }
                         `}
                       >
@@ -752,14 +665,20 @@ export default function PricingWizard() {
                       </div>
                     )}
 
-                    <div className="rounded-3xl border border-blue-200/60 bg-gradient-to-br from-blue-50/80 to-white/80 p-6 backdrop-blur-sm dark:border-blue-400/20 dark:from-blue-400/10 dark:to-[#1e293b]/80 md:p-8">
-                      <div className="mb-2 text-2xl">{quote?.service?.icon || selectedService?.icon || "💼"}</div>
+                    <div className="rounded-3xl border border-blue-200/60 bg-gradient-to-br from-blue-50/80 to-white/80 p-6 backdrop-blur-sm dark:border-blue-400/20 dark:from-blue-400/10 dark:to-[#1a1e2b]/80 md:p-8">
+                      <div className="mb-2 text-2xl">
+                        {(() => {
+                          const iconKey = quote?.service?.icon || selectedService?.iconKey || "";
+                          const Icon = ICON_MAP[iconKey] || Globe2;
+                          return <Icon size={28} className="text-blue-600 dark:text-blue-400" />;
+                        })()}
+                      </div>
                       <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">
-                        {getLabel(quote?.service?.label) || getLabel(selectedService?.label) || "Your Project"}
+                        {quote?.service?.label || selectedService?.label || "Your Project"}
                       </h3>
                       <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
                         {quote?.recommendedPackage
-                          ? getLabel(quote.recommendedPackage.name)
+                          ? quote.recommendedPackage.name
                           : "Custom solution tailored around your business requirements."}
                       </p>
 
@@ -804,7 +723,7 @@ export default function PricingWizard() {
               type="button"
               disabled={step === 0 || loadingQuote}
               onClick={() => setStep((cur) => Math.max(0, cur - 1))}
-              className="rounded-full border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 transition-all hover:border-slate-300 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-30 dark:border-white/10 dark:text-slate-400 dark:hover:text-white"
+              className="rounded-full border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 transition-all hover:border-slate-300 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-30 dark:border-white/8 dark:text-slate-400 dark:hover:text-white"
             >
               {t("pricing.back", "Back")}
             </button>
