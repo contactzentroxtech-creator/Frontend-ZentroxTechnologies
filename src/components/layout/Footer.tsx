@@ -68,12 +68,12 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="col-span-2 lg:col-span-1">
             <div className="mb-4 flex items-center gap-3">
-              <div className="relative flex h-14 w-14 items-center justify-center">
+              <div className="relative flex h-20 w-20 items-center justify-center">
                 <Image
                   src="/Zentrox-Logo1.png"
                   alt="Zentrox Technologies Logo"
-                  width={64}
-                  height={64}
+                  width={80}
+                  height={80}
                   className="object-contain"
                   priority
                 />
