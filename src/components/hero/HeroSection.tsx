@@ -212,7 +212,7 @@ export default function HeroSection() {
         relative
         overflow-hidden
         bg-white
-        py-16
+        py-14
         transition-colors
         duration-500
         dark:bg-[#111827]
@@ -310,7 +310,7 @@ export default function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="
-              mx-auto mb-6
+              mx-auto mb-5
               inline-flex items-center gap-2.5
               rounded-full
               border border-blue-200/60
@@ -375,7 +375,7 @@ export default function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
             className="
-              mx-auto mt-6
+              mx-auto mt-5
               max-w-3xl
               text-[16px] leading-7
               text-slate-600
@@ -391,7 +391,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3 }}
-            className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row"
+            className="mt-7 flex flex-col items-center justify-center gap-4 sm:flex-row"
           >
             <Link
               href="/contact"
@@ -451,16 +451,16 @@ export default function HeroSection() {
 
         {/* ===== SERVICES CAROUSEL ===== */}
         <div
-          className="relative mt-14 md:mt-16"
+          className="relative mt-12 md:mt-16"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
           {/* Section label */}
-          <div className="mb-6 text-center">
+          <div className="mb-5 text-center">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-blue-600 dark:text-blue-300">
               What We Do
             </p>
-            <h2 className="mt-2 text-2xl font-bold text-slate-900 dark:text-white md:text-3xl">
+            <h2 className="mt-1.5 text-2xl font-bold text-slate-900 dark:text-white md:text-3xl">
               Technology built around your business
             </h2>
           </div>
@@ -716,7 +716,7 @@ export default function HeroSection() {
           </div>
 
           {/* Dots indicator */}
-          <div className="mt-5 flex justify-center gap-2">
+          <div className="mt-4 flex justify-center gap-2">
             {SERVICES.map((service, index) => (
               <button
                 key={service.id}
@@ -745,7 +745,7 @@ export default function HeroSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
           className="
-            mx-auto mt-14
+            mx-auto mt-10
             grid max-w-5xl
             grid-cols-2
             overflow-hidden
