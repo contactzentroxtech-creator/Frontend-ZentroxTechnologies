@@ -36,10 +36,10 @@ const company = [
   { label: "Terms of Service", href: "/terms" },
 ];
 
+// INTERNSHIP LINK REMOVED
 const learning = [
   { label: "All Courses", href: "/courses" },
   { label: "View Our Work", href: "/#classes" },
-  { label: "Remote Internship", href: "/internship" },
   { label: "Student Dashboard", href: "/dashboard" },
   { label: "Verify Certificate", href: "/verify" },
 ];
@@ -190,7 +190,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Learning */}
+          {/* Learning - INTERNSHIP REMOVED */}
           <div>
             <h4 className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400 mb-4">
               Learning
