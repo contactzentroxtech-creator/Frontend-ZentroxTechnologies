@@ -157,7 +157,6 @@ function ServiceCard({
   const title = t(service.titleKey, service.titleFB);
   const description = t(service.descKey, service.descFB);
 
-  // Handle mouse move for spotlight
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
@@ -196,18 +195,18 @@ function ServiceCard({
             relative
             flex h-full min-h-[290px] flex-col
             overflow-hidden rounded-[24px]
-            border border-slate-200/80
+            border border-slate-200/60
             bg-white/90
             p-6
-            shadow-[0_8px_30px_rgba(15,23,42,0.05)]
+            shadow-[0_8px_30px_rgba(15,23,42,0.04)]
             backdrop-blur-sm
             transition-all duration-500
-            hover:border-blue-200/80
-            hover:shadow-[0_20px_60px_rgba(15,23,42,0.10)]
-            dark:border-white/[0.08]
-            dark:bg-[#1e293b]/80
+            hover:border-blue-300/60
+            hover:shadow-[0_20px_60px_rgba(15,23,42,0.08)]
+            dark:border-white/8
+            dark:bg-[#1a1e2b]/90
             dark:hover:border-blue-400/25
-            dark:hover:bg-[#1e293b]/90
+            dark:hover:bg-[#1a1e2b]/95
           "
           style={{ transformStyle: "preserve-3d" }}
         >
@@ -216,14 +215,14 @@ function ServiceCard({
             <div
               className="pointer-events-none absolute inset-0 transition-opacity duration-300"
               style={{
-                background: `radial-gradient(circle at ${spotlightPosition.x}% ${spotlightPosition.y}%, ${service.color}15, transparent 60%)`,
+                background: `radial-gradient(circle at ${spotlightPosition.x}% ${spotlightPosition.y}%, ${service.color}12, transparent 60%)`,
               }}
             />
           )}
 
           {/* Subtle top glow */}
           <div
-            className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full opacity-0 blur-[80px] transition-opacity duration-500 group-hover:opacity-[0.12]"
+            className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full opacity-0 blur-[80px] transition-opacity duration-500 group-hover:opacity-[0.10]"
             style={{ backgroundColor: service.color }}
           />
 
@@ -275,7 +274,7 @@ function ServiceCard({
               relative z-10 mt-6
               flex items-center justify-between
               border-t border-slate-100 pt-5
-              dark:border-white/[0.06]
+              dark:border-white/6
             "
           >
             <span
@@ -285,7 +284,7 @@ function ServiceCard({
                 dark:text-slate-200 dark:group-hover:text-blue-300
               "
             >
-              {t("services.explore", "Explore Service")}
+              {t("services.explore")}
             </span>
 
             <span
@@ -329,18 +328,21 @@ export default function ServicesSection() {
       aria-labelledby="services-heading"
       className="
         relative overflow-hidden
-        px-4 py-20
-        sm:py-24 md:px-6 md:py-28 lg:py-32
+        bg-white
+        px-4 py-16
+        sm:py-20 md:px-6 md:py-24 lg:py-28
+        dark:bg-[#111827]
+        transition-colors duration-300
       "
     >
-      {/* Background elements */}
+      {/* Background elements – softer in dark mode */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
         <div
           className="
             absolute left-[-150px] top-[10%]
             h-[450px] w-[450px] rounded-full
             bg-blue-500/[0.05] blur-[140px]
-            dark:bg-blue-400/[0.06]
+            dark:bg-blue-400/[0.05]
           "
         />
         <div
@@ -348,7 +350,7 @@ export default function ServicesSection() {
             absolute right-[-150px] bottom-[5%]
             h-[450px] w-[450px] rounded-full
             bg-orange-400/[0.04] blur-[140px]
-            dark:bg-orange-400/[0.05]
+            dark:bg-orange-400/[0.04]
           "
         />
       </div>
@@ -359,11 +361,11 @@ export default function ServicesSection() {
           initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : undefined}
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-          className="mx-auto mb-14 max-w-4xl text-center sm:mb-16 md:mb-18"
+          className="mx-auto mb-12 max-w-4xl text-center sm:mb-14 md:mb-16"
         >
-          <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-blue-50/60 px-4 py-1.5 text-[11px] font-bold tracking-[0.1em] text-blue-700 backdrop-blur-sm dark:border-blue-400/20 dark:bg-blue-400/[0.06] dark:text-blue-200">
+          <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-blue-50/60 px-4 py-1.5 text-[11px] font-bold tracking-[0.1em] text-blue-700 backdrop-blur-sm dark:border-blue-400/20 dark:bg-blue-400/[0.05] dark:text-blue-200">
             <Sparkles size={13} />
-            <span>{t("services.badge", "Everything You Need To Grow")}</span>
+            <span>{t("services.badge")}</span>
           </div>
 
           <h2
@@ -376,10 +378,7 @@ export default function ServicesSection() {
               dark:text-white
             "
           >
-            {t(
-              "services.title",
-              "Technology That Moves Your Business Forward"
-            )}
+            {t("services.title")}
           </h2>
 
           <p
@@ -391,10 +390,7 @@ export default function ServicesSection() {
               dark:text-slate-300
             "
           >
-            {t(
-              "services.sub",
-              "From building powerful digital products to helping your business attract more customers, Zentrox Technologies brings strategy, design, development, AI, and digital growth together under one team."
-            )}
+            {t("services.sub")}
           </p>
         </motion.div>
 
@@ -412,15 +408,15 @@ export default function ServicesSection() {
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           className="
-            mx-auto mt-16 max-w-3xl
+            mx-auto mt-14 max-w-3xl
             rounded-[28px]
-            border border-slate-200/70
-            bg-white/70
+            border border-slate-200/60
+            bg-white/80
             px-6 py-10 text-center
-            shadow-[0_15px_50px_rgba(15,23,42,0.05)]
+            shadow-[0_15px_50px_rgba(15,23,42,0.04)]
             backdrop-blur-md
             sm:px-10
-            dark:border-white/10 dark:bg-[#1e293b]/70
+            dark:border-white/8 dark:bg-[#1a1e2b]/80
           "
         >
           <div className="mb-4 flex justify-center">
@@ -428,14 +424,11 @@ export default function ServicesSection() {
           </div>
 
           <h3 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl dark:text-white">
-            {t("services.cta_title", "Not Sure Which Service You Need?")}
+            {t("services.cta_title")}
           </h3>
 
           <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-            {t(
-              "services.cta_sub",
-              "Tell us about your business goals and our team will help you find the right digital solution."
-            )}
+            {t("services.cta_sub")}
           </p>
 
           <Link
@@ -452,7 +445,7 @@ export default function ServicesSection() {
               focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-4
             "
           >
-            {t("services.view_all", "Explore All Services")}
+            {t("services.view_all")}
             <ArrowRight
               size={17}
               className="transition-transform duration-300 group-hover:translate-x-1"
