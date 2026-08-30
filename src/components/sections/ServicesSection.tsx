@@ -30,7 +30,7 @@ const SERVICES = [
     descKey: "service.software.desc",
     titleFB: "Custom Software Development",
     descFB:
-      "Tailored software solutions designed around your business processes, challenges, and long-term growth.",
+      "Secure, scalable software solutions tailored around your workflows, processes and business goals.",
   },
   {
     id: "web",
@@ -107,7 +107,7 @@ const SERVICES = [
     descKey: "service.ai.desc",
     titleFB: "AI Integration & Automation",
     descFB:
-      "Intelligent AI integration and automation workflows that reduce repetitive work and improve business efficiency.",
+      "Practical AI integrations and automation systems that save time and improve productivity.",
   },
   {
     id: "crm",
@@ -185,7 +185,7 @@ function ServiceCard({
           onMouseMove={handleMouseMove}
           className="
             relative
-            flex h-full min-h-[280px] flex-col
+            flex h-full min-h-[280px] max-h-[340px] flex-col
             overflow-hidden rounded-[24px]
             border border-slate-200/60
             bg-white/90
@@ -220,11 +220,11 @@ function ServiceCard({
             {String(index + 1).padStart(2, "0")}
           </span>
 
-          <div className="relative z-10">
+          <div className="relative z-10 flex flex-1 flex-col">
             <motion.div
               whileHover={{ rotate: 4, scale: 1.08 }}
               transition={{ type: "spring", stiffness: 300, damping: 16 }}
-              className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border"
+              className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border flex-shrink-0"
               style={{
                 backgroundColor: `${service.color}10`,
                 borderColor: `${service.color}25`,
@@ -233,24 +233,22 @@ function ServiceCard({
               <Icon size={25} style={{ color: service.color }} aria-hidden="true" />
             </motion.div>
 
-            <h3 className="text-xl font-bold leading-snug tracking-[-0.02em] text-slate-900 dark:text-white">
+            <h3 className="text-xl font-bold leading-snug tracking-[-0.02em] text-slate-900 dark:text-white line-clamp-2">
               {title}
             </h3>
 
-            <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
+            <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300 line-clamp-3 flex-1">
               {description}
             </p>
           </div>
 
-          <div className="flex-1" />
-
-          <div className="relative z-10 mt-6 flex items-center justify-between border-t border-slate-100 pt-5 dark:border-white/6">
+          <div className="relative z-10 mt-4 flex items-center justify-between border-t border-slate-100 pt-4 dark:border-white/6 flex-shrink-0">
             <span className="text-sm font-semibold text-slate-700 transition-colors group-hover:text-blue-600 dark:text-slate-200 dark:group-hover:text-blue-300">
               Explore Service
             </span>
 
             <span
-              className="flex h-9 w-9 items-center justify-center rounded-full transition-all duration-300 group-hover:scale-110 group-hover:rotate-45"
+              className="flex h-9 w-9 items-center justify-center rounded-full transition-all duration-300 group-hover:scale-110 group-hover:rotate-45 flex-shrink-0"
               style={{
                 color: service.color,
                 backgroundColor: `${service.color}12`,
@@ -282,8 +280,8 @@ export default function ServicesSection() {
       className="
         relative overflow-hidden
         bg-white
-        px-4 py-14
-        sm:py-16 md:px-6 md:py-20 lg:py-24
+        px-4 py-16
+        sm:py-20 md:px-6 md:py-24 lg:py-28
         dark:bg-[#111827]
         transition-colors duration-300
       "
@@ -298,7 +296,7 @@ export default function ServicesSection() {
           initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : undefined}
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-          className="mx-auto mb-10 max-w-4xl text-center sm:mb-12 md:mb-14"
+          className="mx-auto mb-12 max-w-4xl text-center sm:mb-14 md:mb-16"
         >
           <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-blue-50/60 px-4 py-1.5 text-[11px] font-bold tracking-[0.1em] text-blue-700 backdrop-blur-sm dark:border-blue-400/20 dark:bg-blue-400/[0.05] dark:text-blue-200">
             <Sparkles size={13} />
