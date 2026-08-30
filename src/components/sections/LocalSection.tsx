@@ -1,15 +1,18 @@
 "use client";
 
-import { MouseEvent, useState } from "react";
+import { useState, type MouseEvent } from "react";
 import { motion } from "framer-motion";
 import {
+  ArrowUpRight,
+  BriefcaseBusiness,
+  CheckCircle2,
+  Code2,
   Globe2,
   MapPin,
-  BriefcaseBusiness,
-  Code2,
   Rocket,
   ShieldCheck,
-  ArrowUpRight,
+  Sparkles,
+  Users,
 } from "lucide-react";
 
 import { useLang } from "@/lib/providers";
@@ -21,11 +24,11 @@ type CardData = {
   color: string;
   title: string;
   desc: string;
-  cta: string;
+  points: string[];
 };
 
 /* =========================================================
-   GROWTH CARD
+   INTERACTIVE GROWTH CARD
 ========================================================= */
 
 function GrowthCard({
@@ -37,52 +40,62 @@ function GrowthCard({
 }) {
   const Icon = card.icon;
 
-  const [coords, setCoords] = useState({
+  const [spotlight, setSpotlight] = useState({
     x: 50,
     y: 50,
   });
 
-  function handleMouseMove({
-    currentTarget,
-    clientX,
-    clientY,
-  }: MouseEvent<HTMLDivElement>) {
-    const rect = currentTarget.getBoundingClientRect();
+  function handleMouseMove(
+    event: MouseEvent<HTMLDivElement>
+  ) {
+    const rect =
+      event.currentTarget.getBoundingClientRect();
 
-    setCoords({
-      x: clientX - rect.left,
-      y: clientY - rect.top,
+    setSpotlight({
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top,
     });
   }
 
   return (
     <motion.article
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{
+        opacity: 0,
+        y: 35,
+      }}
+      whileInView={{
+        opacity: 1,
+        y: 0,
+      }}
       viewport={{
         once: true,
-        margin: "-40px",
+        margin: "-60px",
       }}
       transition={{
-        duration: 0.55,
+        duration: 0.6,
         delay: index * 0.1,
         ease: [0.22, 1, 0.36, 1],
       }}
       whileHover={{
-        y: -6,
+        y: -8,
       }}
       onMouseMove={handleMouseMove}
       className="
-        group relative overflow-hidden
-        rounded-3xl
-        border border-slate-200/80
+        group
+        relative
+        h-full
+        overflow-hidden
+        rounded-[28px]
+        border
+        border-slate-200/80
         bg-white
         p-6
-        shadow-[0_10px_35px_rgba(15,23,42,0.06)]
-        transition-all duration-500
+        shadow-[0_12px_40px_rgba(15,23,42,0.06)]
+        transition-all
+        duration-500
 
         hover:border-slate-300
-        hover:shadow-[0_25px_60px_rgba(15,23,42,0.12)]
+        hover:shadow-[0_25px_70px_rgba(15,23,42,0.12)]
 
         dark:border-white/10
         dark:bg-white/[0.045]
@@ -91,30 +104,60 @@ function GrowthCard({
         md:p-7
       "
     >
-      {/* Dynamic Mouse Spotlight */}
+      {/* Interactive spotlight */}
+
       <div
         className="
           pointer-events-none
-          absolute inset-0
+          absolute
+          inset-0
           opacity-0
-          transition-opacity duration-500
+          transition-opacity
+          duration-500
           group-hover:opacity-100
         "
         style={{
           background: `radial-gradient(
-            350px circle at ${coords.x}px ${coords.y}px,
-            ${card.color}18,
+            420px circle at ${spotlight.x}px ${spotlight.y}px,
+            ${card.color}14,
             transparent 65%
           )`,
         }}
       />
 
-      {/* Top Accent */}
+      {/* Background decoration */}
+
       <div
         className="
-          absolute left-0 top-0
-          h-1 w-0
-          transition-all duration-500
+          pointer-events-none
+          absolute
+          -right-16
+          -top-16
+          h-40
+          w-40
+          rounded-full
+          blur-3xl
+          opacity-0
+          transition-opacity
+          duration-500
+          group-hover:opacity-100
+        "
+        style={{
+          backgroundColor: `${card.color}18`,
+        }}
+      />
+
+      {/* Top accent */}
+
+      <div
+        className="
+          absolute
+          left-0
+          top-0
+          h-1
+          w-0
+          transition-all
+          duration-500
           group-hover:w-full
         "
         style={{
@@ -123,15 +166,20 @@ function GrowthCard({
       />
 
       {/* Icon */}
+
       <div
         className="
-          relative z-10
-          mb-6
-          flex h-12 w-12
-          items-center justify-center
+          relative
+          z-10
+          flex
+          h-14
+          w-14
+          items-center
+          justify-center
           rounded-2xl
           border
-          transition-transform duration-300
+          transition-all
+          duration-500
           group-hover:scale-110
           group-hover:rotate-3
         "
@@ -141,58 +189,97 @@ function GrowthCard({
         }}
       >
         <Icon
-          size={22}
+          size={25}
           style={{
             color: card.color,
           }}
         />
       </div>
 
-      {/* Title */}
-      <h3
-        className="
-          relative z-10
-          text-xl font-bold
-          tracking-tight
-          text-slate-900
-          dark:text-z-text
-        "
-      >
-        {card.title}
-      </h3>
+      {/* Content */}
 
-      {/* Description */}
-      <p
-        className="
-          relative z-10
-          mt-3
-          text-sm
-          leading-relaxed
-          text-slate-600
-          dark:text-z-muted
-        "
-      >
-        {card.desc}
-      </p>
+      <div className="relative z-10 mt-7">
+        <h3
+          className="
+            text-xl
+            font-bold
+            tracking-tight
+            text-slate-900
 
-      {/* CTA */}
+            dark:text-z-text
+          "
+        >
+          {card.title}
+        </h3>
+
+        <p
+          className="
+            mt-3
+            text-sm
+            leading-relaxed
+            text-slate-600
+
+            dark:text-z-muted
+          "
+        >
+          {card.desc}
+        </p>
+      </div>
+
+      {/* Points */}
+
+      <div className="relative z-10 mt-6 space-y-3">
+        {card.points.map((point) => (
+          <div
+            key={point}
+            className="
+              flex
+              items-start
+              gap-2.5
+              text-sm
+              text-slate-600
+
+              dark:text-z-muted
+            "
+          >
+            <CheckCircle2
+              size={17}
+              className="mt-0.5 shrink-0"
+              style={{
+                color: card.color,
+              }}
+            />
+
+            <span>{point}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Bottom */}
+
       <div
         className="
-          relative z-10
-          mt-6
-          flex items-center gap-2
-          text-sm font-semibold
+          relative
+          z-10
+          mt-8
+          flex
+          items-center
+          gap-2
+          text-sm
+          font-semibold
         "
         style={{
           color: card.color,
         }}
       >
-        <span>{card.cta}</span>
+        <span>Explore how we can help</span>
 
         <ArrowUpRight
-          size={16}
+          size={17}
           className="
-            transition-transform duration-300
+            transition-transform
+            duration-300
+
             group-hover:-translate-y-1
             group-hover:translate-x-1
           "
@@ -223,10 +310,10 @@ export default function LocalSection() {
     "Himachal Pradesh",
     "Delhi NCR",
     "India",
-    "United States",
-    "United Kingdom",
-    "Australia",
+    "USA",
+    "UK",
     "Canada",
+    "Australia",
     "Worldwide",
   ];
 
@@ -238,10 +325,10 @@ export default function LocalSection() {
     "हिमाचल प्रदेश",
     "दिल्ली एनसीआर",
     "भारत",
-    "संयुक्त राज्य",
-    "यूनाइटेड किंगडम",
-    "ऑस्ट्रेलिया",
+    "अमेरिका",
+    "यूके",
     "कनाडा",
+    "ऑस्ट्रेलिया",
     "विश्वभर",
   ];
 
@@ -253,10 +340,10 @@ export default function LocalSection() {
     "ਹਿਮਾਚਲ ਪ੍ਰਦੇਸ਼",
     "ਦਿੱਲੀ ਐਨਸੀਆਰ",
     "ਭਾਰਤ",
-    "ਸੰਯੁਕਤ ਰਾਜ",
-    "ਯੂਨਾਈਟਿਡ ਕਿੰਗਡਮ",
-    "ਆਸਟ੍ਰੇਲੀਆ",
+    "ਅਮਰੀਕਾ",
+    "ਯੂਕੇ",
     "ਕੈਨੇਡਾ",
+    "ਆਸਟ੍ਰੇਲੀਆ",
     "ਦੁਨੀਆ ਭਰ",
   ];
 
@@ -297,10 +384,6 @@ export default function LocalSection() {
     "ਵਧ ਰਹੇ ਬਿਜ਼ਨਸ",
   ];
 
-  /* =======================================================
-     LANGUAGE DATA
-  ======================================================= */
-
   const locations =
     currentLang === "hi"
       ? LOCATIONS_HI
@@ -336,18 +419,28 @@ export default function LocalSection() {
 
       title: t(
         "global.card1.title",
-        "India & Global Digital Delivery"
+        "Local Understanding. Global Delivery."
       ),
 
       desc: t(
         "global.card1.desc",
-        "From businesses across India to international companies, we build scalable digital solutions designed for modern markets and long-term growth."
+        "We understand the needs of businesses in India while building digital solutions ready for customers, teams and markets worldwide."
       ),
 
-      cta: t(
-        "global.card1.cta",
-        "Built for modern businesses"
-      ),
+      points: [
+        t(
+          "global.card1.point1",
+          "Serving businesses across India"
+        ),
+        t(
+          "global.card1.point2",
+          "Remote-first global collaboration"
+        ),
+        t(
+          "global.card1.point3",
+          "Solutions built for scalable growth"
+        ),
+      ],
     },
 
     {
@@ -356,18 +449,28 @@ export default function LocalSection() {
 
       title: t(
         "global.card2.title",
-        "Custom Technology Solutions"
+        "Technology Built Around Your Business"
       ),
 
       desc: t(
         "global.card2.desc",
-        "Websites, custom software, mobile apps, SaaS platforms and AI-powered workflows tailored around your exact business requirements."
+        "Instead of forcing your business into generic tools, we design websites, software and digital systems around your actual workflows."
       ),
 
-      cta: t(
-        "global.card2.cta",
-        "Built around your goals"
-      ),
+      points: [
+        t(
+          "global.card2.point1",
+          "Custom websites and web applications"
+        ),
+        t(
+          "global.card2.point2",
+          "Mobile apps and SaaS platforms"
+        ),
+        t(
+          "global.card2.point3",
+          "AI and automation workflows"
+        ),
+      ],
     },
 
     {
@@ -376,18 +479,28 @@ export default function LocalSection() {
 
       title: t(
         "global.card3.title",
-        "Affordable Growth-Focused Services"
+        "Built for Long-Term Growth"
       ),
 
       desc: t(
         "global.card3.desc",
-        "Professional technology and digital marketing services designed to deliver strong value, better visibility and more opportunities for growing businesses."
+        "Our goal is not just to launch a project. We help businesses create stronger digital foundations that can evolve as they grow."
       ),
 
-      cta: t(
-        "global.card3.cta",
-        "Designed for growth"
-      ),
+      points: [
+        t(
+          "global.card3.point1",
+          "Clear communication and strategy"
+        ),
+        t(
+          "global.card3.point2",
+          "Scalable technology decisions"
+        ),
+        t(
+          "global.card3.point3",
+          "Ongoing digital growth support"
+        ),
+      ],
     },
   ];
 
@@ -403,31 +516,36 @@ export default function LocalSection() {
         "India & Worldwide"
       ),
     },
-
     {
       icon: BriefcaseBusiness,
       text: t(
         "global.trust.business",
-        "Business-Focused"
+        "Business-Focused Solutions"
       ),
     },
-
     {
       icon: ShieldCheck,
       text: t(
         "global.trust.delivery",
-        "Reliable Delivery"
+        "Reliable Project Delivery"
       ),
     },
   ];
 
   return (
     <section
-      aria-label="Zentrox Technologies global digital services"
+      aria-labelledby="global-heading"
       className="
-        relative overflow-hidden
-        px-4 py-20
-        md:px-6 md:py-28
+        relative
+        overflow-hidden
+        bg-slate-50/60
+        px-4
+        py-20
+
+        dark:bg-transparent
+
+        md:px-6
+        md:py-28
       "
     >
       {/* ===================================================
@@ -435,35 +553,72 @@ export default function LocalSection() {
       =================================================== */}
 
       <div
-        className="pointer-events-none absolute inset-0"
+        className="
+          pointer-events-none
+          absolute
+          inset-0
+          overflow-hidden
+        "
         aria-hidden="true"
       >
         <div
           className="
-            absolute -left-32 top-1/4
-            h-96 w-96
+            absolute
+            -left-40
+            top-[15%]
+            h-[500px]
+            w-[500px]
             rounded-full
-            bg-blue-500/[0.05]
-            blur-[130px]
+            bg-blue-500/[0.06]
+            blur-[150px]
           "
         />
 
         <div
           className="
-            absolute -right-32 bottom-1/4
-            h-96 w-96
+            absolute
+            -right-40
+            bottom-[10%]
+            h-[500px]
+            w-[500px]
             rounded-full
             bg-orange-400/[0.05]
-            blur-[130px]
+            blur-[150px]
           "
+        />
+
+        {/* Grid */}
+
+        <div
+          className="
+            absolute
+            inset-0
+            opacity-[0.035]
+            dark:opacity-[0.05]
+          "
+          style={{
+            backgroundImage: `
+              linear-gradient(
+                rgba(100,116,139,.6) 1px,
+                transparent 1px
+              ),
+              linear-gradient(
+                90deg,
+                rgba(100,116,139,.6) 1px,
+                transparent 1px
+              )
+            `,
+            backgroundSize: "70px 70px",
+          }}
         />
       </div>
 
-      {/* ===================================================
-          HEADER
-      =================================================== */}
-
       <div className="relative mx-auto max-w-7xl">
+
+        {/* =================================================
+            HEADER
+        ================================================= */}
+
         <motion.div
           initial={{
             opacity: 0,
@@ -475,14 +630,15 @@ export default function LocalSection() {
           }}
           viewport={{
             once: true,
+            amount: 0.3,
           }}
           transition={{
             duration: 0.65,
             ease: [0.22, 1, 0.36, 1],
           }}
           className="
-            mx-auto mb-14
-            max-w-3xl
+            mx-auto
+            max-w-4xl
             text-center
           "
         >
@@ -492,50 +648,58 @@ export default function LocalSection() {
             <span>
               {t(
                 "global.badge",
-                "India to Worldwide Digital Delivery"
+                "Digital Solutions for India & Worldwide"
               )}
             </span>
           </div>
 
           <h2
+            id="global-heading"
             className="
               text-4xl
               font-extrabold
+              leading-[1.05]
               tracking-tight
               text-slate-900
+
               md:text-6xl
+
               dark:text-z-text
             "
           >
             {t(
               "global.title",
-              "Built in India. Designed for Businesses Everywhere."
+              "Built in India. Ready for Business Anywhere."
             )}
           </h2>
 
           <p
             className="
-              mx-auto mt-6
-              max-w-2xl
+              mx-auto
+              mt-6
+              max-w-3xl
               text-base
               leading-relaxed
               text-slate-600
+
               md:text-lg
+
               dark:text-z-muted
             "
           >
             {t(
               "global.sub",
-              "Zentrox Technologies helps startups and established businesses across Mohali, Chandigarh, Punjab, Haryana, Himachal Pradesh, India and worldwide build stronger digital products and grow online."
+              "From Mohali and Chandigarh to businesses across India and international markets, Zentrox Technologies creates modern websites, software, AI solutions and digital growth systems designed around real business goals."
             )}
           </p>
 
-          {/* Trust Indicators */}
+          {/* Trust Pills */}
 
           <div
             className="
               mt-8
-              flex flex-wrap
+              flex
+              flex-wrap
               justify-center
               gap-3
             "
@@ -547,23 +711,29 @@ export default function LocalSection() {
                 <div
                   key={item.text}
                   className="
-                    flex items-center gap-2
+                    flex
+                    items-center
+                    gap-2
                     rounded-full
-                    border border-slate-200
-                    bg-white
-                    px-4 py-2
-                    text-xs font-semibold
+                    border
+                    border-slate-200
+                    bg-white/90
+                    px-4
+                    py-2.5
+                    text-xs
+                    font-semibold
                     text-slate-600
                     shadow-sm
+                    backdrop-blur-xl
 
                     dark:border-white/10
-                    dark:bg-white/[0.04]
+                    dark:bg-white/[0.05]
                     dark:text-z-muted
                   "
                 >
                   <Icon
                     size={14}
-                    className="text-blue-600"
+                    className="text-blue-600 dark:text-blue-400"
                   />
 
                   {item.text}
@@ -572,110 +742,212 @@ export default function LocalSection() {
             })}
           </div>
         </motion.div>
-      </div>
 
-      {/* ===================================================
-          MARQUEE
-      =================================================== */}
-
-      <div
-        className="
-          relative mb-16
-          w-full overflow-hidden
-        "
-      >
-        {/* Left Fade */}
+        {/* =================================================
+            MARQUEE
+        ================================================= */}
 
         <div
           className="
-            pointer-events-none
-            absolute left-0 top-0
-            z-10 h-full w-16
-
-            bg-gradient-to-r
-            from-white
-            to-transparent
-
-            dark:from-[#0b0f19]
-
-            md:w-40
+            relative
+            mt-16
+            overflow-hidden
           "
-        />
+        >
+          <div
+            className="
+              pointer-events-none
+              absolute
+              left-0
+              top-0
+              z-10
+              h-full
+              w-20
+              bg-gradient-to-r
+              from-slate-50
+              to-transparent
 
-        {/* Right Fade */}
+              dark:from-[#0b0f19]
 
-        <div
-          className="
-            pointer-events-none
-            absolute right-0 top-0
-            z-10 h-full w-16
+              md:w-40
+            "
+          />
 
-            bg-gradient-to-l
-            from-white
-            to-transparent
+          <div
+            className="
+              pointer-events-none
+              absolute
+              right-0
+              top-0
+              z-10
+              h-full
+              w-20
+              bg-gradient-to-l
+              from-slate-50
+              to-transparent
 
-            dark:from-[#0b0f19]
+              dark:from-[#0b0f19]
 
-            md:w-40
-          "
-        />
+              md:w-40
+            "
+          />
+
+          <motion.div
+            className="
+              flex
+              w-max
+              gap-4
+              px-4
+            "
+            animate={{
+              x: ["0%", "-50%"],
+            }}
+            transition={{
+              duration: 42,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+          >
+            {loopItems.map((item, index) => (
+              <div
+                key={`${item}-${index}`}
+                className="
+                  flex
+                  items-center
+                  gap-2.5
+                  whitespace-nowrap
+                  rounded-2xl
+                  border
+                  border-slate-200/80
+                  bg-white
+                  px-5
+                  py-3.5
+                  text-sm
+                  font-semibold
+                  text-slate-700
+                  shadow-sm
+
+                  dark:border-white/10
+                  dark:bg-white/[0.045]
+                  dark:text-z-muted
+                "
+              >
+                <span
+                  className="
+                    h-2
+                    w-2
+                    rounded-full
+                    bg-blue-500
+                  "
+                />
+
+                {item}
+              </div>
+            ))}
+          </motion.div>
+        </div>
+
+        {/* =================================================
+            SECTION INTRO
+        ================================================= */}
 
         <motion.div
-          className="
-            flex w-max
-            gap-4
-            px-4
-          "
-          animate={{
-            x: ["0%", "-50%"],
+          initial={{
+            opacity: 0,
+            y: 20,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{
+            once: true,
           }}
           transition={{
-            duration: 38,
-            repeat: Infinity,
-            ease: "linear",
+            duration: 0.6,
           }}
+          className="
+            mx-auto
+            mt-20
+            max-w-3xl
+            text-center
+          "
         >
-          {loopItems.map((item, index) => (
+          <div
+            className="
+              mb-4
+              flex
+              justify-center
+            "
+          >
             <div
-              key={`${item}-${index}`}
               className="
-                flex items-center gap-2.5
-                whitespace-nowrap
+                flex
+                h-11
+                w-11
+                items-center
+                justify-center
                 rounded-2xl
-                border border-slate-200
-                bg-white
-                px-5 py-3
-                text-sm font-semibold
-                text-slate-700
-                shadow-sm
+                bg-blue-500/10
+                text-blue-600
 
-                dark:border-white/10
-                dark:bg-white/[0.045]
-                dark:text-z-muted
+                dark:text-blue-400
               "
             >
-              <span className="h-2 w-2 rounded-full bg-blue-500" />
-
-              {item}
+              <Users size={20} />
             </div>
-          ))}
+          </div>
+
+          <h3
+            className="
+              text-2xl
+              font-bold
+              tracking-tight
+              text-slate-900
+
+              md:text-3xl
+
+              dark:text-z-text
+            "
+          >
+            {t(
+              "global.why.title",
+              "One Technology Partner for Your Digital Growth"
+            )}
+          </h3>
+
+          <p
+            className="
+              mx-auto
+              mt-4
+              max-w-2xl
+              text-sm
+              leading-relaxed
+              text-slate-600
+
+              md:text-base
+
+              dark:text-z-muted
+            "
+          >
+            {t(
+              "global.why.sub",
+              "We combine strategy, design, development and digital growth so your business can move forward without managing multiple disconnected teams."
+            )}
+          </p>
         </motion.div>
-      </div>
 
-      {/* ===================================================
-          GROWTH CARDS
-      =================================================== */}
+        {/* =================================================
+            CARDS
+        ================================================= */}
 
-      <div
-        className="
-          relative mx-auto
-          max-w-7xl
-        "
-      >
         <div
           className="
-            grid grid-cols-1
+            mt-12
+            grid
+            grid-cols-1
             gap-5
+
             md:grid-cols-3
           "
         >
@@ -687,6 +959,79 @@ export default function LocalSection() {
             />
           ))}
         </div>
+
+        {/* =================================================
+            BOTTOM TRUST LINE
+        ================================================= */}
+
+        <motion.div
+          initial={{
+            opacity: 0,
+            y: 15,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{
+            once: true,
+          }}
+          transition={{
+            duration: 0.6,
+            delay: 0.15,
+          }}
+          className="
+            mt-12
+            flex
+            flex-wrap
+            items-center
+            justify-center
+            gap-x-6
+            gap-y-3
+            text-center
+            text-xs
+            font-medium
+            text-slate-500
+
+            dark:text-z-muted
+          "
+        >
+          <span className="flex items-center gap-2">
+            <Sparkles
+              size={14}
+              className="text-blue-500"
+            />
+
+            {t(
+              "global.footer1",
+              "Strategy-led digital solutions"
+            )}
+          </span>
+
+          <span className="flex items-center gap-2">
+            <CheckCircle2
+              size={14}
+              className="text-blue-500"
+            />
+
+            {t(
+              "global.footer2",
+              "Designed for real business outcomes"
+            )}
+          </span>
+
+          <span className="flex items-center gap-2">
+            <Globe2
+              size={14}
+              className="text-blue-500"
+            />
+
+            {t(
+              "global.footer3",
+              "India-based. Globally connected."
+            )}
+          </span>
+        </motion.div>
       </div>
     </section>
   );
