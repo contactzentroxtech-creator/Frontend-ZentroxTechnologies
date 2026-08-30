@@ -185,7 +185,7 @@ function ServiceCard({
           onMouseMove={handleMouseMove}
           className="
             relative
-            flex h-full min-h-[280px] max-h-[340px] flex-col
+            flex h-full min-h-[280px] flex-col
             overflow-hidden rounded-[24px]
             border border-slate-200/60
             bg-white/90
@@ -280,8 +280,8 @@ export default function ServicesSection() {
       className="
         relative overflow-hidden
         bg-white
-        px-4 py-16
-        sm:py-20 md:px-6 md:py-24 lg:py-28
+        px-4 py-14
+        sm:py-16 md:px-6 md:py-20 lg:py-24
         dark:bg-[#111827]
         transition-colors duration-300
       "
@@ -296,7 +296,7 @@ export default function ServicesSection() {
           initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : undefined}
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-          className="mx-auto mb-12 max-w-4xl text-center sm:mb-14 md:mb-16"
+          className="mx-auto mb-10 max-w-4xl text-center sm:mb-12 md:mb-14"
         >
           <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-blue-50/60 px-4 py-1.5 text-[11px] font-bold tracking-[0.1em] text-blue-700 backdrop-blur-sm dark:border-blue-400/20 dark:bg-blue-400/[0.05] dark:text-blue-200">
             <Sparkles size={13} />
@@ -326,7 +326,7 @@ export default function ServicesSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="mx-auto mt-14 max-w-3xl rounded-[28px] border border-slate-200/60 bg-white/80 px-6 py-10 text-center shadow-[0_15px_50px_rgba(15,23,42,0.04)] backdrop-blur-md sm:px-10 dark:border-white/8 dark:bg-[#1a1e2b]/80"
+          className="mx-auto mt-12 max-w-3xl rounded-[28px] border border-slate-200/60 bg-white/80 px-6 py-10 text-center shadow-[0_15px_50px_rgba(15,23,42,0.04)] backdrop-blur-md sm:px-10 dark:border-white/8 dark:bg-[#1a1e2b]/80"
         >
           <div className="mb-4 flex justify-center">
             <CheckCircle2 size={26} className="text-blue-600 dark:text-blue-400" />
