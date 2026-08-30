@@ -148,11 +148,11 @@ function ServiceCard({
             bg-white p-6
             shadow-sm
             transition-all duration-300
-            hover:border-gray-300
+            hover:border-blue-300
             hover:shadow-md
           "
         >
-          <span className="text-[11px] font-medium tracking-wider text-slate-300">
+          <span className="text-[11px] font-medium tracking-wider text-blue-400">
             {String(index + 1).padStart(2, "0")}
           </span>
 
@@ -174,7 +174,7 @@ function ServiceCard({
             {description}
           </p>
 
-          <div className="mt-4 flex items-center gap-1.5 text-sm font-medium text-amber-600 transition-all group-hover:gap-2.5">
+          <div className="mt-4 flex items-center gap-1.5 text-sm font-medium text-blue-600 transition-all group-hover:gap-2.5">
             {t("services.explore")}
             <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
           </div>
@@ -197,7 +197,7 @@ export default function ServicesSection() {
       <div ref={ref} className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="mx-auto mb-12 max-w-3xl text-center sm:mb-14">
-          <span className="text-xs font-medium uppercase tracking-wider text-amber-600">
+          <span className="text-xs font-medium uppercase tracking-wider text-blue-600">
             {t("services.badge")}
           </span>
           <h2
@@ -222,7 +222,7 @@ export default function ServicesSection() {
         <div className="mt-12 text-center">
           <Link
             href="/services"
-            className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-6 py-3 text-sm font-medium text-white transition-all hover:bg-slate-800 hover:shadow-md"
+            className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-medium text-white transition-all hover:bg-blue-700 hover:shadow-md"
           >
             {t("services.view_all")}
             <ArrowRight size={16} />
