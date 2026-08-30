@@ -98,6 +98,7 @@ const COMPLEXITY = [
   { key: "enterprise", label: "Enterprise" },
 ];
 
+// ─── Fallback services with plain strings ──────────────────────────────
 const FALLBACK_SERVICES: PricingService[] = [
   {
     id: "business-website",
@@ -181,6 +182,43 @@ const FALLBACK_SERVICES: PricingService[] = [
   },
 ];
 
+// ─── Helper to extract plain string from a localized object ──────────
+function toPlainString(value: any): string {
+  if (typeof value === "string") return value;
+  if (value && typeof value === "object") {
+    // If it has an 'en' property, use that; otherwise fallback to first string
+    return value.en || Object.values(value).find(v => typeof v === "string") || "";
+  }
+  return String(value || "");
+}
+
+function convertService(apiService: any): PricingService {
+  return {
+    id: apiService.id,
+    label: toPlainString(apiService.label),
+    description: toPlainString(apiService.description),
+    iconKey: apiService.iconKey || apiService.icon || "business-website",
+    baseMin: apiService.baseMin || 0,
+    baseMax: apiService.baseMax || 0,
+    features: Array.isArray(apiService.features)
+      ? apiService.features.map((f: any) => ({
+          id: f.id,
+          label: toPlainString(f.label),
+          flatAdd: f.flatAdd || 0,
+          multiplier: f.multiplier || 1,
+        }))
+      : [],
+    packages: Array.isArray(apiService.packages)
+      ? apiService.packages.map((p: any) => ({
+          name: toPlainString(p.name),
+          minBudget: p.minBudget || 0,
+          features: Array.isArray(p.features) ? p.features.map(toPlainString) : [],
+          deliveryWeeks: p.deliveryWeeks || "",
+        }))
+      : [],
+  };
+}
+
 function StepProgress({ current, total }: { current: number; total: number }) {
   return (
     <div className="mb-8 flex items-center justify-center gap-2">
@@ -241,7 +279,11 @@ export default function PricingWizard() {
       try {
         const { data } = await api.get("/pricing/services");
         if (active && Array.isArray(data?.data) && data.data.length > 0) {
-          setServices(data.data);
+          // Convert API data (which might have localized objects) to plain strings
+          const converted = data.data.map(convertService);
+          setServices(converted);
+        } else {
+          setServices(FALLBACK_SERVICES);
         }
       } catch {
         if (active) setServices(FALLBACK_SERVICES);
@@ -295,7 +337,28 @@ export default function PricingWizard() {
       });
 
       if (data?.data?.estimate && typeof data.data.estimate.min === "number" && typeof data.data.estimate.max === "number") {
-        setQuote(data.data);
+        // Convert any localized fields in the quote response
+        const quoteData = data.data;
+        const serviceLabel = quoteData.service?.label ? toPlainString(quoteData.service.label) : "";
+        const recPackage = quoteData.recommendedPackage ? {
+          name: toPlainString(quoteData.recommendedPackage.name),
+          minBudget: quoteData.recommendedPackage.minBudget || 0,
+          features: Array.isArray(quoteData.recommendedPackage.features)
+            ? quoteData.recommendedPackage.features.map(toPlainString)
+            : [],
+          deliveryWeeks: quoteData.recommendedPackage.deliveryWeeks || "",
+        } : null;
+
+        setQuote({
+          service: quoteData.service ? {
+            id: quoteData.service.id,
+            label: serviceLabel,
+            icon: quoteData.service.icon || "",
+          } : undefined,
+          estimate: quoteData.estimate,
+          delivery: quoteData.delivery || "",
+          recommendedPackage: recPackage,
+        });
       } else {
         setQuoteError("Live pricing is currently unavailable. Showing an approximate estimate.");
       }
