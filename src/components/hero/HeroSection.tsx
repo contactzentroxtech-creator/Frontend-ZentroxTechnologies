@@ -1,12 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import {
-  motion,
-  useMotionValueEvent,
-  useScroll,
-} from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
   ChevronLeft,
@@ -21,7 +17,7 @@ import {
 import { useLang } from "@/lib/providers";
 
 /* =========================================================
-   SERVICES DATA
+   SERVICES
 ========================================================= */
 
 const SERVICES = [
@@ -29,7 +25,7 @@ const SERVICES = [
     id: 0,
     title: "Website Development",
     description:
-      "Fast, SEO-friendly, modern websites that build trust and help your business grow.",
+      "Fast, modern and SEO-friendly websites designed to build trust and turn visitors into customers.",
     icon: Globe2,
     accent: "blue",
   },
@@ -37,975 +33,939 @@ const SERVICES = [
     id: 1,
     title: "Mobile App Development",
     description:
-      "Cross-platform mobile apps for Android and iOS that engage your users.",
+      "Powerful Android and iOS applications built for seamless user experiences and business growth.",
     icon: Smartphone,
     accent: "cyan",
   },
   {
     id: 2,
-    title: "Custom Software Development",
+    title: "Custom Software",
     description:
-      "Scalable, secure and high-performance software tailored to your business workflows.",
+      "Secure, scalable software solutions tailored around your workflows, processes and business goals.",
     icon: Code2,
     accent: "purple",
   },
   {
     id: 3,
-    title: "AI Integration & Automation",
+    title: "AI & Automation",
     description:
-      "Smart AI solutions to automate tasks and improve your business productivity.",
+      "Practical AI integrations and automation systems that save time and improve productivity.",
     icon: Bot,
     accent: "emerald",
   },
   {
     id: 4,
-    title: "Digital Marketing & SEO",
+    title: "SEO & Digital Growth",
     description:
-      "Rank higher, get more traffic, generate quality leads and grow online.",
+      "Data-driven SEO and digital marketing strategies focused on visibility, quality leads and growth.",
     icon: BarChart3,
-    accent: "pink",
+    accent: "orange",
   },
 ];
 
 /* =========================================================
-   3D CARD POSITION
+   CARD POSITION
 ========================================================= */
 
 function getCardStyle(index: number, activeIndex: number) {
   const total = SERVICES.length;
-
   let position = index - activeIndex;
 
   if (position > total / 2) position -= total;
   if (position < -total / 2) position += total;
 
-  if (position === 0) {
-    return {
+  const positions: Record<number, any> = {
+    0: {
       x: "0%",
       scale: 1,
       rotateY: 0,
-      rotateZ: 0,
       opacity: 1,
-      zIndex: 50,
+      zIndex: 30,
       filter: "blur(0px)",
-    };
-  }
+    },
 
-  if (position === -1) {
-    return {
-      x: "-112%",
-      scale: 0.82,
+    [-1]: {
+      x: "-95%",
+      scale: 0.78,
+      rotateY: 12,
+      opacity: 0.62,
+      zIndex: 20,
+      filter: "blur(0.3px)",
+    },
+
+    1: {
+      x: "95%",
+      scale: 0.78,
+      rotateY: -12,
+      opacity: 0.62,
+      zIndex: 20,
+      filter: "blur(0.3px)",
+    },
+
+    [-2]: {
+      x: "-165%",
+      scale: 0.6,
       rotateY: 18,
-      rotateZ: -5,
-      opacity: 0.78,
-      zIndex: 30,
-      filter: "blur(0px)",
-    };
-  }
+      opacity: 0.16,
+      zIndex: 10,
+      filter: "blur(1px)",
+    },
 
-  if (position === 1) {
-    return {
-      x: "112%",
-      scale: 0.82,
+    2: {
+      x: "165%",
+      scale: 0.6,
       rotateY: -18,
-      rotateZ: 5,
-      opacity: 0.78,
-      zIndex: 30,
-      filter: "blur(0px)",
-    };
-  }
-
-  if (position === -2) {
-    return {
-      x: "-205%",
-      scale: 0.65,
-      rotateY: 25,
-      rotateZ: -8,
-      opacity: 0.28,
+      opacity: 0.16,
       zIndex: 10,
       filter: "blur(1px)",
-    };
-  }
-
-  if (position === 2) {
-    return {
-      x: "205%",
-      scale: 0.65,
-      rotateY: -25,
-      rotateZ: 8,
-      opacity: 0.28,
-      zIndex: 10,
-      filter: "blur(1px)",
-    };
-  }
-
-  return {
-    x: position > 0 ? "280%" : "-280%",
-    scale: 0.5,
-    rotateY: position > 0 ? -25 : 25,
-    opacity: 0,
-    zIndex: 0,
-    filter: "blur(4px)",
+    },
   };
+
+  return (
+    positions[position] || {
+      x: position > 0 ? "220%" : "-220%",
+      scale: 0.45,
+      opacity: 0,
+      zIndex: 0,
+      filter: "blur(3px)",
+    }
+  );
 }
 
 /* =========================================================
-   ACCENT CLASSES
+   ACCENT COLORS
 ========================================================= */
 
 function getAccentClasses(accent: string) {
   switch (accent) {
-    case "purple":
-      return "border-purple-400/30 bg-purple-500/10 text-purple-500 dark:text-purple-400";
-
     case "cyan":
-      return "border-cyan-400/30 bg-cyan-500/10 text-cyan-600 dark:text-cyan-400";
+      return {
+        icon: "bg-cyan-500/10 border-cyan-500/20 text-cyan-600 dark:text-cyan-300",
+        glow: "from-cyan-500/10",
+      };
+
+    case "purple":
+      return {
+        icon: "bg-violet-500/10 border-violet-500/20 text-violet-600 dark:text-violet-300",
+        glow: "from-violet-500/10",
+      };
 
     case "emerald":
-      return "border-emerald-400/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400";
+      return {
+        icon: "bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-300",
+        glow: "from-emerald-500/10",
+      };
 
-    case "pink":
-      return "border-pink-400/30 bg-pink-500/10 text-pink-600 dark:text-pink-400";
+    case "orange":
+      return {
+        icon: "bg-orange-500/10 border-orange-500/20 text-orange-600 dark:text-orange-300",
+        glow: "from-orange-500/10",
+      };
 
     default:
-      return "border-blue-400/30 bg-blue-500/10 text-blue-600 dark:text-blue-400";
+      return {
+        icon: "bg-blue-500/10 border-blue-500/20 text-blue-600 dark:text-blue-300",
+        glow: "from-blue-500/10",
+      };
   }
 }
 
 /* =========================================================
-   HERO SECTION
+   HERO
 ========================================================= */
 
 export default function HeroSection() {
   const { t } = useLang();
 
-  const sectionRef = useRef<HTMLElement | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
-  const [activeIndex, setActiveIndex] = useState(2);
-  const [scrollStep, setScrollStep] = useState(-1);
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end end"],
-  });
-
-  /* =======================================================
-     SCROLL CONTROL
-  ======================================================= */
-
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    if (latest < 0.05) return;
-
-    const nextStep = Math.min(
-      SERVICES.length - 1,
-      Math.floor(latest * SERVICES.length)
-    );
-
-    if (nextStep !== scrollStep) {
-      setScrollStep(nextStep);
-      setActiveIndex(nextStep);
-    }
-  });
-
-  /* =======================================================
-     AUTO PLAY
-  ======================================================= */
+  /* AUTO PLAY */
 
   useEffect(() => {
+    if (isPaused) return;
+
     const interval = setInterval(() => {
-      setActiveIndex((current) => {
-        return (current + 1) % SERVICES.length;
-      });
-    }, 6500);
+      setActiveIndex((current) => (current + 1) % SERVICES.length);
+    }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [isPaused]);
 
   function nextCard() {
-    setActiveIndex((current) => {
-      return (current + 1) % SERVICES.length;
-    });
+    setActiveIndex((current) => (current + 1) % SERVICES.length);
   }
 
   function previousCard() {
-    setActiveIndex((current) => {
-      return current === 0
-        ? SERVICES.length - 1
-        : current - 1;
-    });
+    setActiveIndex((current) =>
+      current === 0 ? SERVICES.length - 1 : current - 1
+    );
   }
 
   return (
     <section
-      ref={sectionRef}
       aria-label="Zentrox Technologies Digital Solutions"
       className="
         relative
-        h-[185vh]
         overflow-hidden
-        bg-[#f8fafc]
+        bg-[#ffffff]
+        py-24
         transition-colors
         duration-500
-        dark:bg-[#050914]
+        dark:bg-[#111827]
+        md:py-28
+        lg:py-32
       "
     >
-      {/* ===================================================
-          STICKY SCREEN
-      ==================================================== */}
+      {/* BACKGROUND */}
 
-      <div className="sticky top-0 h-screen overflow-hidden">
-        {/* =================================================
-            BACKGROUND
-        ================================================= */}
-
-        <div
-          className="pointer-events-none absolute inset-0"
-          aria-hidden="true"
-        >
-          {/* GRID */}
-
-          <div
-            className="
-              absolute
-              inset-0
-              opacity-[0.045]
-              dark:opacity-[0.10]
-            "
-            style={{
-              backgroundImage: `
-                linear-gradient(
-                  rgba(100,116,139,.5) 1px,
-                  transparent 1px
-                ),
-                linear-gradient(
-                  90deg,
-                  rgba(100,116,139,.5) 1px,
-                  transparent 1px
-                )
-              `,
-              backgroundSize: "72px 72px",
-            }}
-          />
-
-          {/* TOP CENTER GLOW */}
-
-          <div
-            className="
-              absolute
-              left-1/2
-              top-[20%]
-              h-[600px]
-              w-[850px]
-              -translate-x-1/2
-              rounded-full
-              bg-blue-500/[0.07]
-              blur-[160px]
-              dark:bg-blue-600/[0.14]
-            "
-          />
-
-          {/* LEFT GLOW */}
-
-          <div
-            className="
-              absolute
-              -left-40
-              bottom-[-100px]
-              h-[500px]
-              w-[500px]
-              rounded-full
-              bg-blue-500/[0.08]
-              blur-[150px]
-              dark:bg-blue-500/[0.14]
-            "
-          />
-
-          {/* RIGHT GLOW */}
-
-          <div
-            className="
-              absolute
-              -right-40
-              bottom-[-100px]
-              h-[500px]
-              w-[500px]
-              rounded-full
-              bg-cyan-500/[0.08]
-              blur-[150px]
-              dark:bg-cyan-500/[0.14]
-            "
-          />
-
-          {/* FLOOR */}
-
-          <div
-            className="
-              absolute
-              bottom-[-150px]
-              left-1/2
-              h-[300px]
-              w-[900px]
-              -translate-x-1/2
-              rounded-full
-              bg-blue-500/[0.08]
-              blur-[100px]
-              dark:bg-blue-500/[0.18]
-            "
-          />
-
-          {/* PARTICLES */}
-
-          <div className="absolute left-[8%] top-[30%] h-1 w-1 rounded-full bg-blue-500 shadow-[0_0_12px_3px_rgba(59,130,246,.5)]" />
-
-          <div className="absolute right-[12%] top-[40%] h-1 w-1 rounded-full bg-cyan-500 shadow-[0_0_12px_3px_rgba(6,182,212,.5)]" />
-
-          <div className="absolute left-[15%] bottom-[25%] h-1 w-1 rounded-full bg-blue-400" />
-
-          <div className="absolute right-[8%] bottom-[30%] h-1 w-1 rounded-full bg-cyan-400" />
-        </div>
-
-        {/* =================================================
-            MAIN CONTENT
-        ================================================= */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 overflow-hidden"
+      >
+        {/* GRID */}
 
         <div
           className="
-            relative
-            z-10
-            mx-auto
-            flex
-            h-full
-            w-full
-            max-w-[1500px]
-            flex-col
-            justify-center
-            px-4
-            pt-20
-            pb-5
-            md:px-8
-            lg:px-12
+            absolute
+            inset-0
+            opacity-[0.035]
+            dark:opacity-[0.04]
           "
-        >
-          {/* ===============================================
-              HERO TEXT
-          =============================================== */}
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(100,116,139,.45) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(100,116,139,.45) 1px, transparent 1px)
+            `,
+            backgroundSize: "72px 72px",
+          }}
+        />
 
-          <div className="mx-auto w-full max-w-5xl text-center">
-            {/* BADGE */}
+        {/* SOFT BLOBS */}
 
-            <motion.div
-              initial={{ opacity: 0, y: -15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
+        <motion.div
+          animate={{
+            x: [0, 35, 0],
+            y: [0, 20, 0],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="
+            absolute
+            -left-40
+            top-10
+            h-[500px]
+            w-[500px]
+            rounded-full
+            bg-blue-500/[0.07]
+            blur-[130px]
+            dark:bg-blue-500/[0.09]
+          "
+        />
+
+        <motion.div
+          animate={{
+            x: [0, -30, 0],
+            y: [0, 25, 0],
+          }}
+          transition={{
+            duration: 14,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="
+            absolute
+            -right-40
+            top-20
+            h-[520px]
+            w-[520px]
+            rounded-full
+            bg-amber-400/[0.05]
+            blur-[140px]
+            dark:bg-orange-400/[0.05]
+          "
+        />
+
+        <motion.div
+          animate={{
+            scale: [1, 1.12, 1],
+            opacity: [0.4, 0.7, 0.4],
+          }}
+          transition={{
+            duration: 7,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="
+            absolute
+            left-1/2
+            top-[45%]
+            h-[450px]
+            w-[650px]
+            -translate-x-1/2
+            rounded-full
+            bg-blue-500/[0.06]
+            blur-[120px]
+            dark:bg-blue-500/[0.08]
+          "
+        />
+      </div>
+
+      <div
+        className="
+          relative
+          z-10
+          mx-auto
+          w-full
+          max-w-[1440px]
+          px-5
+          sm:px-8
+          lg:px-12
+        "
+      >
+        {/* HERO TEXT */}
+
+        <div className="mx-auto max-w-4xl text-center">
+          {/* BADGE */}
+
+          <motion.div
+            initial={{ opacity: 0, y: -15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="
+              mx-auto
+              mb-6
+              inline-flex
+              items-center
+              gap-2
+              rounded-full
+              border
+              border-blue-200
+              bg-blue-50/80
+              px-4
+              py-2
+              text-[10px]
+              font-bold
+              tracking-[0.08em]
+              text-blue-700
+              backdrop-blur-xl
+              dark:border-blue-400/20
+              dark:bg-blue-400/[0.07]
+              dark:text-blue-200
+              sm:text-xs
+            "
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+            </span>
+
+            {t(
+              "hero.badge",
+              "MOHALI, INDIA · BUILDING DIGITAL SOLUTIONS WORLDWIDE"
+            )}
+          </motion.div>
+
+          {/* HEADING */}
+
+          <motion.h1
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            className="
+              font-extrabold
+              leading-[1.02]
+              tracking-[-0.045em]
+            "
+          >
+            <span className="block text-4xl text-slate-900 dark:text-white sm:text-5xl md:text-6xl lg:text-7xl">
+              {t("hero.line1", "Build Better.")}
+            </span>
+
+            <span
               className="
-                mx-auto
-                mb-4
-                flex
-                w-fit
+                mt-2
+                block
+                bg-gradient-to-r
+                from-blue-600
+                via-blue-500
+                to-teal-600
+                bg-clip-text
+                text-4xl
+                text-transparent
+                dark:from-blue-300
+                dark:via-blue-400
+                dark:to-teal-300
+                sm:text-5xl
+                md:text-6xl
+                lg:text-7xl
+              "
+            >
+              {t("hero.line2", "Grow Faster.")}
+            </span>
+          </motion.h1>
+
+          {/* DESCRIPTION */}
+
+          <motion.p
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="
+              mx-auto
+              mt-6
+              max-w-3xl
+              text-[15px]
+              leading-7
+              text-slate-600
+              dark:text-slate-300
+              md:text-lg
+            "
+          >
+            {t(
+              "hero.description",
+              "We create custom software, high-performance websites, mobile apps and digital growth systems that help ambitious businesses move forward."
+            )}
+          </motion.p>
+
+          {/* CTA */}
+
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+            className="
+              mt-8
+              flex
+              flex-col
+              items-center
+              justify-center
+              gap-3
+              sm:flex-row
+            "
+          >
+            <Link
+              href="/contact"
+              className="
+                group
+                inline-flex
+                min-w-[190px]
                 items-center
+                justify-center
                 gap-2
-                rounded-full
-                border
-                border-blue-400/30
-                bg-white/70
-                px-4
-                py-2
-                text-[10px]
+                rounded-xl
+                bg-gradient-to-r
+                from-blue-600
+                to-blue-700
+                px-6
+                py-4
+                text-sm
                 font-bold
-                tracking-[0.1em]
-                text-slate-600
+                text-white
+                shadow-[0_12px_30px_rgba(37,99,235,.22)]
+                transition-all
+                duration-300
+                hover:-translate-y-1
+                hover:shadow-[0_18px_40px_rgba(37,99,235,.30)]
+              "
+            >
+              {t("hero.cta_primary", "Start Your Project")}
+
+              <ArrowRight
+                size={18}
+                className="transition-transform duration-300 group-hover:translate-x-1"
+              />
+            </Link>
+
+            <Link
+              href="/services"
+              className="
+                inline-flex
+                min-w-[190px]
+                items-center
+                justify-center
+                gap-2
+                rounded-xl
+                border
+                border-slate-200
+                bg-white/80
+                px-6
+                py-4
+                text-sm
+                font-bold
+                text-slate-700
                 shadow-sm
                 backdrop-blur-xl
-                dark:bg-blue-500/[0.08]
-                dark:text-blue-200
-                sm:text-xs
+                transition-all
+                duration-300
+                hover:-translate-y-1
+                hover:border-blue-300
+                hover:text-blue-600
+                dark:border-white/10
+                dark:bg-white/[0.04]
+                dark:text-slate-200
               "
             >
-              <span className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,.8)]" />
+              Explore Our Services
 
-              {t(
-                "hero.badge",
-                "MOHALI & CHANDIGARH — MSME REGISTERED TECHNOLOGY COMPANY"
-              )}
-            </motion.div>
+              <ArrowRight size={17} />
+            </Link>
+          </motion.div>
+        </div>
 
-            {/* HEADING */}
+        {/* CAROUSEL */}
 
-            <motion.h1
-              initial={{ opacity: 0, y: 25 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.75, delay: 0.1 }}
-              className="font-extrabold leading-[0.95] tracking-tight"
-            >
-              <span className="block text-4xl text-slate-900 dark:text-white sm:text-5xl md:text-6xl lg:text-7xl">
-                {t("hero.line1", "We Build")}
-              </span>
+        <div
+          className="relative mt-16 md:mt-20"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
+          {/* SECTION LABEL */}
 
-              <span
-                className="
-                  mt-2
-                  block
-                  bg-gradient-to-r
-                  from-blue-600
-                  via-blue-500
-                  to-cyan-500
-                  bg-clip-text
-                  text-4xl
-                  text-transparent
-                  dark:from-blue-400
-                  dark:via-blue-500
-                  dark:to-cyan-300
-                  sm:text-5xl
-                  md:text-6xl
-                  lg:text-7xl
-                "
-              >
-                {t("hero.line2", "Digital Solutions")}
-              </span>
-            </motion.h1>
+          <div className="mb-7 text-center">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-blue-600 dark:text-blue-300">
+              What We Do
+            </p>
 
-            {/* DESCRIPTION */}
-
-            <motion.p
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.2 }}
-              className="
-                mx-auto
-                mt-4
-                max-w-3xl
-                text-sm
-                leading-relaxed
-                text-slate-600
-                dark:text-slate-300
-                md:text-base
-              "
-            >
-              {t(
-                "hero.description",
-                "Custom Software, Websites, Mobile Apps, AI, SEO & Digital Marketing to help your business grow in the modern world."
-              )}
-            </motion.p>
-
-            {/* BUTTONS */}
-
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.3 }}
-              className="
-                mt-5
-                flex
-                flex-col
-                items-center
-                justify-center
-                gap-3
-                sm:flex-row
-              "
-            >
-              <Link
-                href="/contact"
-                className="
-                  group
-                  inline-flex
-                  items-center
-                  gap-2
-                  rounded-full
-                  bg-gradient-to-r
-                  from-blue-600
-                  to-blue-500
-                  px-6
-                  py-3.5
-                  text-sm
-                  font-bold
-                  text-white
-                  shadow-[0_10px_30px_rgba(37,99,235,.3)]
-                  transition-all
-                  duration-300
-                  hover:-translate-y-1
-                  hover:shadow-[0_15px_40px_rgba(37,99,235,.4)]
-                "
-              >
-                {t("hero.cta_primary", "Start Your Project")}
-
-                <ArrowRight
-                  size={17}
-                  className="transition-transform group-hover:translate-x-1"
-                />
-              </Link>
-
-              <Link
-                href="/services"
-                className="
-                  inline-flex
-                  items-center
-                  gap-2
-                  rounded-full
-                  border
-                  border-slate-300
-                  bg-white/70
-                  px-6
-                  py-3.5
-                  text-sm
-                  font-bold
-                  text-slate-800
-                  shadow-sm
-                  backdrop-blur-xl
-                  transition-all
-                  hover:-translate-y-1
-                  hover:border-blue-400
-                  dark:border-white/15
-                  dark:bg-white/[0.04]
-                  dark:text-white
-                "
-              >
-                <span className="h-0 w-0 border-y-[6px] border-l-[9px] border-y-transparent border-l-current" />
-
-                {t("hero.cta_secondary", "View Our Work")}
-              </Link>
-            </motion.div>
+            <h2 className="mt-2 text-2xl font-bold text-slate-900 dark:text-white md:text-3xl">
+              Technology built around your business
+            </h2>
           </div>
 
-          {/* ===============================================
-              3D CAROUSEL
-          =============================================== */}
+          {/* ARROWS */}
 
-          <div className="relative mt-5 md:mt-6">
-            {/* CENTER GLOW */}
+          <button
+            type="button"
+            onClick={previousCard}
+            aria-label="Previous service"
+            className="
+              absolute
+              left-0
+              top-[58%]
+              z-50
+              hidden
+              h-12
+              w-12
+              -translate-y-1/2
+              items-center
+              justify-center
+              rounded-full
+              border
+              border-slate-200
+              bg-white/90
+              text-slate-700
+              shadow-lg
+              backdrop-blur-xl
+              transition-all
+              hover:scale-105
+              hover:border-blue-300
+              hover:text-blue-600
+              dark:border-white/10
+              dark:bg-[#1c293b]/90
+              dark:text-white
+              xl:flex
+            "
+          >
+            <ChevronLeft size={21} />
+          </button>
 
-            <motion.div
-              animate={{
-                opacity: [0.25, 0.65, 0.25],
-                scale: [0.9, 1.08, 0.9],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="
-                pointer-events-none
-                absolute
-                left-1/2
-                top-1/2
-                h-[260px]
-                w-[500px]
-                -translate-x-1/2
-                -translate-y-1/2
-                rounded-full
-                bg-blue-500/[0.10]
-                blur-[80px]
-                dark:bg-blue-500/[0.18]
-              "
-            />
+          <button
+            type="button"
+            onClick={nextCard}
+            aria-label="Next service"
+            className="
+              absolute
+              right-0
+              top-[58%]
+              z-50
+              hidden
+              h-12
+              w-12
+              -translate-y-1/2
+              items-center
+              justify-center
+              rounded-full
+              border
+              border-slate-200
+              bg-white/90
+              text-slate-700
+              shadow-lg
+              backdrop-blur-xl
+              transition-all
+              hover:scale-105
+              hover:border-blue-300
+              hover:text-blue-600
+              dark:border-white/10
+              dark:bg-[#1c293b]/90
+              dark:text-white
+              xl:flex
+            "
+          >
+            <ChevronRight size={21} />
+          </button>
 
-            {/* LEFT ARROW */}
+          {/* DESKTOP 3D CAROUSEL */}
 
-            <button
-              type="button"
-              onClick={previousCard}
-              aria-label="Previous service"
-              className="
-                absolute
-                left-2
-                top-1/2
-                z-[70]
-                hidden
-                h-11
-                w-11
-                -translate-y-1/2
-                items-center
-                justify-center
-                rounded-full
-                border
-                border-slate-300
-                bg-white/80
-                text-slate-700
-                shadow-lg
-                backdrop-blur-xl
-                transition-all
-                hover:scale-110
-                hover:border-blue-400
-                dark:border-white/15
-                dark:bg-white/[0.06]
-                dark:text-white
-                lg:flex
-              "
-            >
-              <ChevronLeft size={21} />
-            </button>
+          <div
+            className="
+              relative
+              mx-auto
+              hidden
+              h-[340px]
+              max-w-[1200px]
+              lg:block
+            "
+            style={{ perspective: "1600px" }}
+          >
+            {SERVICES.map((service, index) => {
+              const Icon = service.icon;
+              const isActive = index === activeIndex;
+              const accent = getAccentClasses(service.accent);
 
-            {/* RIGHT ARROW */}
+              return (
+                <motion.div
+                  key={service.id}
+                  animate={getCardStyle(index, activeIndex)}
+                  transition={{
+                    type: "spring",
+                    stiffness: 120,
+                    damping: 20,
+                    mass: 0.8,
+                  }}
+                  onClick={() => setActiveIndex(index)}
+                  className="
+                    absolute
+                    left-1/2
+                    top-1/2
+                    w-[330px]
+                    -translate-x-1/2
+                    -translate-y-1/2
+                    cursor-pointer
+                  "
+                  style={{ transformStyle: "preserve-3d" }}
+                >
+                  <div
+                    className={`
+                      group
+                      relative
+                      min-h-[280px]
+                      overflow-hidden
+                      rounded-3xl
+                      border
+                      p-7
+                      transition-all
+                      duration-500
+                      ${
+                        isActive
+                          ? `
+                            border-blue-300
+                            bg-white/[0.96]
+                            shadow-[0_25px_70px_rgba(37,99,235,.18)]
+                            dark:border-blue-400/25
+                            dark:bg-[#1c293b]/95
+                          `
+                          : `
+                            border-slate-200
+                            bg-white/80
+                            shadow-[0_15px_45px_rgba(15,23,42,.07)]
+                            dark:border-white/10
+                            dark:bg-[#162033]/90
+                          `
+                      }
+                    `}
+                  >
+                    <div
+                      className={`
+                        pointer-events-none
+                        absolute
+                        inset-0
+                        bg-gradient-to-br
+                        ${accent.glow}
+                        via-transparent
+                        to-transparent
+                        opacity-70
+                      `}
+                    />
 
-            <button
-              type="button"
-              onClick={nextCard}
-              aria-label="Next service"
-              className="
-                absolute
-                right-2
-                top-1/2
-                z-[70]
-                hidden
-                h-11
-                w-11
-                -translate-y-1/2
-                items-center
-                justify-center
-                rounded-full
-                border
-                border-slate-300
-                bg-white/80
-                text-slate-700
-                shadow-lg
-                backdrop-blur-xl
-                transition-all
-                hover:scale-110
-                hover:border-blue-400
-                dark:border-white/15
-                dark:bg-white/[0.06]
-                dark:text-white
-                lg:flex
-              "
-            >
-              <ChevronRight size={21} />
-            </button>
+                    <div className="relative z-10">
+                      <div
+                        className={`
+                          flex
+                          h-14
+                          w-14
+                          items-center
+                          justify-center
+                          rounded-2xl
+                          border
+                          ${accent.icon}
+                        `}
+                      >
+                        <Icon size={25} />
+                      </div>
 
-            {/* CARDS */}
+                      <h3 className="mt-6 text-xl font-bold leading-tight text-slate-900 dark:text-white">
+                        {service.title}
+                      </h3>
 
-            <div
-              className="
-                relative
-                mx-auto
-                h-[265px]
-                w-full
-                max-w-[1180px]
-                overflow-visible
-                sm:h-[280px]
-                md:h-[295px]
-              "
-              style={{
-                perspective: "1800px",
-              }}
-            >
+                      <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
+                        {service.description}
+                      </p>
+
+                      <Link
+                        href="/services"
+                        onClick={(event) => event.stopPropagation()}
+                        className="
+                          group/link
+                          mt-6
+                          inline-flex
+                          items-center
+                          gap-2
+                          text-sm
+                          font-bold
+                          text-blue-600
+                          transition-all
+                          hover:gap-3
+                          dark:text-blue-300
+                        "
+                      >
+                        Explore Service
+
+                        <ArrowRight
+                          size={16}
+                          className="transition-transform group-hover/link:translate-x-1"
+                        />
+                      </Link>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* MOBILE / TABLET ACTIVE CARD */}
+
+          <div className="mx-auto max-w-md lg:hidden">
+            <AnimatePresence mode="wait">
               {SERVICES.map((service, index) => {
+                if (index !== activeIndex) return null;
+
                 const Icon = service.icon;
-
-                const isActive = index === activeIndex;
-
-                const cardStyle = getCardStyle(
-                  index,
-                  activeIndex
-                );
+                const accent = getAccentClasses(service.accent);
 
                 return (
                   <motion.div
                     key={service.id}
-                    animate={cardStyle}
-                    transition={{
-                      type: "spring",
-                      stiffness: 130,
-                      damping: 21,
-                      mass: 0.8,
-                    }}
-                    onClick={() => setActiveIndex(index)}
+                    initial={{ opacity: 0, x: 35, scale: 0.96 }}
+                    animate={{ opacity: 1, x: 0, scale: 1 }}
+                    exit={{ opacity: 0, x: -35, scale: 0.96 }}
+                    transition={{ duration: 0.35 }}
                     className="
-                      absolute
-                      left-1/2
-                      top-1/2
-                      w-[245px]
-                      -translate-x-1/2
-                      -translate-y-1/2
-                      cursor-pointer
-                      sm:w-[270px]
-                      md:w-[300px]
+                      relative
+                      overflow-hidden
+                      rounded-3xl
+                      border
+                      border-slate-200
+                      bg-white/90
+                      p-7
+                      shadow-[0_20px_55px_rgba(15,23,42,.08)]
+                      dark:border-white/10
+                      dark:bg-[#1c293b]/90
                     "
-                    style={{
-                      transformStyle: "preserve-3d",
-                    }}
                   >
                     <div
                       className={`
-                        relative
-                        min-h-[245px]
-                        overflow-hidden
-                        rounded-[22px]
-                        border
-                        p-5
-                        backdrop-blur-xl
-                        transition-all
-                        duration-500
-
-                        ${
-                          isActive
-                            ? `
-                              border-blue-400/70
-                              bg-white/90
-                              shadow-[0_20px_60px_rgba(37,99,235,.22)]
-                              dark:bg-[#101827]/90
-                              dark:shadow-[0_25px_80px_rgba(37,99,235,.30)]
-                            `
-                            : `
-                              border-slate-200
-                              bg-white/70
-                              shadow-xl
-                              dark:border-white/10
-                              dark:bg-[#0d1525]/80
-                            `
-                        }
+                        absolute
+                        inset-0
+                        bg-gradient-to-br
+                        ${accent.glow}
+                        via-transparent
+                        to-transparent
                       `}
-                    >
-                      {/* ACTIVE EFFECT */}
+                    />
 
-                      {isActive && (
-                        <>
-                          <div
-                            className="
-                              pointer-events-none
-                              absolute
-                              inset-0
-                              bg-gradient-to-br
-                              from-blue-500/[0.08]
-                              via-transparent
-                              to-purple-500/[0.08]
-                            "
-                          />
-
-                          <div
-                            className="
-                              absolute
-                              bottom-0
-                              left-1/2
-                              h-px
-                              w-2/3
-                              -translate-x-1/2
-                              bg-gradient-to-r
-                              from-transparent
-                              via-blue-400
-                              to-transparent
-                            "
-                          />
-                        </>
-                      )}
-
-                      <div className="relative z-10">
-                        {/* ICON */}
-
-                        <div
-                          className={`
-                            flex
-                            h-12
-                            w-12
-                            items-center
-                            justify-center
-                            rounded-2xl
-                            border
-                            ${getAccentClasses(service.accent)}
-                          `}
-                        >
-                          <Icon size={23} />
-                        </div>
-
-                        {/* TITLE */}
-
-                        <h3
-                          className={`
-                            mt-4
-                            font-bold
-                            leading-tight
-                            text-slate-900
-                            dark:text-white
-                            ${
-                              isActive
-                                ? "text-xl md:text-2xl"
-                                : "text-lg"
-                            }
-                          `}
-                        >
-                          {service.title}
-                        </h3>
-
-                        {/* DESCRIPTION */}
-
-                        <p
-                          className="
-                            mt-3
-                            text-xs
-                            leading-6
-                            text-slate-600
-                            dark:text-slate-400
-                            md:text-sm
-                          "
-                        >
-                          {service.description}
-                        </p>
-
-                        {/* LINK */}
-
-                        <Link
-                          href="/services"
-                          onClick={(event) =>
-                            event.stopPropagation()
-                          }
-                          className="
-                            group
-                            mt-4
-                            inline-flex
-                            items-center
-                            gap-2
-                            text-xs
-                            font-bold
-                            text-blue-600
-                            transition-all
-                            hover:gap-3
-                            dark:text-blue-400
-                          "
-                        >
-                          Explore Service
-
-                          <ArrowRight
-                            size={15}
-                            className="
-                              transition-transform
-                              group-hover:translate-x-1
-                            "
-                          />
-                        </Link>
+                    <div className="relative z-10">
+                      <div
+                        className={`
+                          flex
+                          h-14
+                          w-14
+                          items-center
+                          justify-center
+                          rounded-2xl
+                          border
+                          ${accent.icon}
+                        `}
+                      >
+                        <Icon size={25} />
                       </div>
+
+                      <h3 className="mt-5 text-xl font-bold text-slate-900 dark:text-white">
+                        {service.title}
+                      </h3>
+
+                      <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
+                        {service.description}
+                      </p>
+
+                      <Link
+                        href="/services"
+                        className="
+                          mt-6
+                          inline-flex
+                          items-center
+                          gap-2
+                          text-sm
+                          font-bold
+                          text-blue-600
+                          dark:text-blue-300
+                        "
+                      >
+                        Explore Service
+                        <ArrowRight size={16} />
+                      </Link>
                     </div>
                   </motion.div>
                 );
               })}
-            </div>
+            </AnimatePresence>
 
-            {/* DOTS */}
-
-            <div className="mt-1 flex justify-center gap-2">
-              {SERVICES.map((service, index) => (
-                <button
-                  key={service.id}
-                  type="button"
-                  onClick={() => setActiveIndex(index)}
-                  aria-label={`Show ${service.title}`}
-                  className="
-                    flex
-                    h-6
-                    items-center
-                    justify-center
-                  "
-                >
-                  <motion.span
-                    animate={{
-                      width:
-                        index === activeIndex
-                          ? 18
-                          : 8,
-                      opacity:
-                        index === activeIndex
-                          ? 1
-                          : 0.4,
-                    }}
-                    transition={{
-                      duration: 0.25,
-                    }}
-                    className="
-                      h-2
-                      rounded-full
-                      bg-blue-500
-                      shadow-[0_0_10px_rgba(59,130,246,.5)]
-                      dark:bg-blue-400
-                    "
-                  />
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* ===============================================
-              TRUST BAR
-          =============================================== */}
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.5 }}
-            className="
-              mx-auto
-              mt-4
-              grid
-              w-full
-              max-w-5xl
-              grid-cols-2
-              overflow-hidden
-              rounded-2xl
-              border
-              border-slate-200
-              bg-white/75
-              shadow-lg
-              backdrop-blur-xl
-              dark:border-white/10
-              dark:bg-[#0d1525]/80
-              md:grid-cols-4
-            "
-          >
-            {[
-              "Founded in 2023",
-              "Custom Solutions",
-              "Cutting-edge Technology",
-              "Global Delivery",
-            ].map((item, index) => (
-              <div
-                key={item}
-                className={`
+            <div className="mt-5 flex justify-center gap-3">
+              <button
+                onClick={previousCard}
+                className="
                   flex
+                  h-11
+                  w-11
                   items-center
                   justify-center
-                  gap-2
-                  px-3
-                  py-3
-                  text-center
-                  text-xs
-                  font-medium
+                  rounded-xl
+                  border
+                  border-slate-200
+                  bg-white
                   text-slate-700
-                  dark:text-slate-300
-                  ${
-                    index !== 3
-                      ? `
-                        md:border-r
-                        md:border-slate-200
-                        dark:md:border-white/10
-                      `
-                      : ""
-                  }
-                `}
+                  shadow-sm
+                  dark:border-white/10
+                  dark:bg-[#1c293b]
+                  dark:text-white
+                "
+                aria-label="Previous service"
               >
-                <CheckCircle2
-                  size={17}
-                  className="shrink-0 text-blue-500"
+                <ChevronLeft size={20} />
+              </button>
+
+              <button
+                onClick={nextCard}
+                className="
+                  flex
+                  h-11
+                  w-11
+                  items-center
+                  justify-center
+                  rounded-xl
+                  border
+                  border-slate-200
+                  bg-white
+                  text-slate-700
+                  shadow-sm
+                  dark:border-white/10
+                  dark:bg-[#1c293b]
+                  dark:text-white
+                "
+                aria-label="Next service"
+              >
+                <ChevronRight size={20} />
+              </button>
+            </div>
+          </div>
+
+          {/* DOTS */}
+
+          <div className="mt-5 flex justify-center gap-2">
+            {SERVICES.map((service, index) => (
+              <button
+                key={service.id}
+                type="button"
+                onClick={() => setActiveIndex(index)}
+                aria-label={`Show ${service.title}`}
+                className="flex h-7 items-center justify-center px-1"
+              >
+                <motion.span
+                  animate={{
+                    width: index === activeIndex ? 28 : 8,
+                    opacity: index === activeIndex ? 1 : 0.35,
+                  }}
+                  transition={{ duration: 0.25 }}
+                  className="h-2 rounded-full bg-blue-600 dark:bg-blue-400"
                 />
-
-                <span>{item}</span>
-              </div>
+              </button>
             ))}
-          </motion.div>
-
-          {/* SCROLL TEXT */}
-
-          <div
-            className="
-              mt-2
-              text-center
-              text-[9px]
-              font-bold
-              uppercase
-              tracking-[0.22em]
-              text-slate-400
-              dark:text-slate-500
-            "
-          >
-            Scroll to explore services
           </div>
         </div>
+
+        {/* TRUST BAR */}
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="
+            mx-auto
+            mt-16
+            grid
+            max-w-5xl
+            grid-cols-2
+            overflow-hidden
+            rounded-2xl
+            border
+            border-slate-200
+            bg-white/80
+            shadow-[0_10px_40px_rgba(15,23,42,.06)]
+            backdrop-blur-xl
+            dark:border-white/10
+            dark:bg-[#1c293b]/80
+            md:grid-cols-4
+          "
+        >
+          {[
+            "Founded in 2023",
+            "Custom Solutions",
+            "Modern Technology",
+            "Global Delivery",
+          ].map((item, index) => (
+            <div
+              key={item}
+              className={`
+                flex
+                items-center
+                justify-center
+                gap-2
+                px-4
+                py-4
+                text-center
+                text-xs
+                font-semibold
+                text-slate-600
+                dark:text-slate-300
+                ${
+                  index < 3
+                    ? "md:border-r md:border-slate-200 dark:md:border-white/10"
+                    : ""
+                }
+              `}
+            >
+              <CheckCircle2
+                size={17}
+                className="shrink-0 text-blue-600 dark:text-blue-400"
+              />
+
+              {item}
+            </div>
+          ))}
+        </motion.div>
       </div>
     </section>
   );
