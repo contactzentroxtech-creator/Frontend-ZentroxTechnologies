@@ -53,8 +53,7 @@ const STATIC_FALLBACKS: Record<string, string> = {
   "nav.get_started": "Get Started",
 
   // ─── HERO ────────────────────────────────────────────────────────────────
-  "hero.badge":
-    "Mohali & Chandigarh — MSME Registered Technology Company",
+  "hero.badge": "Mohali & Chandigarh — Trusted Technology Partner for Growing Businesses",
   "hero.line1": "We Build",
   "hero.line2": "Grow Faster.",
   "hero.sub":
