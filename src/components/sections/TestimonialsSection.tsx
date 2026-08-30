@@ -30,10 +30,10 @@ const TESTIMONIALS = [
 
 function TestimonialCard({ testimonial }: { testimonial: (typeof TESTIMONIALS)[0] }) {
   return (
-    <div className="flex flex-col rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm transition-all hover:border-gray-300 hover:shadow-md">
+    <div className="flex flex-col rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm transition-all hover:border-blue-300 hover:shadow-md">
       <div className="flex gap-0.5">
         {Array.from({ length: 5 }).map((_, i) => (
-          <Star key={i} size={14} className="fill-amber-500 text-amber-500" />
+          <Star key={i} size={14} className="fill-blue-500 text-blue-500" />
         ))}
       </div>
       <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-slate-600">
@@ -80,7 +80,7 @@ export default function TestimonialsSection() {
       <div className="mx-auto max-w-4xl">
         {/* Header */}
         <div className="mx-auto mb-12 max-w-3xl text-center sm:mb-14">
-          <span className="text-xs font-medium uppercase tracking-wider text-amber-600">
+          <span className="text-xs font-medium uppercase tracking-wider text-blue-600">
             {t("testimonials.badge")}
           </span>
           <h2
@@ -111,7 +111,7 @@ export default function TestimonialsSection() {
           <div className="mt-6 flex items-center justify-center gap-3">
             <button
               onClick={() => goToSlide(currentIndex - 1)}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white text-slate-600 transition-all hover:border-gray-300 hover:bg-gray-50"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white text-slate-600 transition-all hover:border-blue-300 hover:bg-blue-50"
               aria-label="Previous testimonial"
             >
               <ChevronLeft size={18} />
@@ -124,7 +124,7 @@ export default function TestimonialsSection() {
                   onClick={() => goToSlide(index)}
                   className={`h-2 rounded-full transition-all ${
                     currentIndex === index
-                      ? "w-6 bg-amber-600"
+                      ? "w-6 bg-blue-600"
                       : "w-2 bg-gray-300 hover:bg-gray-400"
                   }`}
                   aria-label={`Go to testimonial ${index + 1}`}
@@ -134,7 +134,7 @@ export default function TestimonialsSection() {
 
             <button
               onClick={() => goToSlide(currentIndex + 1)}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white text-slate-600 transition-all hover:border-gray-300 hover:bg-gray-50"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white text-slate-600 transition-all hover:border-blue-300 hover:bg-blue-50"
               aria-label="Next testimonial"
             >
               <ChevronRight size={18} />
