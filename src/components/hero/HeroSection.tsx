@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import {
   motion,
-  AnimatePresence,
-  useScroll,
   useMotionValueEvent,
+  useScroll,
 } from "framer-motion";
 import {
   ArrowRight,
@@ -18,7 +17,6 @@ import {
   Smartphone,
   Bot,
   BarChart3,
-  Sparkles,
 } from "lucide-react";
 
 import { useLang } from "@/lib/providers";
@@ -32,7 +30,7 @@ const SERVICES = [
     id: 0,
     title: "Website Development",
     description:
-      "Fast, SEO-friendly, modern websites that build trust and scale your brand.",
+      "Fast, SEO-friendly, modern websites that build trust and help your business grow.",
     icon: Globe2,
     accent: "blue",
   },
@@ -40,7 +38,7 @@ const SERVICES = [
     id: 1,
     title: "Mobile App Development",
     description:
-      "Cross-platform mobile apps for Android & iOS that engage users.",
+      "Powerful Android and iOS applications designed for smooth experiences and growth.",
     icon: Smartphone,
     accent: "cyan",
   },
@@ -56,7 +54,7 @@ const SERVICES = [
     id: 3,
     title: "AI Integration & Automation",
     description:
-      "Smart AI solutions to automate tasks and improve business productivity.",
+      "Smart AI solutions that automate workflows and improve business productivity.",
     icon: Bot,
     accent: "emerald",
   },
@@ -64,14 +62,14 @@ const SERVICES = [
     id: 4,
     title: "Digital Marketing & SEO",
     description:
-      "Rank higher, get more traffic, generate leads and grow your business online.",
+      "Rank higher, generate quality leads, and grow your business online.",
     icon: BarChart3,
     accent: "pink",
   },
 ];
 
 /* =========================================================
-   CARD POSITIONS
+   CARD POSITION LOGIC
 ========================================================= */
 
 function getCardStyle(index: number, activeIndex: number) {
@@ -87,12 +85,12 @@ function getCardStyle(index: number, activeIndex: number) {
     position += total;
   }
 
-  const absPosition = Math.abs(position);
+  /* CENTER */
 
-  /* CENTER CARD */
   if (position === 0) {
     return {
       x: "0%",
+      y: "0%",
       scale: 1,
       rotateY: 0,
       rotateZ: 0,
@@ -103,69 +101,122 @@ function getCardStyle(index: number, activeIndex: number) {
   }
 
   /* LEFT */
+
   if (position === -1) {
     return {
-      x: "-108%",
-      scale: 0.88,
-      rotateY: 12,
-      rotateZ: -6,
-      opacity: 0.85,
+      x: "-102%",
+      y: "3%",
+      scale: 0.84,
+      rotateY: 14,
+      rotateZ: -5,
+      opacity: 0.72,
       zIndex: 30,
       filter: "blur(0px)",
     };
   }
 
   /* RIGHT */
+
   if (position === 1) {
     return {
-      x: "108%",
-      scale: 0.88,
-      rotateY: -12,
-      rotateZ: 6,
-      opacity: 0.85,
+      x: "102%",
+      y: "3%",
+      scale: 0.84,
+      rotateY: -14,
+      rotateZ: 5,
+      opacity: 0.72,
       zIndex: 30,
       filter: "blur(0px)",
     };
   }
 
   /* FAR LEFT */
+
   if (position === -2) {
     return {
-      x: "-205%",
-      scale: 0.72,
-      rotateY: 18,
+      x: "-185%",
+      y: "7%",
+      scale: 0.68,
+      rotateY: 20,
       rotateZ: -8,
-      opacity: 0.45,
+      opacity: 0.28,
       zIndex: 10,
       filter: "blur(1px)",
     };
   }
 
   /* FAR RIGHT */
+
   if (position === 2) {
     return {
-      x: "205%",
-      scale: 0.72,
-      rotateY: -18,
+      x: "185%",
+      y: "7%",
+      scale: 0.68,
+      rotateY: -20,
       rotateZ: 8,
-      opacity: 0.45,
+      opacity: 0.28,
       zIndex: 10,
       filter: "blur(1px)",
     };
   }
 
   return {
-    x: position > 0 ? "280%" : "-280%",
-    scale: 0.6,
-    rotateY: position > 0 ? -20 : 20,
+    x: position > 0 ? "250%" : "-250%",
+    y: "10%",
+    scale: 0.5,
+    rotateY: position > 0 ? -25 : 25,
+    rotateZ: 0,
     opacity: 0,
     zIndex: 0,
-    filter: "blur(4px)",
+    filter: "blur(5px)",
   };
 }
 
 /* =========================================================
-   COMPONENT
+   ACCENT COLOR FUNCTION
+========================================================= */
+
+function getAccentClasses(accent: string) {
+  switch (accent) {
+    case "purple":
+      return {
+        icon: "border-purple-400/30 bg-purple-500/10 text-purple-500 dark:text-purple-400",
+        glow: "from-purple-500/10 via-transparent to-indigo-500/10",
+        line: "via-purple-400",
+      };
+
+    case "cyan":
+      return {
+        icon: "border-cyan-400/30 bg-cyan-500/10 text-cyan-600 dark:text-cyan-400",
+        glow: "from-cyan-500/10 via-transparent to-blue-500/10",
+        line: "via-cyan-400",
+      };
+
+    case "emerald":
+      return {
+        icon: "border-emerald-400/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+        glow: "from-emerald-500/10 via-transparent to-cyan-500/10",
+        line: "via-emerald-400",
+      };
+
+    case "pink":
+      return {
+        icon: "border-pink-400/30 bg-pink-500/10 text-pink-600 dark:text-pink-400",
+        glow: "from-pink-500/10 via-transparent to-purple-500/10",
+        line: "via-pink-400",
+      };
+
+    default:
+      return {
+        icon: "border-blue-400/30 bg-blue-500/10 text-blue-600 dark:text-blue-400",
+        glow: "from-blue-500/10 via-transparent to-cyan-500/10",
+        line: "via-blue-400",
+      };
+  }
+}
+
+/* =========================================================
+   HERO SECTION
 ========================================================= */
 
 export default function HeroSection() {
@@ -174,56 +225,54 @@ export default function HeroSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
 
   const [activeIndex, setActiveIndex] = useState(2);
-  const [lastScrollStep, setLastScrollStep] = useState(-1);
+  const lastStepRef = useRef(-1);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end end"],
   });
 
-  /* =========================================================
-     SCROLL → CHANGE CARDS
-  ========================================================= */
+  /* =======================================================
+     SCROLL CHANGES ACTIVE CARD
+  ======================================================= */
 
   useMotionValueEvent(
     scrollYProgress,
     "change",
     (latest) => {
       /*
-       0 → 1 scroll progress
-       5 zones = cards change
+        Scroll zones:
+
+        0% → Website
+        20% → Mobile
+        40% → Software
+        60% → AI
+        80% → Marketing
       */
+
+      if (latest < 0.08) return;
 
       const step = Math.min(
         SERVICES.length - 1,
         Math.floor(latest * SERVICES.length)
       );
 
-      if (step !== lastScrollStep && latest > 0.05) {
-        setLastScrollStep(step);
-
+      if (step !== lastStepRef.current) {
+        lastStepRef.current = step;
         setActiveIndex(step);
       }
     }
   );
 
-  /* =========================================================
-     AUTO PLAY
-  ========================================================= */
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveIndex((prev) => {
-        return (prev + 1) % SERVICES.length;
-      });
-    }, 6000);
-
-    return () => clearInterval(interval);
-  }, []);
+  /* =======================================================
+     BUTTON FUNCTIONS
+  ======================================================= */
 
   function nextCard() {
     setActiveIndex((prev) => {
-      return (prev + 1) % SERVICES.length;
+      return prev === SERVICES.length - 1
+        ? 0
+        : prev + 1;
     });
   }
 
@@ -238,47 +287,49 @@ export default function HeroSection() {
   return (
     <section
       ref={sectionRef}
-      aria-label="Zentrox Technologies"
+      aria-label="Zentrox Technologies Digital Solutions"
       className="
         relative
-        min-h-[180vh]
-        bg-white
+        min-h-[220vh]
+        overflow-visible
+        bg-[#f7f9fc]
         transition-colors
         duration-500
-        dark:bg-[#050914]
+        dark:bg-[#070b14]
       "
     >
-      {/* =====================================================
-          STICKY HERO
-      ====================================================== */}
+      {/* ===================================================
+          STICKY SCREEN
+      ==================================================== */}
 
-      <div className="sticky top-0 flex min-h-screen items-center overflow-hidden">
+      <div className="sticky top-0 h-screen overflow-hidden">
 
-        {/* ===================================================
+        {/* =================================================
             BACKGROUND
-        ==================================================== */}
+        ================================================= */}
 
         <div
           className="pointer-events-none absolute inset-0"
           aria-hidden="true"
         >
-          {/* Dark grid */}
+          {/* GRID */}
 
           <div
             className="
-              absolute inset-0
-              opacity-[0.06]
+              absolute
+              inset-0
+              opacity-[0.045]
               dark:opacity-[0.12]
             "
             style={{
               backgroundImage: `
                 linear-gradient(
-                  rgba(100,116,139,.35) 1px,
+                  rgba(100,116,139,.45) 1px,
                   transparent 1px
                 ),
                 linear-gradient(
                   90deg,
-                  rgba(100,116,139,.35) 1px,
+                  rgba(100,116,139,.45) 1px,
                   transparent 1px
                 )
               `,
@@ -286,116 +337,120 @@ export default function HeroSection() {
             }}
           />
 
-          {/* Center Glow */}
+          {/* CENTER GLOW */}
 
           <div
             className="
               absolute
               left-1/2
-              top-[42%]
-              h-[700px]
-              w-[900px]
+              top-[35%]
+              h-[650px]
+              w-[850px]
               -translate-x-1/2
               rounded-full
-              bg-blue-500/[0.07]
+              bg-blue-500/[0.08]
               blur-[170px]
-
-              dark:bg-blue-600/[0.12]
+              dark:bg-blue-500/[0.12]
             "
           />
 
-          {/* Left Glow */}
+          {/* LEFT GLOW */}
 
           <div
             className="
               absolute
               -left-40
-              bottom-0
-              h-[450px]
-              w-[450px]
+              bottom-[-100px]
+              h-[500px]
+              w-[500px]
               rounded-full
               bg-blue-500/[0.08]
-              blur-[130px]
-
-              dark:bg-blue-500/[0.14]
+              blur-[140px]
+              dark:bg-blue-500/[0.12]
             "
           />
 
-          {/* Right Glow */}
+          {/* RIGHT GLOW */}
 
           <div
             className="
               absolute
               -right-40
-              bottom-0
-              h-[450px]
-              w-[450px]
+              bottom-[-100px]
+              h-[500px]
+              w-[500px]
               rounded-full
-              bg-cyan-500/[0.07]
-              blur-[130px]
-
+              bg-cyan-500/[0.08]
+              blur-[140px]
               dark:bg-cyan-500/[0.12]
             "
           />
 
-          {/* Blue floor glow */}
+          {/* FLOOR */}
 
           <div
             className="
               absolute
-              bottom-0
+              bottom-[-120px]
               left-1/2
-              h-[220px]
-              w-[900px]
+              h-[300px]
+              w-[1000px]
               -translate-x-1/2
               rounded-full
               bg-blue-500/[0.06]
-              blur-[90px]
-
-              dark:bg-blue-600/[0.15]
+              blur-[100px]
+              dark:bg-blue-500/[0.14]
             "
           />
 
-          {/* Stars */}
+          {/* PARTICLES */}
 
-          <div className="absolute left-[8%] top-[45%] h-1 w-1 rounded-full bg-blue-400 shadow-[0_0_12px_2px_rgba(59,130,246,.8)]" />
+          <div className="absolute left-[8%] top-[48%] h-1 w-1 rounded-full bg-blue-400 shadow-[0_0_12px_2px_rgba(59,130,246,.7)]" />
 
-          <div className="absolute right-[13%] top-[48%] h-1 w-1 rounded-full bg-cyan-400 shadow-[0_0_12px_2px_rgba(34,211,238,.8)]" />
+          <div className="absolute right-[12%] top-[52%] h-1 w-1 rounded-full bg-cyan-400 shadow-[0_0_12px_2px_rgba(34,211,238,.7)]" />
 
-          <div className="absolute right-[6%] top-[65%] h-1 w-1 rounded-full bg-blue-400" />
+          <div className="absolute right-[8%] top-[70%] h-1 w-1 rounded-full bg-blue-400" />
 
-          <div className="absolute left-[18%] top-[70%] h-1 w-1 rounded-full bg-blue-400" />
+          <div className="absolute left-[15%] top-[68%] h-1 w-1 rounded-full bg-cyan-400" />
         </div>
 
-        {/* ===================================================
-            CONTENT
-        ==================================================== */}
+        {/* =================================================
+            MAIN CONTENT
+        ================================================= */}
 
-        <div className="relative z-10 mx-auto w-full max-w-[1500px] px-4 pt-24 md:px-8 lg:px-12">
+        <div
+          className="
+            relative
+            z-10
+            mx-auto
+            flex
+            h-full
+            w-full
+            max-w-[1600px]
+            flex-col
+            px-4
+            pt-[90px]
+            sm:px-6
+            md:px-8
+            lg:px-12
+          "
+        >
 
-          {/* =================================================
-              TOP HERO
-          ================================================= */}
+          {/* ===============================================
+              HERO TEXT
+          =============================================== */}
 
-          <div className="mx-auto max-w-5xl text-center">
+          <div className="shrink-0 text-center">
 
-            {/* Badge */}
+            {/* BADGE */}
 
             <motion.div
-              initial={{
-                opacity: 0,
-                y: -20,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
-              transition={{
-                duration: 0.6,
-              }}
+              initial={{ opacity: 0, y: -15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
               className="
                 mx-auto
-                mb-7
+                mb-5
                 flex
                 w-fit
                 items-center
@@ -403,17 +458,22 @@ export default function HeroSection() {
                 rounded-full
                 border
                 border-blue-400/30
-                bg-blue-500/[0.06]
-                px-5
-                py-2.5
-                text-[11px]
+                bg-white/70
+                px-4
+                py-2
+                text-[9px]
                 font-bold
-                tracking-[0.12em]
+                tracking-[0.1em]
                 text-slate-600
+                shadow-sm
+                backdrop-blur-xl
 
-                dark:bg-blue-500/[0.08]
+                dark:bg-blue-500/[0.07]
                 dark:text-blue-200
 
+                sm:px-5
+                sm:py-2.5
+                sm:text-[10px]
                 md:text-xs
               "
             >
@@ -425,38 +485,31 @@ export default function HeroSection() {
               )}
             </motion.div>
 
-            {/* Heading */}
+            {/* HEADING */}
 
             <motion.h1
-              initial={{
-                opacity: 0,
-                y: 30,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
+              initial={{ opacity: 0, y: 25 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{
                 duration: 0.8,
                 delay: 0.1,
               }}
               className="
                 font-extrabold
-                leading-[0.9]
+                leading-[0.92]
                 tracking-tight
               "
             >
               <span
                 className="
                   block
-                  text-5xl
+                  text-4xl
                   text-slate-900
-
                   dark:text-white
 
-                  sm:text-6xl
-                  md:text-7xl
-                  lg:text-8xl
+                  sm:text-5xl
+                  md:text-6xl
+                  lg:text-7xl
                 "
               >
                 {t("hero.line1", "We Build")}
@@ -464,23 +517,23 @@ export default function HeroSection() {
 
               <span
                 className="
-                  mt-3
+                  mt-2
                   block
                   bg-gradient-to-r
                   from-blue-600
                   via-blue-500
-                  to-cyan-400
+                  to-cyan-500
                   bg-clip-text
-                  text-5xl
+                  text-4xl
                   text-transparent
 
                   dark:from-blue-500
                   dark:via-blue-400
                   dark:to-cyan-300
 
-                  sm:text-6xl
-                  md:text-7xl
-                  lg:text-8xl
+                  sm:text-5xl
+                  md:text-6xl
+                  lg:text-7xl
                 "
               >
                 {t(
@@ -490,32 +543,25 @@ export default function HeroSection() {
               </span>
             </motion.h1>
 
-            {/* Description */}
+            {/* DESCRIPTION */}
 
             <motion.p
-              initial={{
-                opacity: 0,
-                y: 20,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{
                 duration: 0.7,
                 delay: 0.2,
               }}
               className="
                 mx-auto
-                mt-6
+                mt-4
                 max-w-3xl
-                text-base
+                text-sm
                 leading-relaxed
                 text-slate-600
-
                 dark:text-slate-300
 
-                md:text-lg
+                md:text-base
               "
             >
               {t(
@@ -524,30 +570,22 @@ export default function HeroSection() {
               )}
             </motion.p>
 
-            {/* Buttons */}
+            {/* BUTTONS */}
 
             <motion.div
-              initial={{
-                opacity: 0,
-                y: 20,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{
                 duration: 0.7,
                 delay: 0.3,
               }}
               className="
-                mt-7
+                mt-5
                 flex
-                flex-col
+                flex-wrap
                 items-center
                 justify-center
                 gap-3
-
-                sm:flex-row
               "
             >
               <Link
@@ -556,22 +594,22 @@ export default function HeroSection() {
                   group
                   inline-flex
                   items-center
-                  gap-3
+                  gap-2
                   rounded-full
                   bg-gradient-to-r
                   from-blue-600
                   to-blue-500
-                  px-7
-                  py-4
+                  px-6
+                  py-3
                   text-sm
                   font-bold
                   text-white
-                  shadow-[0_12px_35px_rgba(37,99,235,.35)]
+                  shadow-[0_10px_30px_rgba(37,99,235,.35)]
                   transition-all
                   duration-300
 
                   hover:-translate-y-1
-                  hover:shadow-[0_18px_45px_rgba(37,99,235,.45)]
+                  hover:shadow-[0_16px_40px_rgba(37,99,235,.45)]
                 "
               >
                 {t(
@@ -580,7 +618,7 @@ export default function HeroSection() {
                 )}
 
                 <ArrowRight
-                  size={18}
+                  size={17}
                   className="
                     transition-transform
                     duration-300
@@ -595,16 +633,17 @@ export default function HeroSection() {
                   group
                   inline-flex
                   items-center
-                  gap-3
+                  gap-2
                   rounded-full
                   border
                   border-slate-300
-                  bg-white/50
-                  px-7
-                  py-4
+                  bg-white/70
+                  px-6
+                  py-3
                   text-sm
                   font-bold
                   text-slate-800
+                  shadow-sm
                   backdrop-blur-xl
                   transition-all
                   duration-300
@@ -613,14 +652,11 @@ export default function HeroSection() {
                   hover:border-blue-400
 
                   dark:border-white/15
-                  dark:bg-white/[0.03]
+                  dark:bg-white/[0.04]
                   dark:text-white
-                  dark:hover:border-blue-400/60
                 "
               >
-                <span className="flex h-5 w-5 items-center justify-center">
-                  <span className="h-0 w-0 border-y-[6px] border-l-[9px] border-y-transparent border-l-current" />
-                </span>
+                <span className="h-0 w-0 border-y-[6px] border-l-[9px] border-y-transparent border-l-current" />
 
                 {t(
                   "hero.cta_secondary",
@@ -630,50 +666,60 @@ export default function HeroSection() {
             </motion.div>
           </div>
 
-          {/* =================================================
-              3D SERVICES CAROUSEL
-          ================================================= */}
+          {/* ===============================================
+              3D CAROUSEL
+          =============================================== */}
 
-          <div className="relative mt-8 md:mt-10">
+          <div
+            className="
+              relative
+              mt-6
+              flex
+              flex-1
+              items-center
+              justify-center
+              md:mt-7
+            "
+          >
 
-            {/* Glow behind center */}
+            {/* CENTER GLOW */}
 
             <motion.div
               animate={{
-                opacity: [0.3, 0.7, 0.3],
+                opacity: [0.3, 0.65, 0.3],
                 scale: [0.95, 1.05, 0.95],
               }}
               transition={{
                 duration: 4,
                 repeat: Infinity,
+                ease: "easeInOut",
               }}
               className="
                 pointer-events-none
                 absolute
                 left-1/2
                 top-1/2
-                h-[300px]
+                h-[280px]
                 w-[500px]
                 -translate-x-1/2
                 -translate-y-1/2
                 rounded-full
-                bg-blue-500/[0.08]
+                bg-blue-500/[0.10]
                 blur-[90px]
-
-                dark:bg-blue-500/[0.16]
+                dark:bg-blue-500/[0.15]
               "
             />
 
-            {/* Left Arrow */}
+            {/* LEFT ARROW */}
 
             <button
               onClick={previousCard}
               aria-label="Previous service"
               className="
                 absolute
-                left-0
+                left-1
                 top-1/2
-                z-[70]
+                z-[80]
                 hidden
                 h-12
                 w-12
@@ -683,7 +729,7 @@ export default function HeroSection() {
                 rounded-full
                 border
                 border-slate-300
-                bg-white/70
+                bg-white/80
                 text-slate-700
                 shadow-lg
                 backdrop-blur-xl
@@ -699,19 +745,19 @@ export default function HeroSection() {
                 lg:flex
               "
             >
-              <ChevronLeft size={23} />
+              <ChevronLeft size={22} />
             </button>
 
-            {/* Right Arrow */}
+            {/* RIGHT ARROW */}
 
             <button
               onClick={nextCard}
               aria-label="Next service"
               className="
                 absolute
-                right-0
+                right-1
                 top-1/2
-                z-[70]
+                z-[80]
                 hidden
                 h-12
                 w-12
@@ -721,7 +767,7 @@ export default function HeroSection() {
                 rounded-full
                 border
                 border-slate-300
-                bg-white/70
+                bg-white/80
                 text-slate-700
                 shadow-lg
                 backdrop-blur-xl
@@ -737,290 +783,240 @@ export default function HeroSection() {
                 lg:flex
               "
             >
-              <ChevronRight size={23} />
+              <ChevronRight size={22} />
             </button>
 
-            {/* CARDS AREA */}
+            {/* CARDS CONTAINER */}
 
             <div
               className="
                 relative
-                mx-auto
-                h-[310px]
+                h-[290px]
                 w-full
-                max-w-[1180px]
-                overflow-visible
-
-                sm:h-[330px]
-                md:h-[360px]
+                max-w-[1250px]
+                overflow-hidden
+                sm:h-[310px]
+                md:h-[330px]
+                lg:overflow-visible
               "
               style={{
                 perspective: "1800px",
               }}
             >
-              {SERVICES.map(
-                (service, index) => {
-                  const Icon = service.icon;
+              {SERVICES.map((service, index) => {
+                const Icon = service.icon;
 
-                  const isActive =
-                    index === activeIndex;
+                const isActive =
+                  index === activeIndex;
 
-                  const cardStyle =
-                    getCardStyle(
-                      index,
-                      activeIndex
-                    );
+                const cardStyle =
+                  getCardStyle(
+                    index,
+                    activeIndex
+                  );
 
-                  return (
-                    <motion.div
-                      key={service.id}
-                      animate={cardStyle}
-                      transition={{
-                        type: "spring",
-                        stiffness: 120,
-                        damping: 20,
-                        mass: 0.8,
-                      }}
-                      onClick={() =>
-                        setActiveIndex(index)
-                      }
-                      className="
-                        absolute
-                        left-1/2
-                        top-1/2
-                        w-[280px]
-                        -translate-x-1/2
-                        -translate-y-1/2
-                        cursor-pointer
+                const accent =
+                  getAccentClasses(
+                    service.accent
+                  );
 
-                        sm:w-[310px]
-                        md:w-[340px]
-                      "
-                      style={{
-                        transformStyle:
-                          "preserve-3d",
-                      }}
+                return (
+                  <motion.div
+                    key={service.id}
+                    animate={cardStyle}
+                    transition={{
+                      type: "spring",
+                      stiffness: 110,
+                      damping: 18,
+                      mass: 0.85,
+                    }}
+                    onClick={() =>
+                      setActiveIndex(index)
+                    }
+                    className="
+                      absolute
+                      left-1/2
+                      top-1/2
+                      w-[250px]
+                      -translate-x-1/2
+                      -translate-y-1/2
+                      cursor-pointer
+
+                      sm:w-[280px]
+                      md:w-[310px]
+                    "
+                    style={{
+                      transformStyle:
+                        "preserve-3d",
+                    }}
+                  >
+                    <div
+                      className={`
+                        relative
+                        min-h-[255px]
+                        overflow-hidden
+                        rounded-[24px]
+                        border
+                        p-5
+                        backdrop-blur-xl
+                        transition-all
+                        duration-500
+
+                        ${
+                          isActive
+                            ? `
+                              border-blue-400/70
+                              bg-white/90
+                              shadow-[0_20px_70px_rgba(37,99,235,.22)]
+
+                              dark:bg-[#101827]/90
+                              dark:shadow-[0_25px_90px_rgba(37,99,235,.28)]
+                            `
+                            : `
+                              border-slate-200/90
+                              bg-white/75
+                              shadow-[0_15px_40px_rgba(15,23,42,.10)]
+
+                              dark:border-white/10
+                              dark:bg-[#0d1422]/80
+                            `
+                        }
+                      `}
                     >
-                      <div
-                        className={`
-                          relative
-                          min-h-[285px]
-                          overflow-hidden
-                          rounded-[24px]
-                          border
-                          p-6
-                          backdrop-blur-xl
-                          transition-all
-                          duration-500
+                      {/* ACTIVE BACKGROUND */}
 
-                          ${
-                            isActive
-                              ? `
-                                border-blue-400/70
-                                bg-white/80
-                                shadow-[0_20px_70px_rgba(37,99,235,.22)]
-                                dark:bg-[#111827]/85
-                                dark:shadow-[0_25px_90px_rgba(79,70,229,.32)]
-                              `
-                              : `
-                                border-slate-200
-                                bg-white/70
-                                shadow-xl
-                                dark:border-white/10
-                                dark:bg-[#0f172a]/75
-                              `
-                          }
-                        `}
-                      >
-                        {/* Active glow */}
-
-                        {isActive && (
-                          <>
-                            <div
-                              className="
-                                pointer-events-none
-                                absolute
-                                inset-0
-                                rounded-[24px]
-                                bg-gradient-to-br
-                                from-blue-500/[0.08]
-                                via-transparent
-                                to-purple-500/[0.08]
-                              "
-                            />
-
-                            <div
-                              className="
-                                absolute
-                                bottom-0
-                                left-1/2
-                                h-px
-                                w-2/3
-                                -translate-x-1/2
-                                bg-gradient-to-r
-                                from-transparent
-                                via-blue-400
-                                to-transparent
-                                shadow-[0_0_18px_rgba(96,165,250,.9)]
-                              "
-                            />
-                          </>
-                        )}
-
-                        <div className="relative z-10">
-
-                          {/* Icon */}
+                      {isActive && (
+                        <>
+                          <div
+                            className={`
+                              pointer-events-none
+                              absolute
+                              inset-0
+                              bg-gradient-to-br
+                              ${accent.glow}
+                            `}
+                          />
 
                           <div
                             className={`
-                              flex
-                              h-14
-                              w-14
-                              items-center
-                              justify-center
-                              rounded-2xl
-                              border
-
-                              ${
-                                service.accent ===
-                                "purple"
-                                  ? `
-                                    border-purple-400/30
-                                    bg-purple-500/10
-                                    text-purple-500
-                                  `
-                                  : ""
-                              }
-
-                              ${
-                                service.accent ===
-                                "blue"
-                                  ? `
-                                    border-blue-400/30
-                                    bg-blue-500/10
-                                    text-blue-500
-                                  `
-                                  : ""
-                              }
-
-                              ${
-                                service.accent ===
-                                "cyan"
-                                  ? `
-                                    border-cyan-400/30
-                                    bg-cyan-500/10
-                                    text-cyan-500
-                                  `
-                                  : ""
-                              }
-
-                              ${
-                                service.accent ===
-                                "emerald"
-                                  ? `
-                                    border-emerald-400/30
-                                    bg-emerald-500/10
-                                    text-emerald-500
-                                  `
-                                  : ""
-                              }
-
-                              ${
-                                service.accent ===
-                                "pink"
-                                  ? `
-                                    border-pink-400/30
-                                    bg-pink-500/10
-                                    text-pink-500
-                                  `
-                                  : ""
-                              }
+                              absolute
+                              bottom-0
+                              left-1/2
+                              h-px
+                              w-2/3
+                              -translate-x-1/2
+                              bg-gradient-to-r
+                              from-transparent
+                              ${accent.line}
+                              to-transparent
+                              shadow-[0_0_18px_rgba(96,165,250,.8)]
                             `}
-                          >
-                            <Icon size={27} />
-                          </div>
+                          />
+                        </>
+                      )}
 
-                          {/* Title */}
+                      <div className="relative z-10">
 
-                          <h3
-                            className={`
-                              mt-6
-                              text-xl
-                              font-bold
-                              leading-tight
-                              text-slate-900
-                              dark:text-white
+                        {/* ICON */}
 
-                              ${
-                                isActive
-                                  ? "md:text-2xl"
-                                  : ""
-                              }
-                            `}
-                          >
-                            {service.title}
-                          </h3>
-
-                          {/* Description */}
-
-                          <p
-                            className="
-                              mt-4
-                              text-sm
-                              leading-7
-                              text-slate-600
-                              dark:text-slate-400
-                            "
-                          >
-                            {service.description}
-                          </p>
-
-                          {/* CTA */}
-
-                          <Link
-                            href="/services"
-                            onClick={(event) =>
-                              event.stopPropagation()
-                            }
-                            className="
-                              group
-                              mt-6
-                              inline-flex
-                              items-center
-                              gap-2
-                              text-sm
-                              font-semibold
-                              text-blue-600
-                              transition-all
-
-                              hover:gap-3
-
-                              dark:text-blue-400
-                            "
-                          >
-                            Explore Service
-
-                            <ArrowRight
-                              size={16}
-                              className="
-                                transition-transform
-                                group-hover:translate-x-1
-                              "
-                            />
-                          </Link>
+                        <div
+                          className={`
+                            flex
+                            h-12
+                            w-12
+                            items-center
+                            justify-center
+                            rounded-2xl
+                            border
+                            ${accent.icon}
+                          `}
+                        >
+                          <Icon size={23} />
                         </div>
+
+                        {/* TITLE */}
+
+                        <h3
+                          className={`
+                            mt-5
+                            text-lg
+                            font-bold
+                            leading-tight
+                            text-slate-900
+                            dark:text-white
+
+                            ${
+                              isActive
+                                ? "md:text-xl"
+                                : ""
+                            }
+                          `}
+                        >
+                          {service.title}
+                        </h3>
+
+                        {/* DESCRIPTION */}
+
+                        <p
+                          className="
+                            mt-3
+                            text-xs
+                            leading-6
+                            text-slate-600
+                            dark:text-slate-400
+                          "
+                        >
+                          {service.description}
+                        </p>
+
+                        {/* CTA */}
+
+                        <Link
+                          href="/services"
+                          onClick={(event) =>
+                            event.stopPropagation()
+                          }
+                          className="
+                            group
+                            mt-5
+                            inline-flex
+                            items-center
+                            gap-2
+                            text-xs
+                            font-semibold
+                            text-blue-600
+                            transition-all
+
+                            hover:gap-3
+
+                            dark:text-blue-400
+                          "
+                        >
+                          Explore Service
+
+                          <ArrowRight
+                            size={15}
+                            className="
+                              transition-transform
+                              group-hover:translate-x-1
+                            "
+                          />
+                        </Link>
                       </div>
-                    </motion.div>
-                  );
-                }
-              )}
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
+          </div>
 
-            {/* =================================================
-                DOTS
-            ================================================= */}
+          {/* ===============================================
+              DOTS
+          =============================================== */}
 
-            <div className="mt-2 flex justify-center gap-3">
+          <div className="shrink-0 pb-3">
+
+            <div className="flex justify-center gap-2">
               {SERVICES.map(
                 (service, index) => (
                   <button
@@ -1030,11 +1026,11 @@ export default function HeroSection() {
                     }
                     aria-label={`Show ${service.title}`}
                     className="
-                      group
                       flex
                       h-6
                       items-center
                       justify-center
+                      px-1
                     "
                   >
                     <motion.span
@@ -1042,18 +1038,21 @@ export default function HeroSection() {
                         width:
                           index === activeIndex
                             ? 20
-                            : 9,
+                            : 8,
+
                         opacity:
                           index === activeIndex
                             ? 1
-                            : 0.4,
+                            : 0.35,
+                      }}
+                      transition={{
+                        duration: 0.3,
                       }}
                       className="
-                        h-2.5
+                        h-2
                         rounded-full
                         bg-blue-500
-                        shadow-[0_0_12px_rgba(59,130,246,.6)]
-
+                        shadow-[0_0_10px_rgba(59,130,246,.55)]
                         dark:bg-blue-400
                       "
                     />
@@ -1063,14 +1062,14 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* =================================================
+          {/* ===============================================
               TRUST BAR
-          ================================================= */}
+          =============================================== */}
 
           <motion.div
             initial={{
               opacity: 0,
-              y: 25,
+              y: 20,
             }}
             animate={{
               opacity: 1,
@@ -1082,21 +1081,22 @@ export default function HeroSection() {
             }}
             className="
               mx-auto
-              mt-7
-              mb-5
+              mb-3
               grid
+              w-full
               max-w-5xl
+              shrink-0
               grid-cols-2
               overflow-hidden
               rounded-2xl
               border
               border-slate-200
-              bg-white/70
+              bg-white/80
               shadow-lg
               backdrop-blur-xl
 
               dark:border-white/10
-              dark:bg-[#0d1525]/70
+              dark:bg-[#0d1525]/80
 
               md:grid-cols-4
             "
@@ -1114,14 +1114,16 @@ export default function HeroSection() {
                   items-center
                   justify-center
                   gap-2
-                  px-4
-                  py-5
+                  px-3
+                  py-3
                   text-center
-                  text-sm
+                  text-xs
                   font-medium
                   text-slate-700
-
                   dark:text-slate-300
+
+                  md:py-4
+                  md:text-sm
 
                   ${
                     index !== 3
@@ -1135,8 +1137,11 @@ export default function HeroSection() {
                 `}
               >
                 <CheckCircle2
-                  size={20}
-                  className="shrink-0 text-blue-500"
+                  size={17}
+                  className="
+                    shrink-0
+                    text-blue-500
+                  "
                 />
 
                 <span>{item}</span>
@@ -1144,19 +1149,18 @@ export default function HeroSection() {
             ))}
           </motion.div>
 
-          {/* Scroll Hint */}
+          {/* SCROLL TEXT */}
 
           <div
             className="
-              mt-3
-              pb-5
+              shrink-0
+              pb-3
               text-center
-              text-[10px]
+              text-[9px]
               font-semibold
               uppercase
-              tracking-[0.25em]
+              tracking-[0.22em]
               text-slate-400
-
               dark:text-slate-600
             "
           >
