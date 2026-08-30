@@ -4,6 +4,7 @@ import { useRef } from "react";
 import Link from "next/link";
 import { motion, useInView } from "framer-motion";
 import {
+  ArrowRight,
   ArrowUpRight,
   Globe,
   Smartphone,
@@ -16,8 +17,8 @@ import {
   Cable,
   Sparkles,
   Megaphone,
+  CheckCircle2,
 } from "lucide-react";
-
 import { useLang } from "@/lib/providers";
 
 /* =========================================================
@@ -28,7 +29,7 @@ const SERVICES = [
   {
     id: "software",
     icon: Code2,
-    color: "#3b7bff",
+    color: "#2563eb",
     href: "/services#software",
     titleKey: "service.software.title",
     descKey: "service.software.desc",
@@ -39,7 +40,7 @@ const SERVICES = [
   {
     id: "web",
     icon: Globe,
-    color: "#6d5dfc",
+    color: "#4f46e5",
     href: "/services#web",
     titleKey: "service.web.title",
     descKey: "service.web.desc",
@@ -50,7 +51,7 @@ const SERVICES = [
   {
     id: "saas",
     icon: Cloud,
-    color: "#14b8a6",
+    color: "#0f766e",
     href: "/services#saas",
     titleKey: "service.saas.title",
     descKey: "service.saas.desc",
@@ -61,7 +62,7 @@ const SERVICES = [
   {
     id: "android",
     icon: Smartphone,
-    color: "#f59e0b",
+    color: "#c7771a",
     href: "/services#android",
     titleKey: "service.android.title",
     descKey: "service.android.desc",
@@ -72,7 +73,7 @@ const SERVICES = [
   {
     id: "design",
     icon: Palette,
-    color: "#ec4899",
+    color: "#9333ea",
     href: "/services#design",
     titleKey: "service.design.title",
     descKey: "service.design.desc",
@@ -83,7 +84,7 @@ const SERVICES = [
   {
     id: "seo",
     icon: BarChart3,
-    color: "#3b7bff",
+    color: "#2563eb",
     href: "/services#seo",
     titleKey: "service.seo.title",
     descKey: "service.seo.desc",
@@ -94,7 +95,7 @@ const SERVICES = [
   {
     id: "marketing",
     icon: Megaphone,
-    color: "#8b5cf6",
+    color: "#7c3aed",
     href: "/services#marketing",
     titleKey: "service.marketing.title",
     descKey: "service.marketing.desc",
@@ -105,7 +106,7 @@ const SERVICES = [
   {
     id: "ai",
     icon: Bot,
-    color: "#14b8a6",
+    color: "#0f766e",
     href: "/services#ai",
     titleKey: "service.ai.title",
     descKey: "service.ai.desc",
@@ -116,7 +117,7 @@ const SERVICES = [
   {
     id: "crm",
     icon: Users,
-    color: "#f97316",
+    color: "#c2410c",
     href: "/services#crm",
     titleKey: "service.crm.title",
     descKey: "service.crm.desc",
@@ -127,7 +128,7 @@ const SERVICES = [
   {
     id: "api",
     icon: Cable,
-    color: "#d946ef",
+    color: "#7e22ce",
     href: "/services#api",
     titleKey: "service.api.title",
     descKey: "service.api.desc",
@@ -149,215 +150,245 @@ function ServiceCard({
   index: number;
 }) {
   const { t } = useLang();
-
   const Icon = service.icon;
 
-  const title = t(
-    service.titleKey,
-    service.titleFB
-  );
-
-  const description = t(
-    service.descKey,
-    service.descFB
-  );
+  const title = t(service.titleKey, service.titleFB);
+  const description = t(service.descKey, service.descFB);
 
   return (
     <motion.article
-      initial={{
-        opacity: 0,
-        y: 30,
-      }}
-      whileInView={{
-        opacity: 1,
-        y: 0,
-      }}
+      initial={{ opacity: 0, y: 32 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{
         once: true,
-        margin: "-50px",
+        margin: "-60px",
       }}
       transition={{
-        duration: 0.5,
+        duration: 0.55,
         delay: Math.min(index * 0.05, 0.35),
+        ease: [0.22, 1, 0.36, 1],
       }}
-      whileHover={{
-        y: -6,
-      }}
+      whileHover={{ y: -7 }}
       className="group relative h-full"
     >
       <Link
         href={service.href}
         aria-label={`Explore ${title}`}
         className="
-          block h-full
-          rounded-3xl
+          block
+          h-full
+          rounded-[22px]
           focus:outline-none
           focus-visible:ring-2
           focus-visible:ring-blue-500
-          focus-visible:ring-offset-2
-          dark:focus-visible:ring-offset-slate-950
+          focus-visible:ring-offset-4
         "
       >
         <div
           className="
             relative
-            flex h-full
-            min-h-[270px]
+            flex
+            h-full
+            min-h-[285px]
             flex-col
             overflow-hidden
-            rounded-3xl
-            border border-slate-200/80
-            bg-white
+            rounded-[22px]
+            border
+            border-slate-200/90
+            bg-white/[0.92]
             p-6
-            shadow-[0_8px_30px_rgba(15,23,42,0.05)]
+            shadow-[0_10px_35px_rgba(15,23,42,0.055)]
+            backdrop-blur-xl
             transition-all
             duration-500
 
-            group-hover:border-slate-300
-            group-hover:shadow-[0_25px_60px_rgba(15,23,42,0.12)]
+            group-hover:border-blue-200
+            group-hover:shadow-[0_24px_60px_rgba(15,23,42,0.11)]
 
-            dark:border-white/10
-            dark:bg-white/[0.04]
-            dark:group-hover:bg-white/[0.07]
+            dark:border-white/[0.10]
+            dark:bg-[#1c293b]/80
+            dark:group-hover:border-blue-400/30
+            dark:group-hover:bg-[#203047]/90
           "
         >
-          {/* Soft background glow */}
+          {/* Soft accent glow */}
           <div
             className="
               pointer-events-none
-              absolute -right-16 -top-16
-              h-40 w-40
+              absolute
+              -right-20
+              -top-20
+              h-48
+              w-48
               rounded-full
               opacity-0
-              blur-3xl
+              blur-[70px]
               transition-opacity
               duration-500
-              group-hover:opacity-20
+              group-hover:opacity-[0.13]
             "
-            style={{
-              backgroundColor: service.color,
-            }}
-            aria-hidden="true"
+            style={{ backgroundColor: service.color }}
           />
 
-          {/* Service Number */}
+          {/* subtle gradient */}
+          <div
+            className="
+              pointer-events-none
+              absolute
+              inset-0
+              bg-gradient-to-br
+              from-white/30
+              via-transparent
+              to-transparent
+              dark:from-white/[0.025]
+            "
+          />
+
+          {/* Number */}
           <span
             className="
-              absolute right-5 top-5
-              text-xs font-bold
+              absolute
+              right-6
+              top-6
+              text-[11px]
+              font-bold
+              tracking-[0.12em]
               text-slate-300
-              dark:text-white/10
+              dark:text-white/15
             "
-            aria-hidden="true"
           >
             {String(index + 1).padStart(2, "0")}
           </span>
 
-          {/* Icon */}
-          <div
-            className="
-              relative mb-6
-              flex h-12 w-12
-              items-center justify-center
-              rounded-2xl
-              border
-              transition-all
-              duration-500
-              group-hover:scale-110
-              group-hover:rotate-3
-            "
-            style={{
-              backgroundColor: `${service.color}12`,
-              borderColor: `${service.color}25`,
-            }}
-          >
-            <Icon
-              size={22}
-              style={{
-                color: service.color,
+          <div className="relative z-10">
+            {/* Icon */}
+            <motion.div
+              whileHover={{
+                rotate: 4,
+                scale: 1.08,
               }}
-              aria-hidden="true"
-            />
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 16,
+              }}
+              className="
+                mb-6
+                flex
+                h-13
+                w-13
+                items-center
+                justify-center
+                rounded-2xl
+                border
+              "
+              style={{
+                backgroundColor: `${service.color}12`,
+                borderColor: `${service.color}28`,
+              }}
+            >
+              <Icon
+                size={24}
+                style={{ color: service.color }}
+                aria-hidden="true"
+              />
+            </motion.div>
+
+            {/* Title */}
+            <h3
+              className="
+                max-w-[88%]
+                text-[19px]
+                font-bold
+                leading-snug
+                tracking-[-0.02em]
+                text-slate-900
+                dark:text-white
+              "
+            >
+              {title}
+            </h3>
+
+            {/* Description */}
+            <p
+              className="
+                mt-3
+                text-sm
+                leading-6
+                text-slate-600
+                dark:text-slate-300
+              "
+            >
+              {description}
+            </p>
           </div>
 
-          {/* Content */}
-          <h3
-            className="
-              relative mb-3
-              text-lg font-bold
-              tracking-tight
-              text-slate-900
-              dark:text-z-text
-            "
-          >
-            {title}
-          </h3>
-
-          <p
-            className="
-              relative
-              text-sm leading-relaxed
-              text-slate-600
-              dark:text-z-muted
-            "
-          >
-            {description}
-          </p>
-
-          {/* Spacer */}
           <div className="flex-1" />
 
-          {/* Explore Service */}
+          {/* Footer */}
           <div
             className="
-              relative mt-6
-              flex items-center gap-2
-              text-sm font-semibold
-              transition-all duration-300
-              group-hover:gap-3
+              relative
+              z-10
+              mt-7
+              flex
+              items-center
+              justify-between
+              border-t
+              border-slate-100
+              pt-5
+              dark:border-white/[0.08]
             "
-            style={{
-              color: service.color,
-            }}
           >
-            <span>
-              {t(
-                "services.explore",
-                "Explore Service"
-              )}
+            <span
+              className="
+                text-sm
+                font-semibold
+                text-slate-700
+                transition-colors
+                group-hover:text-blue-600
+                dark:text-slate-200
+                dark:group-hover:text-blue-300
+              "
+            >
+              {t("services.explore", "Explore Service")}
             </span>
 
             <span
               className="
-                flex h-7 w-7
-                items-center justify-center
+                flex
+                h-9
+                w-9
+                items-center
+                justify-center
                 rounded-full
-                transition-transform
+                transition-all
                 duration-300
+                group-hover:scale-110
                 group-hover:rotate-45
               "
               style={{
+                color: service.color,
                 backgroundColor: `${service.color}12`,
               }}
-              aria-hidden="true"
             >
-              <ArrowUpRight size={14} />
+              <ArrowUpRight size={17} />
             </span>
           </div>
 
-          {/* Bottom Accent */}
+          {/* Bottom accent */}
           <div
             className="
-              absolute bottom-0 left-0
-              h-1 w-0
+              absolute
+              bottom-0
+              left-0
+              h-[3px]
+              w-0
               transition-all
               duration-500
               group-hover:w-full
             "
-            style={{
-              backgroundColor: service.color,
-            }}
-            aria-hidden="true"
+            style={{ backgroundColor: service.color }}
           />
         </div>
       </Link>
@@ -384,58 +415,60 @@ export default function ServicesSection() {
       id="services"
       aria-labelledby="services-heading"
       className="
-        relative overflow-hidden
-        px-4 py-24
-        md:px-6 md:py-32
+        relative
+        overflow-hidden
+        px-4
+        py-20
+        sm:py-24
+        md:px-6
+        md:py-28
+        lg:py-32
       "
     >
-      {/* Background Decoration */}
+      {/* Background */}
       <div
-        className="
-          pointer-events-none
-          absolute inset-0
-          overflow-hidden
-        "
+        className="pointer-events-none absolute inset-0 overflow-hidden"
         aria-hidden="true"
       >
         <div
           className="
-            absolute left-[5%] top-[20%]
-            h-[350px] w-[350px]
+            absolute
+            left-[-150px]
+            top-[10%]
+            h-[420px]
+            w-[420px]
             rounded-full
-            bg-blue-400/[0.06]
-            blur-[120px]
+            bg-blue-500/[0.045]
+            blur-[130px]
+            dark:bg-blue-500/[0.07]
           "
         />
 
         <div
           className="
-            absolute right-[5%] bottom-[10%]
-            h-[350px] w-[350px]
+            absolute
+            right-[-150px]
+            bottom-[5%]
+            h-[420px]
+            w-[420px]
             rounded-full
-            bg-purple-400/[0.05]
-            blur-[120px]
+            bg-orange-400/[0.035]
+            blur-[130px]
+            dark:bg-blue-400/[0.05]
           "
         />
       </div>
 
       <div
         ref={ref}
-        className="
-          relative
-          mx-auto
-          max-w-7xl
-        "
+        className="relative mx-auto max-w-[1280px]"
       >
         {/* =================================================
-            SECTION HEADER
+            HEADER
         ================================================= */}
 
         <motion.div
-          initial={{
-            opacity: 0,
-            y: 25,
-          }}
+          initial={{ opacity: 0, y: 24 }}
           animate={
             inView
               ? {
@@ -445,20 +478,20 @@ export default function ServicesSection() {
               : undefined
           }
           transition={{
-            duration: 0.6,
+            duration: 0.65,
+            ease: [0.22, 1, 0.36, 1],
           }}
           className="
-            mx-auto mb-16
-            max-w-3xl
+            mx-auto
+            mb-12
+            max-w-4xl
             text-center
+            sm:mb-14
+            md:mb-16
           "
         >
-          {/* Badge */}
           <div className="z-badge mx-auto mb-5 w-fit">
-            <Sparkles
-              size={13}
-              aria-hidden="true"
-            />
+            <Sparkles size={13} />
 
             <span>
               {t(
@@ -468,19 +501,20 @@ export default function ServicesSection() {
             </span>
           </div>
 
-          {/* Heading */}
           <h2
             id="services-heading"
             className="
-              mb-5
-              text-4xl
+              mx-auto
+              max-w-4xl
+              text-3xl
               font-extrabold
-              tracking-tight
+              leading-[1.08]
+              tracking-[-0.035em]
               text-slate-900
-
-              md:text-6xl
-
-              dark:text-z-text
+              sm:text-4xl
+              md:text-5xl
+              lg:text-6xl
+              dark:text-white
             "
           >
             {t(
@@ -489,18 +523,17 @@ export default function ServicesSection() {
             )}
           </h2>
 
-          {/* Description */}
           <p
             className="
               mx-auto
-              max-w-2xl
-              text-base
+              mt-5
+              max-w-3xl
+              text-sm
               leading-relaxed
               text-slate-600
-
+              sm:text-base
               md:text-lg
-
-              dark:text-z-muted
+              dark:text-slate-300
             "
           >
             {t(
@@ -517,78 +550,128 @@ export default function ServicesSection() {
         <div
           className="
             grid
+            auto-rows-fr
             grid-cols-1
             gap-5
-
             sm:grid-cols-2
-
             lg:grid-cols-3
+            lg:gap-6
           "
         >
-          {SERVICES.map(
-            (service, index) => (
-              <ServiceCard
-                key={service.id}
-                service={service}
-                index={index}
-              />
-            )
-          )}
+          {SERVICES.map((service, index) => (
+            <ServiceCard
+              key={service.id}
+              service={service}
+              index={index}
+            />
+          ))}
         </div>
 
         {/* =================================================
-            CTA
+            CTA AREA
         ================================================= */}
 
         <motion.div
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{
             once: true,
             amount: 0.3,
           }}
           transition={{
-            duration: 0.5,
+            duration: 0.6,
+            ease: [0.22, 1, 0.36, 1],
           }}
           className="
+            mx-auto
             mt-14
+            max-w-3xl
+            rounded-[24px]
+            border
+            border-slate-200/80
+            bg-white/[0.75]
+            px-6
+            py-9
             text-center
+            shadow-[0_15px_50px_rgba(15,23,42,0.06)]
+            backdrop-blur-xl
+            sm:px-10
+            dark:border-white/10
+            dark:bg-[#1c293b]/70
           "
         >
+          <div
+            className="
+              mb-4
+              flex
+              justify-center
+            "
+          >
+            <CheckCircle2
+              size={24}
+              className="text-blue-600 dark:text-blue-400"
+            />
+          </div>
+
+          <h3
+            className="
+              text-xl
+              font-bold
+              tracking-tight
+              text-slate-900
+              sm:text-2xl
+              dark:text-white
+            "
+          >
+            {t(
+              "services.cta_title",
+              "Not Sure Which Service You Need?"
+            )}
+          </h3>
+
+          <p
+            className="
+              mx-auto
+              mt-3
+              max-w-xl
+              text-sm
+              leading-relaxed
+              text-slate-600
+              dark:text-slate-300
+            "
+          >
+            {t(
+              "services.cta_sub",
+              "Tell us about your business goals and our team will help you find the right digital solution."
+            )}
+          </p>
+
           <Link
             href="/services"
             className="
               group
+              mt-6
               inline-flex
               items-center
-              gap-3
+              gap-2
               rounded-full
-              bg-slate-900
-              px-7 py-3.5
-              text-sm font-semibold
+              bg-gradient-to-r
+              from-blue-600
+              to-blue-700
+              px-7
+              py-3.5
+              text-sm
+              font-bold
               text-white
-              shadow-lg
-              shadow-slate-900/10
+              shadow-[0_10px_28px_rgba(37,99,235,0.22)]
               transition-all
               duration-300
-
               hover:-translate-y-1
-              hover:shadow-xl
-
+              hover:shadow-[0_16px_36px_rgba(37,99,235,0.30)]
               focus:outline-none
               focus-visible:ring-2
               focus-visible:ring-blue-500
-              focus-visible:ring-offset-2
-
-              dark:bg-white
-              dark:text-slate-900
-              dark:focus-visible:ring-offset-slate-950
+              focus-visible:ring-offset-4
             "
           >
             {t(
@@ -596,16 +679,13 @@ export default function ServicesSection() {
               "Explore All Services"
             )}
 
-            <ArrowUpRight
+            <ArrowRight
               size={17}
               className="
                 transition-transform
                 duration-300
-
                 group-hover:translate-x-1
-                group-hover:-translate-y-1
               "
-              aria-hidden="true"
             />
           </Link>
         </motion.div>
