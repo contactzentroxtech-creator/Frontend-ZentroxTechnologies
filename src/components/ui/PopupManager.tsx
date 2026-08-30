@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sparkles, Rocket, Gift, Zap } from "lucide-react";
+import { X, Sparkles, Rocket, Gift, Zap, Mail, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import api from "@/lib/api";
 
@@ -18,7 +18,7 @@ interface PopupData {
   showOnce: boolean;
 }
 
-// Map popup types to icons and badges
+// Map popup types to icons and badges – English only, no emojis
 const POPUP_META = {
   lead: { icon: Sparkles, badge: "Special Offer" },
   discount: { icon: Gift, badge: "Limited Time" },
@@ -138,7 +138,7 @@ export default function PopupManager() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
             onClick={() => dismiss(activePopup)}
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[200]"
+            className="fixed inset-0 z-[200] bg-black/40 backdrop-blur-sm"
           />
 
           {/* Popup Container */}
@@ -156,23 +156,25 @@ export default function PopupManager() {
           >
             <div
               className="
-                relative max-w-md w-full mx-4
-                bg-white/95 dark:bg-[#1e293b]/95
-                rounded-3xl
-                border border-slate-200/60 dark:border-white/10
-                shadow-2xl shadow-slate-900/10 dark:shadow-black/40
-                p-8
+                relative mx-4 w-full max-w-md
+                overflow-hidden rounded-3xl
+                border border-slate-200/60
+                bg-white/95 p-8
+                shadow-2xl shadow-slate-900/10
                 backdrop-blur-xl
-                overflow-hidden
+                dark:border-white/8
+                dark:bg-[#1a1e2b]/95
+                dark:shadow-black/40
               "
             >
               {/* Decorative glow blob */}
               <div
                 className="
-                  pointer-events-none absolute -top-20 -right-20
-                  w-56 h-56 rounded-full
-                  bg-blue-500/10 dark:bg-blue-400/10
+                  pointer-events-none absolute -right-20 -top-20
+                  h-56 w-56 rounded-full
+                  bg-blue-500/10
                   blur-[80px]
+                  dark:bg-blue-400/10
                 "
               />
 
@@ -180,12 +182,13 @@ export default function PopupManager() {
               <button
                 onClick={() => dismiss(activePopup)}
                 className="
-                  absolute top-4 right-4
-                  p-1.5 rounded-full
-                  text-slate-400 dark:text-slate-500
-                  hover:text-slate-900 dark:hover:text-white
-                  hover:bg-slate-100 dark:hover:bg-white/10
+                  absolute right-4 top-4
+                  rounded-full p-1.5
+                  text-slate-400
                   transition-colors duration-200
+                  hover:bg-slate-100 hover:text-slate-900
+                  dark:text-slate-500
+                  dark:hover:bg-white/10 dark:hover:text-white
                 "
                 aria-label="Close popup"
               >
@@ -199,12 +202,12 @@ export default function PopupManager() {
                 return (
                   <div
                     className="
-                      w-14 h-14 rounded-2xl
+                      mb-5 flex h-14 w-14 items-center justify-center
+                      rounded-2xl
+                      border border-blue-200/60
                       bg-gradient-to-br from-blue-50 to-indigo-50
+                      dark:border-blue-400/20
                       dark:from-blue-500/10 dark:to-indigo-500/10
-                      border border-blue-200/60 dark:border-blue-400/20
-                      flex items-center justify-center
-                      mb-5
                     "
                   >
                     <Icon size={26} className="text-blue-600 dark:text-blue-400" />
@@ -215,14 +218,15 @@ export default function PopupManager() {
               {/* Badge */}
               <div
                 className="
-                  inline-flex items-center gap-1.5
+                  mb-4 inline-flex items-center gap-1.5
                   rounded-full
-                  border border-blue-200/60 dark:border-blue-400/20
-                  bg-blue-50/80 dark:bg-blue-400/10
-                  px-3.5 py-1
+                  border border-blue-200/60
+                  bg-blue-50/80 px-3.5 py-1
                   text-[10px] font-bold uppercase tracking-[0.1em]
-                  text-blue-700 dark:text-blue-300
-                  mb-4
+                  text-blue-700
+                  dark:border-blue-400/20
+                  dark:bg-blue-400/10
+                  dark:text-blue-300
                 "
               >
                 {(() => {
@@ -232,12 +236,12 @@ export default function PopupManager() {
               </div>
 
               {/* Title */}
-              <h3 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-2">
+              <h3 className="mb-2 text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">
                 {activePopup.title}
               </h3>
 
               {/* Description */}
-              <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-300 mb-7">
+              <p className="mb-7 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
                 {activePopup.content}
               </p>
 
@@ -247,8 +251,7 @@ export default function PopupManager() {
                   href={activePopup.ctaLink}
                   onClick={() => dismiss(activePopup)}
                   className="
-                    group flex items-center justify-center gap-2
-                    w-full
+                    group mb-3 flex w-full items-center justify-center gap-2
                     rounded-xl
                     bg-gradient-to-r from-blue-600 to-blue-700
                     px-6 py-3.5
@@ -258,7 +261,6 @@ export default function PopupManager() {
                     hover:-translate-y-1
                     hover:shadow-xl hover:shadow-blue-600/30
                     focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-                    mb-3
                   "
                 >
                   {activePopup.ctaText}
@@ -269,12 +271,13 @@ export default function PopupManager() {
               <button
                 onClick={() => dismiss(activePopup)}
                 className="
-                  w-full text-center
+                  w-full py-1 text-center
                   text-sm font-medium
-                  text-slate-500 dark:text-slate-400
-                  hover:text-slate-900 dark:hover:text-white
+                  text-slate-500
                   transition-colors duration-200
-                  py-1
+                  hover:text-slate-900
+                  dark:text-slate-400
+                  dark:hover:text-white
                 "
               >
                 No thanks, I'll skip this
