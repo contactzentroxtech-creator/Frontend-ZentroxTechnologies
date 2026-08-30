@@ -13,6 +13,9 @@ import {
   Smartphone,
   Bot,
   BarChart3,
+  Rocket,
+  Settings,
+  Lightbulb,
 } from "lucide-react";
 import { useLang } from "@/lib/providers";
 
@@ -209,12 +212,12 @@ export default function HeroSection() {
         relative
         overflow-hidden
         bg-white
-        py-20
+        py-16
         transition-colors
         duration-500
-        dark:bg-[#0f172a]
-        md:py-28
-        lg:py-32
+        dark:bg-[#111827]
+        md:py-20
+        lg:py-24
       "
     >
       {/* ===== BACKGROUND ELEMENTS ===== */}
@@ -224,7 +227,7 @@ export default function HeroSection() {
           className="
             absolute inset-0
             opacity-[0.03]
-            dark:opacity-[0.05]
+            dark:opacity-[0.04]
           "
           style={{
             backgroundImage: `
@@ -235,7 +238,7 @@ export default function HeroSection() {
           }}
         />
 
-        {/* Floating blobs */}
+        {/* Floating blobs - softer for dark mode */}
         <motion.div
           animate={{
             x: [0, 40, 0],
@@ -250,9 +253,9 @@ export default function HeroSection() {
             absolute -left-32 top-10
             h-[500px] w-[500px]
             rounded-full
-            bg-blue-500/[0.06]
+            bg-blue-500/[0.05]
             blur-[140px]
-            dark:bg-blue-400/[0.08]
+            dark:bg-blue-400/[0.06]
           "
         />
 
@@ -270,16 +273,16 @@ export default function HeroSection() {
             absolute -right-32 top-20
             h-[550px] w-[550px]
             rounded-full
-            bg-amber-400/[0.05]
+            bg-amber-400/[0.04]
             blur-[160px]
-            dark:bg-orange-400/[0.05]
+            dark:bg-orange-400/[0.04]
           "
         />
 
         <motion.div
           animate={{
             scale: [1, 1.15, 1],
-            opacity: [0.3, 0.6, 0.3],
+            opacity: [0.3, 0.5, 0.3],
           }}
           transition={{
             duration: 10,
@@ -291,9 +294,9 @@ export default function HeroSection() {
             h-[500px] w-[700px]
             -translate-x-1/2 -translate-y-1/2
             rounded-full
-            bg-blue-500/[0.05]
+            bg-blue-500/[0.04]
             blur-[130px]
-            dark:bg-blue-400/[0.06]
+            dark:bg-blue-400/[0.05]
           "
         />
       </div>
@@ -311,26 +314,23 @@ export default function HeroSection() {
               inline-flex items-center gap-2.5
               rounded-full
               border border-blue-200/60
-              bg-blue-50/70
+              bg-blue-50/60
               px-5 py-2
               text-[11px] font-bold
               tracking-[0.1em]
               text-blue-700
               backdrop-blur-md
               dark:border-blue-400/20
-              dark:bg-blue-400/[0.06]
+              dark:bg-blue-400/[0.05]
               dark:text-blue-200
               sm:text-xs
             "
           >
             <span className="relative flex h-2.5 w-2.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70" />
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
               <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
             </span>
-            {t(
-              "hero.badge",
-              "MOHALI, INDIA · BUILDING DIGITAL SOLUTIONS WORLDWIDE"
-            )}
+            {t("hero.badge")}
           </motion.div>
 
           {/* Heading */}
@@ -345,7 +345,7 @@ export default function HeroSection() {
             "
           >
             <span className="block text-4xl text-slate-900 dark:text-white sm:text-5xl md:text-6xl lg:text-7xl">
-              {t("hero.line1", "Build Better.")}
+              {t("hero.line1")}
             </span>
             <span
               className="
@@ -365,7 +365,7 @@ export default function HeroSection() {
                 lg:text-7xl
               "
             >
-              {t("hero.line2", "Grow Faster.")}
+              {t("hero.line2")}
             </span>
           </motion.h1>
 
@@ -383,10 +383,7 @@ export default function HeroSection() {
               md:text-lg md:leading-8
             "
           >
-            {t(
-              "hero.description",
-              "We create custom software, high-performance websites, mobile apps and digital growth systems that help ambitious businesses move forward."
-            )}
+            {t("hero.sub")}
           </motion.p>
 
           {/* CTA Buttons */}
@@ -411,7 +408,7 @@ export default function HeroSection() {
                 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600
               "
             >
-              {t("hero.cta_primary", "Start Your Project")}
+              {t("hero.cta_primary")}
               <ArrowRight
                 size={18}
                 className="transition-transform duration-300 group-hover:translate-x-1"
@@ -443,7 +440,7 @@ export default function HeroSection() {
                 dark:hover:text-blue-300
               "
             >
-              Explore Our Services
+              {t("hero.cta_secondary")}
               <ArrowRight
                 size={17}
                 className="transition-transform duration-300 group-hover:translate-x-1"
@@ -454,12 +451,12 @@ export default function HeroSection() {
 
         {/* ===== SERVICES CAROUSEL ===== */}
         <div
-          className="relative mt-16 md:mt-20"
+          className="relative mt-14 md:mt-16"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
           {/* Section label */}
-          <div className="mb-7 text-center">
+          <div className="mb-6 text-center">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-blue-600 dark:text-blue-300">
               What We Do
             </p>
@@ -485,7 +482,7 @@ export default function HeroSection() {
               transition-all
               hover:scale-105 hover:border-blue-300 hover:text-blue-600
               dark:border-white/10
-              dark:bg-[#1e293b]/90
+              dark:bg-[#1a1e2b]/90
               dark:text-white
               xl:flex
             "
@@ -509,7 +506,7 @@ export default function HeroSection() {
               transition-all
               hover:scale-105 hover:border-blue-300 hover:text-blue-600
               dark:border-white/10
-              dark:bg-[#1e293b]/90
+              dark:bg-[#1a1e2b]/90
               dark:text-white
               xl:flex
             "
@@ -557,16 +554,16 @@ export default function HeroSection() {
                           ? `
                             border-blue-300/60
                             bg-white/95
-                            shadow-[0_25px_70px_rgba(37,99,235,.18)]
+                            shadow-[0_25px_70px_rgba(37,99,235,.15)]
                             dark:border-blue-400/25
-                            dark:bg-[#1e293b]/95
+                            dark:bg-[#1a1e2b]/95
                           `
                           : `
                             border-slate-200/60
                             bg-white/80
-                            shadow-[0_15px_45px_rgba(15,23,42,.06)]
-                            dark:border-white/10
-                            dark:bg-[#172032]/90
+                            shadow-[0_15px_45px_rgba(15,23,42,.05)]
+                            dark:border-white/8
+                            dark:bg-[#1a1e2b]/90
                           `
                       }
                     `}
@@ -577,7 +574,7 @@ export default function HeroSection() {
                         pointer-events-none absolute inset-0
                         bg-gradient-to-br ${accent.glow}
                         via-transparent to-transparent
-                        opacity-60
+                        opacity-50
                       `}
                     />
 
@@ -647,10 +644,10 @@ export default function HeroSection() {
                       border border-slate-200/60
                       bg-white/90
                       p-7
-                      shadow-[0_20px_55px_rgba(15,23,42,.08)]
+                      shadow-[0_20px_55px_rgba(15,23,42,.06)]
                       backdrop-blur-sm
                       dark:border-white/10
-                      dark:bg-[#1e293b]/90
+                      dark:bg-[#1a1e2b]/90
                     "
                   >
                     <div
@@ -697,7 +694,7 @@ export default function HeroSection() {
                   flex h-11 w-11 items-center justify-center
                   rounded-xl border border-slate-200/60
                   bg-white text-slate-700 shadow-sm
-                  dark:border-white/10 dark:bg-[#1e293b] dark:text-white
+                  dark:border-white/10 dark:bg-[#1a1e2b] dark:text-white
                 "
                 aria-label="Previous service"
               >
@@ -709,7 +706,7 @@ export default function HeroSection() {
                   flex h-11 w-11 items-center justify-center
                   rounded-xl border border-slate-200/60
                   bg-white text-slate-700 shadow-sm
-                  dark:border-white/10 dark:bg-[#1e293b] dark:text-white
+                  dark:border-white/10 dark:bg-[#1a1e2b] dark:text-white
                 "
                 aria-label="Next service"
               >
@@ -741,46 +738,49 @@ export default function HeroSection() {
           </div>
         </div>
 
-        {/* ===== TRUST BAR ===== */}
+        {/* ===== TRUST BAR - No Emojis ===== */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
           className="
-            mx-auto mt-16
+            mx-auto mt-14
             grid max-w-5xl
             grid-cols-2
             overflow-hidden
             rounded-2xl
             border border-slate-200/60
             bg-white/80
-            shadow-[0_10px_40px_rgba(15,23,42,.05)]
+            shadow-[0_10px_40px_rgba(15,23,42,.04)]
             backdrop-blur-md
-            dark:border-white/10
-            dark:bg-[#1e293b]/80
+            dark:border-white/8
+            dark:bg-[#1a1e2b]/80
             md:grid-cols-4
           "
         >
           {[
-            { label: "Founded in 2023", icon: "🚀" },
-            { label: "Custom Solutions", icon: "⚙️" },
-            { label: "Modern Technology", icon: "💡" },
-            { label: "Global Delivery", icon: "🌍" },
-          ].map((item, index) => (
-            <div
-              key={item.label}
-              className={`
-                flex items-center justify-center gap-2.5
-                px-4 py-4 text-center text-xs font-semibold
-                text-slate-600 dark:text-slate-300
-                ${index < 3 ? "md:border-r md:border-slate-200/60 dark:md:border-white/10" : ""}
-              `}
-            >
-              <span className="text-base">{item.icon}</span>
-              {item.label}
-            </div>
-          ))}
+            { label: "Founded in 2023", icon: Rocket },
+            { label: "Custom Solutions", icon: Settings },
+            { label: "Modern Technology", icon: Lightbulb },
+            { label: "Global Delivery", icon: Globe2 },
+          ].map((item, index) => {
+            const Icon = item.icon;
+            return (
+              <div
+                key={item.label}
+                className={`
+                  flex items-center justify-center gap-2.5
+                  px-4 py-4 text-center text-xs font-semibold
+                  text-slate-600 dark:text-slate-300
+                  ${index < 3 ? "md:border-r md:border-slate-200/60 dark:md:border-white/8" : ""}
+                `}
+              >
+                <Icon size={16} className="text-blue-500 dark:text-blue-400" />
+                {item.label}
+              </div>
+            );
+          })}
         </motion.div>
       </div>
     </section>
