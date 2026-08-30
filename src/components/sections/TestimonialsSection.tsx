@@ -1,369 +1,147 @@
 "use client";
 
-import { useState, useRef, type MouseEvent } from "react";
-import { motion } from "framer-motion";
-import Link from "next/link";
-import { ArrowRight, Star, Sparkles, CheckCircle2, Globe2, Rocket } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { motion, useInView } from "framer-motion";
+import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { useLang } from "@/lib/providers";
 
 const TESTIMONIALS = [
   {
-    name: "Rajveer Singh",
-    role: "E-commerce Business Owner",
-    initials: "RS",
-    text: "Zentrox Technologies helped us build a modern digital platform focused on performance, usability, and business growth. The team was responsive and professional throughout the project.",
+    name: "Founder, E-commerce Brand",
+    role: "E-commerce Platform Development",
+    text: "The e-commerce platform they built for us has streamlined our entire operation. The team understood our business from day one and delivered a solution that actually works for us.",
   },
   {
-    name: "Priya Kapoor",
-    role: "Education Institute Director",
-    initials: "PK",
-    text: "The custom management solution improved our workflow and made daily operations easier to manage. The interface is clean, responsive, and simple for our team to use.",
+    name: "Sales Director, B2B Firm",
+    role: "CRM & Management System",
+    text: "Zentrox developed a custom CRM that finally gave us full visibility into our sales pipeline. The process was smooth and the results speak for themselves.",
   },
   {
-    name: "Arjun Sharma",
-    role: "Startup Founder",
-    initials: "AS",
-    text: "From the initial idea to development, the team provided valuable technical guidance. They understood our product requirements and helped us move forward with confidence.",
+    name: "CTO, SaaS Startup",
+    role: "SaaS Development",
+    text: "Their SaaS development expertise helped us launch our product on time. The architecture is scalable and the team continues to support us as we grow.",
   },
   {
-    name: "Mandeep Gill",
-    role: "Retail Brand Owner",
-    initials: "MG",
-    text: "Their digital marketing and SEO support helped us improve our online presence. The team explained the process clearly and focused on practical strategies for long-term growth.",
-  },
-  {
-    name: "Harman Bhatia",
-    role: "Healthcare Operations Manager",
-    initials: "HB",
-    text: "The team understood our workflow challenges and proposed a practical software solution. The automation features helped simplify repetitive processes and improve efficiency.",
-  },
-  {
-    name: "Simran Kaur",
-    role: "Real Estate Entrepreneur",
-    initials: "SK",
-    text: "Professional communication, modern design, and a smooth development process. Zentrox Technologies delivered a solution aligned with our business requirements.",
+    name: "Marketing Lead, Professional Services",
+    role: "SEO & Digital Growth",
+    text: "Our organic traffic increased by over 60% within four months of working with Zentrox on SEO. Their data-driven approach and clear reporting made all the difference.",
   },
 ];
 
-function TestimonialCard({
-  testimonial,
-  delay,
-}: {
-  testimonial: (typeof TESTIMONIALS)[0];
-  delay: number;
-}) {
+function TestimonialCard({ testimonial }: { testimonial: (typeof TESTIMONIALS)[0] }) {
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay }}
-      viewport={{ once: true }}
-      className="
-        flex flex-col gap-4 rounded-2xl
-        border border-slate-200/60
-        bg-white/80 p-6
-        shadow-[0_8px_30px_rgba(15,23,42,0.04)]
-        backdrop-blur-sm
-        transition-all duration-300
-        hover:-translate-y-1
-        hover:border-blue-300/60
-        hover:shadow-[0_20px_60px_rgba(15,23,42,0.08)]
-        dark:border-white/8
-        dark:bg-[#1a1e2b]/80
-      "
-    >
-      <div className="flex gap-0.5" aria-label="5 star testimonial rating">
+    <div className="flex flex-col rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm transition-all hover:border-gray-300 hover:shadow-md">
+      <div className="flex gap-0.5">
         {Array.from({ length: 5 }).map((_, i) => (
-          <Star key={i} size={14} className="text-amber-400 fill-amber-400" />
+          <Star key={i} size={14} className="fill-amber-500 text-amber-500" />
         ))}
       </div>
-
-      <p className="flex-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+      <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-slate-600">
         “{testimonial.text}”
-      </p>
-
-      <div className="flex items-center gap-3 border-t border-slate-200/60 pt-4 dark:border-white/8">
-        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 text-xs font-bold text-white shadow-md">
-          {testimonial.initials}
-        </div>
-
-        <div className="min-w-0">
-          <div className="truncate text-sm font-semibold text-slate-900 dark:text-white">
-            {testimonial.name}
-          </div>
-          <div className="truncate text-xs text-slate-500 dark:text-slate-400">
-            {testimonial.role}
-          </div>
-        </div>
+      </blockquote>
+      <div className="mt-4 border-t border-gray-100 pt-4">
+        <div className="font-semibold text-slate-900">{testimonial.name}</div>
+        <div className="text-sm text-slate-500">{testimonial.role}</div>
       </div>
-    </motion.article>
+    </div>
   );
 }
 
-export function TestimonialsSection() {
+export default function TestimonialsSection() {
   const { t } = useLang();
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.2 });
+
+  const totalSlides = TESTIMONIALS.length;
+
+  const goToSlide = (index: number) => {
+    if (index < 0) setCurrentIndex(totalSlides - 1);
+    else if (index >= totalSlides) setCurrentIndex(0);
+    else setCurrentIndex(index);
+  };
+
+  useEffect(() => {
+    if (!isAutoPlaying) return;
+    const interval = setInterval(() => {
+      goToSlide(currentIndex + 1);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [currentIndex, isAutoPlaying, totalSlides]);
 
   return (
     <section
       id="testimonials"
-      className="relative bg-white px-4 py-16 transition-colors duration-300 dark:bg-[#111827] md:px-6 md:py-20 lg:py-24"
+      aria-labelledby="testimonials-heading"
+      className="bg-slate-50/70 px-4 py-16 sm:py-20 md:px-6 md:py-24 lg:py-28"
+      ref={ref}
     >
-      <div className="mx-auto max-w-7xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="mb-12 max-w-3xl"
-        >
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-blue-50/60 px-4 py-1.5 text-[11px] font-bold tracking-[0.1em] text-blue-700 backdrop-blur-sm dark:border-blue-400/20 dark:bg-blue-400/[0.05] dark:text-blue-200">
-            <Sparkles size={13} />
-            <span>{t("testimonials.badge", "Client Stories")}</span>
+      <div className="mx-auto max-w-4xl">
+        {/* Header */}
+        <div className="mx-auto mb-12 max-w-3xl text-center sm:mb-14">
+          <span className="text-xs font-medium uppercase tracking-wider text-amber-600">
+            {t("testimonials.badge")}
+          </span>
+          <h2
+            id="testimonials-heading"
+            className="mt-2 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl"
+          >
+            {t("testimonials.title")}
+          </h2>
+          <p className="mt-3 text-base leading-relaxed text-slate-500 sm:text-lg">
+            {t("testimonials.sub")}
+          </p>
+        </div>
+
+        {/* Slider */}
+        <div className="relative overflow-hidden">
+          <div
+            className="flex transition-transform duration-500 ease-in-out"
+            style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+          >
+            {TESTIMONIALS.map((testimonial, index) => (
+              <div key={index} className="w-full flex-shrink-0 px-2">
+                <TestimonialCard testimonial={testimonial} />
+              </div>
+            ))}
           </div>
 
-          <h2 className="text-3xl font-extrabold leading-tight tracking-tight text-slate-900 dark:text-white md:text-4xl lg:text-5xl">
-            {t(
-              "testimonials.title",
-              "Trusted by Businesses Building Their Digital Future"
-            )}
-          </h2>
+          {/* Controls */}
+          <div className="mt-6 flex items-center justify-center gap-3">
+            <button
+              onClick={() => goToSlide(currentIndex - 1)}
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white text-slate-600 transition-all hover:border-gray-300 hover:bg-gray-50"
+              aria-label="Previous testimonial"
+            >
+              <ChevronLeft size={18} />
+            </button>
 
-          <p className="mt-4 text-base leading-relaxed text-slate-600 dark:text-slate-300 md:text-lg">
-            {t(
-              "testimonials.sub",
-              "We work with startups, growing businesses, and organizations across multiple industries to build practical digital solutions designed for growth."
-            )}
-          </p>
-        </motion.div>
+            <div className="flex gap-1.5">
+              {TESTIMONIALS.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToSlide(index)}
+                  className={`h-2 rounded-full transition-all ${
+                    currentIndex === index
+                      ? "w-6 bg-amber-600"
+                      : "w-2 bg-gray-300 hover:bg-gray-400"
+                  }`}
+                  aria-label={`Go to testimonial ${index + 1}`}
+                />
+              ))}
+            </div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {TESTIMONIALS.map((testimonial, i) => (
-            <TestimonialCard
-              key={`${testimonial.name}-${i}`}
-              testimonial={testimonial}
-              delay={i * 0.08}
-            />
-          ))}
+            <button
+              onClick={() => goToSlide(currentIndex + 1)}
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white text-slate-600 transition-all hover:border-gray-300 hover:bg-gray-50"
+              aria-label="Next testimonial"
+            >
+              <ChevronRight size={18} />
+            </button>
+          </div>
         </div>
       </div>
     </section>
   );
 }
-
-/* =========================================================
-   CTA SECTION – Premium Redesign with Reduced Spacing
-========================================================= */
-
-export function CTASection() {
-  const { t } = useLang();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [spotlight, setSpotlight] = useState({ x: 50, y: 50 });
-  const [isHovering, setIsHovering] = useState(false);
-
-  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-    setSpotlight({ x, y });
-  };
-
-  // Floating decorative shapes – subtle ambient motion
-  const floatingShapes = [
-    { icon: Sparkles, color: "blue", top: "10%", left: "5%", delay: 0 },
-    { icon: Globe2, color: "teal", bottom: "15%", right: "8%", delay: 2 },
-    { icon: Rocket, color: "purple", top: "50%", left: "85%", delay: 4 },
-  ];
-
-  return (
-    <section
-      ref={containerRef}
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
-      onMouseMove={handleMouseMove}
-      className="
-        relative z-10 overflow-hidden
-        px-4 py-16
-        bg-gradient-to-br from-slate-50 via-white to-blue-50/30
-        dark:from-[#111827] dark:via-[#1a1e2b] dark:to-blue-950/20
-        transition-colors duration-500
-        md:px-6 md:py-20 lg:py-24
-      "
-      style={{ transformStyle: "preserve-3d" }}
-    >
-      {/* Background Elements */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-        <div
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
-            h-[800px] w-[800px] rounded-full
-            bg-blue-500/10 blur-[160px]
-            dark:bg-blue-400/10"
-        />
-        <div
-          className="absolute right-0 top-0
-            h-[500px] w-[500px] rounded-full
-            bg-purple-500/8 blur-[140px]
-            dark:bg-purple-400/8"
-        />
-        <div
-          className="absolute bottom-0 left-0
-            h-[500px] w-[500px] rounded-full
-            bg-teal-500/8 blur-[140px]
-            dark:bg-teal-400/8"
-        />
-      </div>
-
-      {/* Floating decorative shapes */}
-      {floatingShapes.map((shape, idx) => {
-        const Icon = shape.icon;
-        const colorMap = {
-          blue: "text-blue-500/20 dark:text-blue-400/20",
-          teal: "text-teal-500/20 dark:text-teal-400/20",
-          purple: "text-purple-500/20 dark:text-purple-400/20",
-        };
-        return (
-          <motion.div
-            key={idx}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{
-              opacity: isHovering ? 0.8 : 0.4,
-              scale: isHovering ? 1.1 : 1,
-              y: [0, -15, 0],
-            }}
-            transition={{
-              y: { duration: 6, repeat: Infinity, ease: "easeInOut", delay: shape.delay },
-              opacity: { duration: 0.6 },
-              scale: { duration: 0.6 },
-            }}
-            className={`pointer-events-none absolute ${colorMap[shape.color as keyof typeof colorMap]}`}
-            style={{
-              top: shape.top,
-              left: shape.left,
-              bottom: shape.bottom,
-              right: shape.right,
-            }}
-          >
-            <Icon size={48} strokeWidth={1.5} />
-          </motion.div>
-        );
-      })}
-
-      {/* Spotlight overlay */}
-      {isHovering && (
-        <div
-          className="pointer-events-none absolute inset-0 transition-opacity duration-300"
-          style={{
-            background: `radial-gradient(circle at ${spotlight.x}% ${spotlight.y}%, rgba(37,99,235,0.06), transparent 60%)`,
-          }}
-        />
-      )}
-
-      {/* Content */}
-      <div className="relative z-10 mx-auto max-w-4xl text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 25 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          viewport={{ once: true }}
-          style={{ transformStyle: "preserve-3d" }}
-        >
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            viewport={{ once: true }}
-            className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-blue-50/70 px-5 py-2 text-[11px] font-bold tracking-[0.1em] text-blue-700 backdrop-blur-sm dark:border-blue-400/20 dark:bg-blue-400/10 dark:text-blue-200"
-          >
-            <Sparkles size={13} />
-            {t("cta.badge", "Let's Build Something Great Together")}
-          </motion.div>
-
-          {/* Heading */}
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            viewport={{ once: true }}
-            className="text-4xl font-extrabold leading-[1.08] tracking-tight text-slate-900 dark:text-white md:text-5xl lg:text-6xl"
-          >
-            {t("cta.title", "Ready to Build Something Great?")}
-            <br />
-            <span className="bg-gradient-to-r from-blue-600 via-indigo-500 to-cyan-600 bg-clip-text text-transparent dark:from-blue-300 dark:via-indigo-300 dark:to-cyan-300">
-              {t("cta.title2", "Let's Grow Your Business Together")}
-            </span>
-          </motion.h2>
-
-          {/* Description */}
-          <motion.p
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.25 }}
-            viewport={{ once: true }}
-            className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-600 dark:text-slate-300 md:text-lg"
-          >
-            {t(
-              "cta.sub",
-              "Whether you need a website, custom software, mobile application, SaaS platform, AI automation, SEO, or digital marketing services — our team is ready to help you build and grow."
-            )}
-          </motion.p>
-
-          {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.35 }}
-            viewport={{ once: true }}
-            className="mt-10 flex flex-col justify-center gap-4 sm:flex-row"
-          >
-            <Link
-              href="/contact"
-              className="group inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-blue-700 px-8 py-4 text-sm font-bold text-white shadow-lg shadow-blue-600/25 transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:shadow-xl hover:shadow-blue-600/35 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-            >
-              {t("cta.primary", "Get a Free Consultation")}
-              <ArrowRight
-                size={17}
-                className="transition-transform duration-300 group-hover:translate-x-1"
-              />
-            </Link>
-
-            <Link
-              href="/services"
-              className="group inline-flex items-center justify-center gap-2 rounded-full border-2 border-slate-200/80 bg-white/70 px-8 py-4 text-sm font-bold text-slate-700 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:border-blue-300 hover:bg-white hover:text-blue-600 hover:shadow-lg dark:border-white/10 dark:bg-white/5 dark:text-slate-200 dark:hover:border-blue-400/30 dark:hover:bg-white/10 dark:hover:text-blue-300"
-            >
-              {t("cta.secondary", "Explore Our Services")}
-            </Link>
-          </motion.div>
-
-          {/* Trust indicators */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.45 }}
-            viewport={{ once: true }}
-            className="mt-10 flex flex-wrap items-center justify-center gap-4 text-sm text-slate-500 dark:text-slate-400 sm:gap-6"
-          >
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 size={15} className="text-blue-500" />
-              MSME Registered
-            </span>
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 size={15} className="text-blue-500" />
-              Founded 2023
-            </span>
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 size={15} className="text-blue-500" />
-              Remote-First Team
-            </span>
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 size={15} className="text-blue-500" />
-              Global Delivery
-            </span>
-          </motion.div>
-        </motion.div>
-      </div>
-    </section>
-  );
-}
-
-export default TestimonialsSection;

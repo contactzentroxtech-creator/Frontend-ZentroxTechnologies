@@ -10,14 +10,10 @@ import React, {
 } from "react";
 import api from "@/lib/api";
 
-// ─── THEME ────────────────────────────────────────────────────────────────────
-
-type Theme = "dark" | "light";
+// ─── THEME – Light Only ──────────────────────────────────────────────────
 
 interface ThemeCtx {
-  theme: Theme;
-  toggleTheme: () => void;
-  setTheme: (t: Theme) => void;
+  theme: "light";
 }
 
 interface LangCtx {
@@ -29,8 +25,6 @@ interface LangCtx {
 
 const ThemeContext = createContext<ThemeCtx>({
   theme: "light",
-  toggleTheme: () => {},
-  setTheme: () => {},
 });
 
 const LangContext = createContext<LangCtx>({
@@ -40,191 +34,144 @@ const LangContext = createContext<LangCtx>({
   loadingTranslations: false,
 });
 
-// ─── SEO-OPTIMIZED ENGLISH TRANSLATIONS ────────────────────────────────────
+// ─── English Translations ──────────────────────────────────────────────────
 
 const STATIC_FALLBACKS: Record<string, string> = {
-  // ─── NAVBAR ──────────────────────────────────────────────────────────────
   "nav.services": "Services",
-  "nav.courses": "Courses",
-  "nav.blog": "Blog",
-  "nav.about": "About Us",
+  "nav.blog": "Insights",
+  "nav.about": "About",
   "nav.contact": "Contact",
-  "nav.login": "Login",
-  "nav.get_started": "Get Started",
+  "nav.get_started": "Start a Project",
 
-  // ─── HERO ────────────────────────────────────────────────────────────────
-  "hero.badge": "Mohali & Chandigarh — Trusted Technology Partner for Growing Businesses",
-  "hero.line1": "We Build",
-  "hero.line2": "Grow Faster.",
+  "hero.badge": "MSME Registered · Remote-First",
+  "hero.line1": "Building Digital Solutions That",
+  "hero.line2": "Move Businesses Forward.",
   "hero.sub":
-    "Zentrox Technologies delivers custom software, high‑performance websites, mobile apps and AI‑driven digital growth solutions for ambitious businesses.",
+    "Zentrox Technologies helps businesses turn ideas into reliable software, websites, mobile applications and digital growth solutions.",
   "hero.cta_primary": "Start Your Project",
-  "hero.cta_secondary": "Explore Our Services",
+  "hero.cta_secondary": "View Our Work",
 
-  // ─── SERVICES SECTION ───────────────────────────────────────────────────
-  "services.badge": "Everything You Need To Grow",
-  "services.title": "Technology That Moves Your Business Forward",
-  "services.sub":
-    "Zentrox Technologies combines strategy, design, development, AI and digital marketing under one roof to help you build powerful digital products and attract more customers.",
-  "services.view_all": "Explore All Services",
-  "services.cta_title": "Not Sure Which Service You Need?",
-  "services.cta_sub":
-    "Tell us about your business goals and our team will recommend the right digital solution — from websites and apps to AI and SEO.",
-  "services.explore": "Explore Service",
+  "services.badge": "Services",
+  "services.title": "What We Do",
+  "services.sub": "Technology and digital growth solutions designed around your goals.",
+  "services.view_all": "View All Services",
+  "services.cta_title": "Have a Project in Mind?",
+  "services.cta_sub": "Let's discuss how we can help you build the right solution.",
+  "services.explore": "Learn More",
 
-  // ─── INDIVIDUAL SERVICES (SEO-optimised) ──────────────────────────────
-  "service.software.title": "Custom Software Development",
-  "service.software.desc":
-    "Tailored software solutions designed around your business processes, challenges and long‑term growth goals.",
-
-  "service.web.title": "Web Application Development",
-  "service.web.desc":
-    "Modern, scalable web applications built for excellent user experience and measurable business results.",
-
+  "service.software.title": "Software Development",
+  "service.software.desc": "Scalable custom software designed around your business processes, workflows and operational needs.",
+  "service.web.title": "Website Development",
+  "service.web.desc": "Fast, responsive and conversion-focused websites built to represent your brand and generate business.",
   "service.saas.title": "SaaS Development",
-  "service.saas.desc":
-    "From MVP to full‑scale SaaS platforms, we turn your product ideas into reliable digital businesses.",
-
+  "service.saas.desc": "Custom SaaS platforms with subscription models, dashboards, integrations and scalable architecture.",
   "service.android.title": "Mobile App Development",
-  "service.android.desc":
-    "High‑performance mobile apps for Android and iOS with intuitive interfaces and seamless user experiences.",
-
+  "service.android.desc": "User-friendly Android and iOS applications focused on performance, usability and reliability.",
   "service.design.title": "UI/UX Design",
-  "service.design.desc":
-    "Human‑centred digital experiences that look professional, feel intuitive and drive user action.",
-
-  "service.seo.title": "SEO & Local SEO",
-  "service.seo.desc":
-    "Data‑driven SEO strategies that boost visibility, attract qualified traffic and generate more leads for your business.",
-
+  "service.design.desc": "Clear and intuitive digital experiences designed to make complex products simple to use.",
+  "service.seo.title": "SEO & Digital Growth",
+  "service.seo.desc": "Data-driven SEO strategies designed to improve visibility, organic traffic and long-term growth.",
   "service.marketing.title": "Digital Marketing",
-  "service.marketing.desc":
-    "Smart digital campaigns that strengthen your brand, generate leads and support sustainable business growth.",
-
-  "service.ai.title": "AI Integration & Automation",
-  "service.ai.desc":
-    "Intelligent AI integrations and automation workflows that reduce repetitive work and improve efficiency.",
-
+  "service.marketing.desc": "Digital campaigns and content strategies focused on awareness, leads and measurable business growth.",
+  "service.ai.title": "AI Integration",
+  "service.ai.desc": "Practical AI integrations, automation and intelligent features that improve business workflows.",
   "service.crm.title": "CRM Development",
-  "service.crm.desc":
-    "Custom CRM systems that organise customer data, streamline sales and improve business relationships.",
-
+  "service.crm.desc": "Custom CRM systems that organize sales, customer relationships and business operations.",
   "service.api.title": "API Integration",
-  "service.api.desc":
-    "Reliable integrations that connect your software, platforms and workflows for seamless data flow.",
+  "service.api.desc": "Connect your existing tools, platforms and workflows through reliable API integrations.",
 
-  // ─── STATS ──────────────────────────────────────────────────────────────
-  "stats.trust": "Built for Real Business Growth",
-  "stats.title": "Results That Reflect Our Commitment",
-  "stats.description":
-    "Zentrox Technologies helps businesses build stronger digital products, improve online presence and move forward with confidence.",
-  "stats.projects": "Digital Solutions Delivered",
+  "stats.trust": "About",
+  "stats.title": "Technology Built Around Your Business.",
+  "stats.description": "From startups and local businesses to growing enterprises, we build practical digital products that solve real business problems.",
+  "stats.projects": "Projects Delivered",
   "stats.clients": "Businesses Supported",
-  "stats.years": "Years of Digital Experience",
+  "stats.years": "Years Experience",
   "stats.rating": "Client Satisfaction",
-  "stats.trust1": "Custom‑Built Solutions",
+  "stats.trust1": "Custom Solutions",
   "stats.trust2": "Transparent Communication",
-  "stats.trust3": "India & Global Delivery",
-  "stats.trust4": "Long‑Term Support",
+  "stats.trust3": "Global Delivery",
+  "stats.trust4": "Long-Term Support",
 
-  // ─── LOCAL / GLOBAL ─────────────────────────────────────────────────────
-  "global.badge": "Digital Solutions for India & Worldwide",
-  "global.title": "Built in India. Ready for Business Anywhere.",
-  "global.sub":
-    "From Mohali and Chandigarh to businesses across India and international markets, Zentrox Technologies creates modern websites, software, AI solutions and digital growth systems designed around real business goals.",
+  "global.badge": "Industries",
+  "global.title": "Built for Different Industries",
+  "global.sub": "Every industry has different workflows, customers and challenges. Our approach starts by understanding the business before choosing the technology.",
 
   "global.trust.location": "India & Worldwide",
-  "global.trust.business": "Business‑Focused Solutions",
+  "global.trust.business": "Business-Focused Solutions",
   "global.trust.delivery": "Reliable Project Delivery",
+  "global.why.title": "Why Businesses Choose Zentrox",
+  "global.why.sub": "We deliver practical technology built around your business goals.",
+  "global.footer1": "Business-Focused Solutions",
+  "global.footer2": "Quality & Reliability",
+  "global.footer3": "Transparent Process",
 
-  "global.why.title": "One Technology Partner for Your Digital Growth",
-  "global.why.sub":
-    "We combine strategy, design, development and digital growth so your business can move forward without managing multiple disconnected teams.",
+  "global.card1.title": "Business-Focused Solutions",
+  "global.card1.desc": "We don't build technology just for the sake of technology. Every solution is designed around a real business requirement.",
+  "global.card1.point1": "Real business requirements",
+  "global.card1.point2": "Practical technology",
+  "global.card1.point3": "Measurable outcomes",
 
-  "global.footer1": "Strategy‑led digital solutions",
-  "global.footer2": "Designed for real business outcomes",
-  "global.footer3": "India‑based. Globally connected.",
+  "global.card2.title": "Quality & Reliability",
+  "global.card2.desc": "Clean development practices, testing and attention to detail help us deliver dependable digital products.",
+  "global.card2.point1": "Clean development",
+  "global.card2.point2": "Rigorous testing",
+  "global.card2.point3": "Dependable products",
 
-  "global.card1.title": "Local Understanding. Global Delivery.",
-  "global.card1.desc":
-    "We understand the needs of businesses in India while building digital solutions ready for customers, teams and markets worldwide.",
-  "global.card1.point1": "Serving businesses across India",
-  "global.card1.point2": "Remote‑first global collaboration",
-  "global.card1.point3": "Solutions built for scalable growth",
+  "global.card3.title": "Transparent Process",
+  "global.card3.desc": "From discovery to deployment, clients stay informed about progress, priorities and deliverables.",
+  "global.card3.point1": "Clear communication",
+  "global.card3.point2": "Regular updates",
+  "global.card3.point3": "On-time delivery",
 
-  "global.card2.title": "Technology Built Around Your Business",
-  "global.card2.desc":
-    "Instead of forcing your business into generic tools, we design websites, software and digital systems around your actual workflows.",
-  "global.card2.point1": "Custom websites and web applications",
-  "global.card2.point2": "Mobile apps and SaaS platforms",
-  "global.card2.point3": "AI and automation workflows",
-
-  "global.card3.title": "Built for Long‑Term Growth",
-  "global.card3.desc":
-    "Our goal is not just to launch a project. We help businesses create stronger digital foundations that can evolve as they grow.",
-  "global.card3.point1": "Clear communication and strategy",
-  "global.card3.point2": "Scalable technology decisions",
-  "global.card3.point3": "Ongoing digital growth support",
-
-  // ─── PRICING WIZARD ──────────────────────────────────────────────────────
-  "pricing.badge": "Transparent Pricing",
-  "pricing.title": "Estimate Your Project",
-  "pricing.sub":
-    "Get a quick estimated investment range for your website, software, mobile app, SaaS, AI, SEO or digital marketing project.",
-  "pricing.step.service": "Service",
-  "pricing.step.business": "Business",
-  "pricing.step.budget": "Budget",
-  "pricing.step.quote": "Quote",
+  "pricing.badge": "Process",
+  "pricing.title": "A Simple Process. Clear Communication.",
+  "pricing.sub": "From discovery to launch, we keep you informed every step of the way.",
+  "pricing.step.service": "Discover",
+  "pricing.step.business": "Plan",
+  "pricing.step.budget": "Build",
+  "pricing.step.quote": "Launch & Improve",
   "pricing.back": "Back",
   "pricing.next": "Next",
-  "pricing.get_quote": "Get Quote",
-  "pricing.consultation": "Get Free Consultation",
+  "pricing.get_quote": "Get Started",
+  "pricing.consultation": "Start Your Project",
   "pricing.business_type": "What type of business do you have?",
   "pricing.complexity": "Project Complexity",
   "pricing.budget": "Estimated Project Budget",
   "pricing.timeline": "When do you need the project?",
   "pricing.addons": "Optional Features",
 
-  // ─── TESTIMONIALS ────────────────────────────────────────────────────────
-  "testimonials.badge": "Client Stories",
-  "testimonials.title": "Trusted by Businesses Building Their Digital Future",
-  "testimonials.sub":
-    "We work with startups, growing businesses, and organisations across multiple industries to build practical digital solutions designed for growth.",
+  "testimonials.badge": "Testimonials",
+  "testimonials.title": "What Our Clients Say",
+  "testimonials.sub": "Feedback from businesses we've partnered with.",
 
-  // ─── CTA ──────────────────────────────────────────────────────────────────
   "cta.badge": "Let's Build Something Great Together",
-  "cta.title": "Ready to Build Something Great?",
-  "cta.title2": "Let's Grow Your Business Together",
-  "cta.sub":
-    "Whether you need a website, custom software, mobile app, SaaS platform, AI automation, SEO or digital marketing services — our team is ready to help you build and grow.",
-  "cta.primary": "Get a Free Consultation",
-  "cta.secondary": "Explore Our Services",
+  "cta.title": "Have a Digital Product in Mind?",
+  "cta.title2": "Let's turn your idea into a practical digital solution.",
+  "cta.sub": "Whether you need a website, custom software, mobile app, SaaS platform, AI automation, SEO or digital marketing services — our team is ready to help you build and grow.",
+  "cta.primary": "Start a Project",
+  "cta.secondary": "Talk to Us",
 
-  // ─── CONTACT ─────────────────────────────────────────────────────────────
-  "contact.badge": "Get In Touch",
-  "contact.title": "Start Your Digital Journey",
-  "contact.sub":
-    "Tell us about your project. Your first consultation is always free. Our team typically responds within 24 hours.",
+  "contact.badge": "Contact",
+  "contact.title": "Let's Build Something Together",
+  "contact.sub": "Have a project in mind? Reach out and we'll get back to you within one business day.",
   "contact.name": "Your Name",
   "contact.phone": "Phone / WhatsApp",
   "contact.email": "Email Address",
   "contact.service": "Select Required Service",
   "contact.budget": "Budget Range",
   "contact.message": "Tell us about your project or business...",
-  "contact.send": "Send Message — Get Free Quote",
+  "contact.send": "Send Message",
   "contact.sending": "Sending...",
   "contact.success": "Message sent successfully!",
   "contact.success_title": "Message Sent!",
   "contact.send_another": "Send Another Message",
-  "contact.privacy_note":
-    "By submitting this form, you agree to be contacted by Zentrox Technologies.",
+  "contact.privacy_note": "By submitting this form, you agree to be contacted by Zentrox Technologies.",
   "contact.reach_us": "Reach Us Directly",
   "contact.form_title": "Send Us a Message",
   "contact.whatsapp_cta": "Chat on WhatsApp",
-  "contact.brand_desc": "MSME Registered · Innovation‑Driven · Client‑Focused",
-  "contact.brand_locations": "Serving Mohali, Chandigarh, Punjab and Worldwide",
+  "contact.brand_desc": "MSME Registered · Remote-First",
+  "contact.brand_locations": "Mohali & Chandigarh, Punjab, India",
 
-  // ─── VALIDATION ──────────────────────────────────────────────────────────
   "validation.name_min": "Name must contain at least 2 characters",
   "validation.phone_invalid": "Please enter a valid phone number",
   "validation.email_invalid": "Please enter a valid email address",
@@ -232,55 +179,37 @@ const STATIC_FALLBACKS: Record<string, string> = {
   "validation.message_min": "Message must contain at least 10 characters",
   "validation.message_max": "Your message is too long",
 
-  // ─── FOOTER ──────────────────────────────────────────────────────────────
-  "footer.msme": "Remote‑first · Innovation‑driven · MSME Registered",
+  "footer.msme": "MSME Registered · Remote-First · Innovation-Driven",
   "footer.copy": "All rights reserved. MSME Registered — India.",
 
-  // ─── COMMON ──────────────────────────────────────────────────────────────
   "common.loading": "Loading...",
   "common.error": "Something went wrong",
   "common.save": "Save",
   "common.cancel": "Cancel",
   "common.close": "Close",
   "common.learn_more": "Learn More",
-  "whatsapp.message":
-    "Hi Zentrox Technologies, I need help with my project.",
+  "whatsapp.message": "Hi Zentrox Technologies, I need help with my project.",
 };
 
 export { STATIC_FALLBACKS };
 
-// ─── THEME PROVIDER ──────────────────────────────────────────────────────────
+// ─── THEME PROVIDER – Light Only ──────────────────────────────────────────
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>("light");
-
   useEffect(() => {
-    const stored = localStorage.getItem("zt_theme") as Theme | null;
-    const initial: Theme = stored === "dark" || stored === "light" ? stored : "light";
-    setThemeState(initial);
-    document.documentElement.classList.remove("light", "dark");
-    document.documentElement.classList.add(initial);
+    document.documentElement.classList.remove("dark");
+    document.documentElement.classList.add("light");
+    localStorage.setItem("zt_theme", "light");
   }, []);
 
-  const setTheme = (newTheme: Theme) => {
-    setThemeState(newTheme);
-    localStorage.setItem("zt_theme", newTheme);
-    document.documentElement.classList.remove("light", "dark");
-    document.documentElement.classList.add(newTheme);
-  };
-
-  const toggleTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light");
-  };
-
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, setTheme }}>
+    <ThemeContext.Provider value={{ theme: "light" }}>
       {children}
     </ThemeContext.Provider>
   );
 }
 
-// ─── LANGUAGE PROVIDER – ENGLISH ONLY ────────────────────────────────────────
+// ─── LANGUAGE PROVIDER – English Only ──────────────────────────────────────
 
 export function LangProvider({ children }: { children: React.ReactNode }) {
   const [translations, setTranslations] = useState<Record<string, string>>(
@@ -304,7 +233,6 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
 
       setTranslations(merged);
     } catch {
-      // Keep static fallbacks
       setTranslations(STATIC_FALLBACKS);
     } finally {
       setLoadingTranslations(false);
@@ -348,8 +276,6 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
     </ThemeProvider>
   );
 }
-
-// ─── HOOKS ────────────────────────────────────────────────────────────────────
 
 export const useTheme = () => useContext(ThemeContext);
 export const useLang = () => useContext(LangContext);

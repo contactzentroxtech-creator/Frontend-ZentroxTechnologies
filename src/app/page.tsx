@@ -4,7 +4,6 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
 import HeroSection from "@/components/hero/HeroSection";
-
 import ServicesSection from "@/components/sections/ServicesSection";
 import StatsSection from "@/components/sections/StatsSection";
 import WhyChooseUsSection from "@/components/sections/WhyChooseUsSection";
@@ -19,10 +18,10 @@ import CursorEffect from "@/components/ui/CursorEffect";
 
 export const metadata: Metadata = {
   title:
-    "Zentrox Technologies | Software, Web & Digital Marketing Services",
+    "Zentrox Technologies | Software, Web & Digital Growth Solutions",
 
   description:
-    "Zentrox Technologies delivers custom software development, website development, mobile app development, SaaS solutions, AI integration, SEO, UI/UX design and digital marketing services for businesses in India and worldwide.",
+    "Zentrox Technologies delivers custom software, website development, mobile app development, SaaS solutions, AI integration, SEO, UI/UX design and digital marketing services for businesses in India and worldwide.",
 
   keywords: [
     "software development company",
@@ -49,7 +48,7 @@ export const metadata: Metadata = {
 
   openGraph: {
     title:
-      "Zentrox Technologies | Software, Web & Digital Growth Partner",
+      "Zentrox Technologies | Software, Web & Digital Growth Solutions",
 
     description:
       "Custom software, websites, mobile apps, SaaS, AI integration, SEO and digital marketing services for businesses in India and worldwide.",
@@ -67,7 +66,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
 
     title:
-      "Zentrox Technologies | Software, Web & Digital Growth Partner",
+      "Zentrox Technologies | Software, Web & Digital Growth Solutions",
 
     description:
       "Custom software, websites, mobile apps, SaaS, AI integration, SEO and digital marketing solutions for growing businesses worldwide.",
@@ -77,45 +76,20 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
-      {/* Optional desktop cursor effect */}
       <CursorEffect />
-
-      {/* Website Navigation */}
       <Navbar />
-
       <main>
-        {/* Hero Section */}
         <HeroSection />
-
-        {/* Trust & Company Statistics */}
         <StatsSection />
-
-        {/* Core Digital Services */}
         <ServicesSection />
-
-        {/* Why Choose Zentrox Technologies */}
         <WhyChooseUsSection />
-
-        {/* Industries & Global Service Coverage */}
         <LocalSection />
-
-        {/* Interactive Project Estimator */}
         <PricingWizard />
-
-        {/* Client Testimonials */}
         <TestimonialsSection />
-
-        {/* Final Lead Generation CTA */}
         <CTASection />
       </main>
-
-      {/* Website Footer */}
       <Footer />
-
-      {/* Promotional / Lead Generation Popup */}
       <PopupManager />
-
-      {/* WhatsApp / Quick Contact CTA */}
       <FloatingCTA />
     </>
   );
