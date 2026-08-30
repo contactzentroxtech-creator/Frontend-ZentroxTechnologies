@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   motion,
@@ -18,7 +18,6 @@ import {
   Bot,
   BarChart3,
 } from "lucide-react";
-
 import { useLang } from "@/lib/providers";
 
 /* =========================================================
@@ -38,7 +37,7 @@ const SERVICES = [
     id: 1,
     title: "Mobile App Development",
     description:
-      "Powerful Android and iOS applications designed for smooth experiences and growth.",
+      "Cross-platform mobile apps for Android and iOS that engage your users.",
     icon: Smartphone,
     accent: "cyan",
   },
@@ -46,7 +45,7 @@ const SERVICES = [
     id: 2,
     title: "Custom Software Development",
     description:
-      "Scalable, secure, and high-performance software tailored to your business workflows.",
+      "Scalable, secure and high-performance software tailored to your business workflows.",
     icon: Code2,
     accent: "purple",
   },
@@ -54,7 +53,7 @@ const SERVICES = [
     id: 3,
     title: "AI Integration & Automation",
     description:
-      "Smart AI solutions that automate workflows and improve business productivity.",
+      "Smart AI solutions to automate tasks and improve your business productivity.",
     icon: Bot,
     accent: "emerald",
   },
@@ -62,14 +61,14 @@ const SERVICES = [
     id: 4,
     title: "Digital Marketing & SEO",
     description:
-      "Rank higher, generate quality leads, and grow your business online.",
+      "Rank higher, get more traffic, generate quality leads and grow online.",
     icon: BarChart3,
     accent: "pink",
   },
 ];
 
 /* =========================================================
-   CARD POSITION LOGIC
+   3D CARD POSITION
 ========================================================= */
 
 function getCardStyle(index: number, activeIndex: number) {
@@ -77,20 +76,12 @@ function getCardStyle(index: number, activeIndex: number) {
 
   let position = index - activeIndex;
 
-  if (position > total / 2) {
-    position -= total;
-  }
-
-  if (position < -total / 2) {
-    position += total;
-  }
-
-  /* CENTER */
+  if (position > total / 2) position -= total;
+  if (position < -total / 2) position += total;
 
   if (position === 0) {
     return {
       x: "0%",
-      y: "0%",
       scale: 1,
       rotateY: 0,
       rotateZ: 0,
@@ -100,44 +91,35 @@ function getCardStyle(index: number, activeIndex: number) {
     };
   }
 
-  /* LEFT */
-
   if (position === -1) {
     return {
-      x: "-102%",
-      y: "3%",
-      scale: 0.84,
-      rotateY: 14,
+      x: "-112%",
+      scale: 0.82,
+      rotateY: 18,
       rotateZ: -5,
-      opacity: 0.72,
+      opacity: 0.78,
       zIndex: 30,
       filter: "blur(0px)",
     };
   }
-
-  /* RIGHT */
 
   if (position === 1) {
     return {
-      x: "102%",
-      y: "3%",
-      scale: 0.84,
-      rotateY: -14,
+      x: "112%",
+      scale: 0.82,
+      rotateY: -18,
       rotateZ: 5,
-      opacity: 0.72,
+      opacity: 0.78,
       zIndex: 30,
       filter: "blur(0px)",
     };
   }
 
-  /* FAR LEFT */
-
   if (position === -2) {
     return {
-      x: "-185%",
-      y: "7%",
-      scale: 0.68,
-      rotateY: 20,
+      x: "-205%",
+      scale: 0.65,
+      rotateY: 25,
       rotateZ: -8,
       opacity: 0.28,
       zIndex: 10,
@@ -145,14 +127,11 @@ function getCardStyle(index: number, activeIndex: number) {
     };
   }
 
-  /* FAR RIGHT */
-
   if (position === 2) {
     return {
-      x: "185%",
-      y: "7%",
-      scale: 0.68,
-      rotateY: -20,
+      x: "205%",
+      scale: 0.65,
+      rotateY: -25,
       rotateZ: 8,
       opacity: 0.28,
       zIndex: 10,
@@ -161,57 +140,35 @@ function getCardStyle(index: number, activeIndex: number) {
   }
 
   return {
-    x: position > 0 ? "250%" : "-250%",
-    y: "10%",
+    x: position > 0 ? "280%" : "-280%",
     scale: 0.5,
     rotateY: position > 0 ? -25 : 25,
-    rotateZ: 0,
     opacity: 0,
     zIndex: 0,
-    filter: "blur(5px)",
+    filter: "blur(4px)",
   };
 }
 
 /* =========================================================
-   ACCENT COLOR FUNCTION
+   ACCENT CLASSES
 ========================================================= */
 
 function getAccentClasses(accent: string) {
   switch (accent) {
     case "purple":
-      return {
-        icon: "border-purple-400/30 bg-purple-500/10 text-purple-500 dark:text-purple-400",
-        glow: "from-purple-500/10 via-transparent to-indigo-500/10",
-        line: "via-purple-400",
-      };
+      return "border-purple-400/30 bg-purple-500/10 text-purple-500 dark:text-purple-400";
 
     case "cyan":
-      return {
-        icon: "border-cyan-400/30 bg-cyan-500/10 text-cyan-600 dark:text-cyan-400",
-        glow: "from-cyan-500/10 via-transparent to-blue-500/10",
-        line: "via-cyan-400",
-      };
+      return "border-cyan-400/30 bg-cyan-500/10 text-cyan-600 dark:text-cyan-400";
 
     case "emerald":
-      return {
-        icon: "border-emerald-400/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
-        glow: "from-emerald-500/10 via-transparent to-cyan-500/10",
-        line: "via-emerald-400",
-      };
+      return "border-emerald-400/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400";
 
     case "pink":
-      return {
-        icon: "border-pink-400/30 bg-pink-500/10 text-pink-600 dark:text-pink-400",
-        glow: "from-pink-500/10 via-transparent to-purple-500/10",
-        line: "via-pink-400",
-      };
+      return "border-pink-400/30 bg-pink-500/10 text-pink-600 dark:text-pink-400";
 
     default:
-      return {
-        icon: "border-blue-400/30 bg-blue-500/10 text-blue-600 dark:text-blue-400",
-        glow: "from-blue-500/10 via-transparent to-cyan-500/10",
-        line: "via-blue-400",
-      };
+      return "border-blue-400/30 bg-blue-500/10 text-blue-600 dark:text-blue-400";
   }
 }
 
@@ -225,7 +182,7 @@ export default function HeroSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
 
   const [activeIndex, setActiveIndex] = useState(2);
-  const lastStepRef = useRef(-1);
+  const [scrollStep, setScrollStep] = useState(-1);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -233,54 +190,48 @@ export default function HeroSection() {
   });
 
   /* =======================================================
-     SCROLL CHANGES ACTIVE CARD
+     SCROLL CONTROL
   ======================================================= */
 
-  useMotionValueEvent(
-    scrollYProgress,
-    "change",
-    (latest) => {
-      /*
-        Scroll zones:
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    if (latest < 0.05) return;
 
-        0% → Website
-        20% → Mobile
-        40% → Software
-        60% → AI
-        80% → Marketing
-      */
+    const nextStep = Math.min(
+      SERVICES.length - 1,
+      Math.floor(latest * SERVICES.length)
+    );
 
-      if (latest < 0.08) return;
-
-      const step = Math.min(
-        SERVICES.length - 1,
-        Math.floor(latest * SERVICES.length)
-      );
-
-      if (step !== lastStepRef.current) {
-        lastStepRef.current = step;
-        setActiveIndex(step);
-      }
+    if (nextStep !== scrollStep) {
+      setScrollStep(nextStep);
+      setActiveIndex(nextStep);
     }
-  );
+  });
 
   /* =======================================================
-     BUTTON FUNCTIONS
+     AUTO PLAY
   ======================================================= */
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveIndex((current) => {
+        return (current + 1) % SERVICES.length;
+      });
+    }, 6500);
+
+    return () => clearInterval(interval);
+  }, []);
+
   function nextCard() {
-    setActiveIndex((prev) => {
-      return prev === SERVICES.length - 1
-        ? 0
-        : prev + 1;
+    setActiveIndex((current) => {
+      return (current + 1) % SERVICES.length;
     });
   }
 
   function previousCard() {
-    setActiveIndex((prev) => {
-      return prev === 0
+    setActiveIndex((current) => {
+      return current === 0
         ? SERVICES.length - 1
-        : prev - 1;
+        : current - 1;
     });
   }
 
@@ -290,12 +241,12 @@ export default function HeroSection() {
       aria-label="Zentrox Technologies Digital Solutions"
       className="
         relative
-        min-h-[220vh]
-        overflow-visible
-        bg-[#f7f9fc]
+        h-[185vh]
+        overflow-hidden
+        bg-[#f8fafc]
         transition-colors
         duration-500
-        dark:bg-[#070b14]
+        dark:bg-[#050914]
       "
     >
       {/* ===================================================
@@ -303,7 +254,6 @@ export default function HeroSection() {
       ==================================================== */}
 
       <div className="sticky top-0 h-screen overflow-hidden">
-
         {/* =================================================
             BACKGROUND
         ================================================= */}
@@ -319,17 +269,17 @@ export default function HeroSection() {
               absolute
               inset-0
               opacity-[0.045]
-              dark:opacity-[0.12]
+              dark:opacity-[0.10]
             "
             style={{
               backgroundImage: `
                 linear-gradient(
-                  rgba(100,116,139,.45) 1px,
+                  rgba(100,116,139,.5) 1px,
                   transparent 1px
                 ),
                 linear-gradient(
                   90deg,
-                  rgba(100,116,139,.45) 1px,
+                  rgba(100,116,139,.5) 1px,
                   transparent 1px
                 )
               `,
@@ -337,20 +287,20 @@ export default function HeroSection() {
             }}
           />
 
-          {/* CENTER GLOW */}
+          {/* TOP CENTER GLOW */}
 
           <div
             className="
               absolute
               left-1/2
-              top-[35%]
-              h-[650px]
+              top-[20%]
+              h-[600px]
               w-[850px]
               -translate-x-1/2
               rounded-full
-              bg-blue-500/[0.08]
-              blur-[170px]
-              dark:bg-blue-500/[0.12]
+              bg-blue-500/[0.07]
+              blur-[160px]
+              dark:bg-blue-600/[0.14]
             "
           />
 
@@ -365,8 +315,8 @@ export default function HeroSection() {
               w-[500px]
               rounded-full
               bg-blue-500/[0.08]
-              blur-[140px]
-              dark:bg-blue-500/[0.12]
+              blur-[150px]
+              dark:bg-blue-500/[0.14]
             "
           />
 
@@ -381,8 +331,8 @@ export default function HeroSection() {
               w-[500px]
               rounded-full
               bg-cyan-500/[0.08]
-              blur-[140px]
-              dark:bg-cyan-500/[0.12]
+              blur-[150px]
+              dark:bg-cyan-500/[0.14]
             "
           />
 
@@ -391,27 +341,27 @@ export default function HeroSection() {
           <div
             className="
               absolute
-              bottom-[-120px]
+              bottom-[-150px]
               left-1/2
               h-[300px]
-              w-[1000px]
+              w-[900px]
               -translate-x-1/2
               rounded-full
-              bg-blue-500/[0.06]
+              bg-blue-500/[0.08]
               blur-[100px]
-              dark:bg-blue-500/[0.14]
+              dark:bg-blue-500/[0.18]
             "
           />
 
           {/* PARTICLES */}
 
-          <div className="absolute left-[8%] top-[48%] h-1 w-1 rounded-full bg-blue-400 shadow-[0_0_12px_2px_rgba(59,130,246,.7)]" />
+          <div className="absolute left-[8%] top-[30%] h-1 w-1 rounded-full bg-blue-500 shadow-[0_0_12px_3px_rgba(59,130,246,.5)]" />
 
-          <div className="absolute right-[12%] top-[52%] h-1 w-1 rounded-full bg-cyan-400 shadow-[0_0_12px_2px_rgba(34,211,238,.7)]" />
+          <div className="absolute right-[12%] top-[40%] h-1 w-1 rounded-full bg-cyan-500 shadow-[0_0_12px_3px_rgba(6,182,212,.5)]" />
 
-          <div className="absolute right-[8%] top-[70%] h-1 w-1 rounded-full bg-blue-400" />
+          <div className="absolute left-[15%] bottom-[25%] h-1 w-1 rounded-full bg-blue-400" />
 
-          <div className="absolute left-[15%] top-[68%] h-1 w-1 rounded-full bg-cyan-400" />
+          <div className="absolute right-[8%] bottom-[30%] h-1 w-1 rounded-full bg-cyan-400" />
         </div>
 
         {/* =================================================
@@ -426,22 +376,21 @@ export default function HeroSection() {
             flex
             h-full
             w-full
-            max-w-[1600px]
+            max-w-[1500px]
             flex-col
+            justify-center
             px-4
-            pt-[90px]
-            sm:px-6
+            pt-20
+            pb-5
             md:px-8
             lg:px-12
           "
         >
-
           {/* ===============================================
               HERO TEXT
           =============================================== */}
 
-          <div className="shrink-0 text-center">
-
+          <div className="mx-auto w-full max-w-5xl text-center">
             {/* BADGE */}
 
             <motion.div
@@ -450,7 +399,7 @@ export default function HeroSection() {
               transition={{ duration: 0.6 }}
               className="
                 mx-auto
-                mb-5
+                mb-4
                 flex
                 w-fit
                 items-center
@@ -461,23 +410,18 @@ export default function HeroSection() {
                 bg-white/70
                 px-4
                 py-2
-                text-[9px]
+                text-[10px]
                 font-bold
                 tracking-[0.1em]
                 text-slate-600
                 shadow-sm
                 backdrop-blur-xl
-
-                dark:bg-blue-500/[0.07]
+                dark:bg-blue-500/[0.08]
                 dark:text-blue-200
-
-                sm:px-5
-                sm:py-2.5
-                sm:text-[10px]
-                md:text-xs
+                sm:text-xs
               "
             >
-              <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,1)]" />
+              <span className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,.8)]" />
 
               {t(
                 "hero.badge",
@@ -490,28 +434,10 @@ export default function HeroSection() {
             <motion.h1
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.8,
-                delay: 0.1,
-              }}
-              className="
-                font-extrabold
-                leading-[0.92]
-                tracking-tight
-              "
+              transition={{ duration: 0.75, delay: 0.1 }}
+              className="font-extrabold leading-[0.95] tracking-tight"
             >
-              <span
-                className="
-                  block
-                  text-4xl
-                  text-slate-900
-                  dark:text-white
-
-                  sm:text-5xl
-                  md:text-6xl
-                  lg:text-7xl
-                "
-              >
+              <span className="block text-4xl text-slate-900 dark:text-white sm:text-5xl md:text-6xl lg:text-7xl">
                 {t("hero.line1", "We Build")}
               </span>
 
@@ -526,32 +452,24 @@ export default function HeroSection() {
                   bg-clip-text
                   text-4xl
                   text-transparent
-
-                  dark:from-blue-500
-                  dark:via-blue-400
+                  dark:from-blue-400
+                  dark:via-blue-500
                   dark:to-cyan-300
-
                   sm:text-5xl
                   md:text-6xl
                   lg:text-7xl
                 "
               >
-                {t(
-                  "hero.line2",
-                  "Digital Solutions"
-                )}
+                {t("hero.line2", "Digital Solutions")}
               </span>
             </motion.h1>
 
             {/* DESCRIPTION */}
 
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.7,
-                delay: 0.2,
-              }}
+              transition={{ duration: 0.7, delay: 0.2 }}
               className="
                 mx-auto
                 mt-4
@@ -560,32 +478,29 @@ export default function HeroSection() {
                 leading-relaxed
                 text-slate-600
                 dark:text-slate-300
-
                 md:text-base
               "
             >
               {t(
                 "hero.description",
-                "Custom Software, Websites, Mobile Apps, AI, SEO & Digital Marketing to grow your business in the modern world."
+                "Custom Software, Websites, Mobile Apps, AI, SEO & Digital Marketing to help your business grow in the modern world."
               )}
             </motion.p>
 
             {/* BUTTONS */}
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.7,
-                delay: 0.3,
-              }}
+              transition={{ duration: 0.7, delay: 0.3 }}
               className="
                 mt-5
                 flex
-                flex-wrap
+                flex-col
                 items-center
                 justify-center
                 gap-3
+                sm:flex-row
               "
             >
               <Link
@@ -600,37 +515,28 @@ export default function HeroSection() {
                   from-blue-600
                   to-blue-500
                   px-6
-                  py-3
+                  py-3.5
                   text-sm
                   font-bold
                   text-white
-                  shadow-[0_10px_30px_rgba(37,99,235,.35)]
+                  shadow-[0_10px_30px_rgba(37,99,235,.3)]
                   transition-all
                   duration-300
-
                   hover:-translate-y-1
-                  hover:shadow-[0_16px_40px_rgba(37,99,235,.45)]
+                  hover:shadow-[0_15px_40px_rgba(37,99,235,.4)]
                 "
               >
-                {t(
-                  "hero.cta_primary",
-                  "Start Your Project"
-                )}
+                {t("hero.cta_primary", "Start Your Project")}
 
                 <ArrowRight
                   size={17}
-                  className="
-                    transition-transform
-                    duration-300
-                    group-hover:translate-x-1
-                  "
+                  className="transition-transform group-hover:translate-x-1"
                 />
               </Link>
 
               <Link
                 href="/services"
                 className="
-                  group
                   inline-flex
                   items-center
                   gap-2
@@ -639,18 +545,15 @@ export default function HeroSection() {
                   border-slate-300
                   bg-white/70
                   px-6
-                  py-3
+                  py-3.5
                   text-sm
                   font-bold
                   text-slate-800
                   shadow-sm
                   backdrop-blur-xl
                   transition-all
-                  duration-300
-
                   hover:-translate-y-1
                   hover:border-blue-400
-
                   dark:border-white/15
                   dark:bg-white/[0.04]
                   dark:text-white
@@ -658,10 +561,7 @@ export default function HeroSection() {
               >
                 <span className="h-0 w-0 border-y-[6px] border-l-[9px] border-y-transparent border-l-current" />
 
-                {t(
-                  "hero.cta_secondary",
-                  "View Our Work"
-                )}
+                {t("hero.cta_secondary", "View Our Work")}
               </Link>
             </motion.div>
           </div>
@@ -670,24 +570,13 @@ export default function HeroSection() {
               3D CAROUSEL
           =============================================== */}
 
-          <div
-            className="
-              relative
-              mt-6
-              flex
-              flex-1
-              items-center
-              justify-center
-              md:mt-7
-            "
-          >
-
+          <div className="relative mt-5 md:mt-6">
             {/* CENTER GLOW */}
 
             <motion.div
               animate={{
-                opacity: [0.3, 0.65, 0.3],
-                scale: [0.95, 1.05, 0.95],
+                opacity: [0.25, 0.65, 0.25],
+                scale: [0.9, 1.08, 0.9],
               }}
               transition={{
                 duration: 4,
@@ -699,30 +588,31 @@ export default function HeroSection() {
                 absolute
                 left-1/2
                 top-1/2
-                h-[280px]
+                h-[260px]
                 w-[500px]
                 -translate-x-1/2
                 -translate-y-1/2
                 rounded-full
                 bg-blue-500/[0.10]
-                blur-[90px]
-                dark:bg-blue-500/[0.15]
+                blur-[80px]
+                dark:bg-blue-500/[0.18]
               "
             />
 
             {/* LEFT ARROW */}
 
             <button
+              type="button"
               onClick={previousCard}
               aria-label="Previous service"
               className="
                 absolute
-                left-1
+                left-2
                 top-1/2
-                z-[80]
+                z-[70]
                 hidden
-                h-12
-                w-12
+                h-11
+                w-11
                 -translate-y-1/2
                 items-center
                 justify-center
@@ -734,33 +624,31 @@ export default function HeroSection() {
                 shadow-lg
                 backdrop-blur-xl
                 transition-all
-
                 hover:scale-110
                 hover:border-blue-400
-
                 dark:border-white/15
-                dark:bg-white/[0.05]
+                dark:bg-white/[0.06]
                 dark:text-white
-
                 lg:flex
               "
             >
-              <ChevronLeft size={22} />
+              <ChevronLeft size={21} />
             </button>
 
             {/* RIGHT ARROW */}
 
             <button
+              type="button"
               onClick={nextCard}
               aria-label="Next service"
               className="
                 absolute
-                right-1
+                right-2
                 top-1/2
-                z-[80]
+                z-[70]
                 hidden
-                h-12
-                w-12
+                h-11
+                w-11
                 -translate-y-1/2
                 items-center
                 justify-center
@@ -772,32 +660,29 @@ export default function HeroSection() {
                 shadow-lg
                 backdrop-blur-xl
                 transition-all
-
                 hover:scale-110
                 hover:border-blue-400
-
                 dark:border-white/15
-                dark:bg-white/[0.05]
+                dark:bg-white/[0.06]
                 dark:text-white
-
                 lg:flex
               "
             >
-              <ChevronRight size={22} />
+              <ChevronRight size={21} />
             </button>
 
-            {/* CARDS CONTAINER */}
+            {/* CARDS */}
 
             <div
               className="
                 relative
-                h-[290px]
+                mx-auto
+                h-[265px]
                 w-full
-                max-w-[1250px]
-                overflow-hidden
-                sm:h-[310px]
-                md:h-[330px]
-                lg:overflow-visible
+                max-w-[1180px]
+                overflow-visible
+                sm:h-[280px]
+                md:h-[295px]
               "
               style={{
                 perspective: "1800px",
@@ -806,19 +691,12 @@ export default function HeroSection() {
               {SERVICES.map((service, index) => {
                 const Icon = service.icon;
 
-                const isActive =
-                  index === activeIndex;
+                const isActive = index === activeIndex;
 
-                const cardStyle =
-                  getCardStyle(
-                    index,
-                    activeIndex
-                  );
-
-                const accent =
-                  getAccentClasses(
-                    service.accent
-                  );
+                const cardStyle = getCardStyle(
+                  index,
+                  activeIndex
+                );
 
                 return (
                   <motion.div
@@ -826,36 +704,32 @@ export default function HeroSection() {
                     animate={cardStyle}
                     transition={{
                       type: "spring",
-                      stiffness: 110,
-                      damping: 18,
-                      mass: 0.85,
+                      stiffness: 130,
+                      damping: 21,
+                      mass: 0.8,
                     }}
-                    onClick={() =>
-                      setActiveIndex(index)
-                    }
+                    onClick={() => setActiveIndex(index)}
                     className="
                       absolute
                       left-1/2
                       top-1/2
-                      w-[250px]
+                      w-[245px]
                       -translate-x-1/2
                       -translate-y-1/2
                       cursor-pointer
-
-                      sm:w-[280px]
-                      md:w-[310px]
+                      sm:w-[270px]
+                      md:w-[300px]
                     "
                     style={{
-                      transformStyle:
-                        "preserve-3d",
+                      transformStyle: "preserve-3d",
                     }}
                   >
                     <div
                       className={`
                         relative
-                        min-h-[255px]
+                        min-h-[245px]
                         overflow-hidden
-                        rounded-[24px]
+                        rounded-[22px]
                         border
                         p-5
                         backdrop-blur-xl
@@ -867,38 +741,38 @@ export default function HeroSection() {
                             ? `
                               border-blue-400/70
                               bg-white/90
-                              shadow-[0_20px_70px_rgba(37,99,235,.22)]
-
+                              shadow-[0_20px_60px_rgba(37,99,235,.22)]
                               dark:bg-[#101827]/90
-                              dark:shadow-[0_25px_90px_rgba(37,99,235,.28)]
+                              dark:shadow-[0_25px_80px_rgba(37,99,235,.30)]
                             `
                             : `
-                              border-slate-200/90
-                              bg-white/75
-                              shadow-[0_15px_40px_rgba(15,23,42,.10)]
-
+                              border-slate-200
+                              bg-white/70
+                              shadow-xl
                               dark:border-white/10
-                              dark:bg-[#0d1422]/80
+                              dark:bg-[#0d1525]/80
                             `
                         }
                       `}
                     >
-                      {/* ACTIVE BACKGROUND */}
+                      {/* ACTIVE EFFECT */}
 
                       {isActive && (
                         <>
                           <div
-                            className={`
+                            className="
                               pointer-events-none
                               absolute
                               inset-0
                               bg-gradient-to-br
-                              ${accent.glow}
-                            `}
+                              from-blue-500/[0.08]
+                              via-transparent
+                              to-purple-500/[0.08]
+                            "
                           />
 
                           <div
-                            className={`
+                            className="
                               absolute
                               bottom-0
                               left-1/2
@@ -907,16 +781,14 @@ export default function HeroSection() {
                               -translate-x-1/2
                               bg-gradient-to-r
                               from-transparent
-                              ${accent.line}
+                              via-blue-400
                               to-transparent
-                              shadow-[0_0_18px_rgba(96,165,250,.8)]
-                            `}
+                            "
                           />
                         </>
                       )}
 
                       <div className="relative z-10">
-
                         {/* ICON */}
 
                         <div
@@ -928,7 +800,7 @@ export default function HeroSection() {
                             justify-center
                             rounded-2xl
                             border
-                            ${accent.icon}
+                            ${getAccentClasses(service.accent)}
                           `}
                         >
                           <Icon size={23} />
@@ -938,17 +810,15 @@ export default function HeroSection() {
 
                         <h3
                           className={`
-                            mt-5
-                            text-lg
+                            mt-4
                             font-bold
                             leading-tight
                             text-slate-900
                             dark:text-white
-
                             ${
                               isActive
-                                ? "md:text-xl"
-                                : ""
+                                ? "text-xl md:text-2xl"
+                                : "text-lg"
                             }
                           `}
                         >
@@ -964,12 +834,13 @@ export default function HeroSection() {
                             leading-6
                             text-slate-600
                             dark:text-slate-400
+                            md:text-sm
                           "
                         >
                           {service.description}
                         </p>
 
-                        {/* CTA */}
+                        {/* LINK */}
 
                         <Link
                           href="/services"
@@ -978,17 +849,15 @@ export default function HeroSection() {
                           }
                           className="
                             group
-                            mt-5
+                            mt-4
                             inline-flex
                             items-center
                             gap-2
                             text-xs
-                            font-semibold
+                            font-bold
                             text-blue-600
                             transition-all
-
                             hover:gap-3
-
                             dark:text-blue-400
                           "
                         >
@@ -1008,57 +877,47 @@ export default function HeroSection() {
                 );
               })}
             </div>
-          </div>
 
-          {/* ===============================================
-              DOTS
-          =============================================== */}
+            {/* DOTS */}
 
-          <div className="shrink-0 pb-3">
-
-            <div className="flex justify-center gap-2">
-              {SERVICES.map(
-                (service, index) => (
-                  <button
-                    key={service.id}
-                    onClick={() =>
-                      setActiveIndex(index)
-                    }
-                    aria-label={`Show ${service.title}`}
+            <div className="mt-1 flex justify-center gap-2">
+              {SERVICES.map((service, index) => (
+                <button
+                  key={service.id}
+                  type="button"
+                  onClick={() => setActiveIndex(index)}
+                  aria-label={`Show ${service.title}`}
+                  className="
+                    flex
+                    h-6
+                    items-center
+                    justify-center
+                  "
+                >
+                  <motion.span
+                    animate={{
+                      width:
+                        index === activeIndex
+                          ? 18
+                          : 8,
+                      opacity:
+                        index === activeIndex
+                          ? 1
+                          : 0.4,
+                    }}
+                    transition={{
+                      duration: 0.25,
+                    }}
                     className="
-                      flex
-                      h-6
-                      items-center
-                      justify-center
-                      px-1
+                      h-2
+                      rounded-full
+                      bg-blue-500
+                      shadow-[0_0_10px_rgba(59,130,246,.5)]
+                      dark:bg-blue-400
                     "
-                  >
-                    <motion.span
-                      animate={{
-                        width:
-                          index === activeIndex
-                            ? 20
-                            : 8,
-
-                        opacity:
-                          index === activeIndex
-                            ? 1
-                            : 0.35,
-                      }}
-                      transition={{
-                        duration: 0.3,
-                      }}
-                      className="
-                        h-2
-                        rounded-full
-                        bg-blue-500
-                        shadow-[0_0_10px_rgba(59,130,246,.55)]
-                        dark:bg-blue-400
-                      "
-                    />
-                  </button>
-                )
-              )}
+                  />
+                </button>
+              ))}
             </div>
           </div>
 
@@ -1067,37 +926,25 @@ export default function HeroSection() {
           =============================================== */}
 
           <motion.div
-            initial={{
-              opacity: 0,
-              y: 20,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-            transition={{
-              duration: 0.7,
-              delay: 0.5,
-            }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.5 }}
             className="
               mx-auto
-              mb-3
+              mt-4
               grid
               w-full
               max-w-5xl
-              shrink-0
               grid-cols-2
               overflow-hidden
               rounded-2xl
               border
               border-slate-200
-              bg-white/80
+              bg-white/75
               shadow-lg
               backdrop-blur-xl
-
               dark:border-white/10
               dark:bg-[#0d1525]/80
-
               md:grid-cols-4
             "
           >
@@ -1121,10 +968,6 @@ export default function HeroSection() {
                   font-medium
                   text-slate-700
                   dark:text-slate-300
-
-                  md:py-4
-                  md:text-sm
-
                   ${
                     index !== 3
                       ? `
@@ -1138,10 +981,7 @@ export default function HeroSection() {
               >
                 <CheckCircle2
                   size={17}
-                  className="
-                    shrink-0
-                    text-blue-500
-                  "
+                  className="shrink-0 text-blue-500"
                 />
 
                 <span>{item}</span>
@@ -1153,15 +993,14 @@ export default function HeroSection() {
 
           <div
             className="
-              shrink-0
-              pb-3
+              mt-2
               text-center
               text-[9px]
-              font-semibold
+              font-bold
               uppercase
               tracking-[0.22em]
               text-slate-400
-              dark:text-slate-600
+              dark:text-slate-500
             "
           >
             Scroll to explore services
