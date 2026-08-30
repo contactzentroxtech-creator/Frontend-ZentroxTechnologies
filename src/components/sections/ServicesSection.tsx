@@ -20,10 +20,6 @@ import {
 } from "lucide-react";
 import { useLang } from "@/lib/providers";
 
-/* =========================================================
-   SERVICES DATA
-========================================================= */
-
 const SERVICES = [
   {
     id: "software",
@@ -137,10 +133,6 @@ const SERVICES = [
   },
 ];
 
-/* =========================================================
-   SERVICE CARD WITH 3D TILT AND SPOTLIGHT
-========================================================= */
-
 function ServiceCard({
   service,
   index,
@@ -193,7 +185,7 @@ function ServiceCard({
           onMouseMove={handleMouseMove}
           className="
             relative
-            flex h-full min-h-[290px] flex-col
+            flex h-full min-h-[280px] flex-col
             overflow-hidden rounded-[24px]
             border border-slate-200/60
             bg-white/90
@@ -210,7 +202,6 @@ function ServiceCard({
           "
           style={{ transformStyle: "preserve-3d" }}
         >
-          {/* Cursor spotlight */}
           {isHovered && (
             <div
               className="pointer-events-none absolute inset-0 transition-opacity duration-300"
@@ -220,33 +211,20 @@ function ServiceCard({
             />
           )}
 
-          {/* Subtle top glow */}
           <div
             className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full opacity-0 blur-[80px] transition-opacity duration-500 group-hover:opacity-[0.10]"
             style={{ backgroundColor: service.color }}
           />
 
-          {/* Number */}
-          <span
-            className="
-              absolute right-5 top-5
-              text-[11px] font-bold tracking-[0.12em]
-              text-slate-300
-              dark:text-white/15
-            "
-          >
+          <span className="absolute right-5 top-5 text-[11px] font-bold tracking-[0.12em] text-slate-300 dark:text-white/15">
             {String(index + 1).padStart(2, "0")}
           </span>
 
           <div className="relative z-10">
-            {/* Icon */}
             <motion.div
               whileHover={{ rotate: 4, scale: 1.08 }}
               transition={{ type: "spring", stiffness: 300, damping: 16 }}
-              className="
-                mb-5 flex h-14 w-14 items-center justify-center
-                rounded-2xl border
-              "
+              className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border"
               style={{
                 backgroundColor: `${service.color}10`,
                 borderColor: `${service.color}25`,
@@ -255,12 +233,10 @@ function ServiceCard({
               <Icon size={25} style={{ color: service.color }} aria-hidden="true" />
             </motion.div>
 
-            {/* Title */}
             <h3 className="text-xl font-bold leading-snug tracking-[-0.02em] text-slate-900 dark:text-white">
               {title}
             </h3>
 
-            {/* Description */}
             <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
               {description}
             </p>
@@ -268,31 +244,13 @@ function ServiceCard({
 
           <div className="flex-1" />
 
-          {/* Footer */}
-          <div
-            className="
-              relative z-10 mt-6
-              flex items-center justify-between
-              border-t border-slate-100 pt-5
-              dark:border-white/6
-            "
-          >
-            <span
-              className="
-                text-sm font-semibold text-slate-700
-                transition-colors group-hover:text-blue-600
-                dark:text-slate-200 dark:group-hover:text-blue-300
-              "
-            >
-              {t("services.explore")}
+          <div className="relative z-10 mt-6 flex items-center justify-between border-t border-slate-100 pt-5 dark:border-white/6">
+            <span className="text-sm font-semibold text-slate-700 transition-colors group-hover:text-blue-600 dark:text-slate-200 dark:group-hover:text-blue-300">
+              Explore Service
             </span>
 
             <span
-              className="
-                flex h-9 w-9 items-center justify-center
-                rounded-full transition-all duration-300
-                group-hover:scale-110 group-hover:rotate-45
-              "
+              className="flex h-9 w-9 items-center justify-center rounded-full transition-all duration-300 group-hover:scale-110 group-hover:rotate-45"
               style={{
                 color: service.color,
                 backgroundColor: `${service.color}12`,
@@ -302,7 +260,6 @@ function ServiceCard({
             </span>
           </div>
 
-          {/* Bottom accent bar */}
           <div
             className="absolute bottom-0 left-0 h-[3px] w-0 transition-all duration-500 group-hover:w-full"
             style={{ backgroundColor: service.color }}
@@ -312,10 +269,6 @@ function ServiceCard({
     </motion.article>
   );
 }
-
-/* =========================================================
-   MAIN COMPONENT
-========================================================= */
 
 export default function ServicesSection() {
   const ref = useRef<HTMLDivElement>(null);
@@ -329,39 +282,23 @@ export default function ServicesSection() {
       className="
         relative overflow-hidden
         bg-white
-        px-4 py-16
-        sm:py-20 md:px-6 md:py-24 lg:py-28
+        px-4 py-14
+        sm:py-16 md:px-6 md:py-20 lg:py-24
         dark:bg-[#111827]
         transition-colors duration-300
       "
     >
-      {/* Background elements – softer in dark mode */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-        <div
-          className="
-            absolute left-[-150px] top-[10%]
-            h-[450px] w-[450px] rounded-full
-            bg-blue-500/[0.05] blur-[140px]
-            dark:bg-blue-400/[0.05]
-          "
-        />
-        <div
-          className="
-            absolute right-[-150px] bottom-[5%]
-            h-[450px] w-[450px] rounded-full
-            bg-orange-400/[0.04] blur-[140px]
-            dark:bg-orange-400/[0.04]
-          "
-        />
+        <div className="absolute left-[-150px] top-[10%] h-[450px] w-[450px] rounded-full bg-blue-500/[0.05] blur-[140px] dark:bg-blue-400/[0.05]" />
+        <div className="absolute right-[-150px] bottom-[5%] h-[450px] w-[450px] rounded-full bg-orange-400/[0.04] blur-[140px] dark:bg-orange-400/[0.04]" />
       </div>
 
       <div ref={ref} className="relative mx-auto max-w-[1280px]">
-        {/* ===== HEADER ===== */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : undefined}
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-          className="mx-auto mb-12 max-w-4xl text-center sm:mb-14 md:mb-16"
+          className="mx-auto mb-10 max-w-4xl text-center sm:mb-12 md:mb-14"
         >
           <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-blue-50/60 px-4 py-1.5 text-[11px] font-bold tracking-[0.1em] text-blue-700 backdrop-blur-sm dark:border-blue-400/20 dark:bg-blue-400/[0.05] dark:text-blue-200">
             <Sparkles size={13} />
@@ -370,54 +307,28 @@ export default function ServicesSection() {
 
           <h2
             id="services-heading"
-            className="
-              mx-auto max-w-4xl
-              text-3xl font-extrabold leading-[1.08] tracking-[-0.035em]
-              text-slate-900
-              sm:text-4xl md:text-5xl lg:text-6xl
-              dark:text-white
-            "
+            className="mx-auto max-w-4xl text-3xl font-extrabold leading-[1.08] tracking-[-0.035em] text-slate-900 sm:text-4xl md:text-5xl lg:text-6xl dark:text-white"
           >
             {t("services.title")}
           </h2>
 
-          <p
-            className="
-              mx-auto mt-5 max-w-3xl
-              text-sm leading-relaxed
-              text-slate-600
-              sm:text-base md:text-lg
-              dark:text-slate-300
-            "
-          >
+          <p className="mx-auto mt-5 max-w-3xl text-sm leading-relaxed text-slate-600 sm:text-base md:text-lg dark:text-slate-300">
             {t("services.sub")}
           </p>
         </motion.div>
 
-        {/* ===== SERVICES GRID ===== */}
         <div className="grid auto-rows-fr grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
           {SERVICES.map((service, index) => (
             <ServiceCard key={service.id} service={service} index={index} />
           ))}
         </div>
 
-        {/* ===== CTA AREA ===== */}
         <motion.div
           initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="
-            mx-auto mt-14 max-w-3xl
-            rounded-[28px]
-            border border-slate-200/60
-            bg-white/80
-            px-6 py-10 text-center
-            shadow-[0_15px_50px_rgba(15,23,42,0.04)]
-            backdrop-blur-md
-            sm:px-10
-            dark:border-white/8 dark:bg-[#1a1e2b]/80
-          "
+          className="mx-auto mt-14 max-w-3xl rounded-[28px] border border-slate-200/60 bg-white/80 px-6 py-10 text-center shadow-[0_15px_50px_rgba(15,23,42,0.04)] backdrop-blur-md sm:px-10 dark:border-white/8 dark:bg-[#1a1e2b]/80"
         >
           <div className="mb-4 flex justify-center">
             <CheckCircle2 size={26} className="text-blue-600 dark:text-blue-400" />
@@ -433,23 +344,10 @@ export default function ServicesSection() {
 
           <Link
             href="/services"
-            className="
-              group mt-6 inline-flex items-center gap-2
-              rounded-full bg-gradient-to-r from-blue-600 to-blue-700
-              px-8 py-3.5
-              text-sm font-bold text-white
-              shadow-[0_10px_28px_rgba(37,99,235,0.22)]
-              transition-all duration-300
-              hover:-translate-y-1
-              hover:shadow-[0_16px_36px_rgba(37,99,235,0.30)]
-              focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-4
-            "
+            className="group mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-blue-700 px-8 py-3.5 text-sm font-bold text-white shadow-[0_10px_28px_rgba(37,99,235,0.22)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(37,99,235,0.30)] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-4"
           >
             {t("services.view_all")}
-            <ArrowRight
-              size={17}
-              className="transition-transform duration-300 group-hover:translate-x-1"
-            />
+            <ArrowRight size={17} className="transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </motion.div>
       </div>
