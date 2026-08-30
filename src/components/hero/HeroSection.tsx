@@ -87,7 +87,7 @@ function getCardStyle(index: number, activeIndex: number) {
       filter: "blur(0px)",
     },
     [-1]: {
-      x: "-95%",
+      x: "-85%",
       scale: 0.78,
       rotateY: 12,
       opacity: 0.6,
@@ -95,7 +95,7 @@ function getCardStyle(index: number, activeIndex: number) {
       filter: "blur(0.3px)",
     },
     1: {
-      x: "95%",
+      x: "85%",
       scale: 0.78,
       rotateY: -12,
       opacity: 0.6,
@@ -103,7 +103,7 @@ function getCardStyle(index: number, activeIndex: number) {
       filter: "blur(0.3px)",
     },
     [-2]: {
-      x: "-165%",
+      x: "-150%",
       scale: 0.6,
       rotateY: 18,
       opacity: 0.15,
@@ -111,7 +111,7 @@ function getCardStyle(index: number, activeIndex: number) {
       filter: "blur(1px)",
     },
     2: {
-      x: "165%",
+      x: "150%",
       scale: 0.6,
       rotateY: -18,
       opacity: 0.15,
@@ -122,7 +122,7 @@ function getCardStyle(index: number, activeIndex: number) {
 
   return (
     positions[position] || {
-      x: position > 0 ? "220%" : "-220%",
+      x: position > 0 ? "200%" : "-200%",
       scale: 0.45,
       opacity: 0,
       zIndex: 0,
@@ -212,17 +212,16 @@ export default function HeroSection() {
         relative
         overflow-hidden
         bg-white
-        py-14
+        py-12
         transition-colors
         duration-500
         dark:bg-[#111827]
-        md:py-20
-        lg:py-24
+        md:py-16
+        lg:py-20
       "
     >
       {/* ===== BACKGROUND ELEMENTS ===== */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-        {/* Subtle grid */}
         <div
           className="
             absolute inset-0
@@ -238,7 +237,6 @@ export default function HeroSection() {
           }}
         />
 
-        {/* Floating blobs - softer for dark mode */}
         <motion.div
           animate={{
             x: [0, 40, 0],
@@ -304,13 +302,12 @@ export default function HeroSection() {
       <div className="relative z-10 mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12">
         {/* ===== HERO TEXT ===== */}
         <div className="mx-auto max-w-4xl text-center">
-          {/* Badge */}
           <motion.div
             initial={{ opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="
-              mx-auto mb-5
+              mx-auto mb-4
               inline-flex items-center gap-2.5
               rounded-full
               border border-blue-200/60
@@ -333,7 +330,6 @@ export default function HeroSection() {
             {t("hero.badge")}
           </motion.div>
 
-          {/* Heading */}
           <motion.h1
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
@@ -369,13 +365,12 @@ export default function HeroSection() {
             </span>
           </motion.h1>
 
-          {/* Description */}
           <motion.p
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
             className="
-              mx-auto mt-5
+              mx-auto mt-4
               max-w-3xl
               text-[16px] leading-7
               text-slate-600
@@ -386,12 +381,11 @@ export default function HeroSection() {
             {t("hero.sub")}
           </motion.p>
 
-          {/* CTA Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3 }}
-            className="mt-7 flex flex-col items-center justify-center gap-4 sm:flex-row"
+            className="mt-6 flex flex-col items-center justify-center gap-4 sm:flex-row"
           >
             <Link
               href="/contact"
@@ -451,16 +445,15 @@ export default function HeroSection() {
 
         {/* ===== SERVICES CAROUSEL ===== */}
         <div
-          className="relative mt-12 md:mt-16"
+          className="relative mt-10 md:mt-12"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
-          {/* Section label */}
-          <div className="mb-5 text-center">
+          <div className="mb-4 text-center">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-blue-600 dark:text-blue-300">
               What We Do
             </p>
-            <h2 className="mt-1.5 text-2xl font-bold text-slate-900 dark:text-white md:text-3xl">
+            <h2 className="mt-1 text-2xl font-bold text-slate-900 dark:text-white md:text-3xl">
               Technology built around your business
             </h2>
           </div>
@@ -471,7 +464,7 @@ export default function HeroSection() {
             onClick={prevCard}
             aria-label="Previous service"
             className="
-              absolute left-0 top-[58%] z-50 hidden -translate-y-1/2
+              absolute left-0 top-[55%] z-50 hidden -translate-y-1/2
               h-12 w-12 items-center justify-center
               rounded-full
               border border-slate-200/80
@@ -495,7 +488,7 @@ export default function HeroSection() {
             onClick={nextCard}
             aria-label="Next service"
             className="
-              absolute right-0 top-[58%] z-50 hidden -translate-y-1/2
+              absolute right-0 top-[55%] z-50 hidden -translate-y-1/2
               h-12 w-12 items-center justify-center
               rounded-full
               border border-slate-200/80
@@ -516,8 +509,8 @@ export default function HeroSection() {
 
           {/* Desktop 3D Carousel */}
           <div
-            className="relative mx-auto hidden h-[360px] max-w-[1200px] lg:block"
-            style={{ perspective: "1600px" }}
+            className="relative mx-auto hidden h-[340px] max-w-[1100px] lg:block"
+            style={{ perspective: "1400px" }}
           >
             {SERVICES.map((service, index) => {
               const Icon = service.icon;
@@ -537,7 +530,7 @@ export default function HeroSection() {
                   onClick={() => setActiveIndex(index)}
                   className="
                     absolute left-1/2 top-1/2
-                    w-[340px] -translate-x-1/2 -translate-y-1/2
+                    w-[320px] -translate-x-1/2 -translate-y-1/2
                     cursor-pointer
                   "
                   style={{ transformStyle: "preserve-3d" }}
@@ -545,9 +538,9 @@ export default function HeroSection() {
                   <div
                     className={`
                       group relative
-                      min-h-[300px]
-                      overflow-hidden rounded-3xl
-                      border p-7
+                      min-h-[280px] max-h-[320px]
+                      overflow-hidden rounded-2xl
+                      border p-6
                       transition-all duration-500
                       ${
                         isActive
@@ -568,7 +561,6 @@ export default function HeroSection() {
                       }
                     `}
                   >
-                    {/* Glow overlay */}
                     <div
                       className={`
                         pointer-events-none absolute inset-0
@@ -578,34 +570,30 @@ export default function HeroSection() {
                       `}
                     />
 
-                    <div className="relative z-10">
-                      {/* Icon */}
+                    <div className="relative z-10 flex h-full flex-col">
                       <div
                         className={`
-                          flex h-14 w-14 items-center justify-center
-                          rounded-2xl border
+                          flex h-12 w-12 items-center justify-center
+                          rounded-xl border
                           ${accent.icon}
                         `}
                       >
-                        <Icon size={25} />
+                        <Icon size={22} />
                       </div>
 
-                      {/* Title */}
-                      <h3 className="mt-6 text-xl font-bold leading-tight text-slate-900 dark:text-white">
+                      <h3 className="mt-4 text-lg font-bold leading-tight text-slate-900 dark:text-white line-clamp-2">
                         {service.title}
                       </h3>
 
-                      {/* Description */}
-                      <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
+                      <p className="mt-2 text-sm leading-5 text-slate-600 dark:text-slate-300 line-clamp-3 flex-1">
                         {service.description}
                       </p>
 
-                      {/* Link */}
                       <Link
                         href="/services"
                         onClick={(e) => e.stopPropagation()}
                         className="
-                          group/link mt-6 inline-flex items-center gap-2
+                          group/link mt-4 inline-flex items-center gap-2
                           text-sm font-bold text-blue-600
                           transition-all hover:gap-3
                           dark:text-blue-300
@@ -613,7 +601,7 @@ export default function HeroSection() {
                       >
                         Explore Service
                         <ArrowRight
-                          size={16}
+                          size={15}
                           className="transition-transform group-hover/link:translate-x-1"
                         />
                       </Link>
@@ -625,7 +613,7 @@ export default function HeroSection() {
           </div>
 
           {/* Mobile / Tablet: single active card */}
-          <div className="mx-auto max-w-md lg:hidden">
+          <div className="mx-auto max-w-sm lg:hidden">
             <AnimatePresence mode="wait">
               {SERVICES.map((service, index) => {
                 if (index !== activeIndex) return null;
@@ -640,10 +628,10 @@ export default function HeroSection() {
                     exit={{ opacity: 0, x: -30, scale: 0.95 }}
                     transition={{ duration: 0.35 }}
                     className="
-                      relative overflow-hidden rounded-3xl
+                      relative overflow-hidden rounded-2xl
                       border border-slate-200/60
                       bg-white/90
-                      p-7
+                      p-6
                       shadow-[0_20px_55px_rgba(15,23,42,.06)]
                       backdrop-blur-sm
                       dark:border-white/10
@@ -660,25 +648,25 @@ export default function HeroSection() {
                     <div className="relative z-10">
                       <div
                         className={`
-                          flex h-14 w-14 items-center justify-center
-                          rounded-2xl border
+                          flex h-12 w-12 items-center justify-center
+                          rounded-xl border
                           ${accent.icon}
                         `}
                       >
-                        <Icon size={25} />
+                        <Icon size={22} />
                       </div>
-                      <h3 className="mt-5 text-xl font-bold text-slate-900 dark:text-white">
+                      <h3 className="mt-4 text-lg font-bold text-slate-900 dark:text-white">
                         {service.title}
                       </h3>
-                      <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
+                      <p className="mt-2 text-sm leading-5 text-slate-600 dark:text-slate-300">
                         {service.description}
                       </p>
                       <Link
                         href="/services"
-                        className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-blue-600 dark:text-blue-300"
+                        className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-blue-600 dark:text-blue-300"
                       >
                         Explore Service
-                        <ArrowRight size={16} />
+                        <ArrowRight size={15} />
                       </Link>
                     </div>
                   </motion.div>
@@ -686,36 +674,34 @@ export default function HeroSection() {
               })}
             </AnimatePresence>
 
-            {/* Mobile controls */}
-            <div className="mt-5 flex justify-center gap-3">
+            <div className="mt-4 flex justify-center gap-3">
               <button
                 onClick={prevCard}
                 className="
-                  flex h-11 w-11 items-center justify-center
+                  flex h-10 w-10 items-center justify-center
                   rounded-xl border border-slate-200/60
                   bg-white text-slate-700 shadow-sm
                   dark:border-white/10 dark:bg-[#1a1e2b] dark:text-white
                 "
                 aria-label="Previous service"
               >
-                <ChevronLeft size={20} />
+                <ChevronLeft size={18} />
               </button>
               <button
                 onClick={nextCard}
                 className="
-                  flex h-11 w-11 items-center justify-center
+                  flex h-10 w-10 items-center justify-center
                   rounded-xl border border-slate-200/60
                   bg-white text-slate-700 shadow-sm
                   dark:border-white/10 dark:bg-[#1a1e2b] dark:text-white
                 "
                 aria-label="Next service"
               >
-                <ChevronRight size={20} />
+                <ChevronRight size={18} />
               </button>
             </div>
           </div>
 
-          {/* Dots indicator */}
           <div className="mt-4 flex justify-center gap-2">
             {SERVICES.map((service, index) => (
               <button
@@ -723,22 +709,22 @@ export default function HeroSection() {
                 type="button"
                 onClick={() => setActiveIndex(index)}
                 aria-label={`Show ${service.title}`}
-                className="flex h-7 items-center justify-center px-1"
+                className="flex h-6 items-center justify-center px-1"
               >
                 <motion.span
                   animate={{
-                    width: index === activeIndex ? 28 : 8,
+                    width: index === activeIndex ? 24 : 7,
                     opacity: index === activeIndex ? 1 : 0.35,
                   }}
                   transition={{ duration: 0.25 }}
-                  className="h-2 rounded-full bg-blue-600 dark:bg-blue-400"
+                  className="h-1.5 rounded-full bg-blue-600 dark:bg-blue-400"
                 />
               </button>
             ))}
           </div>
         </div>
 
-        {/* ===== TRUST BAR - No Emojis ===== */}
+        {/* ===== TRUST BAR ===== */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -746,10 +732,10 @@ export default function HeroSection() {
           transition={{ duration: 0.6 }}
           className="
             mx-auto mt-10
-            grid max-w-5xl
+            grid max-w-4xl
             grid-cols-2
             overflow-hidden
-            rounded-2xl
+            rounded-xl
             border border-slate-200/60
             bg-white/80
             shadow-[0_10px_40px_rgba(15,23,42,.04)]
@@ -770,13 +756,13 @@ export default function HeroSection() {
               <div
                 key={item.label}
                 className={`
-                  flex items-center justify-center gap-2.5
-                  px-4 py-4 text-center text-xs font-semibold
+                  flex items-center justify-center gap-2
+                  px-3 py-3 text-center text-xs font-semibold
                   text-slate-600 dark:text-slate-300
                   ${index < 3 ? "md:border-r md:border-slate-200/60 dark:md:border-white/8" : ""}
                 `}
               >
-                <Icon size={16} className="text-blue-500 dark:text-blue-400" />
+                <Icon size={14} className="text-blue-500 dark:text-blue-400" />
                 {item.label}
               </div>
             );
