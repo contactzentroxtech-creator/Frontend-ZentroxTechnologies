@@ -21,10 +21,7 @@ import {
   Zap,
   Users,
 } from "lucide-react";
-
-/* =========================================
-   DATA
-========================================= */
+import { useLang } from "@/lib/providers";
 
 const stats = [
   {
@@ -58,37 +55,25 @@ const journeySteps = [
     year: "2023",
     title: "Zentrox Technologies Begins",
     desc: "Zentrox Technologies was founded with the goal of making modern technology and digital solutions more accessible to growing businesses.",
-    bullets: [
-      "Focus on custom digital solutions",
-      "Started serving growing businesses",
-    ],
+    bullets: ["Focus on custom digital solutions", "Started serving growing businesses"],
   },
   {
     year: "2024",
     title: "Expanding Digital Services",
     desc: "The company expanded its capabilities across websites, software, mobile applications, SEO and digital growth services.",
-    bullets: [
-      "Broader service portfolio",
-      "Focus on scalable digital solutions",
-    ],
+    bullets: ["Broader service portfolio", "Focus on scalable digital solutions"],
   },
   {
     year: "2025",
     title: "Technology & Growth Focus",
     desc: "Zentrox continued building stronger capabilities in modern web technology, software development, AI integration and digital growth.",
-    bullets: [
-      "Modern development workflows",
-      "AI and automation exploration",
-    ],
+    bullets: ["Modern development workflows", "AI and automation exploration"],
   },
   {
     year: "2026",
     title: "Building for the Future",
     desc: "The focus continues on creating practical technology solutions, improving digital experiences and helping businesses grow online.",
-    bullets: [
-      "Future-ready technology",
-      "Long-term business partnerships",
-    ],
+    bullets: ["Future-ready technology", "Long-term business partnerships"],
   },
 ];
 
@@ -198,8 +183,7 @@ const offices = [
     address: "Mohali & Chandigarh, Punjab, India",
     email: "contact.zentroxtech@gmail.com",
     hours: "Mon–Fri: 9:00 AM – 6:30 PM IST",
-    mapLink:
-      "https://www.google.com/maps/search/?api=1&query=Mohali%20Punjab%20India",
+    mapLink: "https://www.google.com/maps/search/?api=1&query=Mohali%20Punjab%20India",
   },
   {
     city: "Remote-First",
@@ -213,29 +197,6 @@ const offices = [
       "https://www.google.com/maps/search/?api=1&query=Chandigarh%20Punjab%20India",
   },
 ];
-
-/* =========================================
-   ANIMATION VARIANTS
-========================================= */
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 25 },
-  visible: { opacity: 1, y: 0 },
-};
-
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.08,
-    },
-  },
-};
-
-/* =========================================
-   3D TILT CARD WITH SPOTLIGHT
-========================================= */
 
 function TiltCard({
   children,
@@ -265,7 +226,6 @@ function TiltCard({
       className={`relative overflow-hidden transition-all duration-500 ${className}`}
       style={{ transformStyle: "preserve-3d" }}
     >
-      {/* Spotlight overlay */}
       {isHovered && (
         <div
           className="pointer-events-none absolute inset-0 transition-opacity duration-300"
@@ -279,11 +239,8 @@ function TiltCard({
   );
 }
 
-/* =========================================
-   COMPONENT
-========================================= */
-
 export default function AboutClient() {
+  const { t } = useLang();
   const [activeYear, setActiveYear] = useState(journeySteps[0].year);
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -312,11 +269,11 @@ export default function AboutClient() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-white dark:bg-[#0f172a] transition-colors duration-300">
+    <main className="min-h-screen bg-white transition-colors duration-300 dark:bg-[#111827]">
       {/* ===== HERO ===== */}
       <section className="relative overflow-hidden px-4 pt-16 pb-10 text-center md:pt-20 lg:pt-24 md:px-8">
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute -top-40 -right-40 h-[600px] w-[600px] rounded-full bg-blue-500/5 blur-[120px] dark:bg-blue-400/5" />
+          <div className="absolute -right-40 -top-40 h-[600px] w-[600px] rounded-full bg-blue-500/5 blur-[120px] dark:bg-blue-400/5" />
           <div className="absolute -bottom-40 -left-40 h-[600px] w-[600px] rounded-full bg-indigo-500/5 blur-[120px] dark:bg-indigo-400/5" />
         </div>
 
@@ -326,7 +283,7 @@ export default function AboutClient() {
           transition={{ duration: 0.6 }}
           className="relative z-10 mx-auto max-w-4xl space-y-6"
         >
-          <div className="inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-blue-50/70 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-blue-700 backdrop-blur-sm dark:border-blue-400/20 dark:bg-blue-400/[0.06] dark:text-blue-200">
+          <div className="inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-blue-50/70 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-blue-700 backdrop-blur-sm dark:border-blue-400/20 dark:bg-blue-400/[0.05] dark:text-blue-200">
             ABOUT ZENTROX TECHNOLOGIES
           </div>
 
@@ -346,15 +303,15 @@ export default function AboutClient() {
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-            <span className="flex items-center gap-2 rounded-full border border-slate-200/70 bg-white/80 px-4 py-2 text-xs font-medium text-slate-700 shadow-sm backdrop-blur-sm dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300">
+            <span className="flex items-center gap-2 rounded-full border border-slate-200/70 bg-white/80 px-4 py-2 text-xs font-medium text-slate-700 shadow-sm backdrop-blur-sm dark:border-white/8 dark:bg-white/[0.04] dark:text-slate-300">
               <span className="h-2 w-2 animate-pulse rounded-full bg-blue-600 dark:bg-blue-400" />
               MSME Registered
             </span>
-            <span className="flex items-center gap-2 rounded-full border border-slate-200/70 bg-white/80 px-4 py-2 text-xs font-medium text-slate-700 shadow-sm backdrop-blur-sm dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300">
+            <span className="flex items-center gap-2 rounded-full border border-slate-200/70 bg-white/80 px-4 py-2 text-xs font-medium text-slate-700 shadow-sm backdrop-blur-sm dark:border-white/8 dark:bg-white/[0.04] dark:text-slate-300">
               <span className="h-2 w-2 rounded-full bg-indigo-500" />
               Remote-First
             </span>
-            <span className="flex items-center gap-2 rounded-full border border-slate-200/70 bg-white/80 px-4 py-2 text-xs font-medium text-slate-700 shadow-sm backdrop-blur-sm dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300">
+            <span className="flex items-center gap-2 rounded-full border border-slate-200/70 bg-white/80 px-4 py-2 text-xs font-medium text-slate-700 shadow-sm backdrop-blur-sm dark:border-white/8 dark:bg-white/[0.04] dark:text-slate-300">
               <span className="h-2 w-2 rounded-full bg-purple-500" />
               Innovation-Driven
             </span>
@@ -402,10 +359,7 @@ export default function AboutClient() {
                 className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-blue-700 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-600/30"
               >
                 Work With Us
-                <ArrowRight
-                  size={16}
-                  className="transition-transform group-hover:translate-x-1"
-                />
+                <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
               </Link>
             </div>
           </motion.div>
@@ -420,7 +374,7 @@ export default function AboutClient() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: idx * 0.08 }}
-                  className="group relative rounded-2xl border border-slate-200/70 bg-white/80 p-6 shadow-[0_8px_30px_rgba(15,23,42,0.04)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-2 hover:border-blue-300/60 hover:shadow-[0_20px_60px_rgba(15,23,42,0.08)] dark:border-white/10 dark:bg-white/[0.04] dark:hover:border-blue-400/20"
+                  className="group relative rounded-2xl border border-slate-200/70 bg-white/80 p-6 shadow-[0_8px_30px_rgba(15,23,42,0.04)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-2 hover:border-blue-300/60 hover:shadow-[0_20px_60px_rgba(15,23,42,0.08)] dark:border-white/8 dark:bg-white/[0.04] dark:hover:border-blue-400/20"
                 >
                   <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition-colors group-hover:bg-blue-100 dark:bg-blue-500/10 dark:text-blue-400">
                     <Icon size={18} />
@@ -443,8 +397,8 @@ export default function AboutClient() {
 
       {/* ===== FOUNDER / LEADERSHIP ===== */}
       <section className="mx-auto max-w-7xl px-4 py-8 md:px-8">
-        <div className="relative overflow-hidden rounded-3xl border border-blue-200/60 bg-gradient-to-br from-blue-50/80 via-white/80 to-indigo-50/60 p-8 shadow-[0_20px_60px_rgba(37,99,235,0.08)] backdrop-blur-sm dark:border-blue-400/20 dark:from-blue-950/30 dark:via-[#0f172a]/80 dark:to-indigo-950/30 sm:p-12 lg:p-16">
-          <div className="absolute -top-40 -right-40 h-[500px] w-[500px] rounded-full bg-blue-500/5 blur-[100px] dark:bg-blue-400/5" />
+        <div className="relative overflow-hidden rounded-3xl border border-blue-200/60 bg-gradient-to-br from-blue-50/80 via-white/80 to-indigo-50/60 p-8 shadow-[0_20px_60px_rgba(37,99,235,0.08)] backdrop-blur-sm dark:border-blue-400/20 dark:from-blue-950/30 dark:via-[#111827]/80 dark:to-indigo-950/30 sm:p-12 lg:p-16">
+          <div className="absolute -right-40 -top-40 h-[500px] w-[500px] rounded-full bg-blue-500/5 blur-[100px] dark:bg-blue-400/5" />
           <div className="absolute -bottom-40 -left-40 h-[500px] w-[500px] rounded-full bg-indigo-500/5 blur-[100px] dark:bg-indigo-400/5" />
 
           <div className="relative grid grid-cols-1 items-center gap-10 lg:grid-cols-12">
@@ -495,7 +449,7 @@ export default function AboutClient() {
                 <p>
                   As a remote-first technology company, we collaborate flexibly,
                   use modern tools and focus on delivering solutions aligned with
-                  each project&apos;s real requirements.
+                  each project's real requirements.
                 </p>
               </div>
             </motion.div>
@@ -504,7 +458,7 @@ export default function AboutClient() {
       </section>
 
       {/* ===== JOURNEY ===== */}
-      <section className="mx-auto max-w-7xl border-b border-slate-200/60 px-4 py-20 md:px-8 dark:border-white/10">
+      <section className="mx-auto max-w-7xl border-b border-slate-200/60 px-4 py-20 md:px-8 dark:border-white/8">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
           <div className="hidden lg:col-span-5 lg:block">
             <div className="sticky top-32 space-y-6">
@@ -533,7 +487,7 @@ export default function AboutClient() {
             </div>
           </div>
 
-          <div className="relative space-y-12 border-l-2 border-slate-200 pl-6 sm:pl-10 lg:col-span-7 dark:border-white/10">
+          <div className="relative space-y-12 border-l-2 border-slate-200 pl-6 sm:pl-10 lg:col-span-7 dark:border-white/8">
             <div className="mb-12 space-y-4 lg:hidden">
               <div className="text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400">
                 — Our Journey
@@ -556,7 +510,7 @@ export default function AboutClient() {
                 transition={{ duration: 0.5 }}
                 className="group relative"
               >
-                <span className="absolute -left-[31px] top-1.5 h-4 w-4 rounded-full border-4 border-white bg-blue-600 transition-transform group-hover:scale-125 dark:border-[#0f172a] sm:-left-[47px] sm:h-5 sm:w-5" />
+                <span className="absolute -left-[31px] top-1.5 h-4 w-4 rounded-full border-4 border-white bg-blue-600 transition-transform group-hover:scale-125 dark:border-[#111827] sm:-left-[47px] sm:h-5 sm:w-5" />
                 <div className="mb-1 text-xs font-bold tracking-wider text-blue-600 dark:text-blue-400">
                   {step.year}
                 </div>
@@ -566,12 +520,9 @@ export default function AboutClient() {
                 <p className="mb-4 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
                   {step.desc}
                 </p>
-                <div className="space-y-2 rounded-xl border border-slate-200/60 bg-white/60 p-4 backdrop-blur-sm transition-all hover:border-blue-300/60 hover:shadow-md dark:border-white/10 dark:bg-white/[0.04]">
+                <div className="space-y-2 rounded-xl border border-slate-200/60 bg-white/60 p-4 backdrop-blur-sm transition-all hover:border-blue-300/60 hover:shadow-md dark:border-white/8 dark:bg-white/[0.04]">
                   {step.bullets.map((bullet) => (
-                    <div
-                      key={bullet}
-                      className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300"
-                    >
+                    <div key={bullet} className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
                       <span className="h-1.5 w-1.5 rounded-full bg-blue-500" />
                       <span>{bullet}</span>
                     </div>
@@ -584,7 +535,7 @@ export default function AboutClient() {
       </section>
 
       {/* ===== VALUES ===== */}
-      <section className="mx-auto max-w-7xl border-b border-slate-200/60 px-4 py-20 md:px-8 dark:border-white/10">
+      <section className="mx-auto max-w-7xl border-b border-slate-200/60 px-4 py-20 md:px-8 dark:border-white/8">
         <div className="mx-auto mb-16 max-w-3xl space-y-3 text-center">
           <div className="flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400">
             <span className="h-px w-6 bg-blue-600 dark:bg-blue-400" />
@@ -605,7 +556,7 @@ export default function AboutClient() {
             return (
               <TiltCard
                 key={value.num}
-                className="rounded-2xl border border-slate-200/70 bg-white/80 p-6 shadow-[0_8px_30px_rgba(15,23,42,0.04)] backdrop-blur-sm transition-all duration-300 hover:border-blue-300/60 hover:shadow-[0_20px_60px_rgba(15,23,42,0.08)] dark:border-white/10 dark:bg-white/[0.04] dark:hover:border-blue-400/20"
+                className="rounded-2xl border border-slate-200/70 bg-white/80 p-6 shadow-[0_8px_30px_rgba(15,23,42,0.04)] backdrop-blur-sm transition-all duration-300 hover:border-blue-300/60 hover:shadow-[0_20px_60px_rgba(15,23,42,0.08)] dark:border-white/8 dark:bg-white/[0.04] dark:hover:border-blue-400/20"
               >
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -633,7 +584,7 @@ export default function AboutClient() {
       </section>
 
       {/* ===== TEAM ===== */}
-      <section className="mx-auto max-w-7xl border-b border-slate-200/60 px-4 py-20 md:px-8 dark:border-white/10">
+      <section className="mx-auto max-w-7xl border-b border-slate-200/60 px-4 py-20 md:px-8 dark:border-white/8">
         <div className="mb-16 max-w-3xl space-y-3">
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400">
             <span className="h-px w-6 bg-blue-600 dark:bg-blue-400" />
@@ -655,13 +606,10 @@ export default function AboutClient() {
             const Icon = dept.icon;
             return (
               <div key={dept.category} className="space-y-4">
-                <div className="flex items-center gap-2.5 border-b border-slate-200/60 pb-3 dark:border-white/10">
+                <div className="flex items-center gap-2.5 border-b border-slate-200/60 pb-3 dark:border-white/8">
                   <div
                     className="flex h-8 w-8 items-center justify-center rounded-lg"
-                    style={{
-                      backgroundColor: `${dept.color}15`,
-                      color: dept.color,
-                    }}
+                    style={{ backgroundColor: `${dept.color}15`, color: dept.color }}
                   >
                     <Icon size={16} />
                   </div>
@@ -681,7 +629,7 @@ export default function AboutClient() {
                       className={`rounded-2xl border p-5 text-center transition-all duration-300 hover:border-blue-300/60 hover:shadow-[0_20px_60px_rgba(15,23,42,0.08)] ${
                         member.isPrimary
                           ? "border-blue-200/60 bg-blue-50/50 dark:border-blue-400/20 dark:bg-blue-500/5"
-                          : "border-slate-200/70 bg-white/80 dark:border-white/10 dark:bg-white/[0.04]"
+                          : "border-slate-200/70 bg-white/80 dark:border-white/8 dark:bg-white/[0.04]"
                       }`}
                     >
                       {member.badge && (
@@ -710,7 +658,7 @@ export default function AboutClient() {
       </section>
 
       {/* ===== LOCATIONS ===== */}
-      <section className="mx-auto max-w-7xl border-b border-slate-200/60 px-4 py-20 md:px-8 dark:border-white/10">
+      <section className="mx-auto max-w-7xl border-b border-slate-200/60 px-4 py-20 md:px-8 dark:border-white/8">
         <div className="mx-auto mb-16 max-w-3xl space-y-3 text-center">
           <div className="flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400">
             <span className="h-px w-6 bg-blue-600 dark:bg-blue-400" />
@@ -729,9 +677,9 @@ export default function AboutClient() {
           {offices.map((office) => (
             <TiltCard
               key={office.city}
-              className="flex flex-col overflow-hidden rounded-3xl border border-slate-200/70 bg-white/80 shadow-[0_8px_30px_rgba(15,23,42,0.04)] backdrop-blur-sm transition-all duration-300 hover:border-blue-300/60 hover:shadow-[0_20px_60px_rgba(15,23,42,0.08)] dark:border-white/10 dark:bg-white/[0.04] dark:hover:border-blue-400/20"
+              className="flex flex-col overflow-hidden rounded-3xl border border-slate-200/70 bg-white/80 shadow-[0_8px_30px_rgba(15,23,42,0.04)] backdrop-blur-sm transition-all duration-300 hover:border-blue-300/60 hover:shadow-[0_20px_60px_rgba(15,23,42,0.08)] dark:border-white/8 dark:bg-white/[0.04] dark:hover:border-blue-400/20"
             >
-              <div className="border-b border-slate-200/60 bg-gradient-to-br from-blue-50/80 to-indigo-50/60 p-8 text-center dark:border-white/10 dark:from-blue-950/20 dark:to-indigo-950/20">
+              <div className="border-b border-slate-200/60 bg-gradient-to-br from-blue-50/80 to-indigo-50/60 p-8 text-center dark:border-white/8 dark:from-blue-950/20 dark:to-indigo-950/20">
                 <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl border border-blue-200/60 bg-blue-50/80 text-blue-600 dark:border-blue-400/20 dark:bg-blue-500/10 dark:text-blue-400">
                   <Building2 size={22} />
                 </div>
@@ -782,7 +730,7 @@ export default function AboutClient() {
       {/* ===== FINAL CTA ===== */}
       <section className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800 px-4 py-20 text-center text-white md:px-8">
         <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-[0.04]" />
-        <div className="absolute -top-40 -right-40 h-[600px] w-[600px] rounded-full bg-white/5 blur-[120px]" />
+        <div className="absolute -right-40 -top-40 h-[600px] w-[600px] rounded-full bg-white/5 blur-[120px]" />
         <div className="absolute -bottom-40 -left-40 h-[600px] w-[600px] rounded-full bg-white/5 blur-[120px]" />
 
         <div className="relative z-10 mx-auto max-w-4xl space-y-6">
@@ -791,7 +739,7 @@ export default function AboutClient() {
           </h2>
           <p className="mx-auto max-w-xl text-sm leading-relaxed text-blue-100 sm:text-base">
             Whether you need a website, software, mobile application, AI
-            integration or digital growth support, let&apos;s discuss your next
+            integration or digital growth support, let's discuss your next
             project.
           </p>
 
@@ -801,10 +749,7 @@ export default function AboutClient() {
               className="group inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-bold text-slate-900 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-white/20"
             >
               Start Your Project
-              <ArrowRight
-                size={16}
-                className="transition-transform group-hover:translate-x-1"
-              />
+              <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
             </Link>
             <Link
               href="/contact"
