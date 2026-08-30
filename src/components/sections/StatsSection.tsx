@@ -58,7 +58,6 @@ function AnimatedCounter({
     const animate = (currentTime: number) => {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      // Ease out quart
       const easedProgress = 1 - Math.pow(1 - progress, 4);
       setCount(Math.floor(target * easedProgress));
 
@@ -178,7 +177,7 @@ function StatCard({
         ease: [0.22, 1, 0.36, 1],
       }}
       whileHover={{ y: -6 }}
-      className="group relative min-h-[210px] overflow-hidden rounded-[24px] border border-slate-200/70 bg-white/85 p-6 shadow-[0_8px_30px_rgba(15,23,42,0.05)] backdrop-blur-sm transition-all duration-300 hover:border-blue-200/80 hover:shadow-[0_20px_60px_rgba(15,23,42,0.08)] dark:border-white/[0.06] dark:bg-[#1e293b]/70 dark:hover:border-blue-400/20 sm:p-7 md:min-h-[240px]"
+      className="group relative min-h-[200px] overflow-hidden rounded-[24px] border border-slate-200/60 bg-white/85 p-6 shadow-[0_8px_30px_rgba(15,23,42,0.04)] backdrop-blur-sm transition-all duration-300 hover:border-blue-300/60 hover:shadow-[0_20px_60px_rgba(15,23,42,0.08)] dark:border-white/8 dark:bg-[#1a1e2b]/80 dark:hover:border-blue-400/20 sm:p-7 md:min-h-[220px]"
     >
       {/* Glow overlay */}
       <div
@@ -297,7 +296,7 @@ export default function StatsSection() {
   return (
     <section
       aria-label="Zentrox Technologies achievements"
-      className="relative overflow-hidden px-4 py-20 sm:px-6 md:py-28"
+      className="relative overflow-hidden bg-white px-4 py-16 transition-colors duration-300 dark:bg-[#111827] sm:px-6 md:py-20 lg:py-24"
     >
       {/* Background elements */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
@@ -306,7 +305,7 @@ export default function StatsSection() {
             absolute left-[5%] top-1/2 h-[400px] w-[400px]
             -translate-y-1/2 rounded-full
             bg-blue-500/[0.05] blur-[140px]
-            dark:bg-blue-400/[0.06]
+            dark:bg-blue-400/[0.05]
           "
         />
         <div
@@ -314,7 +313,7 @@ export default function StatsSection() {
             absolute right-[5%] top-1/2 h-[400px] w-[400px]
             -translate-y-1/2 rounded-full
             bg-teal-500/[0.04] blur-[140px]
-            dark:bg-teal-400/[0.05]
+            dark:bg-teal-400/[0.04]
           "
         />
       </div>
@@ -326,22 +325,19 @@ export default function StatsSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.35 }}
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-          className="mx-auto mb-12 max-w-3xl text-center md:mb-16"
+          className="mx-auto mb-12 max-w-3xl text-center md:mb-14"
         >
-          <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-blue-50/60 px-4 py-1.5 text-[11px] font-bold tracking-[0.1em] text-blue-700 backdrop-blur-sm dark:border-blue-400/20 dark:bg-blue-400/[0.06] dark:text-blue-200">
+          <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-blue-50/60 px-4 py-1.5 text-[11px] font-bold tracking-[0.1em] text-blue-700 backdrop-blur-sm dark:border-blue-400/20 dark:bg-blue-400/[0.05] dark:text-blue-200">
             <CheckCircle2 size={13} aria-hidden="true" />
-            <span>{t("stats.trust", "Built for Real Business Growth")}</span>
+            <span>{t("stats.trust")}</span>
           </div>
 
           <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl md:text-5xl dark:text-white">
-            {t("stats.title", "Results That Reflect Our Commitment")}
+            {t("stats.title")}
           </h2>
 
           <p className="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base dark:text-slate-300">
-            {t(
-              "stats.description",
-              "Helping businesses build stronger digital products, improve their online presence, and move forward with confidence."
-            )}
+            {t("stats.description")}
           </p>
         </motion.div>
 
@@ -363,10 +359,10 @@ export default function StatsSection() {
             mx-auto mt-12 flex max-w-5xl flex-wrap
             items-center justify-center gap-x-8 gap-y-4
             rounded-2xl border border-slate-200/60
-            bg-white/60 px-6 py-5
+            bg-white/80 px-6 py-5
             text-xs text-slate-600
             backdrop-blur-md
-            dark:border-white/[0.06] dark:bg-[#1e293b]/50 dark:text-slate-300
+            dark:border-white/8 dark:bg-[#1a1e2b]/80 dark:text-slate-300
             md:mt-14
           "
         >
