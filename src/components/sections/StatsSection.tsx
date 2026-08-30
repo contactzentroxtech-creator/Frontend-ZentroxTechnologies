@@ -56,7 +56,6 @@ function AnimatedCounter({
     if (!inView || target <= 0) return;
 
     let animationFrame: number;
-
     const duration = 1400;
     const startTime = performance.now();
 
@@ -67,7 +66,9 @@ function AnimatedCounter({
       const easedProgress =
         1 - Math.pow(1 - progress, 4);
 
-      setCount(Math.floor(target * easedProgress));
+      setCount(
+        Math.floor(target * easedProgress)
+      );
 
       if (progress < 1) {
         animationFrame =
@@ -80,9 +81,8 @@ function AnimatedCounter({
     animationFrame =
       requestAnimationFrame(animate);
 
-    return () => {
+    return () =>
       cancelAnimationFrame(animationFrame);
-    };
   }, [inView, target]);
 
   return (
@@ -108,7 +108,7 @@ const DEFAULT_STATS: StatItem[] = [
   {
     num: 150,
     suffix: "+",
-    label: "Clients & Businesses Supported",
+    label: "Businesses Supported",
     labelKey: "stats.clients",
     settingKey: "stats_clients",
   },
@@ -137,28 +137,28 @@ const STAT_CONFIG: StatConfig[] = [
     iconClass:
       "bg-blue-500/10 text-blue-600 dark:bg-blue-400/10 dark:text-blue-300",
     accent:
-      "from-blue-500/10 via-transparent to-transparent",
+      "from-blue-500/[0.10] via-transparent to-transparent",
   },
   {
     icon: Globe2,
     iconClass:
-      "bg-orange-500/10 text-orange-600 dark:bg-orange-400/10 dark:text-orange-300",
+      "bg-teal-500/10 text-teal-600 dark:bg-teal-400/10 dark:text-teal-300",
     accent:
-      "from-orange-500/10 via-transparent to-transparent",
+      "from-teal-500/[0.10] via-transparent to-transparent",
   },
   {
     icon: Sparkles,
     iconClass:
-      "bg-violet-500/10 text-violet-600 dark:bg-violet-400/10 dark:text-violet-300",
+      "bg-indigo-500/10 text-indigo-600 dark:bg-indigo-400/10 dark:text-indigo-300",
     accent:
-      "from-violet-500/10 via-transparent to-transparent",
+      "from-indigo-500/[0.10] via-transparent to-transparent",
   },
   {
     icon: Star,
     iconClass:
       "bg-amber-500/10 text-amber-600 dark:bg-amber-400/10 dark:text-amber-300",
     accent:
-      "from-amber-500/10 via-transparent to-transparent",
+      "from-amber-500/[0.10] via-transparent to-transparent",
   },
 ];
 
@@ -201,15 +201,11 @@ export default function StatsSection() {
             const value =
               cms[stat.settingKey];
 
-            /* Custom stat such as rating */
-
             if (stat.custom !== undefined) {
               const rating =
                 String(value).trim();
 
-              if (!rating) {
-                return stat;
-              }
+              if (!rating) return stat;
 
               return {
                 ...stat,
@@ -218,8 +214,6 @@ export default function StatsSection() {
                   : `${rating}★`,
               };
             }
-
-            /* Numeric stats */
 
             const numericValue =
               Number(value);
@@ -241,7 +235,7 @@ export default function StatsSection() {
           setStats(updatedStats);
         }
       } catch {
-        // Safe fallback to default stats
+        // Keep default stats safely
       }
     };
 
@@ -255,7 +249,7 @@ export default function StatsSection() {
   const trustItems = [
     t(
       "stats.trust1",
-      "Custom Development"
+      "Custom-Built Solutions"
     ),
     t(
       "stats.trust2",
@@ -274,27 +268,65 @@ export default function StatsSection() {
   return (
     <section
       aria-label="Zentrox Technologies achievements"
-      className="relative overflow-hidden px-4 py-16 md:px-6 md:py-24"
+      className="
+        relative overflow-hidden
+        px-4 py-20
+        sm:px-6
+        md:py-28
+      "
     >
-      {/* Background */}
+      {/* BACKGROUND */}
 
       <div
-        className="pointer-events-none absolute inset-0 overflow-hidden"
+        className="
+          pointer-events-none
+          absolute inset-0
+          overflow-hidden
+        "
         aria-hidden="true"
       >
-        <div className="absolute left-[5%] top-1/2 h-72 w-72 -translate-y-1/2 rounded-full bg-blue-500/[0.06] blur-[120px]" />
+        <div
+          className="
+            absolute
+            left-[3%]
+            top-1/2
+            h-[360px]
+            w-[360px]
+            -translate-y-1/2
+            rounded-full
+            bg-blue-500/[0.055]
+            blur-[130px]
+          "
+        />
 
-        <div className="absolute right-[5%] top-1/2 h-72 w-72 -translate-y-1/2 rounded-full bg-orange-500/[0.05] blur-[120px]" />
+        <div
+          className="
+            absolute
+            right-[3%]
+            top-1/2
+            h-[360px]
+            w-[360px]
+            -translate-y-1/2
+            rounded-full
+            bg-teal-500/[0.045]
+            blur-[130px]
+          "
+        />
       </div>
 
-      <div className="relative mx-auto max-w-7xl">
-
-        {/* Header */}
+      <div
+        className="
+          relative
+          mx-auto
+          max-w-7xl
+        "
+      >
+        {/* HEADER */}
 
         <motion.div
           initial={{
             opacity: 0,
-            y: 20,
+            y: 25,
           }}
           whileInView={{
             opacity: 1,
@@ -302,46 +334,92 @@ export default function StatsSection() {
           }}
           viewport={{
             once: true,
-            amount: 0.4,
+            amount: 0.35,
           }}
           transition={{
-            duration: 0.6,
+            duration: 0.65,
           }}
-          className="mx-auto mb-10 max-w-2xl text-center md:mb-14"
+          className="
+            mx-auto
+            mb-12
+            max-w-3xl
+            text-center
+            md:mb-16
+          "
         >
-          <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/15 bg-blue-500/[0.05] px-4 py-2 text-xs font-semibold text-blue-700 dark:text-blue-300">
-            <CheckCircle2 size={15} />
+          <div className="z-badge mx-auto mb-5 w-fit">
+            <CheckCircle2
+              size={14}
+              aria-hidden="true"
+            />
 
-            {t(
-              "stats.trust",
-              "Technology Built Around Real Business Growth"
-            )}
+            <span>
+              {t(
+                "stats.trust",
+                "Built for Real Business Growth"
+              )}
+            </span>
           </div>
 
-          <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-slate-600 dark:text-z-muted md:text-base">
+          <h2
+            className="
+              text-3xl
+              font-extrabold
+              tracking-tight
+              text-slate-900
+              sm:text-4xl
+              md:text-5xl
+              dark:text-z-text
+            "
+          >
+            {t(
+              "stats.title",
+              "Results That Reflect Our Commitment"
+            )}
+          </h2>
+
+          <p
+            className="
+              mx-auto
+              mt-5
+              max-w-2xl
+              text-sm
+              leading-relaxed
+              text-slate-600
+              sm:text-base
+              dark:text-z-muted
+            "
+          >
             {t(
               "stats.description",
-              "Helping businesses in India and worldwide build stronger digital products, improve online visibility and scale with confidence."
+              "Helping businesses build stronger digital products, improve their online presence, and move forward with confidence."
             )}
           </p>
         </motion.div>
 
-        {/* Stats Grid */}
+        {/* STATS GRID */}
 
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4 md:gap-5">
+        <div
+          className="
+            grid
+            grid-cols-2
+            gap-4
+            md:grid-cols-4
+            md:gap-5
+          "
+        >
           {stats.map((stat, index) => {
             const config =
               STAT_CONFIG[index];
 
-            const Icon =
-              config.icon;
+            const Icon = config.icon;
 
             return (
               <motion.article
                 key={stat.labelKey}
                 initial={{
                   opacity: 0,
-                  y: 28,
+                  y: 30,
                 }}
                 whileInView={{
                   opacity: 1,
@@ -356,35 +434,110 @@ export default function StatsSection() {
                   delay: index * 0.08,
                 }}
                 whileHover={{
-                  y: -6,
+                  y: -7,
                 }}
-                className="group relative min-h-[190px] overflow-hidden rounded-[24px] border border-slate-200/80 bg-white p-4 shadow-[0_10px_35px_rgba(15,23,42,0.06)] transition-all duration-300 hover:border-slate-300 hover:shadow-[0_20px_55px_rgba(15,23,42,0.10)] dark:border-white/10 dark:bg-white/[0.045] dark:hover:border-white/15 sm:p-5 md:min-h-[220px] md:p-6"
+                className="
+                  group
+                  relative
+                  min-h-[200px]
+                  overflow-hidden
+                  rounded-[22px]
+                  border
+                  border-slate-200/90
+                  bg-white/[0.92]
+                  p-5
+                  shadow-[0_10px_35px_rgba(15,23,42,0.055)]
+                  backdrop-blur-xl
+                  transition-all
+                  duration-300
+
+                  hover:border-blue-300/70
+                  hover:shadow-[0_22px_60px_rgba(15,23,42,0.10)]
+
+                  dark:border-white/10
+                  dark:bg-white/[0.045]
+
+                  sm:p-6
+                  md:min-h-[235px]
+                "
               >
-                {/* Hover Gradient */}
+                {/* HOVER GLOW */}
 
                 <div
-                  className={`absolute inset-0 bg-gradient-to-br ${config.accent} opacity-0 transition-opacity duration-500 group-hover:opacity-100`}
+                  className={`
+                    pointer-events-none
+                    absolute inset-0
+                    bg-gradient-to-br
+                    ${config.accent}
+                    opacity-0
+                    transition-opacity
+                    duration-500
+                    group-hover:opacity-100
+                  `}
                 />
 
-                {/* Top */}
+                {/* TOP */}
 
-                <div className="relative flex items-start justify-between">
+                <div
+                  className="
+                    relative
+                    flex
+                    items-start
+                    justify-between
+                  "
+                >
                   <div
-                    className={`flex h-11 w-11 items-center justify-center rounded-2xl transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3 ${config.iconClass}`}
+                    className={`
+                      flex
+                      h-11
+                      w-11
+                      items-center
+                      justify-center
+                      rounded-2xl
+                      transition-all
+                      duration-300
+                      group-hover:scale-110
+                      group-hover:rotate-3
+                      ${config.iconClass}
+                    `}
                   >
                     <Icon size={20} />
                   </div>
 
                   <ArrowUpRight
                     size={18}
-                    className="text-slate-300 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-z-accent dark:text-slate-600"
+                    className="
+                      text-slate-300
+                      transition-all
+                      duration-300
+                      group-hover:-translate-y-1
+                      group-hover:translate-x-1
+                      group-hover:text-blue-500
+                      dark:text-slate-600
+                    "
                   />
                 </div>
 
-                {/* Content */}
+                {/* CONTENT */}
 
-                <div className="relative mt-7 md:mt-9">
-                  <div className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-z-text sm:text-4xl md:text-5xl">
+                <div
+                  className="
+                    relative
+                    mt-8
+                    md:mt-10
+                  "
+                >
+                  <div
+                    className="
+                      text-3xl
+                      font-extrabold
+                      tracking-tight
+                      text-slate-900
+                      sm:text-4xl
+                      md:text-[42px]
+                      dark:text-z-text
+                    "
+                  >
                     {stat.custom ? (
                       stat.custom
                     ) : (
@@ -395,7 +548,19 @@ export default function StatsSection() {
                     )}
                   </div>
 
-                  <p className="mt-3 text-[10px] font-bold uppercase leading-relaxed tracking-[0.12em] text-slate-500 dark:text-z-muted sm:text-[11px]">
+                  <p
+                    className="
+                      mt-3
+                      text-[10px]
+                      font-bold
+                      uppercase
+                      leading-relaxed
+                      tracking-[0.1em]
+                      text-slate-500
+                      sm:text-[11px]
+                      dark:text-z-muted
+                    "
+                  >
                     {t(
                       stat.labelKey,
                       stat.label
@@ -403,22 +568,41 @@ export default function StatsSection() {
                   </p>
                 </div>
 
-                {/* Bottom Accent */}
+                {/* BOTTOM ACCENT */}
 
-                <div className="absolute bottom-0 left-0 h-1 w-full origin-left scale-x-0 bg-gradient-to-r from-z-accent via-blue-400 to-transparent transition-transform duration-500 group-hover:scale-x-100" />
+                <div
+                  className="
+                    absolute
+                    bottom-0
+                    left-0
+                    h-[3px]
+                    w-full
+                    origin-left
+                    scale-x-0
+                    bg-gradient-to-r
+                    from-blue-600
+                    via-blue-400
+                    to-transparent
+                    transition-transform
+                    duration-500
+                    group-hover:scale-x-100
+                  "
+                />
               </motion.article>
             );
           })}
         </div>
 
-        {/* Trust Footer */}
+        {/* TRUST ITEMS */}
 
         <motion.div
           initial={{
             opacity: 0,
+            y: 15,
           }}
           whileInView={{
             opacity: 1,
+            y: 0,
           }}
           viewport={{
             once: true,
@@ -427,16 +611,48 @@ export default function StatsSection() {
             duration: 0.6,
             delay: 0.2,
           }}
-          className="mt-10 flex flex-wrap justify-center gap-x-6 gap-y-3 text-xs text-slate-500 dark:text-z-muted md:mt-12"
+          className="
+            mx-auto
+            mt-12
+            flex
+            max-w-5xl
+            flex-wrap
+            justify-center
+            gap-x-7
+            gap-y-4
+            rounded-2xl
+            border
+            border-slate-200/80
+            bg-white/60
+            px-5
+            py-5
+            text-xs
+            text-slate-600
+            backdrop-blur-xl
+
+            dark:border-white/10
+            dark:bg-white/[0.035]
+            dark:text-z-muted
+
+            md:mt-14
+          "
         >
           {trustItems.map((item) => (
             <span
               key={item}
-              className="flex items-center gap-1.5"
+              className="
+                flex
+                items-center
+                gap-2
+                font-medium
+              "
             >
               <CheckCircle2
-                size={13}
-                className="text-z-accent"
+                size={14}
+                className="
+                  shrink-0
+                  text-blue-500
+                "
               />
 
               {item}
