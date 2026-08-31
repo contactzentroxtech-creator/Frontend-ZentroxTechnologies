@@ -19,6 +19,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { useLang } from "@/lib/providers";
+import ScrollTilt from "@/components/ui/ScrollTilt";
 
 const SERVICES = [
   {
@@ -211,10 +212,12 @@ export default function ServicesSection() {
           </p>
         </div>
 
-        {/* Grid */}
+        {/* Grid with 3D Scroll Tilt */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
           {SERVICES.map((service, index) => (
-            <ServiceCard key={service.id} service={service} index={index} />
+            <ScrollTilt key={service.id} tiltIntensity={4} scaleRange={0.05}>
+              <ServiceCard service={service} index={index} />
+            </ScrollTilt>
           ))}
         </div>
 
