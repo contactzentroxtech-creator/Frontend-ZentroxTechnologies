@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { useLang } from "@/lib/providers";
+import ScrollTilt from "@/components/ui/ScrollTilt";
 
 const LOCATIONS = [
   "Mohali",
@@ -61,15 +62,14 @@ export default function LocalSection() {
           </p>
         </div>
 
-        {/* Industries Grid */}
+        {/* Industries Grid with 3D Scroll Tilt */}
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4">
           {INDUSTRIES.map((industry) => (
-            <div
-              key={industry}
-              className="rounded-lg border border-gray-200/80 bg-white px-4 py-3 text-center text-sm font-medium text-slate-700 shadow-sm transition-all hover:border-blue-300 hover:shadow-md"
-            >
-              {industry}
-            </div>
+            <ScrollTilt key={industry} tiltIntensity={3} scaleRange={0.04}>
+              <div className="rounded-lg border border-gray-200/80 bg-white px-4 py-3 text-center text-sm font-medium text-slate-700 shadow-sm transition-all hover:border-blue-300 hover:shadow-md">
+                {industry}
+              </div>
+            </ScrollTilt>
           ))}
         </div>
 
