@@ -137,4 +137,129 @@ const STATIC_FALLBACKS: Record<string, string> = {
   "cta.badge": "Let's Build Something Great Together",
   "cta.title": "Have a Digital Product in Mind?",
   "cta.title2": "Let's turn your idea into a practical digital solution.",
-  "cta.sub": "
+  "cta.sub": "Whether you need a website, custom software, mobile app, SaaS platform, AI automation, SEO or digital marketing services — our team is ready to help you build and grow.",
+  "cta.primary": "Start a Project",
+  "cta.secondary": "Talk to Us",
+
+  "contact.badge": "Contact",
+  "contact.title": "Let's Build Something Together",
+  "contact.sub": "Have a project in mind? Reach out and we'll get back to you within one business day.",
+  "contact.name": "Your Name",
+  "contact.phone": "Phone / WhatsApp",
+  "contact.email": "Email Address",
+  "contact.service": "Select Required Service",
+  "contact.budget": "Budget Range",
+  "contact.message": "Tell us about your project or business...",
+  "contact.send": "Send Message",
+  "contact.sending": "Sending...",
+  "contact.success": "Message sent successfully!",
+  "contact.success_title": "Message Sent!",
+  "contact.send_another": "Send Another Message",
+  "contact.privacy_note": "By submitting this form, you agree to be contacted by Zentrox Technologies.",
+  "contact.reach_us": "Reach Us Directly",
+  "contact.form_title": "Send Us a Message",
+  "contact.whatsapp_cta": "Chat on WhatsApp",
+  "contact.brand_desc": "MSME Registered · Remote-First",
+  "contact.brand_locations": "Mohali & Chandigarh, Punjab, India",
+
+  "validation.name_min": "Name must contain at least 2 characters",
+  "validation.phone_invalid": "Please enter a valid phone number",
+  "validation.email_invalid": "Please enter a valid email address",
+  "validation.service_required": "Please select a service",
+  "validation.message_min": "Message must contain at least 10 characters",
+  "validation.message_max": "Your message is too long",
+
+  "footer.msme": "MSME Registered · Remote-First · Innovation-Driven",
+  "footer.copy": "All rights reserved. MSME Registered — India.",
+
+  "common.loading": "Loading...",
+  "common.error": "Something went wrong",
+  "common.save": "Save",
+  "common.cancel": "Cancel",
+  "common.close": "Close",
+  "common.learn_more": "Learn More",
+  "whatsapp.message": "Hi Zentrox Technologies, I need help with my project.",
+};
+
+export { STATIC_FALLBACKS };
+
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  useEffect(() => {
+    document.documentElement.classList.remove("dark");
+    document.documentElement.classList.add("light");
+    localStorage.setItem("zt_theme", "light");
+  }, []);
+
+  return (
+    <ThemeContext.Provider value={{ theme: "light" }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+}
+
+export function LangProvider({ children }: { children: React.ReactNode }) {
+  const [translations, setTranslations] = useState<Record<string, string>>(
+    STATIC_FALLBACKS
+  );
+  const [loadingTranslations, setLoadingTranslations] = useState(false);
+  const loadedRef = useRef(false);
+
+  const loadTranslations = useCallback(async () => {
+    if (loadedRef.current) return;
+
+    setLoadingTranslations(true);
+
+    try {
+      const { data } = await api.get("/translations?lang=en");
+
+      const merged: Record<string, string> = {
+        ...STATIC_FALLBACKS,
+        ...(data?.data || {}),
+      };
+
+      setTranslations(merged);
+    } catch {
+      setTranslations(STATIC_FALLBACKS);
+    } finally {
+      setLoadingTranslations(false);
+      loadedRef.current = true;
+    }
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.setAttribute("lang", "en");
+    localStorage.setItem("zt_lang", "en");
+    loadTranslations();
+  }, [loadTranslations]);
+
+  const t = useCallback(
+    (key: string, fallback?: string): string => {
+      return translations[key] || STATIC_FALLBACKS[key] || fallback || key;
+    },
+    [translations]
+  );
+
+  return (
+    <LangContext.Provider
+      value={{
+        lang: "en",
+        t,
+        translations,
+        loadingTranslations,
+      }}
+    >
+      {children}
+    </LangContext.Provider>
+  );
+}
+
+export function AppProviders({ children }: { children: React.ReactNode }) {
+  return (
+    <ThemeProvider>
+      <LangProvider>{children}</LangProvider>
+    </ThemeProvider>
+  );
+}
+
+export const useTheme = () => useContext(ThemeContext);
+export const useLang = () => useContext(LangContext);
