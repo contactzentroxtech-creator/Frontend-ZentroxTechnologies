@@ -32,6 +32,23 @@ const LangContext = createContext<LangCtx>({
   loadingTranslations: false,
 });
 
+// ─── Helper: Convert ANY value to plain string ──────────────────────────
+function ensureString(value: any): string {
+  if (typeof value === "string") return value;
+  if (typeof value === "number" || typeof value === "boolean") return String(value);
+  if (!value) return "";
+  if (Array.isArray(value)) {
+    return value.map(ensureString).join(", ");
+  }
+  if (typeof value === "object") {
+    if (value.en !== undefined && typeof value.en === "string") return value.en;
+    const firstString = Object.values(value).find(v => typeof v === "string");
+    if (firstString) return firstString;
+    return "";
+  }
+  return String(value);
+}
+
 const STATIC_FALLBACKS: Record<string, string> = {
   "nav.services": "Services",
   "nav.blog": "Insights",
@@ -42,8 +59,7 @@ const STATIC_FALLBACKS: Record<string, string> = {
   "hero.badge": "Mohali & Chandigarh — MSME Registered Technology Company",
   "hero.line1": "We Build",
   "hero.line2": "Move Businesses Forward.",
-  "hero.sub":
-    "Zentrox Technologies helps businesses turn ideas into reliable software, websites, mobile applications and digital growth solutions.",
+  "hero.sub": "Zentrox Technologies helps businesses turn ideas into reliable software, websites, mobile applications and digital growth solutions.",
   "hero.cta_primary": "Start Your Project",
   "hero.cta_secondary": "View Our Work",
 
@@ -212,10 +228,11 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
     try {
       const { data } = await api.get("/translations?lang=en");
 
-      const merged: Record<string, string> = {
-        ...STATIC_FALLBACKS,
-        ...(data?.data || {}),
-      };
+      const apiData = data?.data || {};
+      const merged: Record<string, string> = { ...STATIC_FALLBACKS };
+      for (const key in apiData) {
+        merged[key] = ensureString(apiData[key]);
+      }
 
       setTranslations(merged);
     } catch {
@@ -234,7 +251,8 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
 
   const t = useCallback(
     (key: string, fallback?: string): string => {
-      return translations[key] || STATIC_FALLBACKS[key] || fallback || key;
+      let value = translations[key] || STATIC_FALLBACKS[key] || fallback || key;
+      return ensureString(value);
     },
     [translations]
   );
