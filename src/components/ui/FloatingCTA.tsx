@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { MessageCircle, X, Sparkles } from 'lucide-react';
 import api from '@/lib/api';
-import { useLang } from '@/lib/providers';
 
 interface SiteSettings {
   whatsapp_number?: string;
@@ -22,7 +21,6 @@ export default function FloatingCTA() {
   const [visible, setVisible] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const [settings, setSettings] = useState<SiteSettings>({});
-  const { t } = useLang();
   const loaded = useRef(false);
 
   useEffect(() => {
