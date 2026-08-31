@@ -36,12 +36,12 @@ function TestimonialCard({ testimonial }: { testimonial: (typeof TESTIMONIALS)[0
           <Star key={i} size={14} className="fill-blue-500 text-blue-500" />
         ))}
       </div>
-      <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-slate-600">
+      <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-slate-700">
         “{testimonial.text}”
       </blockquote>
       <div className="mt-4 border-t border-gray-100 pt-4">
-        <div className="font-semibold text-slate-900">{testimonial.name}</div>
-        <div className="text-sm text-slate-500">{testimonial.role}</div>
+        <div className="font-semibold text-slate-800">{testimonial.name}</div>
+        <div className="text-sm text-slate-600">{testimonial.role}</div>
       </div>
     </div>
   );
@@ -78,23 +78,21 @@ export default function TestimonialsSection() {
       ref={ref}
     >
       <div className="mx-auto max-w-4xl">
-        {/* Header */}
         <div className="mx-auto mb-12 max-w-3xl text-center sm:mb-14">
           <span className="text-xs font-medium uppercase tracking-wider text-blue-600">
             {t("testimonials.badge")}
           </span>
           <h2
             id="testimonials-heading"
-            className="mt-2 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl"
+            className="mt-2 text-3xl font-semibold tracking-tight text-slate-800 sm:text-4xl"
           >
             {t("testimonials.title")}
           </h2>
-          <p className="mt-3 text-base leading-relaxed text-slate-500 sm:text-lg">
+          <p className="mt-3 text-base leading-relaxed text-slate-600 sm:text-lg">
             {t("testimonials.sub")}
           </p>
         </div>
 
-        {/* Slider */}
         <div className="relative overflow-hidden">
           <div
             className="flex transition-transform duration-500 ease-in-out"
@@ -107,7 +105,6 @@ export default function TestimonialsSection() {
             ))}
           </div>
 
-          {/* Controls */}
           <div className="mt-6 flex items-center justify-center gap-3">
             <button
               onClick={() => goToSlide(currentIndex - 1)}
