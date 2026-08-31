@@ -13,7 +13,6 @@ import {
   Linkedin,
   Twitter,
 } from "lucide-react";
-import { useLang } from "@/lib/providers";
 
 const services = [
   "Website Development",
@@ -51,8 +50,6 @@ const socialLinks = [
 ];
 
 export default function Footer() {
-  const { t } = useLang();
-
   return (
     <footer className="border-t border-gray-200 bg-white">
       <div className="mx-auto max-w-7xl px-4 pt-12 pb-6 md:px-6">
