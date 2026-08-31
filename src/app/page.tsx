@@ -17,12 +17,8 @@ import FloatingCTA from "@/components/ui/FloatingCTA";
 import CursorEffect from "@/components/ui/CursorEffect";
 
 export const metadata: Metadata = {
-  title:
-    "Zentrox Technologies | Software, Web & Digital Growth Solutions",
-
-  description:
-    "Zentrox Technologies delivers custom software, website development, mobile app development, SaaS solutions, AI integration, SEO, UI/UX design and digital marketing services for businesses in India and worldwide.",
-
+  title: "Zentrox Technologies | Software, Web & Digital Growth Solutions",
+  description: "Zentrox Technologies delivers custom software, website development, mobile app development, SaaS solutions, AI integration, SEO, UI/UX design and digital marketing services for businesses in India and worldwide.",
   keywords: [
     "software development company",
     "website development company",
@@ -41,35 +37,21 @@ export const metadata: Metadata = {
     "affordable software development",
     "global software development company",
   ],
-
   alternates: {
     canonical: "https://zentroxtechnologies.com/",
   },
-
   openGraph: {
-    title:
-      "Zentrox Technologies | Software, Web & Digital Growth Solutions",
-
-    description:
-      "Custom software, websites, mobile apps, SaaS, AI integration, SEO and digital marketing services for businesses in India and worldwide.",
-
+    title: "Zentrox Technologies | Software, Web & Digital Growth Solutions",
+    description: "Custom software, websites, mobile apps, SaaS, AI integration, SEO and digital marketing services for businesses in India and worldwide.",
     url: "https://zentroxtechnologies.com/",
-
     siteName: "Zentrox Technologies",
-
     type: "website",
-
     locale: "en_IN",
   },
-
   twitter: {
     card: "summary_large_image",
-
-    title:
-      "Zentrox Technologies | Software, Web & Digital Growth Solutions",
-
-    description:
-      "Custom software, websites, mobile apps, SaaS, AI integration, SEO and digital marketing solutions for growing businesses worldwide.",
+    title: "Zentrox Technologies | Software, Web & Digital Growth Solutions",
+    description: "Custom software, websites, mobile apps, SaaS, AI integration, SEO and digital marketing solutions for growing businesses worldwide.",
   },
 };
 
