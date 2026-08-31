@@ -14,7 +14,7 @@ export default function CTASection() {
   return (
     <section
       id="cta"
-      className="bg-slate-900 px-4 py-20 sm:py-24 md:px-6 md:py-28 lg:py-32"
+      className="bg-slate-900 px-4 py-16 sm:py-20 md:px-6 md:py-24 lg:py-28"
       ref={ref}
     >
       <div className="mx-auto max-w-4xl text-center">
@@ -23,18 +23,22 @@ export default function CTASection() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
         >
+          {/* Badge - Blue text on dark background */}
           <span className="inline-block text-xs font-medium uppercase tracking-wider text-blue-400">
             LET'S BUILD SOMETHING GREAT TOGETHER
           </span>
 
+          {/* Heading - White text */}
           <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl lg:text-5xl">
             Have a Digital Product in Mind?
           </h2>
 
+          {/* Subtext - Light gray text */}
           <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-gray-300 sm:text-lg">
             Let's turn your idea into a practical digital solution.
           </p>
 
+          {/* Buttons - Blue background, white text */}
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <Link
               href="/contact"
@@ -59,6 +63,7 @@ export default function CTASection() {
             </a>
           </div>
 
+          {/* Trust Badges - Gray text with blue dots */}
           <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-xs text-gray-400">
             <span className="flex items-center gap-1.5">
               <span className="inline-block h-1.5 w-1.5 rounded-full bg-blue-500" />
