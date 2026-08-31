@@ -28,10 +28,7 @@ export default function HeroSection() {
   };
 
   return (
-    <section
-      ref={sectionRef}
-      className="bg-white pt-28 pb-16 md:pt-32 md:pb-20 lg:pt-36 lg:pb-24"
-    >
+    <section className="bg-white pt-28 pb-16 md:pt-32 md:pb-20 lg:pt-36 lg:pb-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-12">
           <motion.div
@@ -40,7 +37,7 @@ export default function HeroSection() {
             transition={{ duration: 0.6 }}
             className="flex flex-col gap-6"
           >
-            <div className="inline-flex items-center gap-2 w-fit rounded-full border border-gray-200 bg-gray-50 px-4 py-1.5 text-xs font-medium text-slate-600">
+            <div className="inline-flex items-center gap-2 w-fit rounded-full border border-gray-200 bg-gray-50 px-4 py-1.5 text-xs font-medium text-slate-700">
               <span className="inline-block h-1.5 w-1.5 rounded-full bg-blue-600" />
               {t("hero.badge")}
             </div>
@@ -51,7 +48,7 @@ export default function HeroSection() {
               <span className="text-blue-600">{t("hero.line2")}</span>
             </h1>
 
-            <p className="max-w-lg text-base leading-relaxed text-slate-600 sm:text-lg">
+            <p className="max-w-lg text-base leading-relaxed text-slate-700 sm:text-lg">
               {t("hero.sub")}
             </p>
 
@@ -71,7 +68,7 @@ export default function HeroSection() {
               </Link>
             </div>
 
-            <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500">
+            <div className="flex flex-wrap items-center gap-4 text-xs text-slate-600">
               <span className="flex items-center gap-1.5">
                 <CheckCircle2 size={14} className="text-blue-600" />
                 MSME Registered
@@ -112,20 +109,20 @@ export default function HeroSection() {
                 <div className="mb-2 text-sm font-semibold text-slate-900">
                   Custom Software for Growing Businesses
                 </div>
-                <p className="text-sm text-slate-600 leading-relaxed">
+                <p className="text-sm text-slate-700 leading-relaxed">
                   Built around your workflows, users and goals.
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2">
-                  <span className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-slate-600">
+                  <span className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-slate-700">
                     Web
                   </span>
-                  <span className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-slate-600">
+                  <span className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-slate-700">
                     Mobile
                   </span>
                   <span className="rounded-full border border-blue-600 bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
                     SaaS
                   </span>
-                  <span className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-slate-600">
+                  <span className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-slate-700">
                     AI
                   </span>
                 </div>
