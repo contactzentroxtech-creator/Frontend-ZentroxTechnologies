@@ -14,7 +14,7 @@ export default function CTASection() {
   return (
     <section
       id="cta"
-      className="bg-slate-900 px-4 py-16 sm:py-20 md:px-6 md:py-24 lg:py-28"
+      className="bg-slate-900 px-4 py-20 sm:py-24 md:px-6 md:py-28 lg:py-32"
       ref={ref}
     >
       <div className="mx-auto max-w-4xl text-center">
@@ -38,21 +38,21 @@ export default function CTASection() {
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-medium text-white hover:bg-blue-700"
+              className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-medium text-white shadow-lg shadow-blue-600/25 transition-all hover:bg-blue-700 hover:shadow-xl hover:-translate-y-0.5"
             >
               Start a Project
               <ArrowRight size={16} />
             </Link>
             <a
               href="mailto:contact.zentroxtech@gmail.com"
-              className="inline-flex items-center gap-2 rounded-full border border-white/30 px-6 py-3 text-sm font-medium text-white hover:bg-white/10"
+              className="inline-flex items-center gap-2 rounded-full border border-white/30 px-6 py-3 text-sm font-medium text-white transition-all hover:border-white/60 hover:bg-white/10"
             >
               <Mail size={16} />
               Email Us
             </a>
             <a
               href="tel:+918988183513"
-              className="inline-flex items-center gap-2 rounded-full border border-white/30 px-6 py-3 text-sm font-medium text-white hover:bg-white/10"
+              className="inline-flex items-center gap-2 rounded-full border border-white/30 px-6 py-3 text-sm font-medium text-white transition-all hover:border-white/60 hover:bg-white/10"
             >
               <Phone size={16} />
               Call Us
