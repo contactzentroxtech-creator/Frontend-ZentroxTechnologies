@@ -51,12 +51,9 @@ const socialLinks = [
 ];
 
 export default function Footer() {
-  const { t } = useLang();
-
   return (
     <footer className="border-t border-gray-200/80 bg-white/90 backdrop-blur-sm">
       <div className="mx-auto max-w-7xl px-4 pt-12 pb-6 md:px-6">
-        {/* Main Grid - Learning Section Removed */}
         <div className="mb-10 grid grid-cols-2 gap-6 md:grid-cols-4 lg:grid-cols-4 lg:gap-10">
           {/* Brand Column */}
           <div className="col-span-2 lg:col-span-1">
