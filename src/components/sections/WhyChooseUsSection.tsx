@@ -76,8 +76,8 @@ function ReasonCard({
         <div className="flex h-11 w-11 items-center justify-center rounded-lg border border-blue-200/50 bg-blue-50/50 text-blue-600">
           <Icon size={20} />
         </div>
-        <h3 className="mt-4 text-base font-semibold text-slate-900">{title}</h3>
-        <p className="mt-2 text-sm leading-relaxed text-slate-500">{description}</p>
+        <h3 className="mt-4 text-base font-semibold text-slate-800">{title}</h3>
+        <p className="mt-2 text-sm leading-relaxed text-slate-600">{description}</p>
       </div>
     </motion.div>
   );
@@ -93,23 +93,21 @@ export default function WhyChooseUsSection() {
       className="bg-white px-4 py-16 sm:py-20 md:px-6 md:py-24 lg:py-28"
     >
       <div className="mx-auto max-w-7xl">
-        {/* Header */}
         <div className="mx-auto mb-12 max-w-3xl text-center sm:mb-14">
           <span className="text-xs font-medium uppercase tracking-wider text-blue-600">
             Why Zentrox
           </span>
           <h2
             id="why-choose-us-heading"
-            className="mt-2 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl"
+            className="mt-2 text-3xl font-semibold tracking-tight text-slate-800 sm:text-4xl"
           >
             {t("global.why.title")}
           </h2>
-          <p className="mt-3 text-base leading-relaxed text-slate-500 sm:text-lg">
+          <p className="mt-3 text-base leading-relaxed text-slate-600 sm:text-lg">
             {t("global.why.sub")}
           </p>
         </div>
 
-        {/* Grid with 3D Scroll Tilt */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {REASONS.map((reason, index) => (
             <ScrollTilt key={reason.titleFB} tiltIntensity={4} scaleRange={0.05}>
@@ -118,11 +116,10 @@ export default function WhyChooseUsSection() {
           ))}
         </div>
 
-        {/* Bottom CTA */}
         <div className="mt-10 text-center">
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-medium text-white transition-all hover:bg-blue-700 hover:shadow-md"
+            className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-medium text-white shadow-md transition-all hover:bg-blue-700 hover:shadow-lg"
           >
             {t("services.cta_title")}
             <ArrowRight size={16} />
