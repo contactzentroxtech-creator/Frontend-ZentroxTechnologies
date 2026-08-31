@@ -109,7 +109,6 @@ export default function PricingWizard() {
         </div>
 
         <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm md:p-8">
-          {/* Progress */}
           <div className="mb-8 flex items-center justify-between">
             {steps.map((s, i) => (
               <div key={i} className="flex items-center">
@@ -121,7 +120,6 @@ export default function PricingWizard() {
             ))}
           </div>
 
-          {/* Step 1: Service */}
           {step === 0 && (
             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
               <h3 className="mb-4 text-lg font-semibold text-slate-800">Select a Service</h3>
@@ -152,7 +150,6 @@ export default function PricingWizard() {
             </motion.div>
           )}
 
-          {/* Step 2: Details */}
           {step === 1 && (
             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
               <h3 className="mb-4 text-lg font-semibold text-slate-800">Project Details</h3>
@@ -221,7 +218,6 @@ export default function PricingWizard() {
             </motion.div>
           )}
 
-          {/* Step 3: Budget */}
           {step === 2 && (
             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
               <h3 className="mb-4 text-lg font-semibold text-slate-800">Your Budget</h3>
@@ -266,7 +262,6 @@ export default function PricingWizard() {
             </motion.div>
           )}
 
-          {/* Step 4: Quote */}
           {step === 3 && showResult && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
               <div className="mb-4 rounded-lg bg-blue-50 p-6">
