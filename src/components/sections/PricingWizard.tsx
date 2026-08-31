@@ -42,6 +42,25 @@ const ICON_MAP: Record<string, string> = {
   bot: "🤖",
 };
 
+// ─── Helper: Convert ANY value to plain string ──────────────────────────
+function ensureString(value: any): string {
+  if (typeof value === "string") return value;
+  if (typeof value === "number" || typeof value === "boolean") return String(value);
+  if (!value) return "";
+  if (Array.isArray(value)) {
+    return value.map(ensureString).join(", ");
+  }
+  if (typeof value === "object") {
+    // If it has an "en" field, use that
+    if (value.en !== undefined && typeof value.en === "string") return value.en;
+    // Otherwise take the first string value
+    const firstString = Object.values(value).find(v => typeof v === "string");
+    if (firstString) return firstString;
+    return "";
+  }
+  return String(value);
+}
+
 const BUSINESS_TYPES = ["Startups", "Real Estate", "Education", "Healthcare", "Manufacturing", "E-commerce"];
 const TIMELINES = [
   { key: "rush", label: "ASAP (Rush)" },
@@ -77,7 +96,18 @@ export default function PricingWizard() {
     const loadServices = async () => {
       try {
         const { data } = await api.get("/pricing/services");
-        if (data?.data?.length > 0) setServices(data.data);
+        if (data?.data?.length > 0) {
+          // ─── Convert API data (convert {en, hi, pa} to string) ───
+          const converted = data.data.map((service: any) => ({
+            id: service.id || "",
+            label: ensureString(service.label),
+            description: ensureString(service.description),
+            iconKey: service.iconKey || service.icon || "globe",
+            baseMin: service.baseMin || 0,
+            baseMax: service.baseMax || 0,
+          }));
+          setServices(converted);
+        }
       } catch {}
       setLoading(false);
     };
