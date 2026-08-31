@@ -5,12 +5,7 @@ import { motion, useInView } from "framer-motion";
 import {
   ArrowRight,
   Check,
-  Briefcase,
-  Layers,
-  Clock,
-  Wallet,
   Sparkles,
-  AlertCircle,
 } from "lucide-react";
 import Link from "next/link";
 import { useLang } from "@/lib/providers";
