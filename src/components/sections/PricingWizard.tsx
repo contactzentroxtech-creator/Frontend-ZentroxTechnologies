@@ -5,6 +5,7 @@ import { motion, useInView } from "framer-motion";
 import { ArrowRight, Search, PenTool, Code, Rocket } from "lucide-react";
 import Link from "next/link";
 import { useLang } from "@/lib/providers";
+import ScrollTilt from "@/components/ui/ScrollTilt";
 
 const STEPS = [
   {
@@ -60,10 +61,10 @@ function StepCard({
         <span className="mt-3 block text-xs font-medium text-blue-600">
           Step {step.number}
         </span>
-        <h3 className="mt-1 text-base font-semibold text-slate-900">
+        <h3 className="mt-1 text-base font-semibold text-slate-800">
           {step.title}
         </h3>
-        <p className="mt-2 text-sm leading-relaxed text-slate-500">
+        <p className="mt-2 text-sm leading-relaxed text-slate-600">
           {step.desc}
         </p>
       </div>
@@ -81,34 +82,33 @@ export default function PricingWizard() {
       className="bg-white px-4 py-16 sm:py-20 md:px-6 md:py-24 lg:py-28"
     >
       <div className="mx-auto max-w-7xl">
-        {/* Header */}
         <div className="mx-auto mb-12 max-w-3xl text-center sm:mb-14">
           <span className="text-xs font-medium uppercase tracking-wider text-blue-600">
             {t("pricing.badge")}
           </span>
           <h2
             id="process-heading"
-            className="mt-2 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl"
+            className="mt-2 text-3xl font-semibold tracking-tight text-slate-800 sm:text-4xl"
           >
             {t("pricing.title")}
           </h2>
-          <p className="mt-3 text-base leading-relaxed text-slate-500 sm:text-lg">
+          <p className="mt-3 text-base leading-relaxed text-slate-600 sm:text-lg">
             {t("pricing.sub")}
           </p>
         </div>
 
-        {/* Steps Grid */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {STEPS.map((step, index) => (
-            <StepCard key={step.number} step={step} index={index} />
+            <ScrollTilt key={step.number} tiltIntensity={4} scaleRange={0.05}>
+              <StepCard step={step} index={index} />
+            </ScrollTilt>
           ))}
         </div>
 
-        {/* Bottom CTA */}
         <div className="mt-12 text-center">
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-medium text-white transition-all hover:bg-blue-700 hover:shadow-md"
+            className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-medium text-white shadow-md transition-all hover:bg-blue-700 hover:shadow-lg"
           >
             {t("pricing.consultation")}
             <ArrowRight size={16} />
