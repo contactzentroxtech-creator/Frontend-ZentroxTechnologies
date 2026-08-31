@@ -78,7 +78,7 @@ export default function ScrollTilt({
 
   return (
     <div ref={containerRef} className={className}>
-      <div ref={childRef} className="h-full w-full">
+      <div ref={childRef} className="h-full w-full" style={{ display: "block" }}>
         {children}
       </div>
     </div>
