@@ -21,22 +21,18 @@ export default function CTASection() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
         >
-          {/* Badge */}
           <span className="inline-block text-xs font-medium uppercase tracking-wider text-blue-400">
             LET'S BUILD SOMETHING GREAT TOGETHER
           </span>
 
-          {/* Heading */}
           <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl lg:text-5xl">
             Have a Digital Product in Mind?
           </h2>
 
-          {/* Subtext */}
           <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-gray-300 sm:text-lg">
             Let's turn your idea into a practical digital solution.
           </p>
 
-          {/* Buttons */}
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <Link
               href="/contact"
@@ -63,7 +59,6 @@ export default function CTASection() {
             </a>
           </div>
 
-          {/* Trust Badges */}
           <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-xs text-gray-400">
             <span className="flex items-center gap-1.5">
               <span className="inline-block h-1.5 w-1.5 rounded-full bg-blue-500" />
