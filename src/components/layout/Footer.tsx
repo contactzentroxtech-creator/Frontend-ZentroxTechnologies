@@ -51,11 +51,12 @@ const socialLinks = [
 ];
 
 export default function Footer() {
+  const { t } = useLang();
+
   return (
-    <footer className="border-t border-gray-200/80 bg-white/90 backdrop-blur-sm">
+    <footer className="border-t border-gray-200 bg-white">
       <div className="mx-auto max-w-7xl px-4 pt-12 pb-6 md:px-6">
         <div className="mb-10 grid grid-cols-2 gap-6 md:grid-cols-4 lg:grid-cols-4 lg:gap-10">
-          {/* Brand Column */}
           <div className="col-span-2 lg:col-span-1">
             <div className="mb-4 flex items-center gap-2.5">
               <Image
@@ -69,25 +70,24 @@ export default function Footer() {
               <span className="text-lg font-semibold text-slate-900">
                 Zentrox
                 <span className="font-light text-slate-500">Technologies</span>
-                <span className="ml-1 inline-block h-2 w-2 rounded-full bg-blue-600" />
               </span>
             </div>
 
-            <p className="mb-4 text-sm leading-relaxed text-slate-500">
+            <p className="mb-4 text-sm text-slate-600">
               MSME-registered technology company building digital solutions for growing businesses.
             </p>
 
-            <div className="mb-6 flex flex-col gap-1.5 text-sm text-slate-500">
+            <div className="mb-6 flex flex-col gap-1.5 text-sm text-slate-600">
               <a
                 href="mailto:contact.zentroxtech@gmail.com"
-                className="flex items-center gap-2.5 transition-colors hover:text-slate-900"
+                className="flex items-center gap-2.5 hover:text-blue-600"
               >
                 <Mail size={15} className="text-blue-600" />
                 contact.zentroxtech@gmail.com
               </a>
               <a
                 href="tel:+918988183513"
-                className="flex items-center gap-2.5 transition-colors hover:text-slate-900"
+                className="flex items-center gap-2.5 hover:text-blue-600"
               >
                 <Phone size={15} className="text-blue-600" />
                 +91 89881 83513
@@ -108,7 +108,7 @@ export default function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social.label}
-                    className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 text-slate-400 transition-all hover:border-blue-300 hover:text-blue-600"
+                    className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 text-slate-400 hover:border-blue-300 hover:text-blue-600"
                   >
                     <Icon size={14} />
                   </a>
@@ -117,9 +117,8 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Services */}
           <div>
-            <h4 className="mb-4 text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-400">
+            <h4 className="mb-4 text-xs font-semibold uppercase tracking-[0.08em] text-slate-400">
               Services
             </h4>
             <ul className="flex flex-col gap-1.5">
@@ -127,7 +126,7 @@ export default function Footer() {
                 <li key={s}>
                   <Link
                     href="/services"
-                    className="text-sm text-slate-500 transition-colors hover:text-slate-900"
+                    className="text-sm text-slate-600 hover:text-blue-600"
                   >
                     {s}
                   </Link>
@@ -136,9 +135,8 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Company */}
           <div>
-            <h4 className="mb-4 text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-400">
+            <h4 className="mb-4 text-xs font-semibold uppercase tracking-[0.08em] text-slate-400">
               Company
             </h4>
             <ul className="flex flex-col gap-1.5">
@@ -146,7 +144,7 @@ export default function Footer() {
                 <li key={c.href}>
                   <Link
                     href={c.href}
-                    className="text-sm text-slate-500 transition-colors hover:text-slate-900"
+                    className="text-sm text-slate-600 hover:text-blue-600"
                   >
                     {c.label}
                   </Link>
@@ -155,9 +153,8 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Locations */}
           <div>
-            <h4 className="mb-4 text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-400">
+            <h4 className="mb-4 text-xs font-semibold uppercase tracking-[0.08em] text-slate-400">
               Locations
             </h4>
             <ul className="flex flex-col gap-1.5">
@@ -165,12 +162,9 @@ export default function Footer() {
                 <li key={l.href}>
                   <Link
                     href={l.href}
-                    className="group flex items-start gap-1 text-sm text-slate-500 transition-colors hover:text-slate-900"
+                    className="flex items-start gap-1 text-sm text-slate-600 hover:text-blue-600"
                   >
-                    <ArrowUpRight
-                      size={12}
-                      className="mt-0.5 flex-shrink-0 text-blue-600 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                    />
+                    <ArrowUpRight size={12} className="mt-0.5 flex-shrink-0 text-blue-600" />
                     {l.label}
                   </Link>
                 </li>
@@ -179,12 +173,11 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="flex flex-col items-center justify-between gap-4 border-t border-gray-200/60 pt-6 md:flex-row">
-          <p className="text-center text-xs text-slate-400 md:text-left">
+        <div className="flex flex-col items-center justify-between gap-4 border-t border-gray-200 pt-6 md:flex-row">
+          <p className="text-center text-xs text-slate-500 md:text-left">
             &copy; {new Date().getFullYear()} Zentrox Technologies. All rights reserved. MSME Registered — India.
           </p>
-          <div className="flex items-center gap-2 text-xs text-slate-400">
+          <div className="flex items-center gap-2 text-xs text-slate-500">
             <span className="flex items-center gap-1.5">
               <span className="inline-block h-1.5 w-1.5 rounded-full bg-blue-600" />
               Remote-First · Innovation-Driven
