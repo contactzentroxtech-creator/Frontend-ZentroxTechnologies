@@ -4,10 +4,8 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, Mail, Phone } from "lucide-react";
-import { useLang } from "@/lib/providers";
 
 export default function CTASection() {
-  const { t } = useLang();
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.2 });
 
