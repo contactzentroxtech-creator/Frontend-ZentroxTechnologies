@@ -34,7 +34,6 @@ export default function HeroSection() {
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-12">
-          {/* Left Content */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -88,7 +87,6 @@ export default function HeroSection() {
             </div>
           </motion.div>
 
-          {/* Right - Browser Mockup */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
