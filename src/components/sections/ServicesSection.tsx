@@ -135,46 +135,25 @@ function ServiceCard({
       initial={{ opacity: 0, y: 25 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.4, delay: Math.min(index * 0.06, 0.4) }}
-      whileHover={{ y: -4 }}
+      whileHover={{ y: -6 }}
       className="group relative"
     >
-      <Link
-        href="/services"
-        className="block h-full"
-      >
-        <div
-          className="
-            relative h-full min-h-[200px] rounded-xl
-            border border-gray-200/80
-            bg-white p-6
-            shadow-sm
-            transition-all duration-300
-            hover:border-blue-300
-            hover:shadow-md
-          "
-        >
+      <Link href="/services" className="block h-full">
+        <div className="relative h-full min-h-[220px] rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-300 hover:border-blue-300 hover:shadow-lg hover:-translate-y-1">
           <span className="text-[11px] font-medium tracking-wider text-blue-400">
             {String(index + 1).padStart(2, "0")}
           </span>
-
           <div
-            className="mt-3 flex h-11 w-11 items-center justify-center rounded-lg border"
+            className="mt-3 flex h-12 w-12 items-center justify-center rounded-lg border"
             style={{
               backgroundColor: `${service.color}10`,
               borderColor: `${service.color}20`,
             }}
           >
-            <Icon size={20} style={{ color: service.color }} />
+            <Icon size={22} style={{ color: service.color }} />
           </div>
-
-          <h3 className="mt-4 text-base font-semibold text-slate-900">
-            {title}
-          </h3>
-
-          <p className="mt-2 text-sm leading-relaxed text-slate-500 line-clamp-3">
-            {description}
-          </p>
-
+          <h3 className="mt-4 text-lg font-semibold text-slate-800 group-hover:text-blue-600 transition-colors">{title}</h3>
+          <p className="mt-2 text-sm leading-relaxed text-slate-600 line-clamp-3">{description}</p>
           <div className="mt-4 flex items-center gap-1.5 text-sm font-medium text-blue-600 transition-all group-hover:gap-2.5">
             {t("services.explore")}
             <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
@@ -190,43 +169,22 @@ export default function ServicesSection() {
   const { t } = useLang();
 
   return (
-    <section
-      id="services"
-      aria-labelledby="services-heading"
-      className="bg-white px-4 py-16 sm:py-20 md:px-6 md:py-24 lg:py-28"
-    >
+    <section id="services" className="bg-white px-4 py-16 sm:py-20 md:px-6 md:py-24 lg:py-28">
       <div ref={ref} className="mx-auto max-w-7xl">
-        {/* Header */}
         <div className="mx-auto mb-12 max-w-3xl text-center sm:mb-14">
-          <span className="text-xs font-medium uppercase tracking-wider text-blue-600">
-            {t("services.badge")}
-          </span>
-          <h2
-            id="services-heading"
-            className="mt-2 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl"
-          >
-            {t("services.title")}
-          </h2>
-          <p className="mt-3 text-base leading-relaxed text-slate-500 sm:text-lg">
-            {t("services.sub")}
-          </p>
+          <span className="text-xs font-medium uppercase tracking-wider text-blue-600">{t("services.badge")}</span>
+          <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-800 sm:text-4xl">{t("services.title")}</h2>
+          <p className="mt-3 text-base leading-relaxed text-slate-600 sm:text-lg">{t("services.sub")}</p>
         </div>
-
-        {/* Grid with 3D Scroll Tilt */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
           {SERVICES.map((service, index) => (
-            <ScrollTilt key={service.id} tiltIntensity={4} scaleRange={0.05}>
+            <ScrollTilt key={service.id} tiltIntensity={6} scaleRange={0.06}>
               <ServiceCard service={service} index={index} />
             </ScrollTilt>
           ))}
         </div>
-
-        {/* CTA */}
         <div className="mt-12 text-center">
-          <Link
-            href="/services"
-            className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-medium text-white transition-all hover:bg-blue-700 hover:shadow-md"
-          >
+          <Link href="/services" className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-7 py-3 text-sm font-medium text-white shadow-md transition-all hover:bg-blue-700 hover:shadow-lg">
             {t("services.view_all")}
             <ArrowRight size={16} />
           </Link>
