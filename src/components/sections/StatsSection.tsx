@@ -166,19 +166,18 @@ export default function StatsSection() {
     >
       <div ref={ref} className="mx-auto max-w-7xl">
         <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-12">
-          {/* Left Content */}
           <div>
             <span className="text-xs font-medium uppercase tracking-wider text-blue-600">
               {t("stats.trust")}
             </span>
-            <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+            <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-800 sm:text-4xl">
               {t("stats.title")}
             </h2>
-            <p className="mt-3 text-base leading-relaxed text-slate-500">
+            <p className="mt-3 text-base leading-relaxed text-slate-600">
               {t("stats.description")}
             </p>
 
-            <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm text-slate-500">
+            <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm text-slate-600">
               {locations.map((loc) => (
                 <span key={loc} className="flex items-center gap-1.5">
                   <span className="h-1.5 w-1.5 rounded-full bg-blue-600" />
@@ -188,7 +187,6 @@ export default function StatsSection() {
             </div>
           </div>
 
-          {/* Stats Grid */}
           <div className="grid grid-cols-2 gap-4 sm:gap-5">
             {stats.map((stat, index) => (
               <motion.div
@@ -198,14 +196,14 @@ export default function StatsSection() {
                 transition={{ duration: 0.4, delay: index * 0.08 }}
                 className="rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm transition-all hover:border-blue-300 hover:shadow-md"
               >
-                <div className="text-3xl font-semibold text-slate-900 sm:text-4xl">
+                <div className="text-3xl font-semibold text-slate-800 sm:text-4xl">
                   {stat.custom ? (
                     stat.custom
                   ) : (
                     <AnimatedCounter target={stat.num ?? 0} suffix={stat.suffix} />
                   )}
                 </div>
-                <p className="mt-1.5 text-sm text-slate-500">
+                <p className="mt-1.5 text-sm text-slate-600">
                   {t(stat.labelKey, stat.label)}
                 </p>
               </motion.div>
