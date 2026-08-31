@@ -80,7 +80,7 @@ export default function FloatingCTA() {
               transition={{ delay: 0.5, type: 'spring', damping: 25 }}
               className="fixed bottom-6 left-1/2 z-40 w-[calc(100%-2rem)] max-w-lg -translate-x-1/2"
             >
-              <div className="flex items-center justify-between rounded-2xl border border-gray-200/80 bg-white/90 px-5 py-3.5 shadow-lg shadow-gray-200/50 backdrop-blur-md dark:border-gray-800/20 dark:bg-gray-900/90 dark:shadow-black/30">
+              <div className="flex items-center justify-between rounded-2xl border border-gray-200 bg-white px-5 py-3.5 shadow-lg shadow-gray-200/50 backdrop-blur-md dark:border-gray-700 dark:bg-gray-900 dark:shadow-black/30">
                 <div className="flex min-w-0 flex-1 items-center gap-3">
                   <Sparkles size={16} className="flex-shrink-0 text-blue-600" />
                   <span className="truncate text-sm font-medium text-gray-800 dark:text-gray-200">
