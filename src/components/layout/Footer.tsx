@@ -34,13 +34,6 @@ const company = [
   { label: "Terms of Service", href: "/terms" },
 ];
 
-const learning = [
-  { label: "All Courses", href: "/courses" },
-  { label: "View Our Work", href: "/#work" },
-  { label: "Student Dashboard", href: "/dashboard" },
-  { label: "Verify Certificate", href: "/verify" },
-];
-
 const locations = [
   { label: "Web Development — Mohali", href: "/locations/web-development-mohali" },
   { label: "SEO — Chandigarh", href: "/locations/seo-chandigarh" },
@@ -63,8 +56,8 @@ export default function Footer() {
   return (
     <footer className="border-t border-gray-200/80 bg-white/90 backdrop-blur-sm">
       <div className="mx-auto max-w-7xl px-4 pt-12 pb-6 md:px-6">
-        {/* Main Grid */}
-        <div className="mb-10 grid grid-cols-2 gap-6 md:grid-cols-4 lg:grid-cols-5 lg:gap-10">
+        {/* Main Grid - Learning Section Removed */}
+        <div className="mb-10 grid grid-cols-2 gap-6 md:grid-cols-4 lg:grid-cols-4 lg:gap-10">
           {/* Brand Column */}
           <div className="col-span-2 lg:col-span-1">
             <div className="mb-4 flex items-center gap-2.5">
@@ -79,7 +72,7 @@ export default function Footer() {
               <span className="text-lg font-semibold text-slate-900">
                 Zentrox
                 <span className="font-light text-slate-500">Technologies</span>
-                <span className="ml-1 inline-block h-2 w-2 rounded-full bg-amber-600" />
+                <span className="ml-1 inline-block h-2 w-2 rounded-full bg-blue-600" />
               </span>
             </div>
 
@@ -92,18 +85,18 @@ export default function Footer() {
                 href="mailto:contact.zentroxtech@gmail.com"
                 className="flex items-center gap-2.5 transition-colors hover:text-slate-900"
               >
-                <Mail size={15} className="text-amber-600" />
+                <Mail size={15} className="text-blue-600" />
                 contact.zentroxtech@gmail.com
               </a>
               <a
                 href="tel:+918988183513"
                 className="flex items-center gap-2.5 transition-colors hover:text-slate-900"
               >
-                <Phone size={15} className="text-amber-600" />
+                <Phone size={15} className="text-blue-600" />
                 +91 89881 83513
               </a>
               <span className="flex items-center gap-2.5">
-                <MapPin size={15} className="text-amber-600" />
+                <MapPin size={15} className="text-blue-600" />
                 Mohali & Chandigarh, Punjab
               </span>
             </div>
@@ -118,7 +111,7 @@ export default function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social.label}
-                    className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 text-slate-400 transition-all hover:border-gray-300 hover:text-slate-900"
+                    className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 text-slate-400 transition-all hover:border-blue-300 hover:text-blue-600"
                   >
                     <Icon size={14} />
                   </a>
@@ -130,7 +123,7 @@ export default function Footer() {
           {/* Services */}
           <div>
             <h4 className="mb-4 text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-400">
-              {t("nav.services")}
+              Services
             </h4>
             <ul className="flex flex-col gap-1.5">
               {services.map((s) => (
@@ -165,25 +158,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Learning */}
-          <div>
-            <h4 className="mb-4 text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-400">
-              Learning
-            </h4>
-            <ul className="flex flex-col gap-1.5">
-              {learning.map((l) => (
-                <li key={l.href}>
-                  <Link
-                    href={l.href}
-                    className="text-sm text-slate-500 transition-colors hover:text-slate-900"
-                  >
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
           {/* Locations */}
           <div>
             <h4 className="mb-4 text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-400">
@@ -198,7 +172,7 @@ export default function Footer() {
                   >
                     <ArrowUpRight
                       size={12}
-                      className="mt-0.5 flex-shrink-0 text-amber-600 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                      className="mt-0.5 flex-shrink-0 text-blue-600 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                     />
                     {l.label}
                   </Link>
@@ -211,13 +185,12 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="flex flex-col items-center justify-between gap-4 border-t border-gray-200/60 pt-6 md:flex-row">
           <p className="text-center text-xs text-slate-400 md:text-left">
-            &copy; {new Date().getFullYear()} Zentrox Technologies.{" "}
-            {t("footer.copy")}
+            &copy; {new Date().getFullYear()} Zentrox Technologies. All rights reserved. MSME Registered — India.
           </p>
           <div className="flex items-center gap-2 text-xs text-slate-400">
             <span className="flex items-center gap-1.5">
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-600" />
-              {t("footer.msme")}
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-blue-600" />
+              Remote-First · Innovation-Driven
             </span>
           </div>
         </div>
