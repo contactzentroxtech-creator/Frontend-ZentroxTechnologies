@@ -37,6 +37,7 @@ export default function Navbar() {
   }, [pathname]);
 
   const navLinks = [
+    { label: "Home", href: "/" },
     { label: t("nav.services"), href: "/services" },
     { label: t("nav.about"), href: "/about" },
     { label: t("nav.blog"), href: "/blog" },
@@ -50,55 +51,40 @@ export default function Navbar() {
 
   return (
     <header
-      className={`
-        fixed inset-x-0 top-0 z-50 transition-all duration-300
-        ${
-          scrolled
-            ? "bg-white/90 shadow-sm backdrop-blur-md border-b border-gray-100"
-            : "bg-white/80 backdrop-blur-sm"
-        }
-      `}
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "bg-white shadow-sm border-b border-gray-200"
+          : "bg-white border-b border-gray-100"
+      }`}
     >
       <nav className="mx-auto flex h-[68px] max-w-7xl items-center justify-between px-4 md:px-6">
-        {/* Logo */}
-        <Link
-          href="/"
-          className="group relative z-10 flex flex-shrink-0 items-center gap-2"
-        >
+        <Link href="/" className="flex flex-shrink-0 items-center gap-2">
           <Image
             src="/Zentrox-Logo1.png"
             alt="Zentrox Technologies"
             width={36}
             height={36}
             priority
-            className="relative"
           />
-          <span className="text-lg font-semibold tracking-tight text-slate-900">
+          <span className="text-lg font-semibold text-slate-900">
             Zentrox<span className="font-light text-slate-500">Technologies</span>
-            <span className="ml-1 inline-block h-2 w-2 rounded-full bg-amber-600" />
           </span>
         </Link>
 
-        {/* Desktop Navigation */}
         <div className="hidden items-center gap-8 lg:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className={`
-                text-sm font-medium transition-colors relative
-                ${isActive(link.href) ? "text-slate-900" : "text-slate-500 hover:text-slate-900"}
-              `}
+              className={`text-sm font-medium ${
+                isActive(link.href) ? "text-blue-600" : "text-slate-600 hover:text-blue-600"
+              }`}
             >
               {link.label}
-              {isActive(link.href) && (
-                <span className="absolute -bottom-1 left-0 h-0.5 w-full bg-amber-600 rounded-full" />
-              )}
             </Link>
           ))}
         </div>
 
-        {/* Desktop Actions */}
         <div className="hidden items-center gap-3 lg:flex">
           {user ? (
             <div className="flex items-center gap-3">
@@ -110,7 +96,7 @@ export default function Navbar() {
                   await logout();
                   window.location.href = "/";
                 }}
-                className="text-sm text-slate-500 hover:text-slate-900 transition-colors"
+                className="text-sm text-slate-500 hover:text-slate-900"
               >
                 Logout
               </button>
@@ -119,13 +105,13 @@ export default function Navbar() {
             <>
               <Link
                 href="/auth/login"
-                className="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors"
+                className="text-sm font-medium text-slate-600 hover:text-blue-600"
               >
                 Login
               </Link>
               <Link
                 href="/contact"
-                className="flex items-center gap-2 rounded-full bg-slate-900 px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-slate-800 hover:shadow-md"
+                className="flex items-center gap-2 rounded-full bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700"
               >
                 {t("nav.get_started")}
                 <ArrowRight size={15} />
@@ -134,26 +120,21 @@ export default function Navbar() {
           )}
         </div>
 
-        {/* Mobile Menu Button */}
         <button
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white/80 text-slate-700 transition-all hover:border-gray-300 lg:hidden"
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-slate-700 lg:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle navigation menu"
-          aria-expanded={mobileOpen}
         >
           {mobileOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </nav>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25 }}
-            className="overflow-hidden border-t border-gray-100 bg-white lg:hidden"
+            className="overflow-hidden border-t border-gray-200 bg-white lg:hidden"
           >
             <div className="mx-auto max-w-7xl px-4 py-6">
               <div className="flex flex-col gap-1">
@@ -161,24 +142,22 @@ export default function Navbar() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`
-                      rounded-lg px-4 py-3 text-sm font-medium transition-colors
-                      ${isActive(link.href) ? "bg-gray-100 text-slate-900" : "text-slate-500 hover:bg-gray-50 hover:text-slate-900"}
-                    `}
+                    className={`rounded-lg px-4 py-3 text-sm font-medium ${
+                      isActive(link.href) ? "bg-blue-50 text-blue-600" : "text-slate-600 hover:bg-gray-50"
+                    }`}
                   >
                     {link.label}
                   </Link>
                 ))}
               </div>
-
-              <div className="mt-6 border-t border-gray-100 pt-6">
+              <div className="mt-6 border-t border-gray-200 pt-6">
                 {user ? (
                   <button
                     onClick={async () => {
                       await logout();
                       window.location.href = "/";
                     }}
-                    className="w-full rounded-lg border border-gray-200 py-3 text-center text-sm font-medium text-slate-700 hover:bg-gray-50"
+                    className="w-full rounded-lg border border-gray-200 py-3 text-center text-sm font-medium text-slate-700"
                   >
                     Logout
                   </button>
@@ -186,13 +165,13 @@ export default function Navbar() {
                   <div className="grid grid-cols-2 gap-3">
                     <Link
                       href="/auth/login"
-                      className="rounded-lg border border-gray-200 py-3 text-center text-sm font-medium text-slate-700 hover:bg-gray-50"
+                      className="rounded-lg border border-gray-200 py-3 text-center text-sm font-medium text-slate-700"
                     >
                       Login
                     </Link>
                     <Link
                       href="/contact"
-                      className="rounded-lg bg-slate-900 py-3 text-center text-sm font-medium text-white hover:bg-slate-800"
+                      className="rounded-lg bg-blue-600 py-3 text-center text-sm font-medium text-white"
                     >
                       {t("nav.get_started")}
                     </Link>

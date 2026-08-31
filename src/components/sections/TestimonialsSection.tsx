@@ -30,18 +30,16 @@ const TESTIMONIALS = [
 
 function TestimonialCard({ testimonial }: { testimonial: (typeof TESTIMONIALS)[0] }) {
   return (
-    <div className="flex flex-col rounded-xl border border-gray-200/80 bg-white p-6 shadow-sm transition-all hover:border-gray-300 hover:shadow-md">
+    <div className="flex flex-col rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:border-blue-300 hover:shadow-md">
       <div className="flex gap-0.5">
         {Array.from({ length: 5 }).map((_, i) => (
-          <Star key={i} size={14} className="fill-amber-500 text-amber-500" />
+          <Star key={i} size={14} className="fill-blue-500 text-blue-500" />
         ))}
       </div>
-      <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-slate-600">
-        “{testimonial.text}”
-      </blockquote>
+      <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-slate-700">“{testimonial.text}”</blockquote>
       <div className="mt-4 border-t border-gray-100 pt-4">
-        <div className="font-semibold text-slate-900">{testimonial.name}</div>
-        <div className="text-sm text-slate-500">{testimonial.role}</div>
+        <div className="font-semibold text-slate-800">{testimonial.name}</div>
+        <div className="text-sm text-slate-600">{testimonial.role}</div>
       </div>
     </div>
   );
@@ -64,78 +62,45 @@ export default function TestimonialsSection() {
 
   useEffect(() => {
     if (!isAutoPlaying) return;
-    const interval = setInterval(() => {
-      goToSlide(currentIndex + 1);
-    }, 5000);
+    const interval = setInterval(() => { goToSlide(currentIndex + 1); }, 5000);
     return () => clearInterval(interval);
   }, [currentIndex, isAutoPlaying, totalSlides]);
 
   return (
-    <section
-      id="testimonials"
-      aria-labelledby="testimonials-heading"
-      className="bg-slate-50/70 px-4 py-16 sm:py-20 md:px-6 md:py-24 lg:py-28"
-      ref={ref}
-    >
+    <section id="testimonials" className="bg-slate-50/70 px-4 py-16 sm:py-20 md:px-6 md:py-24 lg:py-28" ref={ref}>
       <div className="mx-auto max-w-4xl">
-        {/* Header */}
         <div className="mx-auto mb-12 max-w-3xl text-center sm:mb-14">
-          <span className="text-xs font-medium uppercase tracking-wider text-amber-600">
-            {t("testimonials.badge")}
-          </span>
-          <h2
-            id="testimonials-heading"
-            className="mt-2 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl"
-          >
-            {t("testimonials.title")}
-          </h2>
-          <p className="mt-3 text-base leading-relaxed text-slate-500 sm:text-lg">
-            {t("testimonials.sub")}
-          </p>
+          <span className="text-xs font-medium uppercase tracking-wider text-blue-600">{t("testimonials.badge")}</span>
+          <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-800 sm:text-4xl">{t("testimonials.title")}</h2>
+          <p className="mt-3 text-base leading-relaxed text-slate-600 sm:text-lg">{t("testimonials.sub")}</p>
         </div>
-
-        {/* Slider */}
         <div className="relative overflow-hidden">
-          <div
-            className="flex transition-transform duration-500 ease-in-out"
-            style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-          >
+          <div className="flex transition-transform duration-500 ease-in-out" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
             {TESTIMONIALS.map((testimonial, index) => (
               <div key={index} className="w-full flex-shrink-0 px-2">
                 <TestimonialCard testimonial={testimonial} />
               </div>
             ))}
           </div>
-
-          {/* Controls */}
           <div className="mt-6 flex items-center justify-center gap-3">
             <button
               onClick={() => goToSlide(currentIndex - 1)}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white text-slate-600 transition-all hover:border-gray-300 hover:bg-gray-50"
-              aria-label="Previous testimonial"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white text-slate-600 transition-all hover:border-blue-300 hover:bg-blue-50"
             >
               <ChevronLeft size={18} />
             </button>
-
             <div className="flex gap-1.5">
               {TESTIMONIALS.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => goToSlide(index)}
-                  className={`h-2 rounded-full transition-all ${
-                    currentIndex === index
-                      ? "w-6 bg-amber-600"
-                      : "w-2 bg-gray-300 hover:bg-gray-400"
-                  }`}
-                  aria-label={`Go to testimonial ${index + 1}`}
+                  className={`h-2 rounded-full transition-all ${currentIndex === index ? "w-6 bg-blue-600" : "w-2 bg-gray-300 hover:bg-gray-400"}`}
                 />
               ))}
             </div>
-
             <button
               onClick={() => goToSlide(currentIndex + 1)}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white text-slate-600 transition-all hover:border-gray-300 hover:bg-gray-50"
-              aria-label="Next testimonial"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white text-slate-600 transition-all hover:border-blue-300 hover:bg-blue-50"
             >
               <ChevronRight size={18} />
             </button>

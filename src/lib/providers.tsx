@@ -10,8 +10,6 @@ import React, {
 } from "react";
 import api from "@/lib/api";
 
-// ─── THEME – Light Only ──────────────────────────────────────────────────
-
 interface ThemeCtx {
   theme: "light";
 }
@@ -34,8 +32,6 @@ const LangContext = createContext<LangCtx>({
   loadingTranslations: false,
 });
 
-// ─── English Translations ──────────────────────────────────────────────────
-
 const STATIC_FALLBACKS: Record<string, string> = {
   "nav.services": "Services",
   "nav.blog": "Insights",
@@ -43,8 +39,8 @@ const STATIC_FALLBACKS: Record<string, string> = {
   "nav.contact": "Contact",
   "nav.get_started": "Start a Project",
 
-  "hero.badge": "MSME Registered · Remote-First",
-  "hero.line1": "Building Digital Solutions That",
+  "hero.badge": "Mohali & Chandigarh — MSME Registered Technology Company",
+  "hero.line1": "We Build",
   "hero.line2": "Move Businesses Forward.",
   "hero.sub":
     "Zentrox Technologies helps businesses turn ideas into reliable software, websites, mobile applications and digital growth solutions.",
@@ -57,7 +53,7 @@ const STATIC_FALLBACKS: Record<string, string> = {
   "services.view_all": "View All Services",
   "services.cta_title": "Have a Project in Mind?",
   "services.cta_sub": "Let's discuss how we can help you build the right solution.",
-  "services.explore": "Learn More",
+  "services.explore": "Explore Service",
 
   "service.software.title": "Software Development",
   "service.software.desc": "Scalable custom software designed around your business processes, workflows and operational needs.",
@@ -95,7 +91,6 @@ const STATIC_FALLBACKS: Record<string, string> = {
   "global.badge": "Industries",
   "global.title": "Built for Different Industries",
   "global.sub": "Every industry has different workflows, customers and challenges. Our approach starts by understanding the business before choosing the technology.",
-
   "global.trust.location": "India & Worldwide",
   "global.trust.business": "Business-Focused Solutions",
   "global.trust.delivery": "Reliable Project Delivery",
@@ -134,11 +129,6 @@ const STATIC_FALLBACKS: Record<string, string> = {
   "pricing.next": "Next",
   "pricing.get_quote": "Get Started",
   "pricing.consultation": "Start Your Project",
-  "pricing.business_type": "What type of business do you have?",
-  "pricing.complexity": "Project Complexity",
-  "pricing.budget": "Estimated Project Budget",
-  "pricing.timeline": "When do you need the project?",
-  "pricing.addons": "Optional Features",
 
   "testimonials.badge": "Testimonials",
   "testimonials.title": "What Our Clients Say",
@@ -193,8 +183,6 @@ const STATIC_FALLBACKS: Record<string, string> = {
 
 export { STATIC_FALLBACKS };
 
-// ─── THEME PROVIDER – Light Only ──────────────────────────────────────────
-
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     document.documentElement.classList.remove("dark");
@@ -208,8 +196,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     </ThemeContext.Provider>
   );
 }
-
-// ─── LANGUAGE PROVIDER – English Only ──────────────────────────────────────
 
 export function LangProvider({ children }: { children: React.ReactNode }) {
   const [translations, setTranslations] = useState<Record<string, string>>(
@@ -266,8 +252,6 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
     </LangContext.Provider>
   );
 }
-
-// ─── MAIN APP PROVIDERS ──────────────────────────────────────────────────────
 
 export function AppProviders({ children }: { children: React.ReactNode }) {
   return (
