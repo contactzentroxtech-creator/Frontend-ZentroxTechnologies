@@ -12,7 +12,7 @@ export default function CTASection() {
   return (
     <section
       id="cta"
-      className="bg-slate-900 px-4 py-20 sm:py-24 md:px-6 md:py-28 lg:py-32"
+      className="bg-white px-4 py-20 sm:py-24 md:px-6 md:py-28 lg:py-32"
       ref={ref}
     >
       <div className="mx-auto max-w-4xl text-center">
@@ -21,15 +21,15 @@ export default function CTASection() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
         >
-          <span className="inline-block text-xs font-medium uppercase tracking-wider text-blue-400">
+          <span className="inline-block text-xs font-medium uppercase tracking-wider text-blue-600">
             LET'S BUILD SOMETHING GREAT TOGETHER
           </span>
 
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl lg:text-5xl">
+          <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-800 sm:text-4xl lg:text-5xl">
             Have a Digital Product in Mind?
           </h2>
 
-          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-gray-300 sm:text-lg">
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">
             Let's turn your idea into a practical digital solution.
           </p>
 
@@ -59,17 +59,17 @@ export default function CTASection() {
             </a>
           </div>
 
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-xs text-gray-400">
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-xs text-slate-500">
             <span className="flex items-center gap-1.5">
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-blue-500" />
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-blue-600" />
               MSME Registered
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-blue-500" />
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-blue-600" />
               Remote-First
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-blue-500" />
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-blue-600" />
               Innovation-Driven
             </span>
           </div>
