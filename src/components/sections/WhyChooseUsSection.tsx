@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useLang } from "@/lib/providers";
+import ScrollTilt from "@/components/ui/ScrollTilt";
 
 const REASONS = [
   {
@@ -108,10 +109,12 @@ export default function WhyChooseUsSection() {
           </p>
         </div>
 
-        {/* Grid */}
+        {/* Grid with 3D Scroll Tilt */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {REASONS.map((reason, index) => (
-            <ReasonCard key={reason.titleFB} reason={reason} index={index} />
+            <ScrollTilt key={reason.titleFB} tiltIntensity={4} scaleRange={0.05}>
+              <ReasonCard reason={reason} index={index} />
+            </ScrollTilt>
           ))}
         </div>
 
