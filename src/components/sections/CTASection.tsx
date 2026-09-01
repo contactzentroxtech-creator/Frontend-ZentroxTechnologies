@@ -12,7 +12,7 @@ export default function CTASection() {
   return (
     <section
       id="cta"
-      className="bg-white px-4 py-20 sm:py-24 md:px-6 md:py-28 lg:py-32"
+      className="bg-white px-4 py-16 sm:py-20 md:px-6 md:py-24 lg:py-28"
       ref={ref}
     >
       <div className="mx-auto max-w-4xl text-center">
