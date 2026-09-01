@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import Link from "next/link";
 import { motion, useInView } from "framer-motion";
-import { ArrowRight, CheckCircle2, Code2, Globe2, Smartphone, Bot, Sparkles, Zap } from "lucide-react";
+import { ArrowRight, CheckCircle2, Code2, Globe2, Smartphone, Bot, Sparkles } from "lucide-react";
 import { useLang } from "@/lib/providers";
 
 export default function HeroSection() {
@@ -11,44 +11,39 @@ export default function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const inView = useInView(sectionRef, { once: true, amount: 0.1 });
 
-  const frameRef = useRef<HTMLDivElement>(null);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!frameRef.current) return;
-    const rect = frameRef.current.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    frameRef.current.style.transform =
-      `rotateX(${y * -6}deg) rotateY(${x * 8}deg) translateY(-6px) scale(1.02)`;
-  };
-
-  const handleMouseLeave = () => {
-    if (!frameRef.current) return;
-    frameRef.current.style.transform = "rotateX(0deg) rotateY(0deg) translateY(0px) scale(1)";
-  };
-
-  const floatingIcons = [
-    { Icon: Code2, color: "text-blue-500", delay: 0, x: -25, y: -35 },
-    { Icon: Globe2, color: "text-emerald-500", delay: 2, x: 35, y: -45 },
-    { Icon: Smartphone, color: "text-purple-500", delay: 4, x: -30, y: 40 },
-    { Icon: Bot, color: "text-amber-500", delay: 1, x: 40, y: 30 },
-    { Icon: Sparkles, color: "text-pink-400", delay: 3, x: 0, y: -55 },
-    { Icon: Zap, color: "text-yellow-400", delay: 5, x: 50, y: 0 },
+  const floatingCards = [
+    { icon: Code2, label: "Custom Software", color: "blue", top: "10%", left: "8%", delay: 0 },
+    { icon: Globe2, label: "Web Apps", color: "emerald", top: "55%", left: "70%", delay: 1 },
+    { icon: Smartphone, label: "Mobile Apps", color: "purple", top: "15%", left: "75%", delay: 2 },
+    { icon: Bot, label: "AI Solutions", color: "amber", top: "65%", left: "12%", delay: 0.5 },
   ];
+
+  const getColor = (color: string) => {
+    const colors: Record<string, string> = {
+      blue: "border-blue-200 bg-blue-50/50 text-blue-600",
+      emerald: "border-emerald-200 bg-emerald-50/50 text-emerald-600",
+      purple: "border-purple-200 bg-purple-50/50 text-purple-600",
+      amber: "border-amber-200 bg-amber-50/50 text-amber-600",
+    };
+    return colors[color] || colors.blue;
+  };
 
   return (
     <section
       ref={sectionRef}
-      className="bg-white pt-20 pb-12 md:pt-28 md:pb-16 lg:pt-36 lg:pb-24 overflow-hidden"
+      className="bg-white pt-20 pb-12 md:pt-28 md:pb-16 lg:pt-36 lg:pb-24 overflow-hidden relative"
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 items-center gap-6 lg:grid-cols-2 lg:gap-12">
+      {/* Background Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-12">
           {/* Left Content */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6 }}
-            className="flex flex-col gap-4 md:gap-6 order-1"
+            className="flex flex-col gap-4 md:gap-6"
           >
             <div className="inline-flex items-center gap-2 w-fit rounded-full border border-gray-200 bg-gray-50 px-3 py-1 md:px-4 md:py-1.5 text-[10px] md:text-xs font-medium text-slate-700">
               <span className="inline-block h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse" />
@@ -97,137 +92,64 @@ export default function HeroSection() {
             </div>
           </motion.div>
 
-          {/* Right - Browser Mockup */}
+          {/* Right - Floating Cards */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="relative flex justify-center order-2 mt-4 md:mt-0"
+            initial={{ opacity: 0 }}
+            animate={inView ? { opacity: 1 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="relative flex items-center justify-center min-h-[380px] md:min-h-[420px]"
           >
-            {/* Floating Icons - Hidden on mobile */}
-            {floatingIcons.map((item, idx) => {
-              const { Icon } = item;
+            {floatingCards.map((card, idx) => {
+              const Icon = card.icon;
               return (
                 <motion.div
                   key={idx}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={inView ? { opacity: 1, scale: 1 } : {}}
-                  transition={{ duration: 0.5, delay: 0.4 + idx * 0.1 }}
-                  className={`absolute ${item.color} hidden lg:block`}
+                  initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                  animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
+                  transition={{ duration: 0.5, delay: 0.3 + idx * 0.1 }}
+                  className={`absolute ${getColor(card.color)} rounded-xl border bg-white/80 backdrop-blur-sm p-4 shadow-lg w-[140px] sm:w-[160px]`}
                   style={{
-                    left: `calc(50% + ${item.x}px)`,
-                    top: `calc(50% + ${item.y}px)`,
+                    top: card.top,
+                    left: card.left,
                     transform: "translate(-50%, -50%)",
-                    zIndex: 10,
+                  }}
+                  whileHover={{
+                    y: -8,
+                    scale: 1.05,
+                    transition: { duration: 0.3 },
                   }}
                 >
-                  <motion.div
-                    animate={{
-                      y: [0, -15, 0],
-                      rotate: [0, 10, -10, 0],
-                    }}
-                    transition={{
-                      duration: 5 + idx,
-                      repeat: Infinity,
-                      delay: item.delay,
-                      ease: "easeInOut",
-                    }}
-                  >
-                    <Icon size={34} strokeWidth={1.5} className="opacity-40" />
-                  </motion.div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center">
+                      <Icon size={18} className={card.color === "blue" ? "text-blue-600" : card.color === "emerald" ? "text-emerald-600" : card.color === "purple" ? "text-purple-600" : "text-amber-600"} />
+                    </div>
+                    <span className="text-xs font-medium text-slate-700">{card.label}</span>
+                  </div>
                 </motion.div>
               );
             })}
 
-            {/* Browser Frame */}
-            <div
-              ref={frameRef}
-              onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
-              className="w-full max-w-full sm:max-w-[420px] md:max-w-[480px] lg:max-w-[520px] overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xl transition-shadow duration-300 hover:shadow-2xl relative"
-              style={{ transformStyle: "preserve-3d", perspective: "900px", zIndex: 20 }}
+            {/* Center Card - Big */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={inView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              className="relative z-10 w-[200px] sm:w-[240px] md:w-[280px] rounded-2xl border border-gray-200 bg-white shadow-xl p-6 text-center"
             >
-              {/* Animated Gradient Border Glow */}
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 opacity-20 blur-xl rounded-xl animate-pulse" />
-
-              <div className="relative bg-white rounded-xl">
-                {/* Browser Bar */}
-                <div className="flex items-center gap-1.5 sm:gap-2 border-b border-gray-100 bg-gray-50 px-3 py-2 sm:px-4 sm:py-3">
-                  <span className="h-2 w-2 sm:h-3 sm:w-3 rounded-full bg-red-400" />
-                  <span className="h-2 w-2 sm:h-3 sm:w-3 rounded-full bg-yellow-400" />
-                  <span className="h-2 w-2 sm:h-3 sm:w-3 rounded-full bg-green-400" />
-                  <span className="ml-1 sm:ml-2 rounded-full bg-white px-2 py-0.5 sm:px-3 sm:py-0.5 text-[8px] sm:text-xs text-slate-400 border border-gray-200 truncate max-w-[80px] sm:max-w-[120px] md:max-w-none">
-                    zentroxtechnologies.com
-                  </span>
-                </div>
-
-                {/* Browser Body */}
-                <div className="p-4 sm:p-6 md:p-8">
-                  <div className="mb-1 sm:mb-2 text-sm sm:text-base font-semibold text-slate-900 flex items-center gap-2">
-                    <Sparkles size={16} className="text-blue-500" />
-                    Custom Software for Growing Businesses
-                  </div>
-                  <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
-                    Built around your workflows, users and goals.
-                  </p>
-
-                  {/* Animated Stats Bars - Hidden on very small screens */}
-                  <div className="mt-3 sm:mt-4 space-y-1.5 sm:space-y-2 hidden xs:block">
-                    <div className="flex items-center gap-1.5 sm:gap-2">
-                      <span className="text-[10px] sm:text-xs font-medium text-slate-500 w-10 sm:w-16">Growth</span>
-                      <div className="h-1.5 sm:h-2 flex-1 rounded-full bg-slate-100 overflow-hidden">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          animate={inView ? { width: "85%" } : {}}
-                          transition={{ duration: 1.2, delay: 0.6 }}
-                          className="h-full rounded-full bg-gradient-to-r from-blue-500 to-blue-600"
-                        />
-                      </div>
-                      <span className="text-[10px] sm:text-xs font-medium text-slate-600">85%</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 sm:gap-2">
-                      <span className="text-[10px] sm:text-xs font-medium text-slate-500 w-10 sm:w-16">Speed</span>
-                      <div className="h-1.5 sm:h-2 flex-1 rounded-full bg-slate-100 overflow-hidden">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          animate={inView ? { width: "92%" } : {}}
-                          transition={{ duration: 1.2, delay: 0.8 }}
-                          className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-600"
-                        />
-                      </div>
-                      <span className="text-[10px] sm:text-xs font-medium text-slate-600">92%</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 sm:gap-2">
-                      <span className="text-[10px] sm:text-xs font-medium text-slate-500 w-10 sm:w-16">Satisfaction</span>
-                      <div className="h-1.5 sm:h-2 flex-1 rounded-full bg-slate-100 overflow-hidden">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          animate={inView ? { width: "96%" } : {}}
-                          transition={{ duration: 1.2, delay: 1.0 }}
-                          className="h-full rounded-full bg-gradient-to-r from-purple-500 to-purple-600"
-                        />
-                      </div>
-                      <span className="text-[10px] sm:text-xs font-medium text-slate-600">96%</span>
-                    </div>
-                  </div>
-
-                  <div className="mt-3 sm:mt-5 flex flex-wrap gap-1.5 sm:gap-2">
-                    <span className="rounded-full border border-gray-200 bg-white px-2 py-0.5 sm:px-3 sm:py-1 text-[9px] sm:text-xs font-medium text-slate-700">
-                      Web
-                    </span>
-                    <span className="rounded-full border border-gray-200 bg-white px-2 py-0.5 sm:px-3 sm:py-1 text-[9px] sm:text-xs font-medium text-slate-700">
-                      Mobile
-                    </span>
-                    <span className="rounded-full border border-blue-600 bg-blue-50 px-2 py-0.5 sm:px-3 sm:py-1 text-[9px] sm:text-xs font-medium text-blue-700">
-                      SaaS
-                    </span>
-                    <span className="rounded-full border border-gray-200 bg-white px-2 py-0.5 sm:px-3 sm:py-1 text-[9px] sm:text-xs font-medium text-slate-700">
-                      AI
-                    </span>
-                  </div>
-                </div>
+              <div className="w-12 h-12 mx-auto rounded-xl bg-blue-600/10 flex items-center justify-center mb-3">
+                <Sparkles className="w-6 h-6 text-blue-600" />
               </div>
-            </div>
+              <h3 className="text-base font-semibold text-slate-800">Zentrox</h3>
+              <p className="text-xs text-slate-500 mt-1">Technology & Growth Partner</p>
+              <div className="mt-3 flex justify-center gap-2">
+                <span className="px-2 py-0.5 text-[10px] bg-blue-100 text-blue-700 rounded-full">Web</span>
+                <span className="px-2 py-0.5 text-[10px] bg-purple-100 text-purple-700 rounded-full">Mobile</span>
+                <span className="px-2 py-0.5 text-[10px] bg-emerald-100 text-emerald-700 rounded-full">AI</span>
+              </div>
+              <div className="mt-3 h-1 w-full bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-full w-3/4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full" />
+              </div>
+            </motion.div>
           </motion.div>
         </div>
       </div>
