@@ -28,10 +28,10 @@ export default function HeroSection() {
   };
 
   const floatingIcons = [
-    { Icon: Code2, color: "text-blue-400/30", delay: 0, x: -30, y: -40 },
-    { Icon: Globe2, color: "text-emerald-400/30", delay: 2, x: 35, y: -50 },
-    { Icon: Smartphone, color: "text-purple-400/30", delay: 4, x: -35, y: 45 },
-    { Icon: Bot, color: "text-amber-400/30", delay: 1, x: 45, y: 35 },
+    { Icon: Code2, color: "text-blue-400/20", delay: 0, x: -30, y: -40 },
+    { Icon: Globe2, color: "text-emerald-400/20", delay: 2, x: 35, y: -50 },
+    { Icon: Smartphone, color: "text-purple-400/20", delay: 4, x: -35, y: 45 },
+    { Icon: Bot, color: "text-amber-400/20", delay: 1, x: 45, y: 35 },
   ];
 
   return (
@@ -102,7 +102,7 @@ export default function HeroSection() {
             transition={{ duration: 0.6, delay: 0.15 }}
             className="relative flex justify-center order-2 mt-4 md:mt-0"
           >
-            {/* Floating Icons - Subtle, no overlap */}
+            {/* Floating Icons - Subtle */}
             {floatingIcons.map((item, idx) => {
               const { Icon } = item;
               return (
