@@ -4,101 +4,56 @@ import Footer from "@/components/layout/Footer";
 import LocationPageTemplate from "@/components/seo/LocationPageTemplate";
 
 export const metadata: Metadata = {
-  title: "Digital Marketing Services Agency in Haryana — Zentrox Technologies",
+  title: "Digital Marketing Agency in Haryana | Zentrox Technologies",
   description:
-    "Top Digital Marketing Services agency in Haryana. Zentrox Technologies provides SEO, social media marketing, Google Ads, and content marketing for Haryana businesses. MSME Registered.",
+    "Looking for a digital marketing agency in Haryana? Zentrox Technologies offers SEO, social media marketing, Google Ads and growth strategies for businesses across Haryana.",
   keywords: [
-    "Digital Marketing Services agency Haryana",
-    "SEO Gurugram",
-    "Digital Marketing Services Faridabad",
+    "digital marketing Haryana",
+    "digital marketing agency Haryana",
+    "SEO services Haryana",
     "social media marketing Haryana",
     "Google Ads Haryana",
+    "online marketing company Haryana",
   ],
   alternates: {
-    canonical:
-      "https://zentroxtechnologies.com/locations/digital-marketing-haryana",
+    canonical: "https://zentroxtechnologies.com/locations/digital-marketing-haryana",
+  },
+  openGraph: {
+    title: "Digital Marketing Agency in Haryana | Zentrox Technologies",
+    description:
+      "SEO, social media marketing, Google Ads and growth strategies for businesses across Haryana.",
+    url: "https://zentroxtechnologies.com/locations/digital-marketing-haryana",
+    type: "website",
   },
 };
 
-export default function DigitalMarketingHaryanaPage() {
+export default function DigitalMarketingHaryana() {
   return (
     <>
       <Navbar />
-      <main className="pt-20">
+      <main className="bg-[#FDF8F3] pt-20">
         <LocationPageTemplate
+          title="Digital Marketing Agency in Haryana"
+          description="Zentrox Technologies helps businesses across Haryana grow with data-driven digital marketing — SEO, Google Ads, social media marketing and content strategies that deliver measurable results."
           city="Haryana"
           state="Haryana"
-          service="Digital Marketing Services"
-          serviceSlug="digital-marketing"
-          headline="Digital Marketing Services Agency in Haryana"
-          subheadline="Data-driven Digital Marketing Services for Haryana businesses — SEO, Google Ads, social media, and content marketing that delivers measurable results."
-          ctaText="Get Free Marketing Audit"
-          stats={[
-            { label: "Haryana Clients", value: "40+" },
-            { label: "Avg ROI Improvement", value: "2.5x" },
-            { label: "Campaigns Managed", value: "100+" },
+          country="India"
+          highlights={[
+            "Data-driven campaigns",
+            "SEO & content strategy",
+            "Social media marketing",
+            "Measurable growth",
           ]}
-          services={[
-            {
-              title: "SEO for Haryana Businesses",
-              desc: "Rank higher on Google for searches in Gurugram, Faridabad, Panchkula, and across Haryana.",
-            },
-            {
-              title: "Google Ads Management",
-              desc: "Performance-driven Google Ads campaigns that maximize your ROI with precise targeting.",
-            },
-            {
-              title: "Social Media Marketing",
-              desc: "Strategic social media presence on Instagram, Facebook, and LinkedIn for Haryana brands.",
-            },
-            {
-              title: "Content Marketing & Blogging",
-              desc: "SEO-optimized content strategy that establishes authority and drives organic traffic.",
-            },
+          industries={[
+            "Real Estate",
+            "E-commerce",
+            "Healthcare",
+            "Education",
+            "Retail",
+            "Manufacturing",
+            "Professional Services",
+            "Hospitality",
           ]}
-          faqs={[
-            {
-              q: "Do you serve businesses in Gurugram and Faridabad?",
-              a: "Yes, Zentrox Technologies provides Digital Marketing Services services for businesses across Haryana including Gurugram, Faridabad, Panchkula, Ambala, Karnal, and Hisar.",
-            },
-            {
-              q: "What Digital Marketing Services services do you offer in Haryana?",
-              a: "We offer complete Digital Marketing Services: SEO, Google Ads, Meta Ads, social media management, email marketing, content marketing, and analytics.",
-            },
-            {
-              q: "How do you measure Digital Marketing Services results?",
-              a: "We provide monthly detailed reports tracking rankings, traffic, leads, conversions, and ROI. Our reporting is fully transparent with no vanity metrics.",
-            },
-            {
-              q: "Do you have experience with manufacturing and industrial businesses in Haryana?",
-              a: "Yes, we have worked with industrial, manufacturing, and B2B companies in Haryana, creating targeted Digital Marketing Services strategies for these sectors.",
-            },
-          ]}
-          nearbyAreas={[
-            "Gurugram",
-            "Faridabad",
-            "Panchkula",
-            "Ambala",
-            "Karnal",
-            "Hisar",
-            "Rohtak",
-            "Sonipat",
-            "Panipat",
-            "Yamunanagar",
-          ]}
-          structuredData={{
-            "@type": "LocalBusiness",
-            name: "Zentrox Technologies",
-            description: "Digital Marketing Services Agency serving Haryana",
-            telephone: "+91-8988183513",
-            url: "https://zentroxtechnologies.com",
-            areaServed: "Haryana",
-            address: {
-              "@type": "PostalAddress",
-              addressRegion: "Haryana",
-              addressCountry: "IN",
-            },
-          }}
         />
       </main>
       <Footer />
