@@ -15,6 +15,7 @@ import CTASection from "@/components/sections/CTASection";
 import PopupManager from "@/components/ui/PopupManager";
 import FloatingCTA from "@/components/ui/FloatingCTA";
 import CursorEffect from "@/components/ui/CursorEffect";
+import JanmashtmiPopup from "@/components/ui/JanmashtmiPopup";
 
 export const metadata: Metadata = {
   title: "Zentrox Technologies | Software, Web & Digital Growth Solutions",
@@ -72,6 +73,7 @@ export default function HomePage() {
       </main>
       <Footer />
       <PopupManager />
+      <JanmashtmiPopup />
       <FloatingCTA />
     </>
   );
