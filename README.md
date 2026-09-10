@@ -377,3 +377,4 @@ Access at `/admin` (requires admin or admin role)
 All rights reserved. © 2025 Zentrox Technologies. MSME Registered — India.
 
 Unauthorized reproduction, distribution, or commercial use of any part of this codebase is prohibited.
+Deploy trigger: 10-09-2026
