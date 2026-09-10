@@ -78,10 +78,10 @@ export default function FloatingCTA() {
               transition={{ delay: 0.5, type: 'spring', damping: 25 }}
               className="fixed bottom-6 left-1/2 z-40 w-[calc(100%-2rem)] max-w-lg -translate-x-1/2"
             >
-              <div className="flex items-center justify-between rounded-2xl border border-gray-200 bg-white px-5 py-3.5 shadow-lg shadow-gray-200/50 backdrop-blur-md dark:border-gray-700 dark:bg-gray-900 dark:shadow-black/30">
+              <div className="flex items-center justify-between rounded-2xl border border-[#F0E6D8] bg-white px-5 py-3.5 shadow-lg shadow-slate-200/50">
                 <div className="flex min-w-0 flex-1 items-center gap-3">
                   <Sparkles size={16} className="flex-shrink-0 text-blue-600" />
-                  <span className="truncate text-sm font-medium text-gray-800 dark:text-gray-200">
+                  <span className="truncate text-sm font-medium text-slate-800">
                     {bannerText}
                   </span>
                 </div>
@@ -89,13 +89,13 @@ export default function FloatingCTA() {
                 <div className="ml-3 flex flex-shrink-0 items-center gap-2">
                   <Link
                     href="/contact"
-                    className="rounded-full bg-blue-600 px-4 py-1.5 text-xs font-semibold text-white shadow-sm shadow-blue-600/20 transition-all hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-md hover:shadow-blue-600/30 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    className="rounded-full bg-blue-600 px-4 py-1.5 text-xs font-semibold text-white shadow-sm shadow-blue-600/20 transition-all hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-md hover:shadow-blue-600/30"
                   >
                     Book Now
                   </Link>
                   <button
                     onClick={() => setDismissed(true)}
-                    className="rounded-full p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:text-gray-500 dark:hover:bg-white/10 dark:hover:text-gray-300"
+                    className="rounded-full p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
                     aria-label="Dismiss offer"
                   >
                     <X size={15} />
