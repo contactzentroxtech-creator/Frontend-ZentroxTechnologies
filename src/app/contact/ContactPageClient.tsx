@@ -1,826 +1,309 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import toast from "react-hot-toast";
 import {
   Mail,
   Phone,
   MapPin,
   Clock,
   Send,
+  CheckCircle2,
+  AlertCircle,
   MessageCircle,
-  Building2,
 } from "lucide-react";
-
 import api from "@/lib/api";
-import { useLang } from "@/lib/providers";
 
-type Language = "en" | "hi" | "pa";
-
-/* =========================================
-   VALIDATION SCHEMA
-========================================= */
-
-const makeSchema = (t: (key: string, fallback?: string) => string) =>
-  z.object({
-    name: z
-      .string()
-      .trim()
-      .min(
-        2,
-        t(
-          "validation.name_min",
-          "Name must be at least 2 characters"
-        )
-      ),
-
-    phone: z
-      .string()
-      .trim()
-      .min(
-        10,
-        t(
-          "validation.phone_invalid",
-          "Enter a valid phone number"
-        )
-      )
-      .max(
-        20,
-        t(
-          "validation.phone_invalid",
-          "Enter a valid phone number"
-        )
-      ),
-
-    email: z
-      .string()
-      .trim()
-      .email(
-        t(
-          "validation.email_invalid",
-          "Enter a valid email"
-        )
-      )
-      .or(z.literal(""))
-      .optional(),
-
-    service: z.string().min(
-      1,
-      t(
-        "validation.service_required",
-        "Please select a service"
-      )
-    ),
-
-    budget: z.string().optional(),
-
-    message: z
-      .string()
-      .trim()
-      .min(
-        10,
-        t(
-          "validation.message_min",
-          "Message must be at least 10 characters"
-        )
-      )
-      .max(
-        1000,
-        t(
-          "validation.message_max",
-          "Message too long"
-        )
-      ),
-  });
-
-type FormData = {
-  name: string;
-  phone: string;
-  email?: string;
-  service: string;
-  budget?: string;
-  message: string;
-};
-
-/* =========================================
-   SERVICES
-========================================= */
-
-const SERVICES_EN = [
+const SERVICES = [
   "Website Development",
   "Mobile App Development",
+  "Custom Software",
   "SaaS Development",
   "AI Integration",
   "SEO Services",
-  "Digital Marketing Services",
+  "Digital Marketing",
   "UI/UX Design",
-  "Software Development Service",
-  "View Our Work",
-  "Remote Internship",
+  "CRM Development",
+  "API Integration",
   "Other",
 ];
 
-const SERVICES_HI = [
-  "वेब डेवलपमेंट",
-  "मोबाइल ऐप डेवलपमेंट",
-  "SaaS डेवलपमेंट",
-  "AI इंटीग्रेशन",
-  "SEO सेवाएं",
-  "डिजिटल मार्केटिंग",
-  "UI/UX डिजाइन",
-  "सॉफ्टवेयर डेवलपमेंट",
-  "हमारा काम देखें",
-  "रिमोट इंटर्नशिप",
-  "अन्य",
+const BUDGETS = [
+  "Under ₹25,000",
+  "₹25,000 – ₹50,000",
+  "₹50,000 – ₹1,00,000",
+  "₹1,00,000 – ₹5,00,000",
+  "₹5,00,000+",
+  "Not Sure Yet",
 ];
-
-const SERVICES_PA = [
-  "ਵੈੱਬ ਡਿਵੈਲਪਮੈਂਟ",
-  "ਮੋਬਾਈਲ ਐਪ ਡਿਵੈਲਪਮੈਂਟ",
-  "SaaS ਡਿਵੈਲਪਮੈਂਟ",
-  "AI ਏਕੀਕਰਨ",
-  "SEO ਸੇਵਾਵਾਂ",
-  "ਡਿਜੀਟਲ ਮਾਰਕੀਟਿੰਗ",
-  "UI/UX ਡਿਜ਼ਾਈਨ",
-  "ਸੌਫਟਵੇਅਰ ਡਿਵੈਲਪਮੈਂਟ",
-  "ਸਾਡਾ ਕੰਮ ਵੇਖੋ",
-  "ਰਿਮੋਟ ਇੰਟਰਨਸ਼ਿਪ",
-  "ਹੋਰ",
-];
-
-/* =========================================
-   BUDGETS
-========================================= */
-
-const BUDGETS_EN = [
-  "Under ₹10,000",
-  "₹10,000 — ₹25,000",
-  "₹25,000 — ₹50,000",
-  "₹50,000 — ₹1,00,000",
-  "₹1,00,000+",
-  "Let us suggest",
-];
-
-const BUDGETS_HI = [
-  "₹10,000 से कम",
-  "₹10,000 — ₹25,000",
-  "₹25,000 — ₹50,000",
-  "₹50,000 — ₹1,00,000",
-  "₹1,00,000+",
-  "हम सुझाव दें",
-];
-
-const BUDGETS_PA = [
-  "₹10,000 ਤੋਂ ਘੱਟ",
-  "₹10,000 — ₹25,000",
-  "₹25,000 — ₹50,000",
-  "₹50,000 — ₹1,00,000",
-  "₹1,00,000+",
-  "ਸਾਨੂੰ ਸੁਝਾਅ ਦੇਣ ਦਿਓ",
-];
-
-/* =========================================
-   COMPONENT
-========================================= */
 
 export default function ContactPageClient() {
-  const [submitted, setSubmitted] = useState(false);
-
-  const { t, lang } = useLang();
-
-  /*
-    FIX:
-    String(lang) prevents TypeScript from incorrectly
-    treating lang as only "en".
-  */
-
-  const langCode = String(lang);
-
-  const currentLang: Language =
-    langCode === "hi"
-      ? "hi"
-      : langCode === "pa"
-        ? "pa"
-        : "en";
-
-  const schema = useMemo(
-    () => makeSchema(t),
-    [t]
-  );
-
-  const {
-    register,
-    handleSubmit,
-    formState: {
-      errors,
-      isSubmitting,
-    },
-    reset,
-  } = useForm<FormData>({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      name: "",
-      phone: "",
-      email: "",
-      service: "",
-      budget: "",
-      message: "",
-    },
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    service: "",
+    budget: "",
+    message: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState("");
 
-  /* =========================================
-     LANGUAGE BASED SERVICES
-  ========================================= */
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
-  const services =
-    currentLang === "hi"
-      ? SERVICES_HI
-      : currentLang === "pa"
-        ? SERVICES_PA
-        : SERVICES_EN;
-
-  /* =========================================
-     LANGUAGE BASED BUDGETS
-  ========================================= */
-
-  const budgets =
-    currentLang === "hi"
-      ? BUDGETS_HI
-      : currentLang === "pa"
-        ? BUDGETS_PA
-        : BUDGETS_EN;
-
-  /* =========================================
-     CONTACT INFORMATION
-  ========================================= */
-
-  const CONTACT_INFO = [
-    {
-      icon: Mail,
-      label: t(
-        "contact.info.email",
-        "Email"
-      ),
-      value: "contact.zentroxtech@gmail.com",
-      href: "mailto:contact.zentroxtech@gmail.com",
-    },
-    {
-      icon: Phone,
-      label: t(
-        "contact.info.phone",
-        "Phone / WhatsApp"
-      ),
-      value: "+91 89881 83513",
-      href: "tel:+918988183513",
-    },
-    {
-      icon: MapPin,
-      label: t(
-        "contact.info.location",
-        "Location"
-      ),
-      value: "Mohali & Chandigarh, Punjab",
-      href: null,
-    },
-    {
-      icon: Building2,
-      label: t(
-        "contact.info.registration",
-        "Registration"
-      ),
-      value: t(
-        "contact.info.reg_value",
-        "MSME Registered — India"
-      ),
-      href: null,
-    },
-    {
-      icon: Clock,
-      label: t(
-        "contact.info.response",
-        "Response Time"
-      ),
-      value: t(
-        "contact.info.response_value",
-        "Within 24 hours"
-      ),
-      href: null,
-    },
-  ];
-
-  /* =========================================
-     FORM SUBMIT
-  ========================================= */
-
-  const onSubmit = async (
-    data: FormData
-  ) => {
     try {
-      await api.post("/leads", data);
-
-      setSubmitted(true);
-
-      reset();
-
-      toast.success(
-        t(
-          "contact.success",
-          "Message sent! We'll contact you within 24 hours."
-        )
-      );
-    } catch (error: unknown) {
-      let message = t(
-        "common.error",
-        "Failed to send. Try WhatsApp instead."
-      );
-
-      if (
-        typeof error === "object" &&
-        error !== null &&
-        "response" in error
-      ) {
-        const apiError = error as {
-          response?: {
-            data?: {
-              message?: string;
-            };
-          };
-        };
-
-        if (
-          apiError.response?.data?.message
-        ) {
-          message =
-            apiError.response.data.message;
-        }
-      }
-
-      toast.error(message);
+      await api.post("/leads", form);
+      setSuccess(true);
+      setForm({ name: "", email: "", phone: "", service: "", budget: "", message: "" });
+    } catch (err: any) {
+      setError(err?.response?.data?.message || "Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  /* =========================================
-     WHATSAPP
-  ========================================= */
-
-  const whatsappNumber =
-    process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ||
-    "918988183513";
-
-  const whatsappMessage = encodeURIComponent(
-    t(
-      "whatsapp.message",
-      "Hi Zentrox Technologies, I need help with my project."
-    )
-  );
-
-  const whatsappUrl =
-    `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
-
   return (
-    <section className="relative z-10 overflow-hidden bg-white px-4 py-20 text-slate-900 transition-colors duration-300 dark:bg-[#04050a] dark:text-white md:px-6">
-      {/* Background Effects */}
-
-      <div className="pointer-events-none absolute left-[-150px] top-[10%] h-[400px] w-[400px] rounded-full bg-blue-500/5 blur-[120px]" />
-
-      <div className="pointer-events-none absolute bottom-[5%] right-[-150px] h-[400px] w-[400px] rounded-full bg-purple-500/5 blur-[120px]" />
-
-      <div className="relative mx-auto max-w-7xl">
-
-        {/* HEADER */}
-
+    <section className="bg-[#FDF8F3] px-4 py-20 sm:py-24 md:px-6 md:py-28 lg:py-32">
+      <div className="mx-auto max-w-7xl">
+        {/* Header */}
         <motion.div
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
-          transition={{
-            duration: 0.6,
-          }}
-          className="mb-14 text-center"
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="mx-auto mb-14 max-w-3xl text-center sm:mb-16"
         >
-          <div className="z-badge mx-auto mb-4">
-            {t(
-              "contact.badge",
-              "Get In Touch"
-            )}
+          <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-1.5 text-xs font-medium text-slate-700 shadow-sm">
+            <MessageCircle size={13} className="text-blue-600" />
+            Get In Touch
           </div>
-
-          <h1 className="mb-4 text-4xl font-extrabold leading-tight tracking-tight text-slate-900 dark:text-white md:text-6xl">
-            {t(
-              "contact.title",
-              "Start Your Digital Journey"
-            )}
-
-            <br />
-
-            <span className="gradient-text">
-              {t(
-                "contact.title_today",
-                "Today"
-              )}
-            </span>
+          <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+            Let's Build Something Together
           </h1>
-
-          <p className="mx-auto max-w-xl text-base leading-relaxed text-slate-600 dark:text-z-muted">
-            {t(
-              "contact.sub",
-              "Tell us about your project. First consultation is always free. Our team responds within 24 hours."
-            )}
+          <p className="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg">
+            Have a project in mind? Reach out and we'll get back to you within one business day.
           </p>
         </motion.div>
 
-        {/* MAIN GRID */}
-
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
-
-          {/* CONTACT INFORMATION */}
-
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-5 lg:gap-10">
+          {/* Left: Contact Info */}
           <motion.div
-            initial={{
-              opacity: 0,
-              x: -30,
-            }}
-            animate={{
-              opacity: 1,
-              x: 0,
-            }}
-            transition={{
-              duration: 0.6,
-              delay: 0.2,
-            }}
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="lg:col-span-2 space-y-4"
           >
-            <h2 className="mb-6 text-xl font-bold text-slate-900 dark:text-white">
-              {t(
-                "contact.reach_us",
-                "Reach Us Directly"
-              )}
-            </h2>
-
-            <div className="mb-8 flex flex-col gap-4">
-
-              {CONTACT_INFO.map(
-                ({
-                  icon: Icon,
-                  label,
-                  value,
-                  href,
-                }) => (
-                  <div
-                    key={label}
-                    className="glass-card flex items-center gap-4 p-4"
+            <div className="card-cream p-6">
+              <div className="flex items-start gap-4">
+                <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                  <Mail size={20} />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-slate-900">Email</h3>
+                  <a
+                    href="mailto:contact.zentroxtech@gmail.com"
+                    className="mt-1 block text-sm text-slate-600 hover:text-blue-600 break-all"
                   >
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-z-accent/20 bg-z-accent/10">
-                      <Icon
-                        size={18}
-                        className="text-z-accent"
+                    contact.zentroxtech@gmail.com
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div className="card-cream p-6">
+              <div className="flex items-start gap-4">
+                <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                  <Phone size={20} />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-slate-900">Phone / WhatsApp</h3>
+                  <a
+                    href="tel:+918988183513"
+                    className="mt-1 block text-sm text-slate-600 hover:text-blue-600"
+                  >
+                    +91 89881 83513
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div className="card-cream p-6">
+              <div className="flex items-start gap-4">
+                <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                  <MapPin size={20} />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-slate-900">Location</h3>
+                  <p className="mt-1 text-sm text-slate-600">
+                    Mohali & Chandigarh, Punjab, India
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="card-cream p-6">
+              <div className="flex items-start gap-4">
+                <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                  <Clock size={20} />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-slate-900">Response Time</h3>
+                  <p className="mt-1 text-sm text-slate-600">Within 24 hours</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Right: Contact Form */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="lg:col-span-3"
+          >
+            <div className="card-cream p-6 sm:p-8">
+              {success ? (
+                <div className="py-12 text-center">
+                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50">
+                    <CheckCircle2 size={32} className="text-emerald-600" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-slate-900">
+                    Message Sent Successfully!
+                  </h3>
+                  <p className="mt-2 text-sm text-slate-600">
+                    Thank you for reaching out. Our team will contact you within 24 hours.
+                  </p>
+                  <button
+                    onClick={() => setSuccess(false)}
+                    className="btn-primary mt-6"
+                  >
+                    Send Another Message
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-5">
+                  <h2 className="text-xl font-semibold text-slate-900">
+                    Send Us a Message
+                  </h2>
+
+                  {error && (
+                    <div className="flex gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                      <AlertCircle size={16} className="flex-shrink-0 mt-0.5" />
+                      <span>{error}</span>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                        Your Name *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={form.name}
+                        onChange={(e) => setForm({ ...form, name: e.target.value })}
+                        placeholder="Full name"
+                        className="w-full rounded-lg border border-[#F0E6D8] bg-white px-4 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
                       />
                     </div>
 
-                    <div className="min-w-0">
-                      <div className="text-xs uppercase tracking-widest text-z-muted">
-                        {label}
-                      </div>
-
-                      {href ? (
-                        <a
-                          href={href}
-                          className="break-all text-sm font-medium text-slate-900 transition-colors hover:text-z-accent dark:text-white"
-                        >
-                          {value}
-                        </a>
-                      ) : (
-                        <div className="text-sm font-medium text-slate-900 dark:text-white">
-                          {value}
-                        </div>
-                      )}
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                        Phone / WhatsApp *
+                      </label>
+                      <input
+                        type="tel"
+                        required
+                        value={form.phone}
+                        onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                        placeholder="+91 XXXXX XXXXX"
+                        className="w-full rounded-lg border border-[#F0E6D8] bg-white px-4 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                      />
                     </div>
                   </div>
-                )
-              )}
-
-            </div>
-
-            {/* WHATSAPP */}
-
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mb-4 flex w-full items-center justify-center gap-3 rounded-2xl bg-[#25D366] py-4 font-semibold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:bg-[#22C55E]"
-            >
-              <MessageCircle size={20} />
-
-              {t(
-                "contact.whatsapp_cta",
-                "Chat on WhatsApp — Fastest Response"
-              )}
-            </a>
-
-            {/* COMPANY CARD */}
-
-            <div className="glass-card relative overflow-hidden p-5">
-
-              <div className="pointer-events-none absolute inset-0">
-                <div className="absolute bottom-0 right-0 h-40 w-40 rounded-full bg-z-accent opacity-[0.06] blur-[40px]" />
-              </div>
-
-              <div className="relative">
-                <div className="mb-1.5 text-sm font-semibold text-slate-900 dark:text-white">
-                  Zentrox Technologies
-                </div>
-
-                <div className="text-xs leading-relaxed text-z-muted">
-                  {t(
-                    "contact.brand_desc",
-                    "MSME Registered · Remote-First · Innovation-Driven"
-                  )}
-
-                  <br />
-
-                  {t(
-                    "contact.brand_locations",
-                    "Serving Mohali, Chandigarh, Punjab & clients worldwide"
-                  )}
-                </div>
-              </div>
-
-            </div>
-
-          </motion.div>
-
-          {/* CONTACT FORM */}
-
-          <motion.div
-            initial={{
-              opacity: 0,
-              x: 30,
-            }}
-            animate={{
-              opacity: 1,
-              x: 0,
-            }}
-            transition={{
-              duration: 0.6,
-              delay: 0.3,
-            }}
-          >
-            {submitted ? (
-              <motion.div
-                initial={{
-                  opacity: 0,
-                  scale: 0.95,
-                }}
-                animate={{
-                  opacity: 1,
-                  scale: 1,
-                }}
-                className="glass-card flex h-full min-h-[500px] flex-col items-center justify-center p-10 text-center"
-              >
-                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-z-accent3/30 bg-z-accent3/20">
-                  <Send
-                    size={28}
-                    className="text-z-accent3"
-                  />
-                </div>
-
-                <h3 className="mb-2 text-2xl font-bold text-slate-900 dark:text-white">
-                  {t(
-                    "contact.success_title",
-                    "Message Sent!"
-                  )}
-                </h3>
-
-                <p className="mb-6 text-sm leading-relaxed text-z-muted">
-                  {t(
-                    "contact.success",
-                    "Message sent! We'll contact you within 24 hours."
-                  )}
-                </p>
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    setSubmitted(false)
-                  }
-                  className="rounded-full bg-z-accent px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
-                >
-                  {t(
-                    "contact.send_another",
-                    "Send Another Message"
-                  )}
-                </button>
-              </motion.div>
-            ) : (
-              <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="glass-card flex flex-col gap-4 p-6 md:p-8"
-              >
-                <h2 className="mb-2 text-xl font-bold text-slate-900 dark:text-white">
-                  {t(
-                    "contact.form_title",
-                    "Send Us a Message"
-                  )}
-                </h2>
-
-                {/* NAME + PHONE */}
-
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 
                   <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                      Email Address
+                    </label>
                     <input
-                      {...register("name")}
-                      autoComplete="name"
-                      placeholder={
-                        t(
-                          "contact.name",
-                          "Your Name"
-                        ) + " *"
-                      }
-                      className="z-input"
+                      type="email"
+                      value={form.email}
+                      onChange={(e) => setForm({ ...form, email: e.target.value })}
+                      placeholder="you@example.com"
+                      className="w-full rounded-lg border border-[#F0E6D8] bg-white px-4 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
                     />
+                  </div>
 
-                    {errors.name && (
-                      <p className="mt-1 text-xs text-red-500">
-                        {errors.name.message}
-                      </p>
-                    )}
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                        Service Needed *
+                      </label>
+                      <select
+                        required
+                        value={form.service}
+                        onChange={(e) => setForm({ ...form, service: e.target.value })}
+                        className="w-full rounded-lg border border-[#F0E6D8] bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                      >
+                        <option value="">Select a service</option>
+                        {SERVICES.map((s) => (
+                          <option key={s} value={s}>{s}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                        Budget Range
+                      </label>
+                      <select
+                        value={form.budget}
+                        onChange={(e) => setForm({ ...form, budget: e.target.value })}
+                        className="w-full rounded-lg border border-[#F0E6D8] bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                      >
+                        <option value="">Select budget range</option>
+                        {BUDGETS.map((b) => (
+                          <option key={b} value={b}>{b}</option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
 
                   <div>
-                    <input
-                      {...register("phone")}
-                      type="tel"
-                      autoComplete="tel"
-                      placeholder={
-                        t(
-                          "contact.phone",
-                          "Phone / WhatsApp"
-                        ) + " *"
-                      }
-                      className="z-input"
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                      Project Details *
+                    </label>
+                    <textarea
+                      required
+                      rows={5}
+                      value={form.message}
+                      onChange={(e) => setForm({ ...form, message: e.target.value })}
+                      placeholder="Tell us about your project or business..."
+                      className="w-full resize-none rounded-lg border border-[#F0E6D8] bg-white px-4 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
                     />
-
-                    {errors.phone && (
-                      <p className="mt-1 text-xs text-red-500">
-                        {errors.phone.message}
-                      </p>
-                    )}
                   </div>
 
-                </div>
-
-                {/* EMAIL */}
-
-                <div>
-                  <input
-                    {...register("email")}
-                    type="email"
-                    autoComplete="email"
-                    placeholder={t(
-                      "contact.email",
-                      "Email Address (optional)"
-                    )}
-                    className="z-input"
-                  />
-
-                  {errors.email && (
-                    <p className="mt-1 text-xs text-red-500">
-                      {errors.email.message}
-                    </p>
-                  )}
-                </div>
-
-                {/* SERVICE */}
-
-                <div>
-                  <select
-                    {...register("service")}
-                    className="z-input"
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="btn-primary w-full justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <option value="">
-                      {t(
-                        "contact.service",
-                        "Select Service Required"
-                      ) + " *"}
-                    </option>
+                    {loading ? "Sending..." : "Send Message"}
+                    {!loading && <Send size={16} />}
+                  </button>
 
-                    {services.map(
-                      (service) => (
-                        <option
-                          key={service}
-                          value={service}
-                        >
-                          {service}
-                        </option>
-                      )
-                    )}
-                  </select>
-
-                  {errors.service && (
-                    <p className="mt-1 text-xs text-red-500">
-                      {errors.service.message}
-                    </p>
-                  )}
-                </div>
-
-                {/* BUDGET */}
-
-                <div>
-                  <select
-                    {...register("budget")}
-                    className="z-input"
-                  >
-                    <option value="">
-                      {t(
-                        "contact.budget",
-                        "Budget Range (optional)"
-                      )}
-                    </option>
-
-                    {budgets.map(
-                      (budget) => (
-                        <option
-                          key={budget}
-                          value={budget}
-                        >
-                          {budget}
-                        </option>
-                      )
-                    )}
-                  </select>
-                </div>
-
-                {/* MESSAGE */}
-
-                <div>
-                  <textarea
-                    {...register("message")}
-                    rows={5}
-                    placeholder={
-                      t(
-                        "contact.message",
-                        "Tell us about your project or business..."
-                      ) + " *"
-                    }
-                    className="z-input resize-none"
-                  />
-
-                  {errors.message && (
-                    <p className="mt-1 text-xs text-red-500">
-                      {errors.message.message}
-                    </p>
-                  )}
-                </div>
-
-                {/* SUBMIT */}
-
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="shadow-glow-sm flex w-full items-center justify-center gap-2 rounded-xl bg-z-accent py-4 text-sm font-semibold text-white transition-all duration-300 hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-
-                      {t(
-                        "contact.sending",
-                        "Sending..."
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      <Send size={16} />
-
-                      {t(
-                        "contact.send",
-                        "Send Message — Get Free Quote"
-                      )}
-                    </>
-                  )}
-                </button>
-
-                {/* PRIVACY */}
-
-                <p className="text-center text-[11px] text-z-muted">
-                  {t(
-                    "contact.privacy_note",
-                    "By submitting, you agree to be contacted by Zentrox Technologies. No spam, ever."
-                  )}
-                </p>
-              </form>
-            )}
+                  <p className="text-center text-xs text-slate-500">
+                    By submitting this form, you agree to be contacted by Zentrox Technologies.
+                  </p>
+                </form>
+              )}
+            </div>
           </motion.div>
-
         </div>
       </div>
     </section>
