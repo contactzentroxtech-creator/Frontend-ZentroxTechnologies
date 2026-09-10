@@ -53,8 +53,8 @@ export default function Navbar() {
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-white shadow-sm border-b border-gray-200"
-          : "bg-white border-b border-gray-100"
+          ? "bg-[#FDF8F3]/95 shadow-sm border-b border-[#F0E6D8] backdrop-blur-md"
+          : "bg-[#FDF8F3] border-b border-[#F0E6D8]"
       }`}
     >
       <nav className="mx-auto flex h-[68px] max-w-7xl items-center justify-between px-4 md:px-6">
@@ -76,8 +76,8 @@ export default function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className={`text-sm font-medium ${
-                isActive(link.href) ? "text-blue-600" : "text-slate-600 hover:text-blue-600"
+              className={`text-sm font-medium transition-colors ${
+                isActive(link.href) ? "text-blue-600" : "text-slate-700 hover:text-blue-600"
               }`}
             >
               {link.label}
@@ -91,12 +91,20 @@ export default function Navbar() {
               <span className="text-sm font-medium text-slate-700">
                 {user.name?.split(" ")[0]}
               </span>
+              {user.role === "admin" && (
+                <Link
+                  href="/admin"
+                  className="text-sm font-medium text-blue-600 hover:text-blue-700"
+                >
+                  Admin
+                </Link>
+              )}
               <button
                 onClick={async () => {
                   await logout();
                   window.location.href = "/";
                 }}
-                className="text-sm text-slate-500 hover:text-slate-900"
+                className="text-sm text-slate-600 hover:text-slate-900 transition-colors"
               >
                 Logout
               </button>
@@ -105,13 +113,13 @@ export default function Navbar() {
             <>
               <Link
                 href="/auth/login"
-                className="text-sm font-medium text-slate-600 hover:text-blue-600"
+                className="text-sm font-medium text-slate-700 hover:text-blue-600 transition-colors"
               >
                 Login
               </Link>
               <Link
                 href="/contact"
-                className="flex items-center gap-2 rounded-full bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700"
+                className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-md shadow-blue-600/20 hover:bg-blue-700 hover:shadow-lg transition-all"
               >
                 {t("nav.get_started")}
                 <ArrowRight size={15} />
@@ -121,8 +129,9 @@ export default function Navbar() {
         </div>
 
         <button
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-slate-700 lg:hidden"
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-[#F0E6D8] bg-white text-slate-700 lg:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label="Toggle navigation menu"
         >
           {mobileOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
@@ -134,7 +143,7 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden border-t border-gray-200 bg-white lg:hidden"
+            className="overflow-hidden border-t border-[#F0E6D8] bg-[#FDF8F3] lg:hidden"
           >
             <div className="mx-auto max-w-7xl px-4 py-6">
               <div className="flex flex-col gap-1">
@@ -142,22 +151,30 @@ export default function Navbar() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`rounded-lg px-4 py-3 text-sm font-medium ${
-                      isActive(link.href) ? "bg-blue-50 text-blue-600" : "text-slate-600 hover:bg-gray-50"
+                    className={`rounded-lg px-4 py-3 text-sm font-medium transition-colors ${
+                      isActive(link.href) ? "bg-blue-50 text-blue-600" : "text-slate-700 hover:bg-white"
                     }`}
                   >
                     {link.label}
                   </Link>
                 ))}
+                {user?.role === "admin" && (
+                  <Link
+                    href="/admin"
+                    className="rounded-lg px-4 py-3 text-sm font-medium text-blue-600 bg-blue-50"
+                  >
+                    Admin Panel
+                  </Link>
+                )}
               </div>
-              <div className="mt-6 border-t border-gray-200 pt-6">
+              <div className="mt-6 border-t border-[#F0E6D8] pt-6">
                 {user ? (
                   <button
                     onClick={async () => {
                       await logout();
                       window.location.href = "/";
                     }}
-                    className="w-full rounded-lg border border-gray-200 py-3 text-center text-sm font-medium text-slate-700"
+                    className="w-full rounded-lg border border-[#F0E6D8] bg-white py-3 text-center text-sm font-medium text-slate-700"
                   >
                     Logout
                   </button>
@@ -165,7 +182,7 @@ export default function Navbar() {
                   <div className="grid grid-cols-2 gap-3">
                     <Link
                       href="/auth/login"
-                      className="rounded-lg border border-gray-200 py-3 text-center text-sm font-medium text-slate-700"
+                      className="rounded-lg border border-[#F0E6D8] bg-white py-3 text-center text-sm font-medium text-slate-700"
                     >
                       Login
                     </Link>

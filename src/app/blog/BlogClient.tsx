@@ -1,232 +1,191 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image"; // Back to optimized, safe images
-import { ArrowRight, BookOpen, Clock, Eye, Tag, Search } from "lucide-react";
-import api from "@/lib/api";
-import type { BlogPost } from "@/types";
-import { useDebounce } from "@/hooks";
+import { motion } from "framer-motion";
+import { Search, ArrowRight, Calendar, User, Sparkles } from "lucide-react";
 
-// Prevents absolute breaks from bad backend values
-const isValidUrl = (url: string) => {
-  if (!url) return false;
-  return (
-    url.startsWith("http://") ||
-    url.startsWith("https://") ||
-    url.startsWith("/")
-  );
-};
+const BLOG_POSTS = [
+  {
+    id: 1,
+    title: "Why Your Business Needs a Custom Website in 2026",
+    excerpt: "A custom website is more than just an online presence — it's a powerful tool for building trust, generating leads, and scaling your business.",
+    category: "Website Development",
+    author: "Zentrox Technologies Team",
+    date: "March 15, 2026",
+    readTime: "5 min read",
+    slug: "why-your-business-needs-custom-website-2026",
+  },
+  {
+    id: 2,
+    title: "The Future of AI in Digital Marketing",
+    excerpt: "AI is transforming how businesses approach digital marketing. From personalization to predictive analytics, discover how AI can give you a competitive edge.",
+    category: "AI & Automation",
+    author: "Zentrox Technologies Team",
+    date: "March 10, 2026",
+    readTime: "4 min read",
+    slug: "future-of-ai-in-digital-marketing",
+  },
+  {
+    id: 3,
+    title: "SEO Trends That Will Dominate in 2026",
+    excerpt: "Stay ahead of the competition with these SEO trends — including AI-powered search, user intent optimization, and the growing importance of content quality.",
+    category: "SEO & Digital Growth",
+    author: "Zentrox Technologies Team",
+    date: "March 5, 2026",
+    readTime: "6 min read",
+    slug: "seo-trends-2026",
+  },
+  {
+    id: 4,
+    title: "Mobile App Development: Native vs Cross-Platform",
+    excerpt: "Choosing the right approach for your mobile app development project can significantly impact cost, performance, and user experience.",
+    category: "Mobile App Development",
+    author: "Zentrox Technologies Team",
+    date: "February 28, 2026",
+    readTime: "4 min read",
+    slug: "mobile-app-development-native-vs-cross-platform",
+  },
+  {
+    id: 5,
+    title: "SaaS Development: From Idea to Launch",
+    excerpt: "Building a successful SaaS product requires careful planning, the right technology stack, and a focus on user experience from day one.",
+    category: "SaaS Development",
+    author: "Zentrox Technologies Team",
+    date: "February 20, 2026",
+    readTime: "7 min read",
+    slug: "saas-development-from-idea-to-launch",
+  },
+  {
+    id: 6,
+    title: "How UI/UX Design Drives Business Growth",
+    excerpt: "Great design isn't just about aesthetics — it directly impacts conversion rates, customer retention, and brand perception.",
+    category: "UI/UX Design",
+    author: "Zentrox Technologies Team",
+    date: "February 15, 2026",
+    readTime: "5 min read",
+    slug: "ui-ux-design-drives-business-growth",
+  },
+];
 
-function BlogCard({ post }: { post: BlogPost }) {
-  return (
-    <motion.article
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.4 }}
-      className="glass-card overflow-hidden group hover:-translate-y-1 transition-all duration-300 flex flex-col"
-    >
-      {post.thumbnail && isValidUrl(post.thumbnail) ? (
-        <div className="h-48 overflow-hidden relative">
-          <Image
-            src={post.thumbnail}
-            alt={post.title}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover group-hover:scale-105 transition-transform duration-500 opacity-80 group-hover:opacity-100"
-          />
-        </div>
-      ) : (
-        <div className="h-48 bg-gradient-to-br from-z-dark3 to-z-dark2 flex items-center justify-center">
-          <BookOpen size={36} className="text-z-accent/20" />
-        </div>
-      )}
-      <div className="p-5 flex flex-col flex-1">
-        <div className="flex items-center gap-3 mb-3">
-          {post.category && (
-            <span className="text-[10px] font-semibold uppercase tracking-widest text-z-accent px-2 py-0.5 rounded-full bg-z-accent/10 border border-z-accent/20">
-              {post.category}
-            </span>
-          )}
-          <span className="flex items-center gap-1 text-[10px] text-z-muted">
-            <Clock size={9} /> {post.readTime || "3"} min read
-          </span>
-          <span className="flex items-center gap-1 text-[10px] text-z-muted">
-            <Eye size={9} /> {post.viewCount}
-          </span>
-        </div>
-        <h2 className="font-bold text-white mb-2 leading-snug line-clamp-2 group-hover:text-z-accent transition-colors">
-          {post.title}
-        </h2>
-        {post.excerpt && (
-          <p className="text-xs text-z-muted leading-relaxed mb-4 line-clamp-2 flex-1">
-            {post.excerpt}
-          </p>
-        )}
-        {Boolean(post.tags && post.tags.length > 0) && (
-          <div className="flex flex-wrap gap-1.5 mb-4">
-            {post.tags.slice(0, 3).map((t) => (
-              <span
-                key={t}
-                className="flex items-center gap-1 text-[10px] text-z-muted px-2 py-0.5 rounded-full bg-white/5 border border-z-border"
-              >
-                <Tag size={8} /> {t}
-              </span>
-            ))}
-          </div>
-        )}
-        <div className="flex items-center justify-between mt-auto pt-3 border-t border-z-border">
-          <span className="text-xs text-z-muted">
-            {post.authorName || "Zentrox Technologies"}
-          </span>
-          <Link
-            href={`/blog/${post.slug}`}
-            className="flex items-center gap-1 text-xs font-semibold text-z-accent hover:gap-2 transition-all"
-          >
-            Read <ArrowRight size={12} />
-          </Link>
-        </div>
-      </div>
-    </motion.article>
-  );
-}
+const CATEGORIES = ["All", ...Array.from(new Set(BLOG_POSTS.map((p) => p.category)))];
 
 export default function BlogClient() {
-  const [posts, setPosts] = useState<BlogPost[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
-  const debouncedSearch = useDebounce(search, 350);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState("All");
 
-  useEffect(() => {
-    setLoading(true);
-    const params = debouncedSearch
-      ? `?search=${encodeURIComponent(debouncedSearch)}`
-      : "";
-    api
-      .get(`/blog${params}`)
-      .then((r) => setPosts(r.data.data || []))
-      .catch(() => setPosts([]))
-      .finally(() => setLoading(false));
-  }, [debouncedSearch]);
-
-  // FIX: Separate the single featured post. The rest array will contain everything else.
-  const featured = !search ? posts.find((p) => p.featured) : null;
-  const rest = featured ? posts.filter((p) => p._id !== featured._id) : posts;
+  const filteredPosts = BLOG_POSTS.filter((post) => {
+    const matchesSearch =
+      post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = activeCategory === "All" || post.category === activeCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   return (
-    <div className="relative z-10">
-      {/* Header */}
-      <section className="py-20 px-4 md:px-6 text-center">
+    <section className="bg-[#FDF8F3] px-4 py-20 sm:py-24 md:px-6 md:py-28 lg:py-32">
+      <div className="mx-auto max-w-7xl">
+        {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
+          className="mx-auto mb-10 max-w-3xl text-center"
         >
-          <div className="z-badge mx-auto mb-4">Insights & Tutorials</div>
-          <h1 className="text-4xl md:text-6xl font-extrabold text-white tracking-tight mb-4">
-            The Zentrox
-            <br />
-            <span className="gradient-text">Tech Blog</span>
+          <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-1.5 text-xs font-medium text-slate-700 shadow-sm">
+            <Sparkles size={13} className="text-blue-600" />
+            Insights & Tutorials
+          </div>
+          <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+            The <span className="text-blue-600">Zentrox Technologies</span> Blog
           </h1>
-          <p className="text-z-muted max-w-lg mx-auto mb-8 leading-relaxed">
-            website development, AI, SEO, and Digital Marketing Services
-            insights from the Zentrox Technologies team.
+          <p className="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg">
+            Insights on website development, AI, SEO, and digital marketing from the Zentrox Technologies team.
           </p>
-          <div className="max-w-md mx-auto relative">
-            <Search
-              size={16}
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-z-muted pointer-events-none"
-            />
+
+          {/* Search */}
+          <div className="relative mx-auto mt-6 max-w-md">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
             <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              type="text"
               placeholder="Search articles..."
-              className="z-input pl-10 py-3.5 text-sm"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full rounded-full border border-[#F0E6D8] bg-white py-2.5 pl-10 pr-4 text-sm text-slate-700 placeholder-slate-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
             />
           </div>
         </motion.div>
-      </section>
 
-      <section className="px-4 md:px-6 pb-24">
-        <div className="max-w-7xl mx-auto">
-          {/* Featured post */}
-          {featured && (
-            <motion.article
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="glass-card mb-8 grid grid-cols-1 md:grid-cols-2 gap-0 overflow-hidden hover:border-z-accent/30 transition-colors group"
+        {/* Categories */}
+        <div className="mb-10 flex flex-wrap justify-center gap-2">
+          {CATEGORIES.map((category) => (
+            <button
+              key={category}
+              onClick={() => setActiveCategory(category)}
+              className={`rounded-full px-4 py-1.5 text-sm font-medium transition-all ${
+                activeCategory === category
+                  ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
+                  : "border border-[#F0E6D8] bg-white text-slate-600 hover:border-blue-300 hover:text-blue-600"
+              }`}
             >
-              <div className="h-64 md:h-auto overflow-hidden relative min-h-[260px]">
-                {featured.thumbnail && isValidUrl(featured.thumbnail) ? (
-                  <Image
-                    src={featured.thumbnail}
-                    alt={featured.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-z-accent/10 to-z-accent2/10 flex items-center justify-center">
-                    <BookOpen size={48} className="text-z-accent/30" />
-                  </div>
-                )}
-              </div>
-              <div className="p-8 flex flex-col justify-center">
-                <div className="z-badge mb-3">Featured</div>
-                <h2 className="text-2xl font-extrabold text-white mb-3 leading-snug">
-                  {featured.title}
-                </h2>
-                {featured.excerpt && (
-                  <p className="text-z-muted text-sm leading-relaxed mb-5">
-                    {featured.excerpt}
-                  </p>
-                )}
-                <Link
-                  href={`/blog/${featured.slug}`}
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-z-accent hover:gap-3 transition-all"
-                >
-                  Read Article <ArrowRight size={14} />
-                </Link>
-              </div>
-            </motion.article>
-          )}
+              {category}
+            </button>
+          ))}
+        </div>
 
-          {/* Grid Layout */}
-          {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="glass-card animate-pulse">
-                  <div className="h-48 bg-white/5" />
-                  <div className="p-5 space-y-3">
-                    <div className="h-3 bg-white/5 rounded w-1/3" />
-                    <div className="h-4 bg-white/5 rounded" />
-                    <div className="h-3 bg-white/5 rounded w-3/4" />
+        {/* Blog Grid */}
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {filteredPosts.length > 0 ? (
+            filteredPosts.map((post, index) => (
+              <motion.article
+                key={post.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: index * 0.06 }}
+                className="card-cream group flex flex-col p-6"
+              >
+                <span className="inline-flex w-fit rounded-full bg-blue-50 px-3 py-0.5 text-xs font-medium text-blue-600">
+                  {post.category}
+                </span>
+
+                <h3 className="mt-3 text-lg font-semibold text-slate-800 group-hover:text-blue-600 transition-colors">
+                  <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+                </h3>
+
+                <p className="mt-2 text-sm leading-relaxed text-slate-600 line-clamp-3 flex-1">
+                  {post.excerpt}
+                </p>
+
+                <div className="mt-4 flex items-center justify-between border-t border-[#F0E6D8] pt-4 text-xs text-slate-500">
+                  <div className="flex items-center gap-3">
+                    <span className="flex items-center gap-1">
+                      <User size={12} />
+                      Zentrox Team
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Calendar size={12} />
+                      {post.date}
+                    </span>
                   </div>
+                  <span className="text-slate-400">{post.readTime}</span>
                 </div>
-              ))}
-            </div>
-          ) : rest.length === 0 && !featured ? (
-            <div className="text-center py-20">
-              <BookOpen size={48} className="text-z-muted mx-auto mb-4" />
-              <h3 className="text-lg font-bold text-white mb-2">
-                No articles found
-              </h3>
-              <p className="text-z-muted text-sm">
-                Check back soon — new posts are published regularly.
-              </p>
-            </div>
+
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-blue-600 transition-all group-hover:gap-2"
+                >
+                  Read More
+                  <ArrowRight size={14} />
+                </Link>
+              </motion.article>
+            ))
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {rest.map((post) => (
-                <BlogCard key={post._id} post={post} />
-              ))}
+            <div className="col-span-full py-12 text-center text-slate-500">
+              No articles found matching your search.
             </div>
           )}
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
   );
 }

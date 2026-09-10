@@ -34,9 +34,7 @@ export default function CursorEffect() {
       }
     };
 
-    // Smooth follow animation with slight easing for a premium feel
     const animate = () => {
-      // Slightly faster follow for better responsiveness
       const easing = 0.18;
       rx += (mx - rx) * easing;
       ry += (my - ry) * easing;
@@ -56,7 +54,6 @@ export default function CursorEffect() {
 
       if (cursorRef.current && ringRef.current) {
         if (isInteractive) {
-          // On interactive elements: dot shrinks slightly, ring expands with a subtle glow
           cursorRef.current.style.width = "6px";
           cursorRef.current.style.height = "6px";
           cursorRef.current.style.backgroundColor = "#2563eb";
@@ -66,7 +63,6 @@ export default function CursorEffect() {
           ringRef.current.style.boxShadow = "0 0 20px rgba(37,99,235,0.15)";
           ringRef.current.style.backgroundColor = "rgba(37,99,235,0.04)";
         } else {
-          // Default state: dot at normal size, ring subtle and clean
           cursorRef.current.style.width = "8px";
           cursorRef.current.style.height = "8px";
           cursorRef.current.style.backgroundColor = "#2563eb";
@@ -95,7 +91,6 @@ export default function CursorEffect() {
 
   return (
     <>
-      {/* Main dot cursor */}
       <div
         ref={cursorRef}
         className="custom-cursor"
@@ -114,7 +109,6 @@ export default function CursorEffect() {
           boxShadow: "0 0 12px rgba(37,99,235,0.3)",
         }}
       />
-      {/* Outer ring */}
       <div
         ref={ringRef}
         className="cursor-ring"

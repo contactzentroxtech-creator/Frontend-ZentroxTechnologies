@@ -4,105 +4,56 @@ import Footer from "@/components/layout/Footer";
 import LocationPageTemplate from "@/components/seo/LocationPageTemplate";
 
 export const metadata: Metadata = {
-  title: "website development Company in Mohali — Zentrox Technologies",
+  title: "Website Development Company in Mohali | Zentrox Technologies",
   description:
-    "Looking for a website development company in Mohali? Zentrox Technologies builds premium websites, e-commerce stores, and SaaS platforms for Mohali businesses. MSME Registered. Free consultation.",
+    "Looking for a website development company in Mohali? Zentrox Technologies builds fast, modern, SEO-friendly websites for businesses in Mohali, Punjab and across India.",
   keywords: [
-    "website development company Mohali",
     "website development Mohali",
+    "web development company Mohali",
+    "website design Mohali",
     "web developer Mohali",
-    "Mohali web design",
-    "best website development Mohali",
+    "website company Punjab",
+    "SEO friendly website Mohali",
   ],
   alternates: {
-    canonical:
-      "https://zentroxtechnologies.com/locations/web-development-mohali",
+    canonical: "https://zentroxtechnologies.com/locations/web-development-mohali",
   },
   openGraph: {
-    title: "website development Company in Mohali — Zentrox Technologies",
+    title: "Website Development Company in Mohali | Zentrox Technologies",
     description:
-      "Premium website development for Mohali businesses. React, Next.js, E-Commerce & SaaS. MSME Registered. Free consultation available.",
+      "Fast, modern, SEO-friendly websites for businesses in Mohali and Punjab.",
+    url: "https://zentroxtechnologies.com/locations/web-development-mohali",
+    type: "website",
   },
 };
 
-export default function WebDevMohaliPage() {
+export default function WebDevelopmentMohali() {
   return (
     <>
       <Navbar />
-      <main className="pt-20">
+      <main className="bg-[#FDF8F3] pt-20">
         <LocationPageTemplate
+          title="Website Development Company in Mohali"
+          description="Zentrox Technologies builds fast, modern, and SEO-friendly websites for businesses in Mohali, Punjab, and across India. From corporate websites to e-commerce stores, we deliver reliable digital experiences that grow your business."
           city="Mohali"
           state="Punjab"
-          service="website development"
-          serviceSlug="web-dev"
-          headline="website development Company in Mohali"
-          subheadline="We build premium, high-performance websites and web applications for Mohali businesses — from startups to established enterprises."
-          ctaText="Get Free Quote in Mohali"
-          stats={[
-            { label: "Projects in Mohali Region", value: "50+" },
-            { label: "Average Delivery", value: "3-4 Weeks" },
-            { label: "Client Satisfaction", value: "4.9★" },
+          country="India"
+          highlights={[
+            "Fast, responsive websites",
+            "SEO-friendly structure",
+            "Mobile-first design",
+            "Ongoing support",
           ]}
-          services={[
-            {
-              title: "Business Websites",
-              desc: "Professional websites that convert visitors into customers for your Mohali business.",
-            },
-            {
-              title: "E-Commerce Development",
-              desc: "Full-featured online stores with payment integration for Mohali retailers and businesses.",
-            },
-            {
-              title: "SaaS Development",
-              desc: "Custom SaaS platforms built to scale — perfect for Mohali tech startups.",
-            },
-            {
-              title: "Web App Development",
-              desc: "React and Next.js web applications tailored to your business processes.",
-            },
+          industries={[
+            "Startups",
+            "Real Estate",
+            "Healthcare",
+            "Education",
+            "E-commerce",
+            "Manufacturing",
+            "Professional Services",
+            "Local Businesses",
           ]}
-          faqs={[
-            {
-              q: "How much does a website cost in Mohali?",
-              a: "Website development in Mohali starts from ₹8,000 for basic business sites and goes up to ₹1,50,000+ for enterprise platforms. We offer transparent pricing and free consultations.",
-            },
-            {
-              q: "Do you serve clients in Mohali Phase 7, Phase 8, and Phase 9?",
-              a: "Yes, Zentrox Technologies serves clients across all phases of Mohali, including industrial areas, IT Park, and commercial sectors.",
-            },
-            {
-              q: "What is the website development timeline for Mohali businesses?",
-              a: "Most business websites are delivered within 2-4 weeks. E-commerce and custom platforms may take 4-8 weeks depending on complexity.",
-            },
-            {
-              q: "Do you provide website maintenance in Mohali?",
-              a: "Yes, we offer ongoing maintenance, updates, security patches, and performance optimization for all websites we build.",
-            },
-          ]}
-          nearbyAreas={[
-            "IT Park Mohali",
-            "Phase 7 Mohali",
-            "Phase 8 Mohali",
-            "Phase 9 Mohali",
-            "Sector 70",
-            "Sector 82",
-            "Aerocity",
-          ]}
-          structuredData={{
-            "@type": "LocalBusiness",
-            name: "Zentrox Technologies",
-            description: "website development Company in Mohali",
-            address: {
-              "@type": "PostalAddress",
-              addressLocality: "Mohali",
-              addressRegion: "Punjab",
-              addressCountry: "IN",
-            },
-            telephone: "+91-8988183513",
-            url: "https://zentroxtechnologies.com",
-            areaServed: "Mohali, Punjab",
-            priceRange: "₹₹",
-          }}
         />
       </main>
       <Footer />
