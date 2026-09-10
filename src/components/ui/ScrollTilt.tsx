@@ -12,15 +12,20 @@ interface ScrollTiltProps {
 export default function ScrollTilt({
   children,
   className = "",
-  tiltIntensity = 8,
-  scaleRange = 0.08,
+  tiltIntensity = 6,
+  scaleRange = 0.06,
 }: ScrollTiltProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const childRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (prefersReducedMotion.matches) return;
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    );
+
+    if (prefersReducedMotion.matches) {
+      return;
+    }
 
     const container = containerRef.current;
     const child = childRef.current;
@@ -40,14 +45,13 @@ export default function ScrollTilt({
       const scale = 1 + normalized * scaleRange;
 
       child.style.transform = `
-        perspective(800px)
+        perspective(1000px)
         rotateX(${tilt}deg)
         scale(${scale})
       `;
-      child.style.transition = "transform 0.1s ease-out";
+      child.style.transition = "transform 0.15s ease-out";
       child.style.transformStyle = "preserve-3d";
       child.style.willChange = "transform";
-      child.style.backfaceVisibility = "hidden";
     };
 
     handleScroll();
