@@ -32,7 +32,6 @@ const LangContext = createContext<LangCtx>({
   loadingTranslations: false,
 });
 
-// ─── Helper: Convert ANY value to plain string ──────────────────────────
 function ensureString(value: any): string {
   if (typeof value === "string") return value;
   if (typeof value === "number" || typeof value === "boolean") return String(value);
