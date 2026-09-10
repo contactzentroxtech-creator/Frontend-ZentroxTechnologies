@@ -1,289 +1,242 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Link from "next/link";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
 import {
-  MapPin,
   ArrowRight,
   CheckCircle2,
-  ChevronDown,
-  Phone,
-  Mail,
+  Globe2,
+  MapPin,
+  Sparkles,
+  Code2,
+  Smartphone,
+  Bot,
+  BarChart3,
+  Cloud,
+  Palette,
+  Users,
+  Cable,
+  Megaphone,
 } from "lucide-react";
-import { useState } from "react";
-import Script from "next/script";
 
-interface LocationPageProps {
+const SERVICES = [
+  { icon: Code2, color: "#2563eb", title: "Custom Software" },
+  { icon: Globe2, color: "#4f46e5", title: "Website Development" },
+  { icon: Smartphone, color: "#c7771a", title: "Mobile Apps" },
+  { icon: Cloud, color: "#0f766e", title: "SaaS Development" },
+  { icon: Palette, color: "#9333ea", title: "UI/UX Design" },
+  { icon: BarChart3, color: "#2563eb", title: "SEO Services" },
+  { icon: Megaphone, color: "#7c3aed", title: "Digital Marketing" },
+  { icon: Bot, color: "#0f766e", title: "AI Integration" },
+  { icon: Users, color: "#c2410c", title: "CRM Development" },
+  { icon: Cable, color: "#7e22ce", title: "API Integration" },
+];
+
+interface LocationPageTemplateProps {
+  title: string;
+  description: string;
   city: string;
   state: string;
-  service: string;
-  serviceSlug: string;
-  headline: string;
-  subheadline: string;
-  ctaText: string;
-  stats: { label: string; value: string }[];
-  services: { title: string; desc: string }[];
-  faqs: { q: string; a: string }[];
-  nearbyAreas: string[];
-  structuredData?: Record<string, any>;
-}
-
-function FAQItem({ q, a }: { q: string; a: string }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="border border-z-border rounded-xl overflow-hidden bg-white dark:bg-transparent">
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between p-4 text-left hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-      >
-        <span className="text-sm font-semibold text-zinc-900 dark:text-white pr-4">
-          {q}
-        </span>
-        <ChevronDown
-          size={16}
-          className={`text-z-muted flex-shrink-0 transition-transform duration-200 ${
-            open ? "rotate-180" : ""
-          }`}
-        />
-      </button>
-      {open && (
-        <div className="px-4 pb-4 text-sm text-z-muted leading-relaxed border-t border-z-border pt-3">
-          {a}
-        </div>
-      )}
-    </div>
-  );
+  country: string;
+  highlights: string[];
+  industries: string[];
 }
 
 export default function LocationPageTemplate({
+  title,
+  description,
   city,
   state,
-  service,
-  serviceSlug,
-  headline,
-  subheadline,
-  ctaText,
-  stats,
-  services,
-  faqs,
-  nearbyAreas,
-  structuredData,
-}: LocationPageProps) {
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqs.map(({ q, a }) => ({
-      "@type": "Question",
-      name: q,
-      acceptedAnswer: { "@type": "Answer", text: a },
-    })),
-  };
+  country,
+  highlights,
+  industries,
+}: LocationPageTemplateProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.1 });
 
   return (
-    <>
-      {structuredData && (
-        <Script id="local-biz-schema" type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            ...structuredData,
-          })}
-        </Script>
-      )}
-      <Script id="faq-schema" type="application/ld+json">
-        {JSON.stringify(faqSchema)}
-      </Script>
-
-      {/* Hero */}
-      <section className="relative z-10 py-20 px-4 md:px-6 border-b border-z-border">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="flex items-center gap-2 mb-4">
-              <MapPin size={14} className="text-z-accent" />
-              <span className="text-xs text-z-muted">
-                {city}, {state}
-              </span>
-              <span className="text-z-border">·</span>
-              <span className="text-xs text-z-accent">{service}</span>
-            </div>
-            <h1 className="text-4xl md:text-6xl font-extrabold text-zinc-900 dark:text-white leading-tight tracking-tight mb-5 max-w-3xl">
-              {headline}
-            </h1>
-            <p className="text-base text-z-muted max-w-2xl leading-relaxed mb-8">
-              {subheadline}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link
-                href="/contact"
-                className="group inline-flex items-center gap-2 px-8 py-4 rounded-full bg-z-accent text-white font-semibold text-sm hover:bg-blue-500 transition-all duration-300 shadow-glow-sm hover:shadow-glow-accent"
-              >
-                {ctaText}{" "}
-                <ArrowRight
-                  size={15}
-                  className="group-hover:translate-x-1 transition-transform"
-                />
-              </Link>
-              <a
-                href="https://wa.me/918988183513"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-8 py-4 rounded-full border border-zinc-300 dark:border-white/15 text-zinc-900 dark:text-white font-semibold text-sm hover:border-z-accent hover:text-z-accent transition-all duration-300"
-              >
-                <Phone size={14} /> WhatsApp Us
-              </a>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Stats */}
-      <section className="relative z-10 py-10 px-4 md:px-6 border-b border-z-border bg-slate-100/60 dark:bg-[rgba(8,12,21,0.5)] transition-colors">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-3 gap-6">
-            {stats.map((stat, i) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-                viewport={{ once: true }}
-                className="text-center"
-              >
-                <div className="text-2xl md:text-3xl font-extrabold text-zinc-900 dark:text-white">
-                  {stat.value}
-                </div>
-                <div className="text-xs text-z-muted mt-1">{stat.label}</div>
-              </motion.div>
-            ))}
+    <section className="bg-[#FDF8F3] px-4 py-20 sm:py-24 md:px-6 md:py-28 lg:py-32">
+      <div ref={ref} className="mx-auto max-w-7xl">
+        {/* HERO */}
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+          className="mx-auto mb-14 max-w-4xl text-center sm:mb-16"
+        >
+          <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-1.5 text-xs font-medium text-slate-700 shadow-sm">
+            <MapPin size={13} className="text-blue-600" />
+            {city}, {state}
           </div>
-        </div>
-      </section>
+          <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl xl:text-6xl">
+            {title}
+          </h1>
+          <p className="mx-auto mt-4 max-w-3xl text-base leading-relaxed text-slate-600 sm:text-lg">
+            {description}
+          </p>
 
-      {/* Services */}
-      <section className="relative z-10 py-20 px-4 md:px-6">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mb-10"
-          >
-            <div className="z-badge mb-4">
-              {service} in {city}
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+            <Link href="/contact" className="btn-primary">
+              Get a Free Consultation
+              <ArrowRight size={16} />
+            </Link>
+            <Link href="/services" className="btn-secondary">
+              Explore Our Services
+            </Link>
+          </div>
+        </motion.div>
+
+        {/* HIGHLIGHTS */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mx-auto mb-14 grid max-w-4xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
+        >
+          {highlights.map((highlight, idx) => (
+            <div key={idx} className="card-cream p-4 text-center">
+              <CheckCircle2 size={20} className="mx-auto mb-2 text-blue-600" />
+              <p className="text-sm font-medium text-slate-700">{highlight}</p>
             </div>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight mb-3">
+          ))}
+        </motion.div>
+
+        {/* SERVICES */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mb-16"
+        >
+          <div className="mb-10 text-center">
+            <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-1.5 text-xs font-medium text-slate-700 shadow-sm">
+              <Sparkles size={13} className="text-blue-600" />
+              Our Services
+            </div>
+            <h2 className="mt-4 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
               What We Offer in {city}
             </h2>
-          </motion.div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {services.map((s, i) => (
-              <motion.div
-                key={s.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-                viewport={{ once: true }}
-                className="glass-card p-6 hover:-translate-y-0.5 transition-transform duration-200 bg-white dark:bg-transparent border border-z-border rounded-xl"
-              >
-                <div className="flex items-start gap-3">
-                  <CheckCircle2
-                    size={18}
-                    className="text-z-accent3 flex-shrink-0 mt-0.5"
-                  />
-                  <div>
-                    <h3 className="font-bold text-zinc-900 dark:text-white mb-1">
-                      {s.title}
-                    </h3>
-                    <p className="text-sm text-z-muted leading-relaxed">
-                      {s.desc}
-                    </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
+            {SERVICES.map((service, idx) => {
+              const Icon = service.icon;
+              return (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, y: 15 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.3, delay: idx * 0.05 }}
+                  className="card-cream flex flex-col items-center gap-2 p-4 text-center"
+                >
+                  <div
+                    className="flex h-10 w-10 items-center justify-center rounded-lg border"
+                    style={{
+                      backgroundColor: `${service.color}10`,
+                      borderColor: `${service.color}20`,
+                    }}
+                  >
+                    <Icon size={18} style={{ color: service.color }} />
                   </div>
-                </div>
-              </motion.div>
-            ))}
+                  <span className="text-xs font-semibold text-slate-700">
+                    {service.title}
+                  </span>
+                </motion.div>
+              );
+            })}
           </div>
-        </div>
-      </section>
+        </motion.div>
 
-      {/* FAQs */}
-      <section className="relative z-10 py-20 px-4 md:px-6 bg-slate-50 dark:bg-[#080c15] transition-colors border-t border-z-border">
-        <div className="max-w-3xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mb-8"
-          >
-            <div className="z-badge mb-4">FAQs</div>
-            <h2 className="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
-              Frequently Asked Questions
+        {/* INDUSTRIES */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mb-16"
+        >
+          <div className="mb-10 text-center">
+            <h2 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+              Industries We Serve in {city}
             </h2>
-            <p className="text-z-muted text-sm mt-2">
-              About {service} services in {city}
-            </p>
-          </motion.div>
-          <div className="flex flex-col gap-3">
-            {faqs.map((faq) => (
-              <FAQItem key={faq.q} {...faq} />
-            ))}
           </div>
-        </div>
-      </section>
-
-      {/* Nearby areas */}
-      <section className="relative z-10 py-12 px-4 md:px-6 border-t border-z-border">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-base font-bold text-zinc-900 dark:text-white mb-4">
-            Areas We Serve in and around {city}
-          </h2>
-          <div className="flex flex-wrap gap-2">
-            {nearbyAreas.map((area) => (
+          <div className="flex flex-wrap justify-center gap-3">
+            {industries.map((industry) => (
               <span
-                key={area}
-                className="text-xs font-medium px-3 py-1.5 rounded-full border border-z-border text-z-muted bg-white dark:bg-transparent"
+                key={industry}
+                className="card-cream px-4 py-2 text-sm font-medium text-slate-700"
               >
-                {area}
+                {industry}
               </span>
             ))}
           </div>
-          <p className="text-xs text-z-muted mt-4 max-w-2xl leading-relaxed">
-            Zentrox Technologies is an MSME-registered remote-first technology
-            company serving clients in {city} and across {state}. We deliver
-            premium {service.toLowerCase()} services with the quality of
-            enterprise agencies at competitive local pricing.
-          </p>
-        </div>
-      </section>
+        </motion.div>
 
-      {/* CTA */}
-      <section className="relative z-10 py-16 px-4 md:px-6 bg-slate-100 dark:bg-[#080c15] border-t border-z-border transition-colors">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl font-extrabold text-zinc-900 dark:text-white mb-4">
-            Ready for Premium {service} in {city}?
+        {/* WHY CHOOSE US */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mx-auto max-w-4xl"
+        >
+          <div className="card-cream p-8 sm:p-10">
+            <h2 className="text-center text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+              Why Businesses in {city} Choose Zentrox Technologies
+            </h2>
+            <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
+              {[
+                { icon: Globe2, title: "Local Understanding", desc: `We understand the business landscape of ${city} and ${state}.` },
+                { icon: Sparkles, title: "Modern Technology", desc: "We use the latest tools and frameworks to build reliable solutions." },
+                { icon: Users, title: "Dedicated Team", desc: "A team of developers, designers, and digital marketers working together." },
+                { icon: CheckCircle2, title: "Proven Results", desc: "We focus on practical outcomes, not just deliverables." },
+              ].map((item, idx) => {
+                const Icon = item.icon;
+                return (
+                  <div key={idx} className="flex items-start gap-3">
+                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                      <Icon size={18} />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-slate-900">{item.title}</h3>
+                      <p className="mt-1 text-sm text-slate-600">{item.desc}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </motion.div>
+
+        {/* FINAL CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mt-16 text-center"
+        >
+          <h2 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+            Ready to Start Your Project in {city}?
           </h2>
-          <p className="text-z-muted mb-6 text-sm leading-relaxed">
-            Get a free consultation with Zentrox Technologies. We respond within
-            24 hours and the first consultation is always free.
+          <p className="mt-3 text-base text-slate-600">
+            Let's discuss how Zentrox Technologies can help your business grow.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-z-accent text-white font-semibold text-sm hover:bg-blue-500 transition-all duration-300"
-            >
-              Book Free Consultation <ArrowRight size={15} />
+          <div className="mt-6 flex flex-wrap justify-center gap-4">
+            <Link href="/contact" className="btn-primary">
+              Start Your Project
+              <ArrowRight size={16} />
             </Link>
-            <a
-              href="mailto:contact.zentroxtech@gmail.com"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full border border-zinc-300 dark:border-z-border text-zinc-800 dark:text-z-muted text-sm hover:text-zinc-900 dark:hover:text-white hover:border-z-accent transition-all duration-300 bg-white dark:bg-transparent"
-            >
-              <Mail size={14} /> Email Us
+            <a href="tel:+918988183513" className="btn-secondary">
+              Call +91 89881 83513
             </a>
           </div>
-        </div>
-      </section>
-    </>
+        </motion.div>
+      </div>
+    </section>
   );
 }
