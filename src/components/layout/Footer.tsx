@@ -54,7 +54,6 @@ export default function Footer() {
     <footer className="border-t border-[#F0E6D8] bg-[#FDF8F3]">
       <div className="mx-auto max-w-7xl px-4 pt-12 pb-6 md:px-6">
         <div className="mb-10 grid grid-cols-2 gap-6 md:grid-cols-4 lg:grid-cols-4 lg:gap-10">
-          {/* Brand Column */}
           <div className="col-span-2 lg:col-span-1">
             <div className="mb-4 flex items-center gap-2.5">
               <Image
@@ -109,7 +108,6 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Services */}
           <div>
             <h4 className="mb-4 text-xs font-semibold uppercase tracking-[0.08em] text-slate-500">
               Services
@@ -125,7 +123,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Company */}
           <div>
             <h4 className="mb-4 text-xs font-semibold uppercase tracking-[0.08em] text-slate-500">
               Company
@@ -141,7 +138,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Locations */}
           <div>
             <h4 className="mb-4 text-xs font-semibold uppercase tracking-[0.08em] text-slate-500">
               Locations
@@ -162,7 +158,6 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom Bar */}
         <div className="flex flex-col items-center justify-between gap-4 border-t border-[#F0E6D8] pt-6 md:flex-row">
           <p className="text-center text-xs text-slate-500 md:text-left">
             &copy; {new Date().getFullYear()} Zentrox Technologies. All rights reserved. MSME Registered — India.
