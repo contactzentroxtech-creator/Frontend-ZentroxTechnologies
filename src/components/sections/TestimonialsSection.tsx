@@ -1,137 +1,176 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { useEffect, useState, useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import { Star, Quote, MessageSquare } from "lucide-react";
 import { useLang } from "@/lib/providers";
+import api from "@/lib/api";
 
-const TESTIMONIALS = [
+interface Testimonial {
+  _id?: string;
+  name: string;
+  company?: string;
+  role?: string;
+  message: string;
+  rating?: number;
+  image?: string;
+}
+
+const DEFAULT_TESTIMONIALS: Testimonial[] = [
   {
-    name: "Founder, E-commerce Brand",
-    role: "E-commerce Platform Development",
-    text: "The e-commerce platform they built for us has streamlined our entire operation. The team understood our business from day one and delivered a solution that actually works for us.",
+    name: "Rajesh Kumar",
+    company: "TechVista Solutions",
+    role: "Founder & CEO",
+    message:
+      "Zentrox Technologies delivered our custom CRM on time and exactly as we envisioned. Their team is responsive, professional and truly understands business needs.",
+    rating: 5,
   },
   {
-    name: "Sales Director, B2B Firm",
-    role: "CRM & Management System",
-    text: "Zentrox Technologies developed a custom CRM that finally gave us full visibility into our sales pipeline. The process was smooth and the results speak for themselves.",
+    name: "Priya Sharma",
+    company: "Bloom Retail",
+    role: "Marketing Head",
+    message:
+      "Our website traffic grew by 140% within three months of working with Zentrox. Their SEO and digital marketing team is data-driven and results-focused.",
+    rating: 5,
   },
   {
-    name: "CTO, SaaS Startup",
-    role: "SaaS Development",
-    text: "Their SaaS development expertise helped us launch our product on time. The architecture is scalable and the team continues to support us as we grow.",
-  },
-  {
-    name: "Marketing Lead, Professional Services",
-    role: "SEO & Digital Growth",
-    text: "Our organic traffic increased by over 60% within four months of working with Zentrox Technologies on SEO. Their data-driven approach and clear reporting made all the difference.",
+    name: "Amit Verma",
+    company: "MediCare Plus",
+    role: "Operations Director",
+    message:
+      "From concept to launch, Zentrox handled our mobile app project flawlessly. Clean code, great communication and outstanding post-launch support.",
+    rating: 5,
   },
 ];
 
-function TestimonialCard({ testimonial }: { testimonial: (typeof TESTIMONIALS)[0] }) {
+function StarRating({ rating = 5 }: { rating?: number }) {
   return (
-    <div className="card-cream flex flex-col p-6">
-      <div className="flex gap-0.5">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <Star key={i} size={14} className="fill-blue-500 text-blue-500" />
-        ))}
-      </div>
-      <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-slate-700">
-        “{testimonial.text}”
-      </blockquote>
-      <div className="mt-4 border-t border-[#F0E6D8] pt-4">
-        <div className="font-semibold text-slate-800">{testimonial.name}</div>
-        <div className="text-sm text-slate-500">{testimonial.role}</div>
-      </div>
+    <div className="flex items-center gap-0.5">
+      {[...Array(5)].map((_, i) => (
+        <Star
+          key={i}
+          size={14}
+          className={
+            i < rating
+              ? "fill-amber-400 text-amber-400"
+              : "fill-slate-200 text-slate-200"
+          }
+        />
+      ))}
     </div>
   );
 }
 
 export default function TestimonialsSection() {
   const { t } = useLang();
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const ref = useRef<HTMLDivElement>(null);
-
-  const totalSlides = TESTIMONIALS.length;
-
-  const goToSlide = (index: number) => {
-    if (index < 0) setCurrentIndex(totalSlides - 1);
-    else if (index >= totalSlides) setCurrentIndex(0);
-    else setCurrentIndex(index);
-  };
+  const inView = useInView(ref, { once: true, amount: 0.15 });
+  const [testimonials, setTestimonials] = useState<Testimonial[]>(
+    DEFAULT_TESTIMONIALS
+  );
 
   useEffect(() => {
-    if (!isAutoPlaying) return;
-    const interval = setInterval(() => {
-      goToSlide(currentIndex + 1);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [currentIndex, isAutoPlaying, totalSlides]);
+    let mounted = true;
+    const load = async () => {
+      try {
+        const { data } = await api.get("/testimonials");
+        const items = data?.data || data;
+        if (mounted && Array.isArray(items) && items.length > 0) {
+          setTestimonials(items);
+        }
+      } catch {}
+    };
+    load();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   return (
     <section
       id="testimonials"
-      className="bg-[#FDF8F3] px-4 py-20 sm:py-24 md:px-6 md:py-28 lg:py-32"
-      ref={ref}
+      aria-label="Client testimonials"
+      className="relative bg-[#FDF8F3] px-4 py-20 sm:py-24 md:px-6 md:py-28 lg:py-32"
     >
-      <div className="mx-auto max-w-4xl">
-        <div className="mx-auto mb-14 max-w-3xl text-center sm:mb-16">
-          <span className="text-xs font-medium uppercase tracking-wider text-blue-600">
-            {t("testimonials.badge")}
-          </span>
-          <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-            {t("testimonials.title")}
+      <div ref={ref} className="mx-auto max-w-7xl">
+        {/* ─── HEADER ───────────────────────────────── */}
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+          className="mb-14 max-w-3xl"
+        >
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-200/60 bg-amber-50/60 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-amber-700">
+            <MessageSquare size={13} />
+            {t("testimonials.badge", "Testimonials")}
+          </div>
+
+          <h2 className="text-3xl font-extrabold leading-[1.1] tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+            {t("testimonials.title", "What Our Clients Say")}
           </h2>
-          <p className="mt-3 text-base leading-relaxed text-slate-600 sm:text-lg">
-            {t("testimonials.sub")}
+
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-slate-600 lg:text-lg">
+            {t(
+              "testimonials.sub",
+              "We're grateful for the trust and kind words from our amazing clients."
+            )}
           </p>
-        </div>
+        </motion.div>
 
-        <div className="relative overflow-hidden">
-          <div
-            className="flex transition-transform duration-500 ease-in-out"
-            style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-          >
-            {TESTIMONIALS.map((testimonial, index) => (
-              <div key={index} className="w-full flex-shrink-0 px-2">
-                <TestimonialCard testimonial={testimonial} />
+        {/* ─── TESTIMONIALS GRID ────────────────────── */}
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {testimonials.map((item, index) => (
+            <motion.div
+              key={item._id || index}
+              initial={{ opacity: 0, y: 25 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{
+                duration: 0.5,
+                delay: index * 0.1,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              whileHover={{ y: -6 }}
+              className="
+                group relative flex h-full flex-col
+                rounded-2xl border border-slate-200/70
+                bg-white p-6
+                transition-all duration-300
+                hover:border-blue-200
+                hover:shadow-[0_20px_50px_rgba(15,23,42,0.08)]
+                sm:p-7
+              "
+            >
+              {/* Quote icon */}
+              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition-transform duration-300 group-hover:scale-110">
+                <Quote size={18} />
               </div>
-            ))}
-          </div>
 
-          <div className="mt-6 flex items-center justify-center gap-3">
-            <button
-              onClick={() => goToSlide(currentIndex - 1)}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-[#F0E6D8] bg-white text-slate-600 transition-all hover:border-blue-300 hover:bg-blue-50"
-              aria-label="Previous testimonial"
-            >
-              <ChevronLeft size={18} />
-            </button>
+              {/* Rating */}
+              <StarRating rating={item.rating} />
 
-            <div className="flex gap-1.5">
-              {TESTIMONIALS.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => goToSlide(index)}
-                  className={`h-2 rounded-full transition-all ${
-                    currentIndex === index
-                      ? "w-6 bg-blue-600"
-                      : "w-2 bg-slate-300 hover:bg-slate-400"
-                  }`}
-                  aria-label={`Go to testimonial ${index + 1}`}
-                />
-              ))}
-            </div>
+              {/* Message */}
+              <p className="mt-4 flex-1 text-sm leading-relaxed text-slate-600">
+                "{item.message}"
+              </p>
 
-            <button
-              onClick={() => goToSlide(currentIndex + 1)}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-[#F0E6D8] bg-white text-slate-600 transition-all hover:border-blue-300 hover:bg-blue-50"
-              aria-label="Next testimonial"
-            >
-              <ChevronRight size={18} />
-            </button>
-          </div>
+              {/* Author */}
+              <div className="mt-6 flex items-center gap-3 border-t border-slate-100 pt-5">
+                <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-sm font-bold text-white">
+                  {item.name.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-slate-900">
+                    {item.name}
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    {item.role}
+                    {item.role && item.company ? " · " : ""}
+                    {item.company}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>
