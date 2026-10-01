@@ -1,220 +1,475 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { motion, useInView } from "framer-motion";
 import {
   ArrowRight,
   Globe,
   Smartphone,
-  Bot,
-  BarChart3,
-  Cloud,
-  Palette,
   Code2,
-  Users,
+  Palette,
+  BarChart3,
+  Bot,
+  Cloud,
   Cable,
-  Sparkles,
+  Users,
   Megaphone,
   CheckCircle2,
+  Database,
+  Layers,
 } from "lucide-react";
+import { useLang } from "@/lib/providers";
 
-const SERVICES = [
-  {
-    id: "software",
-    icon: Code2,
-    color: "#2563eb",
-    title: "Software Development",
-    description: "Scalable custom software designed around your business processes, workflows and operational needs.",
-    features: ["Custom web applications", "Internal tools & dashboards", "API development", "Third-party integrations"],
-  },
+/* =========================================================
+   ALL SERVICES DATA
+========================================================= */
+
+const ALL_SERVICES = [
   {
     id: "web",
     icon: Globe,
-    color: "#4f46e5",
-    title: "Website Development",
-    description: "Fast, responsive and conversion-focused websites built to represent your brand and generate business.",
-    features: ["Business websites", "Landing pages", "E-commerce stores", "CMS-based websites"],
-  },
-  {
-    id: "saas",
-    icon: Cloud,
-    color: "#0f766e",
-    title: "SaaS Development",
-    description: "Custom SaaS platforms with subscription models, dashboards, integrations and scalable architecture.",
-    features: ["Multi-tenant SaaS platforms", "Subscription & billing", "Admin dashboards", "User management"],
+    color: "#2563eb",
+    titleKey: "service.web.title",
+    longKey: "service.web.long",
+    titleFB: "Website Development",
+    longFB:
+      "We design and develop fast, mobile-responsive, SEO-optimized websites that help businesses build credibility, generate leads and grow online. Whether you need a business website, landing page or e-commerce store, we build websites that perform.",
+    features: ["Responsive Design", "SEO Optimized", "Fast Loading", "CMS Integration"],
   },
   {
     id: "android",
     icon: Smartphone,
-    color: "#c7771a",
-    title: "Mobile App Development",
-    description: "User-friendly Android and iOS applications focused on performance, usability and reliability.",
-    features: ["Android & iOS apps", "Cross-platform apps", "Mobile UI/UX", "Push notifications"],
+    color: "#7c3aed",
+    titleKey: "service.android.title",
+    longKey: "service.android.long",
+    titleFB: "Mobile App Development",
+    longFB:
+      "We build high-performance Android and iOS applications with intuitive interfaces and smooth user experiences. From concept to launch, we handle strategy, design, development, testing and deployment.",
+    features: ["iOS & Android", "Cross-Platform", "Push Notifications", "App Store Deploy"],
+  },
+  {
+    id: "software",
+    icon: Code2,
+    color: "#0f766e",
+    titleKey: "service.software.title",
+    longKey: "service.software.long",
+    titleFB: "Custom Software Development",
+    longFB:
+      "We build scalable, secure and custom software solutions designed around your business processes. Whether you need internal tools, management systems or industry-specific software, we deliver reliable solutions.",
+    features: ["Scalable Architecture", "Secure Systems", "Custom Workflows", "API Integration"],
   },
   {
     id: "design",
     icon: Palette,
-    color: "#9333ea",
-    title: "UI/UX Design",
-    description: "Clear and intuitive digital experiences designed to make complex products simple to use.",
-    features: ["User research", "Wireframing", "Prototyping", "Design systems"],
+    color: "#0891b2",
+    titleKey: "service.design.title",
+    longKey: "service.design.long",
+    titleFB: "UI/UX Design",
+    longFB:
+      "Human-centered design that makes complex products simple to use. We combine research, strategy and visual design to create digital experiences that users enjoy and businesses benefit from.",
+    features: ["User Research", "Wireframes", "Prototyping", "Design Systems"],
   },
   {
     id: "seo",
     icon: BarChart3,
-    color: "#2563eb",
-    title: "SEO & Digital Growth",
-    description: "Data-driven SEO strategies designed to improve visibility, organic traffic and long-term growth.",
-    features: ["Local SEO", "Technical SEO", "Content SEO", "Link building"],
-  },
-  {
-    id: "marketing",
-    icon: Megaphone,
-    color: "#7c3aed",
-    title: "Digital Marketing",
-    description: "Digital campaigns and content strategies focused on awareness, leads and measurable business growth.",
-    features: ["Social media marketing", "Google Ads", "Content marketing", "Email campaigns"],
+    color: "#ea580c",
+    titleKey: "service.seo.title",
+    longKey: "service.seo.long",
+    titleFB: "SEO & Digital Marketing",
+    longFB:
+      "Data-driven SEO and digital marketing strategies that improve visibility, attract qualified traffic and generate more leads. We focus on practical, measurable results for your business.",
+    features: ["On-Page SEO", "Technical SEO", "Content Strategy", "Analytics"],
   },
   {
     id: "ai",
     icon: Bot,
-    color: "#0f766e",
-    title: "AI Integration",
-    description: "Practical AI integrations, automation and intelligent features that improve business workflows.",
-    features: ["AI chatbots", "Workflow automation", "AI content tools", "Custom AI integrations"],
+    color: "#4f46e5",
+    titleKey: "service.ai.title",
+    longKey: "service.ai.long",
+    titleFB: "AI Integration & Automation",
+    longFB:
+      "Practical AI integrations and automation systems that reduce repetitive work, improve productivity and give your business a competitive edge. From chatbots to workflow automation, we build AI solutions that work.",
+    features: ["AI Chatbots", "Workflow Automation", "Smart Analytics", "Custom AI Models"],
+  },
+  {
+    id: "saas",
+    icon: Cloud,
+    color: "#be185d",
+    titleKey: "service.saas.title",
+    longKey: "service.saas.long",
+    titleFB: "SaaS Development",
+    longFB:
+      "From MVP to full-scale SaaS products, we help turn your product ideas into reliable digital businesses. We handle multi-tenancy, subscriptions, billing, dashboards and scalable architecture.",
+    features: ["Multi-Tenancy", "Subscriptions", "Dashboards", "Scalable Infrastructure"],
   },
   {
     id: "crm",
-    icon: Users,
-    color: "#c2410c",
-    title: "CRM Development",
-    description: "Custom CRM systems that organize sales, customer relationships and business operations.",
-    features: ["Sales pipeline management", "Customer tracking", "Team dashboards", "Reporting & analytics"],
+    icon: Database,
+    color: "#0369a1",
+    titleKey: "service.crm.title",
+    longKey: "service.crm.long",
+    titleFB: "CRM Development",
+    longFB:
+      "Custom CRM systems designed around your sales process. Organize customer data, streamline sales workflows, improve team visibility and build stronger customer relationships.",
+    features: ["Lead Management", "Sales Pipeline", "Reports & Analytics", "Team Collaboration"],
   },
   {
     id: "api",
     icon: Cable,
-    color: "#7e22ce",
-    title: "API Integration",
-    description: "Connect your existing tools, platforms and workflows through reliable API integrations.",
-    features: ["Payment gateway integration", "Third-party APIs", "Data syncing", "Webhook setup"],
+    color: "#059669",
+    titleKey: "service.api.title",
+    longKey: "service.api.long",
+    titleFB: "API Integration",
+    longFB:
+      "Reliable API integrations that connect your existing tools, platforms and workflows. Payment gateways, third-party services, data syncing — we make your systems work together seamlessly.",
+    features: ["REST APIs", "Payment Gateways", "Third-Party Services", "Data Sync"],
+  },
+  {
+    id: "marketing",
+    icon: Megaphone,
+    color: "#dc2626",
+    titleKey: "service.marketing.title",
+    longKey: "service.marketing.long",
+    titleFB: "Digital Marketing",
+    longFB:
+      "Smart digital campaigns that strengthen your brand, generate leads and support sustainable growth. We combine SEO, social media, content and paid campaigns for measurable business outcomes.",
+    features: ["Social Media", "Content Marketing", "Paid Campaigns", "Brand Strategy"],
   },
 ];
 
-function ServiceCard({ service, index }: { service: (typeof SERVICES)[number]; index: number }) {
+/* =========================================================
+   SERVICE CARD COMPONENT
+========================================================= */
+
+function ServiceCard({
+  service,
+  index,
+  inView,
+}: {
+  service: (typeof ALL_SERVICES)[number];
+  index: number;
+  inView: boolean;
+}) {
+  const { t } = useLang();
   const Icon = service.icon;
-  const cardRef = useRef<HTMLDivElement>(null);
-  const inView = useInView(cardRef, { once: true, amount: 0.2 });
 
   return (
     <motion.div
-      ref={cardRef}
+      id={service.id}
       initial={{ opacity: 0, y: 25 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.4, delay: Math.min(index * 0.05, 0.4) }}
+      transition={{
+        duration: 0.5,
+        delay: Math.min(index * 0.06, 0.4),
+        ease: [0.22, 1, 0.36, 1],
+      }}
       whileHover={{ y: -6 }}
-      className="group h-full"
-      id={service.id}
+      className="
+        group flex h-full flex-col
+        overflow-hidden rounded-2xl
+        border border-slate-200/70
+        bg-white p-6
+        transition-all duration-300
+        hover:border-blue-200
+        hover:shadow-[0_20px_50px_rgba(15,23,42,0.08)]
+        sm:p-7
+      "
     >
-      <div className="card-cream relative h-full flex flex-col p-6 sm:p-7">
-        <span className="text-[11px] font-medium tracking-wider text-slate-400">
-          {String(index + 1).padStart(2, "0")}
-        </span>
-
-        <div
-          className="mt-3 flex h-12 w-12 items-center justify-center rounded-xl border"
-          style={{
-            backgroundColor: `${service.color}10`,
-            borderColor: `${service.color}20`,
-          }}
-        >
-          <Icon size={22} style={{ color: service.color }} />
-        </div>
-
-        <h3 className="mt-4 text-lg font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">
-          {service.title}
-        </h3>
-
-        <p className="mt-2 text-sm leading-relaxed text-slate-600">
-          {service.description}
-        </p>
-
-        <div className="mt-4 space-y-1.5">
-          {service.features.map((feature) => (
-            <div key={feature} className="flex items-center gap-2 text-xs text-slate-600">
-              <CheckCircle2 size={13} style={{ color: service.color }} className="flex-shrink-0" />
-              <span>{feature}</span>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-auto pt-6">
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:gap-2.5 transition-all"
-          >
-            Get a Quote
-            <ArrowRight size={15} />
-          </Link>
-        </div>
+      {/* Icon */}
+      <div
+        className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110"
+        style={{
+          backgroundColor: `${service.color}12`,
+          color: service.color,
+        }}
+      >
+        <Icon size={22} />
       </div>
+
+      {/* Title */}
+      <h3 className="text-base font-bold leading-snug text-slate-900 transition-colors group-hover:text-blue-600 sm:text-lg">
+        {t(service.titleKey, service.titleFB)}
+      </h3>
+
+      {/* Description */}
+      <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-600 line-clamp-3">
+        {t(service.longKey, service.longFB)}
+      </p>
+
+      {/* Features */}
+      <ul className="mt-4 space-y-1.5">
+        {service.features.slice(0, 3).map((feature) => (
+          <li
+            key={feature}
+            className="flex items-center gap-2 text-xs text-slate-500"
+          >
+            <CheckCircle2 size={12} className="flex-shrink-0 text-emerald-500" />
+            {feature}
+          </li>
+        ))}
+      </ul>
+
+      {/* Learn More */}
+      <Link
+        href={`/contact?service=${service.id}`}
+        className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 transition-all group-hover:gap-3"
+      >
+        {t("services.learn_more", "Learn More")}
+        <ArrowRight
+          size={15}
+          className="transition-transform duration-300 group-hover:translate-x-1"
+        />
+      </Link>
     </motion.div>
   );
 }
 
+/* =========================================================
+   MAIN COMPONENT
+========================================================= */
+
 export default function ServicesClient() {
+  const { t } = useLang();
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.1 });
+  const inView = useInView(ref, { once: true, amount: 0.05 });
+  const [filter, setFilter] = useState<string>("all");
+
+  const FILTERS = [
+    { id: "all", label: "All Services" },
+    { id: "web", label: "Web" },
+    { id: "mobile", label: "Mobile" },
+    { id: "software", label: "Software" },
+    { id: "design", label: "Design" },
+    { id: "marketing", label: "Marketing" },
+  ];
+
+  const filteredServices =
+    filter === "all"
+      ? ALL_SERVICES
+      : ALL_SERVICES.filter((s) => {
+          if (filter === "mobile") return s.id === "android";
+          if (filter === "marketing") return s.id === "seo" || s.id === "marketing";
+          return s.id === filter;
+        });
 
   return (
-    <section className="bg-[#FDF8F3] px-4 py-20 sm:py-24 md:px-6 md:py-28 lg:py-32">
-      <div ref={ref} className="mx-auto max-w-7xl">
-        <motion.div
-          initial={{ opacity: 0, y: 25 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="mx-auto mb-14 max-w-3xl text-center sm:mb-16"
+    <main className="bg-white">
+      {/* ─── HERO SECTION ─────────────────────────── */}
+      <section className="relative overflow-hidden bg-[#FDF8F3] pt-32 pb-16 md:pt-40 md:pb-20 lg:pt-44 lg:pb-24">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 overflow-hidden"
         >
-          <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-1.5 text-xs font-medium text-slate-700 shadow-sm">
-            <Sparkles size={13} className="text-blue-600" />
-            Our Services
-          </div>
-          <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
-            Technology and Digital Solutions Built Around Your Business
-          </h1>
-          <p className="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg">
-            From custom software and websites to mobile apps, AI, and digital marketing — Zentrox Technologies brings together the services you need to build and grow.
-          </p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
-          {SERVICES.map((service, index) => (
-            <ServiceCard key={service.id} service={service} index={index} />
-          ))}
+          <div className="absolute -left-40 top-0 h-[400px] w-[400px] rounded-full bg-blue-100/60 blur-[120px]" />
+          <div className="absolute -right-40 top-40 h-[400px] w-[400px] rounded-full bg-purple-100/50 blur-[120px]" />
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 25 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mt-16 text-center"
-        >
-          <div className="card-cream mx-auto max-w-2xl p-8 sm:p-10">
-            <h2 className="text-2xl font-semibold text-slate-900 sm:text-3xl">
-              Have a Project in Mind?
-            </h2>
-            <p className="mt-3 text-base text-slate-600">
-              Let's discuss how we can help you build the right solution for your business.
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            className="mx-auto max-w-3xl text-center"
+          >
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-white/80 px-4 py-1.5 text-xs font-semibold text-blue-700 shadow-sm backdrop-blur-sm">
+              <Layers size={13} />
+              {t("services.page.badge", "Our Services")}
+            </div>
+
+            <h1 className="text-4xl font-extrabold leading-[1.05] tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
+              {t("services.page.title1", "Digital Solutions for")}{" "}
+              <span className="gradient-text">
+                {t("services.page.title2", "Modern Businesses")}
+              </span>
+            </h1>
+
+            <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-600 lg:text-lg">
+              {t(
+                "services.page.sub",
+                "We offer a complete range of digital services to help you build, scale and succeed in the online world."
+              )}
             </p>
-            <Link href="/contact" className="btn-primary mt-6">
-              Start Your Project
-              <ArrowRight size={16} />
-            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ─── SERVICES GRID ────────────────────────── */}
+      <section className="relative bg-white px-4 py-16 sm:py-20 md:px-6 md:py-24">
+        <div ref={ref} className="mx-auto max-w-7xl">
+          {/* Filter Tabs */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5 }}
+            className="mb-10 flex flex-wrap items-center justify-center gap-2"
+          >
+            {FILTERS.map((f) => (
+              <button
+                key={f.id}
+                onClick={() => setFilter(f.id)}
+                className={`
+                  rounded-full border px-5 py-2
+                  text-xs font-semibold transition-all duration-300
+                  ${
+                    filter === f.id
+                      ? "border-blue-600 bg-blue-600 text-white shadow-md shadow-blue-600/20"
+                      : "border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:text-blue-600"
+                  }
+                `}
+              >
+                {f.label}
+              </button>
+            ))}
+          </motion.div>
+
+          {/* Services Grid */}
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredServices.map((service, index) => (
+              <ServiceCard
+                key={service.id}
+                service={service}
+                index={index}
+                inView={inView}
+              />
+            ))}
           </div>
-        </motion.div>
-      </div>
-    </section>
+        </div>
+      </section>
+
+      {/* ─── WHY CHOOSE ───────────────────────────── */}
+      <section className="relative bg-[#FDF8F3] px-4 py-16 sm:py-20 md:px-6 md:py-24">
+        <div className="mx-auto max-w-7xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-12 text-center"
+          >
+            <h2 className="text-3xl font-extrabold leading-tight text-slate-900 sm:text-4xl">
+              {t("services.page.why.title", "Why Choose Zentrox")}
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-base text-slate-600">
+              {t(
+                "services.page.why.sub",
+                "We combine technical expertise with business understanding to deliver solutions that actually work."
+              )}
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { icon: Users, label: "Expert Team", color: "#2563eb" },
+              { icon: CheckCircle2, label: "Quality Work", color: "#0891b2" },
+              { icon: BarChart3, label: "Results Driven", color: "#ea580c" },
+              { icon: Cable, label: "Ongoing Support", color: "#7c3aed" },
+            ].map((item, i) => {
+              const Icon = item.icon;
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  className="flex flex-col items-center gap-3 rounded-2xl border border-slate-200/70 bg-white p-6 text-center"
+                >
+                  <div
+                    className="flex h-12 w-12 items-center justify-center rounded-xl"
+                    style={{
+                      backgroundColor: `${item.color}12`,
+                      color: item.color,
+                    }}
+                  >
+                    <Icon size={22} />
+                  </div>
+                  <p className="text-sm font-bold text-slate-900">
+                    {item.label}
+                  </p>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── CTA ──────────────────────────────────── */}
+      <section className="relative bg-white px-4 py-16 sm:py-20 md:px-6 md:py-24">
+        <div className="mx-auto max-w-5xl">
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="
+              relative overflow-hidden rounded-3xl
+              bg-gradient-to-br from-blue-600 via-blue-700 to-purple-700
+              px-8 py-14 text-center
+              shadow-2xl shadow-blue-600/20
+              sm:px-12 sm:py-16
+            "
+          >
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 opacity-[0.06]"
+              style={{
+                backgroundImage: `
+                  linear-gradient(rgba(255,255,255,.8) 1px, transparent 1px),
+                  linear-gradient(90deg, rgba(255,255,255,.8) 1px, transparent 1px)
+                `,
+                backgroundSize: "48px 48px",
+              }}
+            />
+
+            <div className="relative z-10 mx-auto max-w-2xl">
+              <h2 className="text-2xl font-extrabold leading-tight text-white sm:text-3xl lg:text-4xl">
+                {t("services.page.cta.title", "Have a Project in Mind?")}
+              </h2>
+              <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-blue-50 sm:text-base">
+                {t(
+                  "services.page.cta.sub",
+                  "Let's discuss your ideas and turn them into a powerful digital solution."
+                )}
+              </p>
+
+              <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                <Link
+                  href="/contact"
+                  className="
+                    group inline-flex items-center gap-2
+                    rounded-full bg-white px-7 py-3.5
+                    text-sm font-semibold text-blue-700
+                    shadow-lg shadow-black/10
+                    transition-all duration-300
+                    hover:-translate-y-1 hover:shadow-xl
+                  "
+                >
+                  {t("services.page.cta.primary", "Get a Free Quote")}
+                  <ArrowRight
+                    size={16}
+                    className="transition-transform duration-300 group-hover:translate-x-1"
+                  />
+                </Link>
+                <Link
+                  href="/portfolio"
+                  className="
+                    inline-flex items-center gap-2
+                    rounded-full border border-white/30 bg-white/10
+                    px-7 py-3.5
+                    text-sm font-semibold text-white
+                    backdrop-blur-sm
+                    transition-all duration-300
+                    hover:-translate-y-1 hover:bg-white/20
+                  "
+                >
+                  {t("services.page.cta.secondary", "View Our Work")}
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+    </main>
   );
 }
