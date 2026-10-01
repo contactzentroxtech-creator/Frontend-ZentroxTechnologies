@@ -102,7 +102,6 @@ export default function AboutClient() {
 
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-8">
-            {/* Left content */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -129,7 +128,6 @@ export default function AboutClient() {
                 )}
               </p>
 
-              {/* Mini stats */}
               <div className="mt-8 flex flex-wrap items-center gap-6">
                 <div className="flex items-center gap-2">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
@@ -167,7 +165,6 @@ export default function AboutClient() {
               </div>
             </motion.div>
 
-            {/* Right image */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
