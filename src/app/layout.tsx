@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@/styles/globals.css";
-import "@/styles/theme.css";
 import { AppProviders } from "@/lib/providers";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
 const inter = Inter({ subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://zentroxtechnologies.com"),
   title: {
-    default:
-      "Zentrox Technologies | Software, Web & Digital Growth Solutions",
+    default: "Zentrox Technologies | Software, Web & Digital Growth Solutions",
     template: "%s | Zentrox Technologies",
   },
   description:
@@ -26,7 +26,6 @@ export const metadata: Metadata = {
     "custom software development",
     "SaaS development",
     "AI integration services",
-    "AI integration India",
     "SEO services",
     "SEO services Mohali",
     "digital marketing services",
@@ -37,10 +36,6 @@ export const metadata: Metadata = {
     "software company Mohali",
     "software development Chandigarh",
     "IT services Punjab",
-    "digital agency Mohali",
-    "web development Punjab",
-    "custom software India",
-    "global software development company",
   ],
   authors: [{ name: "Zentrox Technologies" }],
   creator: "Zentrox Technologies",
@@ -69,7 +64,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Zentrox Technologies | Software, Web & Digital Growth Solutions",
     description:
-      "Custom software, websites, mobile apps, SaaS, AI integration, SEO and digital marketing solutions for growing businesses worldwide.",
+      "Custom software, websites, mobile apps, SaaS, AI integration, SEO and digital marketing solutions.",
     images: ["/og-image.png"],
   },
   robots: {
@@ -96,7 +91,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // JSON-LD Structured Data for Organization & LocalBusiness
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -122,11 +116,6 @@ export default function RootLayout({
       areaServed: ["IN", "US", "GB", "CA", "AU", "AE", "SG"],
       availableLanguage: ["English"],
     },
-    sameAs: [
-      "https://www.linkedin.com/company/zentrox-technologies",
-      "https://www.instagram.com/zentroxtechnologies",
-      "https://www.facebook.com/zentroxtechnologies",
-    ],
   };
 
   const localBusinessSchema = {
@@ -144,17 +133,6 @@ export default function RootLayout({
       addressRegion: "Punjab",
       postalCode: "140308",
       addressCountry: "IN",
-    },
-    geo: {
-      "@type": "GeoCoordinates",
-      latitude: 30.7046,
-      longitude: 76.7179,
-    },
-    openingHoursSpecification: {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-      opens: "10:00",
-      closes: "18:00",
     },
     areaServed: [
       "Mohali",
@@ -199,7 +177,11 @@ export default function RootLayout({
       <body
         className={`${inter.className} bg-[#FDF8F3] text-slate-800 antialiased`}
       >
-        <AppProviders>{children}</AppProviders>
+        <AppProviders>
+          <Navbar />
+          <main className="pt-20 md:pt-24">{children}</main>
+          <Footer />
+        </AppProviders>
       </body>
     </html>
   );
