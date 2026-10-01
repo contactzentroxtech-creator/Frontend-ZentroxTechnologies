@@ -3,7 +3,6 @@
 import { useEffect, useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Star, Quote, MessageSquare } from "lucide-react";
-import { useLang } from "@/lib/providers";
 import api from "@/lib/api";
 
 interface Testimonial {
@@ -13,7 +12,6 @@ interface Testimonial {
   role?: string;
   message: string;
   rating?: number;
-  image?: string;
 }
 
 const DEFAULT_TESTIMONIALS: Testimonial[] = [
@@ -51,9 +49,7 @@ function StarRating({ rating = 5 }: { rating?: number }) {
           key={i}
           size={14}
           className={
-            i < rating
-              ? "fill-amber-400 text-amber-400"
-              : "fill-slate-200 text-slate-200"
+            i < rating ? "fill-amber-400 text-amber-400" : "fill-slate-200 text-slate-200"
           }
         />
       ))}
@@ -62,12 +58,9 @@ function StarRating({ rating = 5 }: { rating?: number }) {
 }
 
 export default function TestimonialsSection() {
-  const { t } = useLang();
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.15 });
-  const [testimonials, setTestimonials] = useState<Testimonial[]>(
-    DEFAULT_TESTIMONIALS
-  );
+  const [testimonials, setTestimonials] = useState<Testimonial[]>(DEFAULT_TESTIMONIALS);
 
   useEffect(() => {
     let mounted = true;
@@ -90,10 +83,9 @@ export default function TestimonialsSection() {
     <section
       id="testimonials"
       aria-label="Client testimonials"
-      className="relative bg-[#FDF8F3] px-4 py-20 sm:py-24 md:px-6 md:py-28 lg:py-32"
+      className="relative bg-[#FDF8F3] px-4 py-20 sm:py-24 md:px-6 md:py-28"
     >
       <div ref={ref} className="mx-auto max-w-7xl">
-        {/* ─── HEADER ───────────────────────────────── */}
         <motion.div
           initial={{ opacity: 0, y: 25 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -102,66 +94,44 @@ export default function TestimonialsSection() {
         >
           <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-200/60 bg-amber-50/60 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-amber-700">
             <MessageSquare size={13} />
-            {t("testimonials.badge", "Testimonials")}
+            Testimonials
           </div>
 
           <h2 className="text-3xl font-extrabold leading-[1.1] tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
-            {t("testimonials.title", "What Our Clients Say")}
+            What Our Clients Say
           </h2>
 
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-slate-600 lg:text-lg">
-            {t(
-              "testimonials.sub",
-              "We're grateful for the trust and kind words from our amazing clients."
-            )}
+            We're grateful for the trust and kind words from our amazing clients.
           </p>
         </motion.div>
 
-        {/* ─── TESTIMONIALS GRID ────────────────────── */}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {testimonials.map((item, index) => (
             <motion.div
               key={item._id || index}
               initial={{ opacity: 0, y: 25 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{
-                duration: 0.5,
-                delay: index * 0.1,
-                ease: [0.22, 1, 0.36, 1],
-              }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
               whileHover={{ y: -6 }}
-              className="
-                group relative flex h-full flex-col
-                rounded-2xl border border-slate-200/70
-                bg-white p-6
-                transition-all duration-300
-                hover:border-blue-200
-                hover:shadow-[0_20px_50px_rgba(15,23,42,0.08)]
-                sm:p-7
-              "
+              className="group relative flex h-full flex-col rounded-2xl border border-slate-200/70 bg-white p-6 transition-all hover:border-blue-200 hover:shadow-[0_20px_50px_rgba(15,23,42,0.08)] sm:p-7"
             >
-              {/* Quote icon */}
-              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition-transform duration-300 group-hover:scale-110">
+              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition-transform group-hover:scale-110">
                 <Quote size={18} />
               </div>
 
-              {/* Rating */}
               <StarRating rating={item.rating} />
 
-              {/* Message */}
               <p className="mt-4 flex-1 text-sm leading-relaxed text-slate-600">
                 "{item.message}"
               </p>
 
-              {/* Author */}
               <div className="mt-6 flex items-center gap-3 border-t border-slate-100 pt-5">
                 <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-sm font-bold text-white">
                   {item.name.charAt(0).toUpperCase()}
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-slate-900">
-                    {item.name}
-                  </p>
+                  <p className="text-sm font-bold text-slate-900">{item.name}</p>
                   <p className="text-xs text-slate-500">
                     {item.role}
                     {item.role && item.company ? " · " : ""}
