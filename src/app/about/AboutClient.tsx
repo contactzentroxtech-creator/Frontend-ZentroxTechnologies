@@ -22,10 +22,6 @@ import {
 } from "lucide-react";
 import { useLang } from "@/lib/providers";
 
-/* =========================================================
-   DATA
-========================================================= */
-
 const VALUES = [
   {
     icon: Heart,
@@ -86,10 +82,6 @@ const STATS = [
   { num: "5+", label: "Countries Served", icon: Globe2, color: "#0891b2" },
   { num: "2023", label: "Founded", icon: Building2, color: "#ea580c" },
 ];
-
-/* =========================================================
-   MAIN COMPONENT
-========================================================= */
 
 export default function AboutClient() {
   const { t } = useLang();
@@ -194,7 +186,6 @@ export default function AboutClient() {
                   />
                 </div>
 
-                {/* Floating badge */}
                 <motion.div
                   animate={{ y: [0, -10, 0] }}
                   transition={{
@@ -228,7 +219,6 @@ export default function AboutClient() {
       <section className="relative bg-white px-4 py-20 sm:py-24 md:px-6 md:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
-            {/* Left: Story */}
             <motion.div
               initial={{ opacity: 0, y: 25 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -259,7 +249,6 @@ export default function AboutClient() {
                 )}
               </p>
 
-              {/* Checklist */}
               <ul className="mt-6 space-y-3">
                 {[
                   "MSME Registered Company",
@@ -281,7 +270,6 @@ export default function AboutClient() {
               </ul>
             </motion.div>
 
-            {/* Right: Values Grid */}
             <motion.div
               initial={{ opacity: 0, y: 25 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -290,7 +278,7 @@ export default function AboutClient() {
               className="lg:col-span-6"
             >
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                {VALUES.map((value, i) => {
+                {VALUES.map((value) => {
                   const Icon = value.icon;
                   return (
                     <div
