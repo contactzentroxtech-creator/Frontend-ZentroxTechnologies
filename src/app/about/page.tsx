@@ -1,45 +1,31 @@
 import type { Metadata } from "next";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
 import AboutClient from "./AboutClient";
 
 export const metadata: Metadata = {
-  title:
-    "About Zentrox Technologies | Software & Digital Growth Company",
-
+  title: "About Us | Software Development Company in Mohali & Chandigarh",
   description:
-    "Learn about Zentrox Technologies, a remote-first software development and digital growth company founded in 2023, serving businesses in India and worldwide.",
-
+    "Zentrox Technologies is a software development and digital growth company founded in 2023. We help businesses in India and worldwide build websites, apps, custom software and digital solutions.",
+  keywords: [
+    "about Zentrox Technologies",
+    "software company Mohali",
+    "software company Chandigarh",
+    "IT company Punjab",
+    "custom software development India",
+    "digital agency Mohali",
+    "web development company India",
+  ],
   alternates: {
     canonical: "https://zentroxtechnologies.com/about",
   },
-
   openGraph: {
-    title: "About Zentrox Technologies",
+    title: "About Zentrox Technologies | Software & Digital Growth Partner",
     description:
-      "Learn about our remote-first team, technology expertise, and mission to help businesses grow through software, AI, web development, SEO, and digital solutions.",
+      "Founded in 2023, Zentrox Technologies builds custom software, websites, mobile apps and digital solutions for businesses in India and worldwide.",
     url: "https://zentroxtechnologies.com/about",
     type: "website",
-  },
-
-  twitter: {
-    card: "summary_large_image",
-    title: "About Zentrox Technologies",
-    description:
-      "A remote-first software and digital growth company helping businesses build and grow online.",
   },
 };
 
 export default function AboutPage() {
-  return (
-    <>
-      <Navbar />
-
-      <main className="pt-20">
-        <AboutClient />
-      </main>
-
-      <Footer />
-    </>
-  );
+  return <AboutClient />;
 }
