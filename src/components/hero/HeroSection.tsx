@@ -7,50 +7,33 @@ import { motion, useInView } from "framer-motion";
 import {
   ArrowRight,
   Play,
-  CheckCircle2,
   Code2,
   Globe2,
   Smartphone,
   Bot,
   TrendingUp,
+  Award,
 } from "lucide-react";
-import { useLang } from "@/lib/providers";
 
 export default function HeroSection() {
-  const { t } = useLang();
-  const sectionRef = useRef<HTMLElement>(null);
-  const inView = useInView(sectionRef, { once: true, amount: 0.1 });
+  const ref = useRef<HTMLElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.1 });
 
-  const trustFlags = ["India", "USA", "UK", "Canada", "Australia", "UAE", "Singapore"];
+  const trustFlags = ["INDIA", "USA", "UK", "CANADA", "AUSTRALIA", "UAE", "SINGAPORE"];
 
   return (
     <section
-      ref={sectionRef}
-      className="relative overflow-hidden bg-white pt-32 pb-16 md:pt-40 md:pb-20 lg:pt-44 lg:pb-24"
+      ref={ref}
+      className="relative overflow-hidden bg-white pt-12 pb-16 md:pt-16 md:pb-20 lg:pt-20 lg:pb-24"
     >
-      {/* ─── BACKGROUND DECORATION ─────────────────────── */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-        {/* Soft gradient blobs */}
         <div className="absolute -left-40 top-0 h-[500px] w-[500px] rounded-full bg-blue-100/60 blur-[120px]" />
         <div className="absolute -right-40 top-40 h-[500px] w-[500px] rounded-full bg-purple-100/50 blur-[120px]" />
-        <div className="absolute bottom-0 left-1/2 h-[400px] w-[600px] -translate-x-1/2 rounded-full bg-pink-100/40 blur-[120px]" />
-
-        {/* Grid pattern */}
-        <div
-          className="absolute inset-0 opacity-[0.035]"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(100,116,139,.6) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(100,116,139,.6) 1px, transparent 1px)
-            `,
-            backgroundSize: "64px 64px",
-          }}
-        />
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-8">
-          {/* ─── LEFT CONTENT ─────────────────────────── */}
+          {/* LEFT CONTENT */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -58,86 +41,50 @@ export default function HeroSection() {
             className="lg:col-span-6"
           >
             {/* Badge */}
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-4 py-1.5 text-xs font-medium text-slate-700 shadow-sm backdrop-blur-sm"
-            >
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-4 py-1.5 text-xs font-medium text-slate-700 shadow-sm backdrop-blur-sm">
               <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-100">
                 <span className="h-1.5 w-1.5 rounded-full bg-blue-600" />
               </span>
-              {t("hero.badge", "Your Growth. Our Technology.")}
-            </motion.div>
+              Your Growth. Our Technology.
+            </div>
 
             {/* Heading */}
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, delay: 0.15 }}
-              className="text-4xl font-extrabold leading-[1.05] tracking-tight text-slate-900 sm:text-5xl md:text-6xl lg:text-[68px]"
-            >
-              {t("hero.line1", "Build Better,")}
+            <h1 className="text-4xl font-extrabold leading-[1.05] tracking-tight text-slate-900 sm:text-5xl md:text-6xl lg:text-[68px]">
+              Build Better,
               <br />
-              <span className="gradient-text">
-                {t("hero.line2", "Grow Faster")}
-              </span>
-            </motion.h1>
+              <span className="gradient-text">Grow Faster</span>
+            </h1>
 
             {/* Description */}
-            <motion.p
-              initial={{ opacity: 0, y: 15 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, delay: 0.25 }}
-              className="mt-6 max-w-xl text-base leading-relaxed text-slate-600 md:text-lg"
-            >
-              {t(
-                "hero.sub",
-                "We build modern websites, mobile apps and custom software solutions that help businesses grow online and reach their full potential. Remote-first, premium quality, delivered worldwide from Mohali, India."
-              )}
-            </motion.p>
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-slate-600 md:text-lg">
+              We build modern websites, mobile apps and custom software solutions
+              that help businesses grow online and reach their full potential.
+              Remote-first, premium quality, delivered worldwide from Mohali, India.
+            </p>
 
             {/* CTA Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, delay: 0.35 }}
-              className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center"
-            >
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
               <Link
                 href="/contact"
-                className="group inline-flex items-center justify-center gap-2 rounded-full bg-blue-600 px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all duration-300 hover:-translate-y-1 hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-600/35"
+                className="group inline-flex items-center justify-center gap-2 rounded-full bg-blue-600 px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all hover:-translate-y-1 hover:bg-blue-700"
               >
-                {t("hero.cta_primary", "Start Your Project")}
-                <ArrowRight
-                  size={16}
-                  className="transition-transform duration-300 group-hover:translate-x-1"
-                />
+                Start Your Project
+                <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
               </Link>
-
               <Link
                 href="/portfolio"
-                className="group inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-7 py-3.5 text-sm font-semibold text-slate-700 transition-all duration-300 hover:-translate-y-1 hover:border-blue-300 hover:text-blue-600 hover:shadow-lg"
+                className="group inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-7 py-3.5 text-sm font-semibold text-slate-700 transition-all hover:-translate-y-1 hover:border-blue-300 hover:text-blue-600"
               >
-                <Play size={14} className="fill-slate-700 group-hover:fill-blue-600" />
-                {t("hero.cta_secondary", "Watch Our Work")}
+                <Play size={14} className="fill-slate-700" />
+                Watch Our Work
               </Link>
-            </motion.div>
+            </div>
 
-            {/* Trust Section */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, delay: 0.45 }}
-              className="mt-8"
-            >
+            {/* Trust */}
+            <div className="mt-8">
               <p className="mb-3 text-xs font-medium text-slate-500">
-                {t(
-                  "hero.trust_text",
-                  "Trusted by businesses across India, USA, UK, Canada, Australia, UAE & Singapore. Founded in 2023."
-                )}
+                Trusted by businesses across India, USA, UK, Canada, Australia, UAE & Singapore. Founded in 2023.
               </p>
-
               <div className="flex flex-wrap items-center gap-2">
                 {trustFlags.map((flag) => (
                   <span
@@ -148,10 +95,10 @@ export default function HeroSection() {
                   </span>
                 ))}
               </div>
-            </motion.div>
+            </div>
           </motion.div>
 
-          {/* ─── RIGHT VISUAL ─────────────────────────── */}
+          {/* RIGHT VISUAL */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={inView ? { opacity: 1, scale: 1 } : {}}
@@ -159,21 +106,19 @@ export default function HeroSection() {
             className="relative lg:col-span-6"
           >
             <div className="relative mx-auto max-w-[560px]">
-              {/* Main Laptop Image */}
-              <div className="relative z-10">
-                <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl shadow-slate-200/60">
-                  <Image
-                    src="/hero-laptop.png"
-                    alt="Zentrox Technologies - Digital Solutions"
-                    width={800}
-                    height={600}
-                    className="h-auto w-full object-cover"
-                    priority
-                  />
-                </div>
+              {/* Main image */}
+              <div className="relative z-10 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
+                <Image
+                  src="/hero-laptop.png"
+                  alt="Zentrox Technologies - Digital Solutions"
+                  width={800}
+                  height={600}
+                  className="h-auto w-full object-cover"
+                  priority
+                />
               </div>
 
-              {/* Floating Card 1 - Traffic Growth */}
+              {/* Floating card 1 */}
               <motion.div
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
@@ -184,26 +129,17 @@ export default function HeroSection() {
                     <TrendingUp size={18} />
                   </div>
                   <div>
-                    <p className="text-[10px] font-medium text-slate-500">
-                      Traffic Growth
-                    </p>
+                    <p className="text-[10px] font-medium text-slate-500">Traffic Growth</p>
                     <p className="text-lg font-extrabold text-slate-900">+140%</p>
-                    <p className="text-[9px] text-slate-500">
-                      SEO &amp; Digital Marketing
-                    </p>
+                    <p className="text-[9px] text-slate-500">SEO & Digital Marketing</p>
                   </div>
                 </div>
               </motion.div>
 
-              {/* Floating Card 2 - Mobile App */}
+              {/* Floating card 2 */}
               <motion.div
                 animate={{ y: [0, 10, 0] }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 1,
-                }}
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
                 className="absolute -left-6 top-1/3 z-20 hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-xl sm:block"
               >
                 <div className="flex items-center gap-3">
@@ -211,31 +147,20 @@ export default function HeroSection() {
                     <Smartphone size={18} />
                   </div>
                   <div>
-                    <p className="text-[11px] font-bold text-slate-900">
-                      Mobile App
-                    </p>
-                    <p className="text-[11px] font-bold text-slate-900">
-                      Development
-                    </p>
-                    <p className="text-[9px] text-slate-500">
-                      iOS · Android · Cross Platform
-                    </p>
+                    <p className="text-[11px] font-bold text-slate-900">Mobile App</p>
+                    <p className="text-[11px] font-bold text-slate-900">Development</p>
+                    <p className="text-[9px] text-slate-500">iOS · Android · Cross Platform</p>
                   </div>
                 </div>
               </motion.div>
 
-              {/* Floating Card 3 - Code Window */}
+              {/* Floating card 3 - Code window */}
               <motion.div
                 animate={{ y: [0, -12, 0] }}
-                transition={{
-                  duration: 7,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 0.5,
-                }}
+                transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
                 className="absolute -top-10 left-1/4 z-20 hidden rounded-xl border border-slate-800 bg-slate-900 p-3 shadow-xl md:block"
               >
-                <div className="flex items-center gap-1.5 mb-2">
+                <div className="mb-2 flex items-center gap-1.5">
                   <span className="h-2 w-2 rounded-full bg-red-500" />
                   <span className="h-2 w-2 rounded-full bg-yellow-500" />
                   <span className="h-2 w-2 rounded-full bg-green-500" />
@@ -248,28 +173,19 @@ export default function HeroSection() {
                 </div>
               </motion.div>
 
-              {/* Floating Card 4 - Ranking */}
+              {/* Floating card 4 - Ranking */}
               <motion.div
                 animate={{ y: [0, 12, 0] }}
-                transition={{
-                  duration: 6.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 1.5,
-                }}
+                transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
                 className="absolute -bottom-6 -right-6 z-20 hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-xl sm:block"
               >
                 <div className="flex items-center gap-2">
                   <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
-                    <Bot size={14} />
+                    <Award size={14} />
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold text-slate-900">
-                      RANKING #1
-                    </p>
-                    <p className="text-[9px] text-slate-500">
-                      Best SEO Company
-                    </p>
+                    <p className="text-[10px] font-bold text-slate-900">RANKING #1</p>
+                    <p className="text-[9px] text-slate-500">Best SEO Company</p>
                   </div>
                 </div>
               </motion.div>
@@ -277,7 +193,7 @@ export default function HeroSection() {
           </motion.div>
         </div>
 
-        {/* ─── SERVICE CHIPS ROW ────────────────────────── */}
+        {/* SERVICE CHIPS ROW */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -304,16 +220,14 @@ export default function HeroSection() {
             return (
               <div
                 key={idx}
-                className="group flex flex-col items-center gap-3 rounded-2xl border border-slate-200 bg-white p-5 text-center transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg"
+                className="group flex flex-col items-center gap-3 rounded-2xl border border-slate-200 bg-white p-5 text-center transition-all hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg"
               >
                 <div
                   className={`flex h-11 w-11 items-center justify-center rounded-xl ${colors[item.color]}`}
                 >
                   <Icon size={20} />
                 </div>
-                <p className="text-xs font-semibold text-slate-800">
-                  {item.label}
-                </p>
+                <p className="text-xs font-semibold text-slate-800">{item.label}</p>
               </div>
             );
           })}
