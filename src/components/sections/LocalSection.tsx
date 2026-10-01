@@ -10,7 +10,6 @@ import {
   CheckCircle2,
   TrendingUp,
 } from "lucide-react";
-import { useLang } from "@/lib/providers";
 
 const INDUSTRIES = [
   { icon: Briefcase, label: "Startups", color: "#2563eb" },
@@ -39,29 +38,25 @@ const LOCATIONS = [
 const TRUST_CARDS = [
   {
     icon: MapPin,
-    titleKey: "global.trust.location",
-    titleFB: "India & Worldwide",
-    descFB: "Serving businesses locally and globally.",
+    title: "India & Worldwide",
+    desc: "Serving businesses locally and globally.",
     color: "#2563eb",
   },
   {
     icon: Briefcase,
-    titleKey: "global.trust.business",
-    titleFB: "Business-Focused Solutions",
-    descFB: "Technology built around real business needs.",
+    title: "Business-Focused Solutions",
+    desc: "Technology built around real business needs.",
     color: "#7c3aed",
   },
   {
     icon: CheckCircle2,
-    titleKey: "global.trust.delivery",
-    titleFB: "Reliable Project Delivery",
-    descFB: "On-time, on-budget, every time.",
+    title: "Reliable Project Delivery",
+    desc: "On-time, on-budget, every time.",
     color: "#0891b2",
   },
 ];
 
 export default function LocalSection() {
-  const { t } = useLang();
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.15 });
 
@@ -69,10 +64,10 @@ export default function LocalSection() {
     <section
       id="global"
       aria-label="Industries and locations served by Zentrox Technologies"
-      className="relative bg-white px-4 py-20 sm:py-24 md:px-6 md:py-28 lg:py-32"
+      className="relative bg-white px-4 py-20 sm:py-24 md:px-6 md:py-28"
     >
       <div ref={ref} className="mx-auto max-w-7xl">
-        {/* ─── HEADER ───────────────────────────────── */}
+        {/* HEADER */}
         <motion.div
           initial={{ opacity: 0, y: 25 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -80,22 +75,20 @@ export default function LocalSection() {
           className="mb-14 max-w-3xl"
         >
           <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-200/60 bg-cyan-50/60 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-cyan-700">
-            {t("global.badge", "Industries")}
+            Industries
           </div>
 
           <h2 className="text-3xl font-extrabold leading-[1.1] tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
-            {t("global.title", "Built for Different Industries")}
+            Built for Different Industries
           </h2>
 
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-slate-600 lg:text-lg">
-            {t(
-              "global.sub",
-              "Every industry has different workflows, customers and challenges. Our approach starts by understanding the business before choosing the technology."
-            )}
+            Every industry has different workflows, customers and challenges. Our
+            approach starts by understanding the business before choosing the technology.
           </p>
         </motion.div>
 
-        {/* ─── INDUSTRIES GRID ──────────────────────── */}
+        {/* INDUSTRIES GRID */}
         <div className="mb-16 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
           {INDUSTRIES.map((item, index) => {
             const Icon = item.icon;
@@ -104,27 +97,12 @@ export default function LocalSection() {
                 key={item.label}
                 initial={{ opacity: 0, y: 20 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{
-                  duration: 0.5,
-                  delay: index * 0.08,
-                }}
+                transition={{ duration: 0.5, delay: index * 0.08 }}
                 whileHover={{ y: -4 }}
-                className="
-                  group flex flex-col items-center gap-3
-                  rounded-2xl border border-slate-200/70
-                  bg-white p-5 text-center
-                  transition-all duration-300
-                  hover:border-blue-200
-                  hover:shadow-lg
-                "
+                className="group flex flex-col items-center gap-3 rounded-2xl border border-slate-200/70 bg-white p-5 text-center transition-all hover:border-blue-200 hover:shadow-lg"
               >
                 <div
-                  className="
-                    flex h-11 w-11 items-center justify-center
-                    rounded-xl
-                    transition-transform duration-300
-                    group-hover:scale-110
-                  "
+                  className="flex h-11 w-11 items-center justify-center rounded-xl transition-transform group-hover:scale-110"
                   style={{
                     backgroundColor: `${item.color}10`,
                     color: item.color,
@@ -132,43 +110,27 @@ export default function LocalSection() {
                 >
                   <Icon size={20} />
                 </div>
-                <p className="text-xs font-semibold text-slate-800">
-                  {item.label}
-                </p>
+                <p className="text-xs font-semibold text-slate-800">{item.label}</p>
               </motion.div>
             );
           })}
         </div>
 
-        {/* ─── TRUST CARDS ─────────────────────────── */}
+        {/* TRUST CARDS */}
         <div className="mb-16 grid grid-cols-1 gap-5 md:grid-cols-3">
           {TRUST_CARDS.map((card, index) => {
             const Icon = card.icon;
             return (
               <motion.div
-                key={card.titleKey}
+                key={card.title}
                 initial={{ opacity: 0, y: 25 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{
-                  duration: 0.5,
-                  delay: 0.2 + index * 0.1,
-                }}
+                transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
                 whileHover={{ y: -6 }}
-                className="
-                  group rounded-2xl border border-slate-200/70
-                  bg-white p-7
-                  transition-all duration-300
-                  hover:border-blue-200
-                  hover:shadow-[0_20px_50px_rgba(15,23,42,0.08)]
-                "
+                className="group rounded-2xl border border-slate-200/70 bg-white p-7 transition-all hover:border-blue-200 hover:shadow-[0_20px_50px_rgba(15,23,42,0.08)]"
               >
                 <div
-                  className="
-                    mb-5 flex h-12 w-12 items-center justify-center
-                    rounded-xl
-                    transition-transform duration-300
-                    group-hover:scale-110
-                  "
+                  className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl transition-transform group-hover:scale-110"
                   style={{
                     backgroundColor: `${card.color}10`,
                     color: card.color,
@@ -177,39 +139,29 @@ export default function LocalSection() {
                   <Icon size={22} />
                 </div>
 
-                <h3 className="text-base font-bold text-slate-900">
-                  {t(card.titleKey, card.titleFB)}
-                </h3>
-
+                <h3 className="text-base font-bold text-slate-900">{card.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                  {card.descFB}
+                  {card.desc}
                 </p>
               </motion.div>
             );
           })}
         </div>
 
-        {/* ─── LOCATIONS STRIP ──────────────────────── */}
+        {/* LOCATIONS STRIP */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.5 }}
-          className="
-            rounded-3xl border border-slate-200/70
-            bg-gradient-to-r from-blue-50/60 via-white to-purple-50/60
-            p-8 sm:p-10
-          "
+          className="rounded-3xl border border-slate-200/70 bg-gradient-to-r from-blue-50/60 via-white to-purple-50/60 p-8 sm:p-10"
         >
           <div className="flex flex-col items-center gap-6 md:flex-row md:justify-between">
             <div className="text-center md:text-left">
               <h3 className="text-xl font-bold text-slate-900 sm:text-2xl">
-                {t("global.locations.title", "Serving Businesses Worldwide")}
+                Serving Businesses Worldwide
               </h3>
               <p className="mt-2 text-sm text-slate-600">
-                {t(
-                  "global.locations.sub",
-                  "From Mohali to the world — we deliver technology that scales across borders."
-                )}
+                From Mohali to the world — we deliver technology that scales across borders.
               </p>
             </div>
 
@@ -217,14 +169,7 @@ export default function LocalSection() {
               {LOCATIONS.map((loc) => (
                 <span
                   key={loc}
-                  className="
-                    rounded-full border border-slate-200 bg-white
-                    px-3 py-1.5
-                    text-[11px] font-semibold uppercase tracking-wider
-                    text-slate-600
-                    transition-colors duration-200
-                    hover:border-blue-300 hover:text-blue-600
-                  "
+                  className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate-600 transition-colors hover:border-blue-300 hover:text-blue-600"
                 >
                   {loc}
                 </span>
