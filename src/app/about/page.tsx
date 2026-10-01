@@ -11,16 +11,14 @@ export const metadata: Metadata = {
     "software company Chandigarh",
     "IT company Punjab",
     "custom software development India",
-    "digital agency Mohali",
-    "web development company India",
   ],
   alternates: {
     canonical: "https://zentroxtechnologies.com/about",
   },
   openGraph: {
-    title: "About Zentrox Technologies | Software & Digital Growth Partner",
+    title: "About Zentrox Technologies",
     description:
-      "Founded in 2023, Zentrox Technologies builds custom software, websites, mobile apps and digital solutions for businesses in India and worldwide.",
+      "Founded in 2023, Zentrox Technologies builds custom software, websites, mobile apps and digital solutions.",
     url: "https://zentroxtechnologies.com/about",
     type: "website",
   },
