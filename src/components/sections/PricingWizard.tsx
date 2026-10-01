@@ -17,12 +17,7 @@ import {
   Heart,
   Users,
 } from "lucide-react";
-import { useLang } from "@/lib/providers";
 import api from "@/lib/api";
-
-/* =========================================================
-   DATA
-========================================================= */
 
 const PROJECT_TYPES = [
   { id: "web", label: "Website", desc: "Business, E-commerce, Landing Page etc.", icon: Globe, base: 25000, color: "#2563eb" },
@@ -54,27 +49,18 @@ const TIMELINE_OPTIONS = [
 ];
 
 const BUDGET_OPTIONS = [
-  { value: "under-25k", label: "Under ₹25,000" },
-  { value: "25k-50k", label: "₹25,000 – ₹50,000" },
-  { value: "50k-1l", label: "₹50,000 – ₹1,00,000" },
-  { value: "1l-3l", label: "₹1,00,000 – ₹3,00,000" },
-  { value: "3l+", label: "₹3,00,000+" },
+  "Under ₹25,000",
+  "₹25,000 – ₹50,000",
+  "₹50,000 – ₹1,00,000",
+  "₹1,00,000 – ₹3,00,000",
+  "₹3,00,000+",
 ];
-
-/* =========================================================
-   HELPERS
-========================================================= */
 
 function formatPrice(n: number) {
   return "₹" + n.toLocaleString("en-IN");
 }
 
-/* =========================================================
-   MAIN COMPONENT
-========================================================= */
-
 export default function PricingWizard() {
-  const { t } = useLang();
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.05 });
 
@@ -89,22 +75,18 @@ export default function PricingWizard() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  /* ─── CALCULATE ESTIMATE ──────────────────────── */
   const calculateEstimate = () => {
     const pt = PROJECT_TYPES.find((p) => p.id === projectType);
     const pg = PAGES_OPTIONS.find((p) => p.value === pages);
     const ft = FEATURES_OPTIONS.find((f) => f.value === features);
-    const tl = TIMELINE_OPTIONS.find((t2) => t2.value === timeline);
+    const tl = TIMELINE_OPTIONS.find((t) => t.value === timeline);
 
     if (!pt || !pg || !ft || !tl) return { low: 0, high: 0 };
 
     const base = pt.base;
     const estimated = base * pg.multiplier * ft.multiplier * tl.multiplier;
 
-    const low = Math.max(
-      pt.base * 0.9,
-      Math.round((estimated * 0.85) / 1000) * 1000
-    );
+    const low = Math.max(pt.base * 0.9, Math.round((estimated * 0.85) / 1000) * 1000);
     const high = Math.round((estimated * 1.35) / 1000) * 1000;
 
     return { low, high };
@@ -112,7 +94,6 @@ export default function PricingWizard() {
 
   const estimate = calculateEstimate();
 
-  /* ─── SUBMIT ──────────────────────────────────── */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!agreed) return;
@@ -122,9 +103,7 @@ export default function PricingWizard() {
       await api.post("/leads", {
         name: projectName || "Budget Calculator Lead",
         service: PROJECT_TYPES.find((p) => p.id === projectType)?.label,
-        budget:
-          budget ||
-          `${formatPrice(estimate.low)} - ${formatPrice(estimate.high)}`,
+        budget: budget || `${formatPrice(estimate.low)} - ${formatPrice(estimate.high)}`,
         message: `Project: ${projectName}\nDescription: ${description}\nPages: ${pages}\nFeatures: ${features}\nTimeline: ${timeline}\nEstimate: ${formatPrice(estimate.low)} - ${formatPrice(estimate.high)}`,
         source: "budget-calculator",
       });
@@ -168,21 +147,16 @@ Contact: contact.zentroxtech@gmail.com
     <section
       id="budget-calculator"
       aria-label="Project budget calculator"
-      className="relative overflow-hidden bg-white px-4 py-20 sm:py-24 md:px-6 md:py-28 lg:py-32"
+      className="relative overflow-hidden bg-white px-4 py-20 sm:py-24 md:px-6 md:py-28"
     >
-      {/* Decorative background */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 overflow-hidden"
-      >
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -left-40 top-20 h-[500px] w-[500px] rounded-full bg-blue-100/50 blur-[120px]" />
         <div className="absolute -right-40 top-60 h-[500px] w-[500px] rounded-full bg-purple-100/40 blur-[120px]" />
       </div>
 
       <div ref={ref} className="relative mx-auto max-w-7xl">
-        {/* ─── HERO HEADER ───────────────────────────── */}
+        {/* HEADER */}
         <div className="mb-12 grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-8">
-          {/* Left content */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -191,34 +165,28 @@ Contact: contact.zentroxtech@gmail.com
           >
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-blue-50/60 px-4 py-1.5 text-xs font-semibold text-blue-700">
               <Zap size={13} />
-              {t("calc.badge", "Plan Smarter")}
+              Plan Smarter
               <span className="text-slate-300">|</span>
-              <span className="text-slate-600">
-                {t("calc.badge2", "Build Better")}
-              </span>
+              <span className="text-slate-600">Build Better</span>
             </div>
 
             <h2 className="text-4xl font-extrabold leading-[1.05] tracking-tight text-slate-900 sm:text-5xl lg:text-[56px]">
-              {t("calc.title1", "Website & App")}
+              Website & App
               <br />
-              <span className="gradient-text">
-                {t("calc.title2", "Budget Calculator")}
-              </span>
+              <span className="gradient-text">Budget Calculator</span>
             </h2>
 
             <p className="mt-6 max-w-xl text-base leading-relaxed text-slate-600 lg:text-lg">
-              {t(
-                "calc.sub",
-                "Get an instant estimate for your website, mobile app or custom software project. Tell us your requirements and see a clear, transparent budget — no hidden costs, no surprises."
-              )}
+              Get an instant estimate for your website, mobile app or custom software
+              project. Tell us your requirements and see a clear, transparent budget
+              — no hidden costs, no surprises.
             </p>
 
-            {/* Feature pills */}
             <div className="mt-8 flex flex-wrap gap-3">
               {[
-                { icon: Zap, text: "Instant Estimate in Seconds", color: "#2563eb" },
-                { icon: ShieldCheck, text: "100% Transparent Pricing", color: "#0891b2" },
-                { icon: Heart, text: "Tailored to Your Business Needs", color: "#ea580c" },
+                { icon: Zap, text: "Instant Estimate", color: "#2563eb" },
+                { icon: ShieldCheck, text: "100% Transparent", color: "#0891b2" },
+                { icon: Heart, text: "Tailored to You", color: "#ea580c" },
               ].map((item, i) => {
                 const Icon = item.icon;
                 return (
@@ -228,10 +196,7 @@ Contact: contact.zentroxtech@gmail.com
                   >
                     <div
                       className="flex h-6 w-6 items-center justify-center rounded-full"
-                      style={{
-                        backgroundColor: `${item.color}15`,
-                        color: item.color,
-                      }}
+                      style={{ backgroundColor: `${item.color}15`, color: item.color }}
                     >
                       <Icon size={12} />
                     </div>
@@ -242,7 +207,6 @@ Contact: contact.zentroxtech@gmail.com
             </div>
           </motion.div>
 
-          {/* Right illustration */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={inView ? { opacity: 1, scale: 1 } : {}}
@@ -250,89 +214,35 @@ Contact: contact.zentroxtech@gmail.com
             className="relative lg:col-span-6"
           >
             <div className="relative mx-auto max-w-[520px]">
-              <div className="relative overflow-hidden rounded-3xl">
-                <img
-                  src="/calculator-hero.png"
-                  alt="Zentrox Technologies budget calculator illustration"
-                  className="h-auto w-full object-cover"
-                />
+              <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-blue-50 via-white to-purple-50 p-8">
+                <div className="mb-4 flex items-center gap-2">
+                  <Calculator size={20} className="text-blue-600" />
+                  <p className="text-sm font-bold text-slate-900">Instant Estimate</p>
+                </div>
+                <p className="text-xs text-slate-600">Starting from</p>
+                <p className="mt-2 text-3xl font-extrabold text-slate-900">
+                  {formatPrice(estimate.low)}
+                </p>
+                <p className="mt-1 text-xs text-slate-500">
+                  – {formatPrice(estimate.high)} approx
+                </p>
+
+                <div className="mt-6 space-y-2">
+                  {["Professional team", "Clean design", "SEO friendly", "On-time delivery"].map(
+                    (item, i) => (
+                      <div key={i} className="flex items-center gap-2 text-xs text-slate-700">
+                        <CheckCircle2 size={14} className="text-emerald-500" />
+                        {item}
+                      </div>
+                    )
+                  )}
+                </div>
               </div>
-
-              {/* Floating price cards */}
-              <motion.div
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -right-2 top-4 z-10 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-xl sm:top-8"
-              >
-                <div className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
-                    <Globe size={14} />
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-semibold text-slate-700">
-                      Website Development
-                    </p>
-                    <p className="text-xs font-extrabold text-slate-900">
-                      ₹25,000+
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-
-              <motion.div
-                animate={{ y: [0, 10, 0] }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 1,
-                }}
-                className="absolute -right-2 top-1/3 z-10 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-xl"
-              >
-                <div className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-50 text-purple-600">
-                    <Smartphone size={14} />
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-semibold text-slate-700">
-                      Mobile App Development
-                    </p>
-                    <p className="text-xs font-extrabold text-slate-900">
-                      ₹40,000+
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-
-              <motion.div
-                animate={{ y: [0, -12, 0] }}
-                transition={{
-                  duration: 7,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 0.5,
-                }}
-                className="absolute -right-2 bottom-8 z-10 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-xl"
-              >
-                <div className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-50 text-cyan-600">
-                    <Code2 size={14} />
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-semibold text-slate-700">
-                      Custom Software
-                    </p>
-                    <p className="text-xs font-extrabold text-slate-900">
-                      ₹60,000+
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
             </div>
           </motion.div>
         </div>
 
-        {/* ─── CALCULATOR CARD ──────────────────────── */}
+        {/* CALCULATOR CARD */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -340,7 +250,7 @@ Contact: contact.zentroxtech@gmail.com
           className="overflow-hidden rounded-3xl border border-slate-200/70 bg-white shadow-[0_20px_60px_rgba(15,23,42,0.08)]"
         >
           <div className="grid grid-cols-1 lg:grid-cols-12">
-            {/* ─── LEFT FORM ─────────────────────────── */}
+            {/* LEFT FORM */}
             <div className="border-b border-slate-100 p-6 sm:p-8 lg:col-span-8 lg:border-b-0 lg:border-r lg:p-10">
               <div className="mb-6 flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
@@ -348,22 +258,19 @@ Contact: contact.zentroxtech@gmail.com
                 </div>
                 <div>
                   <h3 className="text-lg font-extrabold text-slate-900 sm:text-xl">
-                    {t("calc.form.title", "Calculate Your Project Budget")}
+                    Calculate Your Project Budget
                   </h3>
                   <p className="text-xs text-slate-500 sm:text-sm">
-                    {t(
-                      "calc.form.sub",
-                      "Choose your project type and tell us a few details. Get an instant estimate based on your requirements."
-                    )}
+                    Choose your project type and tell us a few details.
                   </p>
                 </div>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Project Type Cards */}
+                {/* Project Type */}
                 <div>
                   <label className="mb-3 block text-xs font-bold uppercase tracking-wider text-slate-700">
-                    {t("calc.form.type", "Project Type")}
+                    Project Type
                   </label>
                   <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
                     {PROJECT_TYPES.map((pt) => {
@@ -374,22 +281,16 @@ Contact: contact.zentroxtech@gmail.com
                           key={pt.id}
                           type="button"
                           onClick={() => setProjectType(pt.id)}
-                          className={`
-                            group flex flex-col items-start gap-2 rounded-2xl border p-4 text-left
-                            transition-all duration-300
-                            ${
-                              active
-                                ? "border-blue-500 bg-blue-50/60 shadow-md shadow-blue-500/10"
-                                : "border-slate-200 bg-white hover:border-blue-200 hover:shadow-sm"
-                            }
-                          `}
+                          className={`group flex flex-col items-start gap-2 rounded-2xl border p-4 text-left transition-all ${
+                            active
+                              ? "border-blue-500 bg-blue-50/60 shadow-md shadow-blue-500/10"
+                              : "border-slate-200 bg-white hover:border-blue-200"
+                          }`}
                         >
                           <div
-                            className="flex h-9 w-9 items-center justify-center rounded-lg transition-transform group-hover:scale-110"
+                            className="flex h-9 w-9 items-center justify-center rounded-lg"
                             style={{
-                              backgroundColor: active
-                                ? `${pt.color}20`
-                                : `${pt.color}10`,
+                              backgroundColor: active ? `${pt.color}20` : `${pt.color}10`,
                               color: pt.color,
                             }}
                           >
@@ -407,37 +308,30 @@ Contact: contact.zentroxtech@gmail.com
                   </div>
                 </div>
 
-                {/* Project Name + Description */}
+                {/* Name + Desc */}
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
                     <label className="mb-2 block text-xs font-bold text-slate-700">
-                      {t("calc.form.name", "Project Name")}{" "}
-                      <span className="text-red-500">*</span>
+                      Project Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       value={projectName}
                       onChange={(e) => setProjectName(e.target.value)}
-                      placeholder={t(
-                        "calc.form.name.ph",
-                        "e.g. Business Website / Food Delivery App"
-                      )}
+                      placeholder="e.g. Business Website"
                       className="input-field"
                       required
                     />
                   </div>
                   <div>
                     <label className="mb-2 block text-xs font-bold text-slate-700">
-                      {t("calc.form.desc", "Project Description")}
+                      Project Description
                     </label>
                     <input
                       type="text"
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
-                      placeholder={t(
-                        "calc.form.desc.ph",
-                        "Tell us about your idea or requirements..."
-                      )}
+                      placeholder="Tell us about your idea..."
                       className="input-field"
                     />
                   </div>
@@ -447,7 +341,7 @@ Contact: contact.zentroxtech@gmail.com
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
                     <label className="mb-2 block text-xs font-bold text-slate-700">
-                      {t("calc.form.pages", "Pages / Screens (Approx.)")}
+                      Pages / Screens
                     </label>
                     <select
                       value={pages}
@@ -463,7 +357,7 @@ Contact: contact.zentroxtech@gmail.com
                   </div>
                   <div>
                     <label className="mb-2 block text-xs font-bold text-slate-700">
-                      {t("calc.form.features", "Features Needed")}
+                      Features Needed
                     </label>
                     <select
                       value={features}
@@ -483,7 +377,7 @@ Contact: contact.zentroxtech@gmail.com
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
                     <label className="mb-2 block text-xs font-bold text-slate-700">
-                      {t("calc.form.timeline", "Estimated Timeline")}
+                      Estimated Timeline
                     </label>
                     <select
                       value={timeline}
@@ -499,19 +393,17 @@ Contact: contact.zentroxtech@gmail.com
                   </div>
                   <div>
                     <label className="mb-2 block text-xs font-bold text-slate-700">
-                      {t("calc.form.budget", "Your Budget Range")}
+                      Your Budget Range
                     </label>
                     <select
                       value={budget}
                       onChange={(e) => setBudget(e.target.value)}
                       className="input-field"
                     >
-                      <option value="">
-                        {t("calc.form.budget.ph", "Select Budget Range")}
-                      </option>
+                      <option value="">Select Budget Range</option>
                       {BUDGET_OPTIONS.map((b) => (
-                        <option key={b.value} value={b.label}>
-                          {b.label}
+                        <option key={b} value={b}>
+                          {b}
                         </option>
                       ))}
                     </select>
@@ -524,65 +416,49 @@ Contact: contact.zentroxtech@gmail.com
                     type="checkbox"
                     checked={agreed}
                     onChange={(e) => setAgreed(e.target.checked)}
-                    className="mt-0.5 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                    className="mt-0.5 h-4 w-4 rounded border-slate-300 text-blue-600"
                     required
                   />
                   <span className="text-xs text-slate-600">
-                    {t(
-                      "calc.form.agree",
-                      "I agree to be contacted by Zentrox Technologies regarding this estimate."
-                    )}
+                    I agree to be contacted by Zentrox Technologies regarding this estimate.
                   </span>
                 </label>
 
-                {/* Submit Button */}
+                {/* Submit */}
                 <button
                   type="submit"
                   disabled={!agreed || submitting}
-                  className={`
-                    group flex w-full items-center justify-center gap-2
-                    rounded-full bg-gradient-to-r from-blue-600 to-purple-600
-                    px-7 py-3.5 text-sm font-semibold text-white
-                    shadow-lg shadow-blue-600/25
-                    transition-all duration-300
-                    ${
-                      !agreed || submitting
-                        ? "cursor-not-allowed opacity-60"
-                        : "hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-600/35"
-                    }
-                  `}
+                  className={`group flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all ${
+                    !agreed || submitting
+                      ? "cursor-not-allowed opacity-60"
+                      : "hover:-translate-y-1 hover:shadow-xl"
+                  }`}
                 >
                   {submitting
-                    ? t("calc.form.sending", "Sending...")
+                    ? "Sending..."
                     : submitted
-                    ? t("calc.form.sent", "Estimate Sent")
-                    : t("calc.form.cta", "Get My Estimate")}
-                  <ArrowRight
-                    size={16}
-                    className="transition-transform duration-300 group-hover:translate-x-1"
-                  />
+                    ? "Estimate Sent"
+                    : "Get My Estimate"}
+                  <ArrowRight size={16} />
                 </button>
               </form>
             </div>
 
-            {/* ─── RIGHT ESTIMATE PANEL ──────────────── */}
+            {/* RIGHT ESTIMATE */}
             <div className="bg-gradient-to-br from-blue-50/40 via-white to-purple-50/40 p-6 sm:p-8 lg:col-span-4 lg:p-10">
               <div className="lg:sticky lg:top-24">
-                {/* Badge */}
                 <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-white px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-blue-700 shadow-sm">
                   <Calculator size={11} />
-                  {t("calc.result.badge", "Estimated Budget")}
+                  Estimated Budget
                 </div>
 
-                {/* Title */}
                 <h3 className="text-2xl font-extrabold leading-tight text-slate-900 sm:text-3xl">
-                  {t("calc.result.title", "Your Project Estimate")}
+                  Your Project Estimate
                 </h3>
                 <p className="mt-1 text-sm text-slate-600">
-                  {t("calc.result.sub", "Based on the details you provided")}
+                  Based on the details you provided
                 </p>
 
-                {/* Price */}
                 <div className="my-6 rounded-2xl border border-blue-200/60 bg-white p-6 shadow-sm">
                   <p className="text-3xl font-extrabold leading-tight text-slate-900 sm:text-4xl">
                     {formatPrice(estimate.low)}
@@ -590,14 +466,10 @@ Contact: contact.zentroxtech@gmail.com
                     {formatPrice(estimate.high)}
                   </p>
                   <p className="mt-2 text-xs text-slate-500">
-                    {t(
-                      "calc.result.note",
-                      "(May vary based on final requirements)"
-                    )}
+                    (May vary based on final requirements)
                   </p>
                 </div>
 
-                {/* Feature checklist */}
                 <ul className="mb-6 space-y-3">
                   {[
                     "Professional development team",
@@ -606,112 +478,70 @@ Contact: contact.zentroxtech@gmail.com
                     "Post-launch support",
                     "On-time delivery",
                   ].map((item, i) => (
-                    <li
-                      key={i}
-                      className="flex items-start gap-2.5 text-sm text-slate-700"
-                    >
-                      <CheckCircle2
-                        size={16}
-                        className="mt-0.5 flex-shrink-0 text-emerald-500"
-                      />
+                    <li key={i} className="flex items-start gap-2.5 text-sm text-slate-700">
+                      <CheckCircle2 size={16} className="mt-0.5 flex-shrink-0 text-emerald-500" />
                       {item}
                     </li>
                   ))}
                 </ul>
 
-                {/* Actions */}
                 <Link
                   href="/contact"
-                  className="
-                    group mb-3 flex w-full items-center justify-center gap-2
-                    rounded-full bg-gradient-to-r from-blue-600 to-purple-600
-                    px-6 py-3.5 text-sm font-semibold text-white
-                    shadow-lg shadow-blue-600/25
-                    transition-all duration-300
-                    hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-600/35
-                  "
+                  className="group mb-3 flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all hover:-translate-y-1"
                 >
-                  {t("calc.result.talk", "Talk to Our Experts")}
-                  <ArrowRight
-                    size={16}
-                    className="transition-transform duration-300 group-hover:translate-x-1"
-                  />
+                  Talk to Our Experts
+                  <ArrowRight size={16} />
                 </Link>
 
                 <button
                   type="button"
                   onClick={handleDownloadQuote}
-                  className="
-                    group flex w-full items-center justify-center gap-2
-                    rounded-full border border-blue-300 bg-white
-                    px-6 py-3.5 text-sm font-semibold text-blue-700
-                    transition-all duration-300
-                    hover:-translate-y-1 hover:bg-blue-50 hover:shadow-lg
-                  "
+                  className="group flex w-full items-center justify-center gap-2 rounded-full border border-blue-300 bg-white px-6 py-3.5 text-sm font-semibold text-blue-700 transition-all hover:-translate-y-1 hover:bg-blue-50"
                 >
                   <Download size={15} />
-                  {t("calc.result.download", "Download Detailed Quote")}
+                  Download Detailed Quote
                 </button>
               </div>
             </div>
           </div>
         </motion.div>
 
-        {/* ─── WHY CHOOSE + TESTIMONIAL ──────────────── */}
+        {/* WHY CHOOSE */}
         <motion.div
           initial={{ opacity: 0, y: 25 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.3 }}
           className="mt-16 grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-center"
         >
-          {/* Left: Illustration */}
-          <div className="relative lg:col-span-4">
-            <div className="relative overflow-hidden rounded-3xl">
-              <img
-                src="/why-choose-calc.png"
-                alt="Zentrox Technologies development team at work"
-                className="h-auto w-full object-cover"
-              />
-            </div>
-          </div>
-
-          {/* Middle: Why Choose */}
-          <div className="lg:col-span-5">
+          <div className="lg:col-span-7">
             <h3 className="text-2xl font-extrabold leading-tight text-slate-900 sm:text-3xl">
-              {t("calc.why.title", "Why Choose Zentrox?")}
+              Why Choose Zentrox?
             </h3>
             <p className="mt-3 text-base leading-relaxed text-slate-600">
-              {t(
-                "calc.why.sub",
-                "We don't just build websites and apps, we build digital solutions that help your business grow."
-              )}
+              We don't just build websites and apps, we build digital solutions
+              that help your business grow.
             </p>
 
-            <div className="mt-6 grid grid-cols-2 gap-3">
+            <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
               {[
-                { icon: ShieldCheck, label: "Transparent Pricing", color: "#2563eb" },
+                { icon: ShieldCheck, label: "Transparent", color: "#2563eb" },
                 { icon: Users, label: "Expert Team", color: "#7c3aed" },
-                { icon: Zap, label: "On-Time Delivery", color: "#0891b2" },
-                { icon: Heart, label: "Ongoing Support", color: "#ea580c" },
+                { icon: Zap, label: "On-Time", color: "#0891b2" },
+                { icon: Heart, label: "Support", color: "#ea580c" },
               ].map((item, i) => {
                 const Icon = item.icon;
                 return (
                   <div
                     key={i}
-                    className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3"
+                    className="flex flex-col items-center gap-2 rounded-2xl border border-slate-200 bg-white p-4 text-center"
                   >
                     <div
                       className="flex h-9 w-9 items-center justify-center rounded-lg"
-                      style={{
-                        backgroundColor: `${item.color}12`,
-                        color: item.color,
-                      }}
+                      style={{ backgroundColor: `${item.color}12`, color: item.color }}
                     >
                       <Icon size={16} />
                     </div>
-                    <p className="text-xs font-semibold text-slate-800">
-                      {item.label}
-                    </p>
+                    <p className="text-xs font-semibold text-slate-800">{item.label}</p>
                   </div>
                 );
               })}
@@ -719,49 +549,32 @@ Contact: contact.zentroxtech@gmail.com
 
             <Link
               href="/services"
-              className="
-                group mt-6 inline-flex items-center gap-2
-                rounded-full bg-gradient-to-r from-blue-600 to-purple-600
-                px-6 py-3 text-sm font-semibold text-white
-                shadow-lg shadow-blue-600/25
-                transition-all duration-300
-                hover:-translate-y-1 hover:shadow-xl
-              "
+              className="group mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all hover:-translate-y-1"
             >
-              {t("calc.why.cta", "Explore Our Services")}
-              <ArrowRight
-                size={15}
-                className="transition-transform duration-300 group-hover:translate-x-1"
-              />
+              Explore Our Services
+              <ArrowRight size={15} />
             </Link>
           </div>
 
-          {/* Right: Testimonial */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-5">
             <div className="rounded-3xl border border-slate-200/70 bg-white p-6 shadow-sm">
               <div className="mb-3 flex items-center gap-1">
                 {[...Array(5)].map((_, i) => (
-                  <span key={i} className="text-amber-400">
-                    ★
-                  </span>
+                  <span key={i} className="text-amber-400">★</span>
                 ))}
               </div>
               <p className="text-sm leading-relaxed text-slate-700">
-                "The budget calculator was super helpful! It gave us a clear
-                idea of the cost and timeline. The team was professional and
-                delivered exactly what we needed."
+                "The budget calculator was super helpful! It gave us a clear idea
+                of the cost and timeline. The team was professional and delivered
+                exactly what we needed."
               </p>
               <div className="mt-4 flex items-center gap-3 border-t border-slate-100 pt-4">
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-xs font-bold text-white">
                   RS
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-slate-900">
-                    Rohit Sharma
-                  </p>
-                  <p className="text-xs text-slate-500">
-                    Founder, The Tipsy Bar
-                  </p>
+                  <p className="text-sm font-bold text-slate-900">Rohit Sharma</p>
+                  <p className="text-xs text-slate-500">Founder, The Tipsy Bar</p>
                 </div>
               </div>
             </div>
