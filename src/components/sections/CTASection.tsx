@@ -64,3 +64,37 @@ export default function CTASection() {
                 className="group inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition-all hover:-translate-y-1 hover:border-white/40 hover:bg-white/10 sm:w-auto"
               >
                 <Mail size={16} />
+                Email Us
+              </a>
+
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition-all hover:-translate-y-1 hover:border-white/40 hover:bg-white/10 sm:w-auto"
+              >
+                <Phone size={16} />
+                Call Us
+              </a>
+            </div>
+
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-4 text-xs text-slate-400">
+              <span className="flex items-center gap-2">
+                <span className="h-1.5 w-1.5 rounded-full bg-blue-400" />
+                MSME Registered
+              </span>
+              <span className="flex items-center gap-2">
+                <span className="h-1.5 w-1.5 rounded-full bg-purple-400" />
+                Remote-First
+              </span>
+              <span className="flex items-center gap-2">
+                <span className="h-1.5 w-1.5 rounded-full bg-pink-400" />
+                Innovation-Driven
+              </span>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
