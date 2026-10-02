@@ -33,7 +33,7 @@ export default function HeroSection() {
       ref={ref}
       className="relative overflow-hidden bg-white pt-12 pb-16 md:pt-16 md:pb-20 lg:pt-20 lg:pb-24"
     >
-      {/* Background decoration */}
+      {/* Background blobs */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 overflow-hidden"
@@ -44,7 +44,7 @@ export default function HeroSection() {
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-8">
-          {/* ─── LEFT CONTENT ─────────────────────── */}
+          {/* ═══════ LEFT CONTENT ═══════ */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -109,7 +109,7 @@ export default function HeroSection() {
             </div>
           </motion.div>
 
-          {/* ─── RIGHT VISUAL (CSS Dashboard) ──────── */}
+          {/* ═══════ RIGHT VISUAL (CSS DASHBOARD) ═══════ */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={inView ? { opacity: 1, scale: 1 } : {}}
@@ -117,9 +117,9 @@ export default function HeroSection() {
             className="relative lg:col-span-6"
           >
             <div className="relative mx-auto max-w-[560px]">
-              {/* Dashboard Mockup */}
+              {/* Dashboard mockup */}
               <div className="relative z-10 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl shadow-slate-200/60">
-                {/* Browser Top Bar */}
+                {/* Browser bar */}
                 <div className="flex items-center gap-2 border-b border-slate-100 bg-slate-50 px-4 py-3">
                   <div className="flex gap-1.5">
                     <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
@@ -131,7 +131,7 @@ export default function HeroSection() {
                   </div>
                 </div>
 
-                {/* Dashboard Body */}
+                {/* Dashboard body */}
                 <div className="grid grid-cols-12 gap-3 bg-gradient-to-br from-slate-50 via-white to-blue-50/40 p-4">
                   {/* Sidebar */}
                   <div className="col-span-3 space-y-2">
@@ -148,7 +148,7 @@ export default function HeroSection() {
                     ))}
                   </div>
 
-                  {/* Main Area */}
+                  {/* Main */}
                   <div className="col-span-9 space-y-3">
                     {/* KPI cards */}
                     <div className="grid grid-cols-3 gap-2">
@@ -214,7 +214,7 @@ export default function HeroSection() {
                 </div>
               </div>
 
-              {/* Floating Card 1 - Traffic */}
+              {/* Floating card 1 — Traffic */}
               <motion.div
                 animate={{ y: [0, -10, 0] }}
                 transition={{
@@ -242,7 +242,7 @@ export default function HeroSection() {
                 </div>
               </motion.div>
 
-              {/* Floating Card 2 - Mobile */}
+              {/* Floating card 2 — Mobile */}
               <motion.div
                 animate={{ y: [0, 10, 0] }}
                 transition={{
@@ -268,7 +268,7 @@ export default function HeroSection() {
                 </div>
               </motion.div>
 
-              {/* Floating Card 3 - Code */}
+              {/* Floating card 3 — Code */}
               <motion.div
                 animate={{ y: [0, -12, 0] }}
                 transition={{
@@ -292,7 +292,7 @@ export default function HeroSection() {
                 </div>
               </motion.div>
 
-              {/* Floating Card 4 - Ranking */}
+              {/* Floating card 4 — Ranking */}
               <motion.div
                 animate={{ y: [0, 12, 0] }}
                 transition={{
@@ -321,7 +321,7 @@ export default function HeroSection() {
           </motion.div>
         </div>
 
-        {/* ─── SERVICE CHIPS ROW ──────────────────── */}
+        {/* ═══════ SERVICE CHIPS ROW ═══════ */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
