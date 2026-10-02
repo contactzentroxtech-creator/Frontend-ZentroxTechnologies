@@ -15,9 +15,6 @@ import {
 } from "lucide-react";
 import api from "@/lib/api";
 
-/* ═══════════════════════════════════════════════════════════════
-   TYPES
-═══════════════════════════════════════════════════════════════ */
 interface BlogPost {
   _id?: string;
   slug: string;
@@ -33,9 +30,6 @@ interface BlogPost {
   readTime?: number;
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   HELPERS
-═══════════════════════════════════════════════════════════════ */
 function normalizePost(raw: any): BlogPost {
   const wordCount = (raw?.content || "").split(" ").length;
   return {
@@ -67,9 +61,6 @@ function formatDate(dateStr?: string) {
   }
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   MAIN COMPONENT
-═══════════════════════════════════════════════════════════════ */
 export default function BlogClient() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.05 });
@@ -80,7 +71,6 @@ export default function BlogClient() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
 
-  /* ─── FETCH POSTS ──────────────────────────── */
   const loadPosts = async () => {
     setLoading(true);
     setError(null);
@@ -118,7 +108,7 @@ export default function BlogClient() {
       setError(
         e?.response?.data?.message ||
           e?.message ||
-          "Unable to load blog posts. Please try again later."
+          "Unable to load blog posts."
       );
     } finally {
       setLoading(false);
@@ -129,7 +119,6 @@ export default function BlogClient() {
     loadPosts();
   }, []);
 
-  /* ─── FILTERS ──────────────────────────────── */
   const categories = useMemo(() => {
     const cats = new Set<string>();
     posts.forEach((p) => {
@@ -151,9 +140,7 @@ export default function BlogClient() {
 
   return (
     <main className="bg-white">
-      {/* ═══════════════════════════════════════════
-          HERO
-      ═══════════════════════════════════════════ */}
+      {/* ═══════ HERO ═══════ */}
       <section className="relative overflow-hidden bg-[#FDF8F3] pt-12 pb-16 md:pt-16 md:pb-20">
         <div
           aria-hidden="true"
@@ -181,16 +168,14 @@ export default function BlogClient() {
             </h1>
 
             <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-600 lg:text-lg">
-              Stay updated with the latest in technology, digital marketing,
-              web development and business growth.
+              Stay updated with the latest in technology, digital marketing, web
+              development and business growth from Zentrox Technologies.
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════
-          BLOG LIST
-      ═══════════════════════════════════════════ */}
+      {/* ═══════ BLOG LIST ═══════ */}
       <section
         ref={ref}
         className="relative bg-white px-4 py-16 md:px-6 md:py-24"
@@ -238,7 +223,7 @@ export default function BlogClient() {
             </motion.div>
           )}
 
-          {/* LOADING */}
+          {/* Loading */}
           {loading && (
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {[...Array(3)].map((_, i) => (
@@ -252,14 +237,13 @@ export default function BlogClient() {
                     <div className="h-5 w-full rounded bg-slate-100" />
                     <div className="h-5 w-3/4 rounded bg-slate-100" />
                     <div className="h-3 w-full rounded bg-slate-100" />
-                    <div className="h-3 w-2/3 rounded bg-slate-100" />
                   </div>
                 </div>
               ))}
             </div>
           )}
 
-          {/* ERROR */}
+          {/* Error */}
           {!loading && error && (
             <div className="mx-auto max-w-md rounded-2xl border border-red-200 bg-red-50 p-8 text-center">
               <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-red-100 text-red-600">
@@ -279,26 +263,74 @@ export default function BlogClient() {
             </div>
           )}
 
-          {/* EMPTY */}
+          {/* Empty State */}
           {!loading && !error && filtered.length === 0 && (
-            <div className="mx-auto max-w-md rounded-2xl border border-slate-200 bg-slate-50 p-8 text-center">
-              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-slate-200 text-slate-500">
-                <Newspaper size={22} />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6 }}
+              className="mx-auto max-w-3xl"
+            >
+              <div className="overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-blue-50/40 to-purple-50/40 p-8 text-center shadow-xl sm:p-12">
+                <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 shadow-lg shadow-blue-600/25">
+                  <Newspaper size={36} className="text-white" />
+                </div>
+
+                <h3 className="text-2xl font-extrabold text-slate-900 sm:text-3xl">
+                  {posts.length === 0
+                    ? "Insights Coming Soon"
+                    : "No Articles Found"}
+                </h3>
+
+                <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-slate-600">
+                  {posts.length === 0
+                    ? "Zentrox Technologies is preparing in-depth articles on web development, mobile apps, AI integration, digital marketing and business growth. Check back soon."
+                    : "Try a different search or category to find what you're looking for."}
+                </p>
+
+                {posts.length === 0 && (
+                  <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
+                    {[
+                      "Web Development",
+                      "Mobile Apps",
+                      "AI Integration",
+                      "Digital Marketing",
+                      "SaaS",
+                      "Business Growth",
+                    ].map((topic) => (
+                      <span
+                        key={topic}
+                        className="rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-700 shadow-sm"
+                      >
+                        {topic}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                  <Link
+                    href="/contact"
+                    className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all hover:-translate-y-1 hover:shadow-xl"
+                  >
+                    Discuss Your Project
+                    <ArrowRight
+                      size={16}
+                      className="transition-transform group-hover:translate-x-1"
+                    />
+                  </Link>
+                  <Link
+                    href="/services"
+                    className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition-all hover:-translate-y-1 hover:border-blue-300 hover:text-blue-600"
+                  >
+                    Explore Our Services
+                  </Link>
+                </div>
               </div>
-              <h3 className="text-base font-bold text-slate-900">
-                {posts.length === 0
-                  ? "No articles published yet"
-                  : "No articles found matching your search"}
-              </h3>
-              <p className="mt-2 text-sm text-slate-600">
-                {posts.length === 0
-                  ? "Check back soon — new insights are on the way."
-                  : "Try a different search or category."}
-              </p>
-            </div>
+            </motion.div>
           )}
 
-          {/* POSTS GRID */}
+          {/* Posts Grid */}
           {!loading && !error && filtered.length > 0 && (
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {filtered.map((post, index) => (
@@ -309,12 +341,10 @@ export default function BlogClient() {
                   transition={{
                     duration: 0.5,
                     delay: Math.min(index * 0.08, 0.4),
-                    ease: [0.22, 1, 0.36, 1],
                   }}
                   whileHover={{ y: -6 }}
-                  className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200/70 bg-white transition-all duration-300 hover:border-blue-200 hover:shadow-[0_20px_50px_rgba(15,23,42,0.08)]"
+                  className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200/70 bg-white transition-all hover:border-blue-200 hover:shadow-[0_20px_50px_rgba(15,23,42,0.08)]"
                 >
-                  {/* Image / Placeholder */}
                   <Link
                     href={`/blog/${post.slug}`}
                     className="relative block aspect-video overflow-hidden"
@@ -344,7 +374,6 @@ export default function BlogClient() {
                     )}
                   </Link>
 
-                  {/* Content */}
                   <div className="flex flex-1 flex-col p-6">
                     <div className="mb-3 flex items-center gap-4 text-[11px] text-slate-500">
                       {post.publishedAt && (
