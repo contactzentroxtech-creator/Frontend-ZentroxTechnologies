@@ -42,7 +42,7 @@ export default function Navbar() {
             : "shadow-[0_4px_20px_rgba(15,23,42,0.05)]"
         }`}
       >
-        {/* ═══════ ORIGINAL LOGO + FULL NAME ═══════ */}
+        {/* Logo */}
         <Link href="/" className="flex flex-shrink-0 items-center gap-2.5">
           <Image
             src="/Zentrox-Logo1.png"
@@ -85,7 +85,7 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* CTA */}
+        {/* CTA Button */}
         <div className="hidden items-center gap-2 lg:flex">
           <Link
             href="/contact"
@@ -99,7 +99,7 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Mobile Toggle */}
+        {/* Mobile Menu Button */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
           className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-700 transition-colors hover:bg-slate-200 lg:hidden"
