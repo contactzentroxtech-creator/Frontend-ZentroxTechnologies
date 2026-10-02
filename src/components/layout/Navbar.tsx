@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -41,14 +42,18 @@ export default function Navbar() {
             : "shadow-[0_4px_20px_rgba(15,23,42,0.05)]"
         }`}
       >
-        {/* ═══════ CSS LOGO ═══════ */}
+        {/* ═══════ LOGO — ORIGINAL IMAGE + FULL NAME ═══════ */}
         <Link href="/" className="flex flex-shrink-0 items-center gap-2.5">
-          <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 via-purple-600 to-pink-500 shadow-md shadow-blue-600/25 md:h-10 md:w-10">
-            <span className="text-lg font-black text-white md:text-xl">Z</span>
-            <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-gradient-to-br from-blue-400 to-purple-400" />
-          </div>
+          <Image
+            src="/Zentrox-Logo1.png"
+            alt="Zentrox Technologies Logo"
+            width={40}
+            height={40}
+            priority
+            className="h-9 w-auto object-contain md:h-10"
+          />
           <span className="hidden flex-col leading-none sm:flex">
-            <span className="text-[15px] font-extrabold tracking-tight text-slate-900">
+            <span className="text-[14px] font-extrabold tracking-tight text-slate-900">
               ZENTROX
             </span>
             <span className="text-[9px] font-semibold tracking-[0.15em] text-slate-500">
