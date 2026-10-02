@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -42,15 +41,12 @@ export default function Navbar() {
             : "shadow-[0_4px_20px_rgba(15,23,42,0.05)]"
         }`}
       >
-        <Link href="/" className="flex flex-shrink-0 items-center gap-2">
-          <Image
-            src="/Zentrox-Logo1.png"
-            alt="Zentrox Technologies"
-            width={38}
-            height={38}
-            priority
-            className="h-8 w-auto object-contain md:h-9"
-          />
+        {/* Logo */}
+        <Link href="/" className="flex flex-shrink-0 items-center gap-2.5">
+          <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 via-purple-600 to-pink-500 shadow-md shadow-blue-600/25 md:h-10 md:w-10">
+            <span className="text-lg font-black text-white md:text-xl">Z</span>
+            <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-gradient-to-br from-blue-400 to-purple-400" />
+          </div>
           <span className="hidden flex-col leading-none sm:flex">
             <span className="text-[15px] font-extrabold tracking-tight text-slate-900">
               ZENTROX
@@ -61,13 +57,16 @@ export default function Navbar() {
           </span>
         </Link>
 
+        {/* Desktop Nav */}
         <div className="hidden items-center gap-1 lg:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               className={`relative rounded-full px-3.5 py-2 text-[13px] font-medium transition-colors ${
-                isActive(link.href) ? "text-blue-600" : "text-slate-700 hover:text-blue-600"
+                isActive(link.href)
+                  ? "text-blue-600"
+                  : "text-slate-700 hover:text-blue-600"
               }`}
             >
               {link.label}
@@ -81,16 +80,21 @@ export default function Navbar() {
           ))}
         </div>
 
+        {/* CTA */}
         <div className="hidden items-center gap-2 lg:flex">
           <Link
             href="/contact"
             className="group inline-flex items-center gap-1.5 rounded-full bg-blue-600 px-5 py-2.5 text-[13px] font-semibold text-white shadow-md shadow-blue-600/20 transition-all hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-lg"
           >
             Get Started
-            <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
+            <ArrowRight
+              size={14}
+              className="transition-transform group-hover:translate-x-0.5"
+            />
           </Link>
         </div>
 
+        {/* Mobile toggle */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
           className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-700 lg:hidden"
@@ -100,6 +104,7 @@ export default function Navbar() {
         </button>
       </nav>
 
+      {/* Mobile Menu */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
