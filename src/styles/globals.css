@@ -3,28 +3,28 @@
 @tailwind utilities;
 
 /* ═══════════════════════════════════════════════════════════════
-   ZENTROX TECHNOLOGIES THEME VARIABLES
-   Light theme by default (website + admin panel)
+   ZENTROX TECHNOLOGIES — THEME VARIABLES
+   Light theme (website + admin + blog all pages)
 ═══════════════════════════════════════════════════════════════ */
 :root {
-  /* ─── Z Variables (for Tailwind z-* classes) ─── */
-  --z-dark: #FDF8F3;      /* Cream background — main bg */
-  --z-dark2: #FFFFFF;     /* White — sidebar, cards */
-  --z-dark3: #F8FAFC;     /* Light gray — subtle bg */
-  --z-dark4: #F1F5F9;     /* Lighter gray */
+  /* ─── Z Variables (for z-* Tailwind classes) ─── */
+  --z-dark: #FDF8F3;
+  --z-dark2: #FFFFFF;
+  --z-dark3: #F8FAFC;
+  --z-dark4: #F1F5F9;
 
-  --z-accent: #2563eb;    /* Blue accent */
-  --z-accent2: #7c3aed;   /* Purple accent */
-  --z-accent3: #ec4899;   /* Pink accent */
-  --z-gold: #f59e0b;      /* Gold */
+  --z-accent: #2563eb;
+  --z-accent2: #7c3aed;
+  --z-accent3: #ec4899;
+  --z-gold: #f59e0b;
 
-  --z-text: #0f172a;      /* Dark text — headings */
-  --z-muted: #64748b;     /* Muted text — body */
+  --z-text: #0f172a;
+  --z-muted: #64748b;
 
-  --z-border: #E2E8F0;    /* Light border */
+  --z-border: #E2E8F0;
   --z-glow: rgba(37, 99, 235, 0.15);
 
-  /* ─── Legacy Variables (backward compat) ─── */
+  /* ─── Legacy Variables ─── */
   --cream-bg: #FDF8F3;
   --cream-border: #F0E6D8;
   --brand-blue: #2563eb;
@@ -59,28 +59,39 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   ADMIN PANEL OVERRIDES
-   Admin uses z-* classes — ensure text is always visible
+   TEXT VISIBILITY FIXES
+   Ensures all text is visible even if z-* classes fail
 ═══════════════════════════════════════════════════════════════ */
-.admin-layout,
-[class*="admin"] {
+h1, h2, h3, h4, h5, h6 {
   color: #0f172a;
 }
 
-/* Admin text visible on light backgrounds */
-.admin-layout h1,
-.admin-layout h2,
-.admin-layout h3,
-.admin-layout h4,
-.admin-layout h5,
-.admin-layout h6 {
+p, span, div, li {
+  color: inherit;
+}
+
+/* Blog post content */
+article,
+.blog-content,
+.prose {
+  color: #334155;
+}
+
+article h1,
+article h2,
+article h3 {
+  color: #0f172a;
+}
+
+/* Admin panel — force text visibility */
+.admin-layout,
+.admin-layout * {
   color: #0f172a;
 }
 
 .admin-layout p,
-.admin-layout span,
-.admin-layout div {
-  color: inherit;
+.admin-layout span {
+  color: #475569;
 }
 
 /* ═══════════════════════════════════════════════════════════════
