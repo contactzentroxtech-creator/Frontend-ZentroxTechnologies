@@ -3,22 +3,16 @@
 import { useRef } from "react";
 import Link from "next/link";
 import { motion, useInView } from "framer-motion";
-import { ArrowRight, MessageCircle, Sparkles, Mail, Phone } from "lucide-react";
+import { ArrowRight, Mail, Phone, Sparkles } from "lucide-react";
 
 export default function CTASection() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.2 });
 
-  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "918988183513";
-  const whatsappMsg = encodeURIComponent(
-    "Hi Zentrox Technologies, I'd like to discuss a project."
-  );
-  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMsg}`;
-
   return (
     <section
       id="cta"
-      aria-label="Call to action"
+      aria-label="Call to action — Zentrox Technologies"
       className="relative bg-white px-4 py-20 sm:py-24 md:px-6 md:py-28"
     >
       <div ref={ref} className="mx-auto max-w-7xl">
@@ -47,7 +41,8 @@ export default function CTASection() {
             </h2>
 
             <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-slate-300 lg:text-lg">
-              Let's turn your idea into a practical digital solution.
+              Zentrox Technologies can help you turn your idea into a practical
+              digital solution.
             </p>
 
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -56,7 +51,10 @@ export default function CTASection() {
                 className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-slate-900 shadow-lg shadow-black/20 transition-all hover:-translate-y-1 hover:bg-blue-50 sm:w-auto"
               >
                 Start a Project
-                <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                <ArrowRight
+                  size={16}
+                  className="transition-transform group-hover:translate-x-1"
+                />
               </Link>
 
               <a
@@ -68,9 +66,7 @@ export default function CTASection() {
               </a>
 
               <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+                href="tel:+918988183513"
                 className="group inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition-all hover:-translate-y-1 hover:border-white/40 hover:bg-white/10 sm:w-auto"
               >
                 <Phone size={16} />
