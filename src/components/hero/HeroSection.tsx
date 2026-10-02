@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, useInView } from "framer-motion";
 import {
   ArrowRight,
@@ -33,6 +34,7 @@ export default function HeroSection() {
       ref={ref}
       className="relative overflow-hidden bg-white pt-12 pb-16 md:pt-16 md:pb-20 lg:pt-20 lg:pb-24"
     >
+      {/* Background blobs */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 overflow-hidden"
@@ -43,7 +45,7 @@ export default function HeroSection() {
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-8">
-          {/* LEFT CONTENT */}
+          {/* ═══════ LEFT CONTENT ═══════ */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -108,7 +110,7 @@ export default function HeroSection() {
             </div>
           </motion.div>
 
-          {/* RIGHT VISUAL — CSS DASHBOARD */}
+          {/* ═══════ RIGHT VISUAL — HERO IMAGE ═══════ */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={inView ? { opacity: 1, scale: 1 } : {}}
@@ -116,96 +118,19 @@ export default function HeroSection() {
             className="relative lg:col-span-6"
           >
             <div className="relative mx-auto max-w-[560px]">
+              {/* Hero Image */}
               <div className="relative z-10 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl shadow-slate-200/60">
-                <div className="flex items-center gap-2 border-b border-slate-100 bg-slate-50 px-4 py-3">
-                  <div className="flex gap-1.5">
-                    <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-yellow-400" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-green-400" />
-                  </div>
-                  <div className="ml-3 flex-1 rounded-md bg-white px-3 py-1 text-[10px] text-slate-400">
-                    zentroxtechnologies.com
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-12 gap-3 bg-gradient-to-br from-slate-50 via-white to-blue-50/40 p-4">
-                  <div className="col-span-3 space-y-2">
-                    <div className="flex items-center gap-2 rounded-lg bg-gradient-to-br from-blue-600 to-purple-600 p-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-md bg-white/20 text-xs font-black text-white">
-                        Z
-                      </span>
-                      <span className="text-[9px] font-bold text-white">
-                        ZENTROX
-                      </span>
-                    </div>
-                    {[1, 2, 3, 4].map((i) => (
-                      <div key={i} className="h-6 rounded-md bg-slate-100" />
-                    ))}
-                  </div>
-
-                  <div className="col-span-9 space-y-3">
-                    <div className="grid grid-cols-3 gap-2">
-                      {[
-                        { label: "Projects", value: "124" },
-                        { label: "Clients", value: "58" },
-                        { label: "Revenue", value: "₹8L" },
-                      ].map((kpi) => (
-                        <div
-                          key={kpi.label}
-                          className="rounded-lg border border-slate-100 bg-white p-2"
-                        >
-                          <div className="mb-1 h-1.5 w-6 rounded-full bg-slate-200" />
-                          <p className="text-[10px] font-extrabold text-slate-900">
-                            {kpi.value}
-                          </p>
-                          <p className="text-[8px] text-slate-400">
-                            {kpi.label}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="rounded-lg border border-slate-100 bg-white p-3">
-                      <div className="mb-2 flex items-center justify-between">
-                        <p className="text-[10px] font-bold text-slate-700">
-                          Growth
-                        </p>
-                        <span className="text-[9px] font-semibold text-emerald-600">
-                          +140%
-                        </span>
-                      </div>
-                      <div className="flex items-end gap-1">
-                        {[40, 65, 45, 80, 60, 90, 75, 95, 85, 100].map(
-                          (h, i) => (
-                            <div
-                              key={i}
-                              className="flex-1 rounded-sm bg-gradient-to-t from-blue-500 to-purple-500"
-                              style={{ height: `${h * 0.5}px` }}
-                            />
-                          )
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="space-y-1.5">
-                      {[1, 2].map((i) => (
-                        <div
-                          key={i}
-                          className="flex items-center gap-2 rounded-lg border border-slate-100 bg-white p-2"
-                        >
-                          <div className="h-6 w-6 rounded-md bg-gradient-to-br from-blue-100 to-purple-100" />
-                          <div className="flex-1 space-y-1">
-                            <div className="h-1.5 w-16 rounded-full bg-slate-200" />
-                            <div className="h-1.5 w-10 rounded-full bg-slate-100" />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                <Image
+                  src="/hero-laptop.png"
+                  alt="Zentrox Technologies — Modern Development Dashboard"
+                  width={800}
+                  height={600}
+                  className="h-auto w-full object-cover"
+                  priority
+                />
               </div>
 
-              {/* Floating Cards */}
+              {/* Floating Card 1 — Traffic */}
               <motion.div
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
@@ -222,14 +147,22 @@ export default function HeroSection() {
                     <p className="text-lg font-extrabold text-slate-900">
                       +140%
                     </p>
-                    <p className="text-[9px] text-slate-500">SEO &amp; Marketing</p>
+                    <p className="text-[9px] text-slate-500">
+                      SEO &amp; Marketing
+                    </p>
                   </div>
                 </div>
               </motion.div>
 
+              {/* Floating Card 2 — Mobile */}
               <motion.div
                 animate={{ y: [0, 10, 0] }}
-                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                transition={{
+                  duration: 6,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 1,
+                }}
                 className="absolute -left-6 top-1/3 z-20 hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-xl sm:block"
               >
                 <div className="flex items-center gap-3">
@@ -240,32 +173,22 @@ export default function HeroSection() {
                     <p className="text-[11px] font-bold text-slate-900">
                       Mobile App
                     </p>
-                    <p className="text-[9px] text-slate-500">iOS · Android</p>
+                    <p className="text-[9px] text-slate-500">
+                      iOS · Android
+                    </p>
                   </div>
                 </div>
               </motion.div>
 
-              <motion.div
-                animate={{ y: [0, -12, 0] }}
-                transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                className="absolute -top-10 left-1/4 z-20 hidden rounded-xl border border-slate-800 bg-slate-900 p-3 shadow-xl md:block"
-              >
-                <div className="mb-2 flex items-center gap-1.5">
-                  <span className="h-2 w-2 rounded-full bg-red-500" />
-                  <span className="h-2 w-2 rounded-full bg-yellow-500" />
-                  <span className="h-2 w-2 rounded-full bg-green-500" />
-                </div>
-                <div className="space-y-1 font-mono text-[9px]">
-                  <p className="text-blue-400">initZentrox();</p>
-                  <p className="text-emerald-400">✓ Software Dev</p>
-                  <p className="text-emerald-400">✓ Web Apps</p>
-                  <p className="text-emerald-400">✓ SaaS Solutions</p>
-                </div>
-              </motion.div>
-
+              {/* Floating Card 3 — Ranking */}
               <motion.div
                 animate={{ y: [0, 12, 0] }}
-                transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
+                transition={{
+                  duration: 6.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 1.5,
+                }}
                 className="absolute -bottom-6 -right-6 z-20 hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-xl sm:block"
               >
                 <div className="flex items-center gap-2">
@@ -286,7 +209,7 @@ export default function HeroSection() {
           </motion.div>
         </div>
 
-        {/* Service Chips */}
+        {/* ═══════ SERVICE CHIPS ROW ═══════ */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
