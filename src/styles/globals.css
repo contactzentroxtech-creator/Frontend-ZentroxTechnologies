@@ -2,7 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ═══════════════════════════════════════════════════════════════
+   ZENTROX TECHNOLOGIES THEME VARIABLES
+   Light theme by default (website + admin panel)
+═══════════════════════════════════════════════════════════════ */
 :root {
+  /* ─── Z Variables (for Tailwind z-* classes) ─── */
+  --z-dark: #FDF8F3;      /* Cream background — main bg */
+  --z-dark2: #FFFFFF;     /* White — sidebar, cards */
+  --z-dark3: #F8FAFC;     /* Light gray — subtle bg */
+  --z-dark4: #F1F5F9;     /* Lighter gray */
+
+  --z-accent: #2563eb;    /* Blue accent */
+  --z-accent2: #7c3aed;   /* Purple accent */
+  --z-accent3: #ec4899;   /* Pink accent */
+  --z-gold: #f59e0b;      /* Gold */
+
+  --z-text: #0f172a;      /* Dark text — headings */
+  --z-muted: #64748b;     /* Muted text — body */
+
+  --z-border: #E2E8F0;    /* Light border */
+  --z-glow: rgba(37, 99, 235, 0.15);
+
+  /* ─── Legacy Variables (backward compat) ─── */
   --cream-bg: #FDF8F3;
   --cream-border: #F0E6D8;
   --brand-blue: #2563eb;
@@ -13,6 +35,9 @@
   --text-muted: #94a3b8;
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   GLOBAL RESET
+═══════════════════════════════════════════════════════════════ */
 * {
   box-sizing: border-box;
   padding: 0;
@@ -33,7 +58,34 @@ body {
   overflow-x: hidden;
 }
 
-/* ─── SCROLLBAR ─────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   ADMIN PANEL OVERRIDES
+   Admin uses z-* classes — ensure text is always visible
+═══════════════════════════════════════════════════════════════ */
+.admin-layout,
+[class*="admin"] {
+  color: #0f172a;
+}
+
+/* Admin text visible on light backgrounds */
+.admin-layout h1,
+.admin-layout h2,
+.admin-layout h3,
+.admin-layout h4,
+.admin-layout h5,
+.admin-layout h6 {
+  color: #0f172a;
+}
+
+.admin-layout p,
+.admin-layout span,
+.admin-layout div {
+  color: inherit;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SCROLLBAR
+═══════════════════════════════════════════════════════════════ */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -53,7 +105,9 @@ body {
   color: white;
 }
 
-/* ─── CARD STYLES ───────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   CARD STYLES
+═══════════════════════════════════════════════════════════════ */
 .card-cream {
   background: #FFFFFF;
   border: 1px solid #F0E6D8;
@@ -82,7 +136,9 @@ body {
   transform: translateY(-6px);
 }
 
-/* ─── BUTTONS ───────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   BUTTONS
+═══════════════════════════════════════════════════════════════ */
 .btn-primary {
   background-color: #2563eb;
   color: #FFFFFF;
@@ -147,7 +203,9 @@ body {
   transform: translateY(-2px);
 }
 
-/* ─── GRADIENT TEXT ─────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   GRADIENT TEXT
+═══════════════════════════════════════════════════════════════ */
 .gradient-text {
   background: linear-gradient(135deg, #2563eb 0%, #7c3aed 50%, #ec4899 100%);
   -webkit-background-clip: text;
@@ -163,7 +221,9 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
-/* ─── SECTION SPACING ───────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   SECTION SPACING
+═══════════════════════════════════════════════════════════════ */
 .section-padding {
   padding: 80px 16px;
 }
@@ -180,7 +240,9 @@ body {
   }
 }
 
-/* ─── BADGE STYLES ──────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   BADGE STYLES
+═══════════════════════════════════════════════════════════════ */
 .badge-soft {
   display: inline-flex;
   align-items: center;
@@ -211,7 +273,9 @@ body {
   color: #6D28D9;
 }
 
-/* ─── GRID BACKGROUND ───────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   GRID BACKGROUND
+═══════════════════════════════════════════════════════════════ */
 .bg-grid {
   background-image:
     linear-gradient(rgba(100, 116, 139, 0.06) 1px, transparent 1px),
@@ -219,7 +283,9 @@ body {
   background-size: 64px 64px;
 }
 
-/* ─── FOCUS STATES ──────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   FOCUS STATES
+═══════════════════════════════════════════════════════════════ */
 button:focus-visible,
 a:focus-visible,
 input:focus-visible,
@@ -230,7 +296,9 @@ select:focus-visible {
   border-radius: 8px;
 }
 
-/* ─── FORM INPUTS ───────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   FORM INPUTS
+═══════════════════════════════════════════════════════════════ */
 .input-field {
   width: 100%;
   padding: 12px 16px;
@@ -252,7 +320,9 @@ select:focus-visible {
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
-/* ─── LINE CLAMP ────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   LINE CLAMP
+═══════════════════════════════════════════════════════════════ */
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -267,7 +337,9 @@ select:focus-visible {
   overflow: hidden;
 }
 
-/* ─── ANIMATIONS ────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   ANIMATIONS
+═══════════════════════════════════════════════════════════════ */
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-10px); }
@@ -286,7 +358,9 @@ select:focus-visible {
   animation: pulse-slow 3s ease-in-out infinite;
 }
 
-/* ─── REDUCED MOTION ────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   REDUCED MOTION
+═══════════════════════════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
