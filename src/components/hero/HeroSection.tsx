@@ -33,7 +33,6 @@ export default function HeroSection() {
       ref={ref}
       className="relative overflow-hidden bg-white pt-12 pb-16 md:pt-16 md:pb-20 lg:pt-20 lg:pb-24"
     >
-      {/* Background blobs */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 overflow-hidden"
@@ -44,7 +43,7 @@ export default function HeroSection() {
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-8">
-          {/* ═══════ LEFT CONTENT ═══════ */}
+          {/* LEFT CONTENT */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -74,7 +73,7 @@ export default function HeroSection() {
             <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
               <Link
                 href="/contact"
-                className="group inline-flex items-center justify-center gap-2 rounded-full bg-blue-600 px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all hover:-translate-y-1 hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-600/35"
+                className="group inline-flex items-center justify-center gap-2 rounded-full bg-blue-600 px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all hover:-translate-y-1 hover:bg-blue-700 hover:shadow-xl"
               >
                 Start Your Project
                 <ArrowRight
@@ -109,7 +108,7 @@ export default function HeroSection() {
             </div>
           </motion.div>
 
-          {/* ═══════ RIGHT VISUAL (CSS DASHBOARD) ═══════ */}
+          {/* RIGHT VISUAL — CSS DASHBOARD */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={inView ? { opacity: 1, scale: 1 } : {}}
@@ -117,9 +116,7 @@ export default function HeroSection() {
             className="relative lg:col-span-6"
           >
             <div className="relative mx-auto max-w-[560px]">
-              {/* Dashboard mockup */}
               <div className="relative z-10 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl shadow-slate-200/60">
-                {/* Browser bar */}
                 <div className="flex items-center gap-2 border-b border-slate-100 bg-slate-50 px-4 py-3">
                   <div className="flex gap-1.5">
                     <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
@@ -131,9 +128,7 @@ export default function HeroSection() {
                   </div>
                 </div>
 
-                {/* Dashboard body */}
                 <div className="grid grid-cols-12 gap-3 bg-gradient-to-br from-slate-50 via-white to-blue-50/40 p-4">
-                  {/* Sidebar */}
                   <div className="col-span-3 space-y-2">
                     <div className="flex items-center gap-2 rounded-lg bg-gradient-to-br from-blue-600 to-purple-600 p-2">
                       <span className="flex h-6 w-6 items-center justify-center rounded-md bg-white/20 text-xs font-black text-white">
@@ -148,9 +143,7 @@ export default function HeroSection() {
                     ))}
                   </div>
 
-                  {/* Main */}
                   <div className="col-span-9 space-y-3">
-                    {/* KPI cards */}
                     <div className="grid grid-cols-3 gap-2">
                       {[
                         { label: "Projects", value: "124" },
@@ -172,7 +165,6 @@ export default function HeroSection() {
                       ))}
                     </div>
 
-                    {/* Chart */}
                     <div className="rounded-lg border border-slate-100 bg-white p-3">
                       <div className="mb-2 flex items-center justify-between">
                         <p className="text-[10px] font-bold text-slate-700">
@@ -195,7 +187,6 @@ export default function HeroSection() {
                       </div>
                     </div>
 
-                    {/* Line items */}
                     <div className="space-y-1.5">
                       {[1, 2].map((i) => (
                         <div
@@ -214,14 +205,10 @@ export default function HeroSection() {
                 </div>
               </div>
 
-              {/* Floating card 1 — Traffic */}
+              {/* Floating Cards */}
               <motion.div
                 animate={{ y: [0, -10, 0] }}
-                transition={{
-                  duration: 5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                 className="absolute -right-4 -top-6 z-20 hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-xl sm:block"
               >
                 <div className="flex items-center gap-3">
@@ -235,22 +222,14 @@ export default function HeroSection() {
                     <p className="text-lg font-extrabold text-slate-900">
                       +140%
                     </p>
-                    <p className="text-[9px] text-slate-500">
-                      SEO &amp; Marketing
-                    </p>
+                    <p className="text-[9px] text-slate-500">SEO &amp; Marketing</p>
                   </div>
                 </div>
               </motion.div>
 
-              {/* Floating card 2 — Mobile */}
               <motion.div
                 animate={{ y: [0, 10, 0] }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 1,
-                }}
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
                 className="absolute -left-6 top-1/3 z-20 hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-xl sm:block"
               >
                 <div className="flex items-center gap-3">
@@ -261,22 +240,14 @@ export default function HeroSection() {
                     <p className="text-[11px] font-bold text-slate-900">
                       Mobile App
                     </p>
-                    <p className="text-[9px] text-slate-500">
-                      iOS · Android
-                    </p>
+                    <p className="text-[9px] text-slate-500">iOS · Android</p>
                   </div>
                 </div>
               </motion.div>
 
-              {/* Floating card 3 — Code */}
               <motion.div
                 animate={{ y: [0, -12, 0] }}
-                transition={{
-                  duration: 7,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 0.5,
-                }}
+                transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
                 className="absolute -top-10 left-1/4 z-20 hidden rounded-xl border border-slate-800 bg-slate-900 p-3 shadow-xl md:block"
               >
                 <div className="mb-2 flex items-center gap-1.5">
@@ -292,15 +263,9 @@ export default function HeroSection() {
                 </div>
               </motion.div>
 
-              {/* Floating card 4 — Ranking */}
               <motion.div
                 animate={{ y: [0, 12, 0] }}
-                transition={{
-                  duration: 6.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 1.5,
-                }}
+                transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
                 className="absolute -bottom-6 -right-6 z-20 hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-xl sm:block"
               >
                 <div className="flex items-center gap-2">
@@ -321,7 +286,7 @@ export default function HeroSection() {
           </motion.div>
         </div>
 
-        {/* ═══════ SERVICE CHIPS ROW ═══════ */}
+        {/* Service Chips */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
