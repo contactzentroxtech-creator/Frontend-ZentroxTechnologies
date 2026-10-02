@@ -43,10 +43,12 @@ export default function Footer() {
   return (
     <footer className="bg-[#0f172a] text-slate-300">
       <div className="mx-auto max-w-7xl px-4 pt-16 pb-8 md:px-6 lg:px-8">
+        {/* ═══════ MAIN GRID ═══════ */}
         <div className="mb-12 grid grid-cols-2 gap-8 md:grid-cols-4 lg:grid-cols-5 lg:gap-10">
-          {/* Brand Column */}
+          {/* ═══════ BRAND COLUMN ═══════ */}
           <div className="col-span-2 lg:col-span-2">
             <Link href="/" className="mb-5 flex items-center gap-2.5">
+              {/* CSS Logo */}
               <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 shadow-md shadow-blue-500/30">
                 <span className="text-lg font-black text-white">Z</span>
                 <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-[#0f172a] bg-gradient-to-br from-blue-300 to-purple-300" />
@@ -66,8 +68,8 @@ export default function Footer() {
             </p>
             <p className="mb-6 max-w-sm text-sm leading-relaxed text-slate-400">
               Zentrox Technologies is an MSME-registered technology company
-              building custom software, websites, mobile apps and digital
-              growth solutions for businesses in India and worldwide.
+              building custom software, websites, mobile apps and digital growth
+              solutions for businesses in India and worldwide.
             </p>
 
             {/* Contact Info */}
@@ -92,7 +94,7 @@ export default function Footer() {
               </span>
             </div>
 
-            {/* Social */}
+            {/* Social Icons */}
             <div className="flex items-center gap-2.5">
               {socialLinks.map((s) => {
                 const Icon = s.icon;
@@ -112,7 +114,7 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Quick Links */}
+          {/* ═══════ QUICK LINKS ═══════ */}
           <div>
             <h4 className="mb-5 text-xs font-bold uppercase tracking-[0.15em] text-white">
               Quick Links
@@ -131,7 +133,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Services */}
+          {/* ═══════ SERVICES ═══════ */}
           <div>
             <h4 className="mb-5 text-xs font-bold uppercase tracking-[0.15em] text-white">
               Our Services
@@ -150,7 +152,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Locations */}
+          {/* ═══════ LOCATIONS ═══════ */}
           <div>
             <h4 className="mb-5 text-xs font-bold uppercase tracking-[0.15em] text-white">
               Locations
@@ -165,7 +167,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom Bar */}
+        {/* ═══════ BOTTOM BAR ═══════ */}
         <div className="flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 md:flex-row">
           <p className="text-center text-xs text-slate-500 md:text-left">
             &copy; {new Date().getFullYear()} Zentrox Technologies. All rights
