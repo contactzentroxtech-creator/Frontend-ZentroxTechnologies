@@ -33,31 +33,11 @@ const quickLinks = [
 ];
 
 const socialLinks = [
-  {
-    label: "Instagram",
-    icon: Instagram,
-    href: "https://www.instagram.com/zentrox.technologies/",
-  },
-  {
-    label: "Facebook",
-    icon: Facebook,
-    href: "https://www.facebook.com/profile.php?id=61572221829545",
-  },
-  {
-    label: "LinkedIn",
-    icon: Linkedin,
-    href: "https://www.linkedin.com/in/zentrox-technologies-b763573bb/",
-  },
-  {
-    label: "YouTube",
-    icon: Youtube,
-    href: "https://www.youtube.com/@ZentroxTechOfficial",
-  },
-  {
-    label: "Twitter / X",
-    icon: Twitter,
-    href: "https://x.com/Zentrox_tech",
-  },
+  { label: "Instagram", icon: Instagram, href: "https://www.instagram.com/zentrox.technologies/" },
+  { label: "Facebook", icon: Facebook, href: "https://www.facebook.com/profile.php?id=61572221829545" },
+  { label: "LinkedIn", icon: Linkedin, href: "https://www.linkedin.com/in/zentrox-technologies-b763573bb/" },
+  { label: "YouTube", icon: Youtube, href: "https://www.youtube.com/@ZentroxTechOfficial" },
+  { label: "Twitter / X", icon: Twitter, href: "https://x.com/Zentrox_tech" },
 ];
 
 export default function Footer() {
@@ -65,16 +45,16 @@ export default function Footer() {
     <footer className="bg-[#0f172a] text-slate-300">
       <div className="mx-auto max-w-7xl px-4 pt-16 pb-8 md:px-6 lg:px-8">
         <div className="mb-12 grid grid-cols-2 gap-8 md:grid-cols-4 lg:grid-cols-5 lg:gap-10">
-          {/* ═══════ BRAND COLUMN — ORIGINAL LOGO ═══════ */}
+          {/* ═══════ ORIGINAL LOGO — WHITE BOX ═══════ */}
           <div className="col-span-2 lg:col-span-2">
-            <Link href="/" className="mb-5 flex items-center gap-2.5">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white p-1">
+            <Link href="/" className="mb-5 flex items-center gap-3">
+              <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-white p-1.5 shadow-md">
                 <Image
                   src="/Zentrox-Logo1.png"
                   alt="Zentrox Technologies Logo"
-                  width={44}
-                  height={44}
-                  className="h-10 w-10 object-contain"
+                  width={48}
+                  height={48}
+                  className="h-11 w-11 object-contain"
                 />
               </div>
               <span className="flex flex-col leading-none">
@@ -96,7 +76,7 @@ export default function Footer() {
               solutions for businesses in India and worldwide.
             </p>
 
-            {/* ═══════ CONTACT INFO — 2 EMAILS, 2 PHONES ═══════ */}
+            {/* Contact Info */}
             <div className="mb-6 flex flex-col gap-2.5 text-sm">
               <a
                 href="mailto:contact.zentroxtech@gmail.com"
@@ -136,7 +116,7 @@ export default function Footer() {
               </span>
             </div>
 
-            {/* ═══════ SOCIAL ICONS ═══════ */}
+            {/* Social Icons */}
             <div className="flex items-center gap-2.5">
               {socialLinks.map((s) => {
                 const Icon = s.icon;
@@ -156,7 +136,7 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* ═══════ QUICK LINKS ═══════ */}
+          {/* Quick Links */}
           <div>
             <h4 className="mb-5 text-xs font-bold uppercase tracking-[0.15em] text-white">
               Quick Links
@@ -175,7 +155,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* ═══════ SERVICES ═══════ */}
+          {/* Services */}
           <div>
             <h4 className="mb-5 text-xs font-bold uppercase tracking-[0.15em] text-white">
               Our Services
@@ -194,7 +174,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* ═══════ LOCATIONS ═══════ */}
+          {/* Locations */}
           <div>
             <h4 className="mb-5 text-xs font-bold uppercase tracking-[0.15em] text-white">
               Locations
@@ -209,7 +189,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* ═══════ BOTTOM BAR — FULL NAME ═══════ */}
+        {/* Bottom Bar */}
         <div className="flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 md:flex-row">
           <p className="text-center text-xs text-slate-500 md:text-left">
             &copy; {new Date().getFullYear()} Zentrox Technologies. All rights
@@ -217,17 +197,11 @@ export default function Footer() {
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-slate-500">
-            <Link
-              href="/privacy"
-              className="transition-colors hover:text-blue-400"
-            >
+            <Link href="/privacy" className="transition-colors hover:text-blue-400">
               Privacy Policy
             </Link>
             <span className="text-slate-700">|</span>
-            <Link
-              href="/terms"
-              className="transition-colors hover:text-blue-400"
-            >
+            <Link href="/terms" className="transition-colors hover:text-blue-400">
               Terms &amp; Conditions
             </Link>
             <span className="text-slate-700">|</span>
