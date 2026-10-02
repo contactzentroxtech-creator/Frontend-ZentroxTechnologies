@@ -57,6 +57,7 @@ export default function WhyChooseUsSection() {
       aria-label="About Zentrox Technologies"
       className="relative overflow-hidden bg-[#FDF8F3] px-4 py-20 sm:py-24 md:px-6 md:py-28"
     >
+      {/* Background decoration */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         <div className="absolute -right-40 top-20 h-[400px] w-[400px] rounded-full bg-blue-100/40 blur-[120px]" />
         <div className="absolute -left-40 bottom-20 h-[400px] w-[400px] rounded-full bg-purple-100/30 blur-[120px]" />
@@ -64,7 +65,7 @@ export default function WhyChooseUsSection() {
 
       <div ref={ref} className="relative mx-auto max-w-7xl">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-16">
-          {/* LEFT - CSS ILLUSTRATION */}
+          {/* ═══════ LEFT — CSS TEAM ILLUSTRATION ═══════ */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
@@ -88,12 +89,13 @@ export default function WhyChooseUsSection() {
                       </p>
                     </div>
                   </div>
-                  <span className="rounded-full bg-emerald-50 px-2 py-1 text-[9px] font-bold text-emerald-600">
-                    ● Online
+                  <span className="flex items-center gap-1.5 rounded-full bg-emerald-50 px-2 py-1 text-[9px] font-bold text-emerald-600">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                    Online
                   </span>
                 </div>
 
-                {/* Team Grid */}
+                {/* Team grid */}
                 <div className="grid grid-cols-2 gap-3">
                   {TEAM.map((m) => (
                     <div
@@ -140,7 +142,7 @@ export default function WhyChooseUsSection() {
                 </div>
               </div>
 
-              {/* Floating badge - Founded */}
+              {/* Floating badge — Founded */}
               <motion.div
                 animate={{ y: [0, -10, 0] }}
                 transition={{
@@ -165,7 +167,7 @@ export default function WhyChooseUsSection() {
                 </div>
               </motion.div>
 
-              {/* Floating badge - Projects */}
+              {/* Floating badge — Projects */}
               <motion.div
                 animate={{ y: [0, 10, 0] }}
                 transition={{
@@ -193,7 +195,7 @@ export default function WhyChooseUsSection() {
             </div>
           </motion.div>
 
-          {/* RIGHT - CONTENT */}
+          {/* ═══════ RIGHT — CONTENT ═══════ */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
@@ -215,6 +217,7 @@ export default function WhyChooseUsSection() {
               design and long-term partnerships.
             </p>
 
+            {/* Points grid */}
             <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2">
               {POINTS.map((point, index) => {
                 const Icon = point.icon;
@@ -251,6 +254,7 @@ export default function WhyChooseUsSection() {
               })}
             </div>
 
+            {/* CTA */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
