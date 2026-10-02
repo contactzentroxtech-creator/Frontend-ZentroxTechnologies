@@ -45,7 +45,7 @@ export default function Footer() {
     <footer className="bg-[#0f172a] text-slate-300">
       <div className="mx-auto max-w-7xl px-4 pt-16 pb-8 md:px-6 lg:px-8">
         <div className="mb-12 grid grid-cols-2 gap-8 md:grid-cols-4 lg:grid-cols-5 lg:gap-10">
-          {/* ═══════ ORIGINAL LOGO — WHITE BOX ═══════ */}
+          {/* Brand Column with Logo */}
           <div className="col-span-2 lg:col-span-2">
             <Link href="/" className="mb-5 flex items-center gap-3">
               <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-white p-1.5 shadow-md">
@@ -116,7 +116,7 @@ export default function Footer() {
               </span>
             </div>
 
-            {/* Social Icons */}
+            {/* Social Links */}
             <div className="flex items-center gap-2.5">
               {socialLinks.map((s) => {
                 const Icon = s.icon;
