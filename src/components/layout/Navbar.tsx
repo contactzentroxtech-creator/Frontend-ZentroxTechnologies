@@ -42,15 +42,15 @@ export default function Navbar() {
             : "shadow-[0_4px_20px_rgba(15,23,42,0.05)]"
         }`}
       >
-        {/* ═══════ LOGO — ORIGINAL IMAGE + FULL NAME ═══════ */}
+        {/* ═══════ ORIGINAL LOGO + FULL NAME ═══════ */}
         <Link href="/" className="flex flex-shrink-0 items-center gap-2.5">
           <Image
             src="/Zentrox-Logo1.png"
             alt="Zentrox Technologies Logo"
-            width={40}
-            height={40}
+            width={44}
+            height={44}
             priority
-            className="h-9 w-auto object-contain md:h-10"
+            className="h-10 w-auto object-contain md:h-11"
           />
           <span className="hidden flex-col leading-none sm:flex">
             <span className="text-[14px] font-extrabold tracking-tight text-slate-900">
@@ -62,7 +62,7 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* ═══════ DESKTOP NAV ═══════ */}
+        {/* Desktop Nav */}
         <div className="hidden items-center gap-1 lg:flex">
           {navLinks.map((link) => (
             <Link
@@ -85,7 +85,7 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* ═══════ CTA BUTTON ═══════ */}
+        {/* CTA */}
         <div className="hidden items-center gap-2 lg:flex">
           <Link
             href="/contact"
@@ -99,7 +99,7 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* ═══════ MOBILE MENU BUTTON ═══════ */}
+        {/* Mobile Toggle */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
           className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-700 transition-colors hover:bg-slate-200 lg:hidden"
@@ -109,7 +109,7 @@ export default function Navbar() {
         </button>
       </nav>
 
-      {/* ═══════ MOBILE MENU ═══════ */}
+      {/* Mobile Menu */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
