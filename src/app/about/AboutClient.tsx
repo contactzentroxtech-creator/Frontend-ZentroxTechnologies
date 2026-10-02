@@ -390,4 +390,96 @@ export default function AboutClient() {
           STATS
       ═══════════════════════════════════════════ */}
       <section className="relative bg-white px-4 py-16 md:px-6 md:py-20">
-        <div className="mx-auto max
+        <div className="mx-auto max-w-7xl">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
+            {STATS.map((stat, i) => {
+              const Icon = stat.icon;
+              return (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  className="flex flex-col items-center rounded-2xl border border-slate-200/70 bg-white p-6 text-center transition-all hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg"
+                >
+                  <div
+                    className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl"
+                    style={{
+                      backgroundColor: `${stat.color}12`,
+                      color: stat.color,
+                    }}
+                  >
+                    <Icon size={20} />
+                  </div>
+                  <p className="text-2xl font-extrabold text-slate-900 sm:text-3xl">
+                    {stat.num}
+                  </p>
+                  <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    {stat.label}
+                  </p>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          CTA
+      ═══════════════════════════════════════════ */}
+      <section className="relative bg-white px-4 py-16 md:px-6 md:py-24">
+        <div className="mx-auto max-w-5xl">
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] px-8 py-14 text-center shadow-2xl sm:px-12"
+          >
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 opacity-[0.04]"
+              style={{
+                backgroundImage: `
+                  linear-gradient(rgba(255,255,255,.6) 1px, transparent 1px),
+                  linear-gradient(90deg, rgba(255,255,255,.6) 1px, transparent 1px)
+                `,
+                backgroundSize: "48px 48px",
+              }}
+            />
+
+            <div className="relative z-10 mx-auto max-w-2xl">
+              <h2 className="text-2xl font-extrabold leading-tight text-white sm:text-3xl lg:text-4xl">
+                Let's Build Something Great Together
+              </h2>
+              <p className="mx-auto mt-4 max-w-xl text-sm text-slate-300 sm:text-base">
+                Have a project in mind? Zentrox Technologies is ready to bring
+                your ideas to life.
+              </p>
+
+              <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                <Link
+                  href="/contact"
+                  className="group inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-slate-900 transition-all hover:-translate-y-1"
+                >
+                  Start Your Project
+                  <ArrowRight
+                    size={16}
+                    className="transition-transform group-hover:translate-x-1"
+                  />
+                </Link>
+                <Link
+                  href="/services"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white transition-all hover:-translate-y-1 hover:bg-white/10"
+                >
+                  View Our Services
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+    </main>
+  );
+}
