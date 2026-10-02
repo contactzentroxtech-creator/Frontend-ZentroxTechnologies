@@ -486,4 +486,98 @@ export default function AdminPortfolioPage() {
               </button>
             </div>
 
-            <div className="space-y
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <input
+                  type="text"
+                  placeholder="Name"
+                  value={editingReview.name}
+                  onChange={(e) =>
+                    setEditingReview({ ...editingReview, name: e.target.value })
+                  }
+                  className="rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                />
+                <input
+                  type="text"
+                  placeholder="Role/Company"
+                  value={editingReview.role}
+                  onChange={(e) =>
+                    setEditingReview({ ...editingReview, role: e.target.value })
+                  }
+                  className="rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                />
+              </div>
+
+              <textarea
+                placeholder="Review message"
+                value={editingReview.message}
+                onChange={(e) =>
+                  setEditingReview({ ...editingReview, message: e.target.value })
+                }
+                rows={4}
+                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+              />
+
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <label className="mb-1 block text-xs font-bold">Rating</label>
+                  <select
+                    value={editingReview.rating}
+                    onChange={(e) =>
+                      setEditingReview({
+                        ...editingReview,
+                        rating: Number(e.target.value),
+                      })
+                    }
+                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                  >
+                    {[5, 4, 3, 2, 1].map((n) => (
+                      <option key={n} value={n}>
+                        {n} star
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs font-bold">Color</label>
+                  <select
+                    value={editingReview.color}
+                    onChange={(e) =>
+                      setEditingReview({ ...editingReview, color: e.target.value })
+                    }
+                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                  >
+                    {COLOR_OPTIONS.map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs font-bold">Date</label>
+                  <input
+                    type="text"
+                    value={editingReview.date}
+                    onChange={(e) =>
+                      setEditingReview({ ...editingReview, date: e.target.value })
+                    }
+                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                  />
+                </div>
+              </div>
+
+              <button
+                onClick={saveReview}
+                disabled={saving}
+                className="flex w-full items-center justify-center gap-2 rounded-full bg-blue-600 py-3 text-sm font-semibold text-white"
+              >
+                <Save size={14} /> {saving ? "Saving..." : "Save Review"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
