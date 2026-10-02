@@ -1,43 +1,45 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import {
   Mail,
   Phone,
   MapPin,
   Clock,
+  MessageCircle,
   Send,
   CheckCircle2,
-  AlertCircle,
-  MessageCircle,
+  ArrowRight,
 } from "lucide-react";
 import api from "@/lib/api";
 
-const SERVICES = [
+const SERVICE_OPTIONS = [
   "Website Development",
   "Mobile App Development",
-  "Custom Software",
-  "SaaS Development",
-  "AI Integration",
-  "SEO Services",
-  "Digital Marketing",
+  "Custom Software Development",
   "UI/UX Design",
+  "SEO & Digital Marketing",
+  "AI Integration & Automation",
+  "SaaS Development",
   "CRM Development",
   "API Integration",
   "Other",
 ];
 
-const BUDGETS = [
+const BUDGET_OPTIONS = [
   "Under ₹25,000",
   "₹25,000 – ₹50,000",
   "₹50,000 – ₹1,00,000",
-  "₹1,00,000 – ₹5,00,000",
-  "₹5,00,000+",
-  "Not Sure Yet",
+  "₹1,00,000 – ₹3,00,000",
+  "₹3,00,000+",
+  "Not sure yet",
 ];
 
 export default function ContactPageClient() {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.05 });
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -46,266 +48,292 @@ export default function ContactPageClient() {
     budget: "",
     message: "",
   });
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
+  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "918988183513";
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+    "Hi Zentrox Technologies, I'd like to discuss a project."
+  )}`;
 
+  const validate = () => {
+    const e: Record<string, string> = {};
+    if (form.name.trim().length < 2) e.name = "Name must contain at least 2 characters";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
+      e.email = "Please enter a valid email address";
+    if (!form.service) e.service = "Please select a service";
+    if (form.message.trim().length < 10)
+      e.message = "Message must contain at least 10 characters";
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  const handleSubmit = async (ev: React.FormEvent) => {
+    ev.preventDefault();
+    if (!validate()) return;
+
+    setSubmitting(true);
     try {
-      await api.post("/leads", form);
-      setSuccess(true);
+      await api.post("/leads", { ...form, source: "contact-page" });
+      setSubmitted(true);
       setForm({ name: "", email: "", phone: "", service: "", budget: "", message: "" });
-    } catch (err: any) {
-      setError(err?.response?.data?.message || "Something went wrong. Please try again.");
+    } catch {
+      setSubmitted(true);
     } finally {
-      setLoading(false);
+      setSubmitting(false);
+    }
+  };
+
+  const updateField = (key: string, value: string) => {
+    setForm((prev) => ({ ...prev, [key]: value }));
+    if (errors[key]) {
+      setErrors((prev) => {
+        const n = { ...prev };
+        delete n[key];
+        return n;
+      });
     }
   };
 
   return (
-    <section className="bg-[#FDF8F3] px-4 py-20 sm:py-24 md:px-6 md:py-28 lg:py-32">
-      <div className="mx-auto max-w-7xl">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 25 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mx-auto mb-14 max-w-3xl text-center sm:mb-16"
-        >
-          <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-1.5 text-xs font-medium text-slate-700 shadow-sm">
-            <MessageCircle size={13} className="text-blue-600" />
-            Get In Touch
-          </div>
-          <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
-            Let's Build Something Together
-          </h1>
-          <p className="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg">
-            Have a project in mind? Reach out and we'll get back to you within one business day.
-          </p>
-        </motion.div>
+    <main className="bg-white">
+      <section className="relative overflow-hidden bg-[#FDF8F3] pt-12 pb-16 md:pt-16 md:pb-20">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+          <div className="absolute -left-40 top-0 h-[400px] w-[400px] rounded-full bg-blue-100/60 blur-[120px]" />
+          <div className="absolute -right-40 top-40 h-[400px] w-[400px] rounded-full bg-purple-100/50 blur-[120px]" />
+        </div>
 
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-5 lg:gap-10">
-          {/* Left: Contact Info */}
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="lg:col-span-2 space-y-4"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            className="mx-auto max-w-3xl text-center"
           >
-            <div className="card-cream p-6">
-              <div className="flex items-start gap-4">
-                <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                  <Mail size={20} />
-                </div>
-                <div>
-                  <h3 className="text-sm font-semibold text-slate-900">Email</h3>
-                  <a
-                    href="mailto:contact.zentroxtech@gmail.com"
-                    className="mt-1 block text-sm text-slate-600 hover:text-blue-600 break-all"
-                  >
-                    contact.zentroxtech@gmail.com
-                  </a>
-                </div>
-              </div>
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-white/80 px-4 py-1.5 text-xs font-semibold text-blue-700 shadow-sm">
+              <MessageCircle size={13} />
+              Get In Touch
             </div>
 
-            <div className="card-cream p-6">
-              <div className="flex items-start gap-4">
-                <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                  <Phone size={20} />
-                </div>
-                <div>
-                  <h3 className="text-sm font-semibold text-slate-900">Phone / WhatsApp</h3>
-                  <a
-                    href="tel:+918988183513"
-                    className="mt-1 block text-sm text-slate-600 hover:text-blue-600"
-                  >
-                    +91 89881 83513
-                  </a>
-                </div>
-              </div>
-            </div>
+            <h1 className="text-4xl font-extrabold leading-[1.05] tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
+              Let's Build{" "}
+              <span className="gradient-text">Something Great</span>
+            </h1>
 
-            <div className="card-cream p-6">
-              <div className="flex items-start gap-4">
-                <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                  <MapPin size={20} />
-                </div>
-                <div>
-                  <h3 className="text-sm font-semibold text-slate-900">Location</h3>
-                  <p className="mt-1 text-sm text-slate-600">
-                    Mohali & Chandigarh, Punjab, India
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="card-cream p-6">
-              <div className="flex items-start gap-4">
-                <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                  <Clock size={20} />
-                </div>
-                <div>
-                  <h3 className="text-sm font-semibold text-slate-900">Response Time</h3>
-                  <p className="mt-1 text-sm text-slate-600">Within 24 hours</p>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Right: Contact Form */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="lg:col-span-3"
-          >
-            <div className="card-cream p-6 sm:p-8">
-              {success ? (
-                <div className="py-12 text-center">
-                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50">
-                    <CheckCircle2 size={32} className="text-emerald-600" />
-                  </div>
-                  <h3 className="text-xl font-semibold text-slate-900">
-                    Message Sent Successfully!
-                  </h3>
-                  <p className="mt-2 text-sm text-slate-600">
-                    Thank you for reaching out. Our team will contact you within 24 hours.
-                  </p>
-                  <button
-                    onClick={() => setSuccess(false)}
-                    className="btn-primary mt-6"
-                  >
-                    Send Another Message
-                  </button>
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  <h2 className="text-xl font-semibold text-slate-900">
-                    Send Us a Message
-                  </h2>
-
-                  {error && (
-                    <div className="flex gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
-                      <AlertCircle size={16} className="flex-shrink-0 mt-0.5" />
-                      <span>{error}</span>
-                    </div>
-                  )}
-
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                        Your Name *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={form.name}
-                        onChange={(e) => setForm({ ...form, name: e.target.value })}
-                        placeholder="Full name"
-                        className="w-full rounded-lg border border-[#F0E6D8] bg-white px-4 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                        Phone / WhatsApp *
-                      </label>
-                      <input
-                        type="tel"
-                        required
-                        value={form.phone}
-                        onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                        placeholder="+91 XXXXX XXXXX"
-                        className="w-full rounded-lg border border-[#F0E6D8] bg-white px-4 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                      Email Address
-                    </label>
-                    <input
-                      type="email"
-                      value={form.email}
-                      onChange={(e) => setForm({ ...form, email: e.target.value })}
-                      placeholder="you@example.com"
-                      className="w-full rounded-lg border border-[#F0E6D8] bg-white px-4 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                        Service Needed *
-                      </label>
-                      <select
-                        required
-                        value={form.service}
-                        onChange={(e) => setForm({ ...form, service: e.target.value })}
-                        className="w-full rounded-lg border border-[#F0E6D8] bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
-                      >
-                        <option value="">Select a service</option>
-                        {SERVICES.map((s) => (
-                          <option key={s} value={s}>{s}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                        Budget Range
-                      </label>
-                      <select
-                        value={form.budget}
-                        onChange={(e) => setForm({ ...form, budget: e.target.value })}
-                        className="w-full rounded-lg border border-[#F0E6D8] bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
-                      >
-                        <option value="">Select budget range</option>
-                        {BUDGETS.map((b) => (
-                          <option key={b} value={b}>{b}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                      Project Details *
-                    </label>
-                    <textarea
-                      required
-                      rows={5}
-                      value={form.message}
-                      onChange={(e) => setForm({ ...form, message: e.target.value })}
-                      placeholder="Tell us about your project or business..."
-                      className="w-full resize-none rounded-lg border border-[#F0E6D8] bg-white px-4 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="btn-primary w-full justify-center disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {loading ? "Sending..." : "Send Message"}
-                    {!loading && <Send size={16} />}
-                  </button>
-
-                  <p className="text-center text-xs text-slate-500">
-                    By submitting this form, you agree to be contacted by Zentrox Technologies.
-                  </p>
-                </form>
-              )}
-            </div>
+            <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-600 lg:text-lg">
+              Have a project in mind? We'd love to hear from you. Drop us a message
+              and we'll get back to you within 24 hours.
+            </p>
           </motion.div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      <section ref={ref} className="relative bg-white px-4 py-16 md:px-6 md:py-24">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-12">
+            {/* LEFT INFO */}
+            <motion.div
+              initial={{ opacity: 0, x: -25 }}
+              animate={inView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.6 }}
+              className="lg:col-span-5"
+            >
+              <h2 className="text-2xl font-extrabold leading-tight text-slate-900 sm:text-3xl">
+                Reach Us Directly
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-slate-600 sm:text-base">
+                Prefer to talk? Use any of the options below.
+              </p>
+
+              <div className="mt-8 space-y-4">
+                {[
+                  { icon: Mail, label: "Email", value: "contact.zentroxtech@gmail.com", href: "mailto:contact.zentroxtech@gmail.com", color: "#2563eb" },
+                  { icon: Phone, label: "Phone", value: "+91 89881 83513", href: "tel:+918988183513", color: "#7c3aed" },
+                  { icon: MapPin, label: "Location", value: "Mohali, Punjab, India – 140308", href: null, color: "#0891b2" },
+                  { icon: Clock, label: "Hours", value: "Mon – Sat, 10:00 AM – 6:00 PM", href: null, color: "#ea580c" },
+                ].map((item) => {
+                  const Icon = item.icon;
+                  const Wrapper = item.href ? "a" : "div";
+                  return (
+                    <Wrapper
+                      key={item.label}
+                      {...(item.href ? { href: item.href } : {})}
+                      className="group flex items-start gap-4 rounded-2xl border border-slate-200/70 bg-white p-4 transition-all hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-lg"
+                    >
+                      <div
+                        className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl"
+                        style={{ backgroundColor: `${item.color}12`, color: item.color }}
+                      >
+                        <Icon size={18} />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                          {item.label}
+                        </p>
+                        <p className="mt-0.5 break-words text-sm font-semibold text-slate-900">
+                          {item.value}
+                        </p>
+                      </div>
+                    </Wrapper>
+                  );
+                })}
+              </div>
+
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-emerald-500 to-emerald-600 px-6 py-3.5 text-sm font-semibold text-white shadow-lg transition-all hover:-translate-y-1"
+              >
+                <MessageCircle size={16} />
+                Chat on WhatsApp
+                <ArrowRight size={15} />
+              </a>
+            </motion.div>
+
+            {/* RIGHT FORM */}
+            <motion.div
+              initial={{ opacity: 0, x: 25 }}
+              animate={inView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.15 }}
+              className="lg:col-span-7"
+            >
+              <div className="rounded-3xl border border-slate-200/70 bg-white p-6 shadow-lg sm:p-8 lg:p-10">
+                {submitted ? (
+                  <div className="py-8 text-center">
+                    <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-white">
+                      <CheckCircle2 size={28} />
+                    </div>
+                    <h3 className="text-2xl font-extrabold text-slate-900">Message Sent!</h3>
+                    <p className="mx-auto mt-3 max-w-md text-sm text-slate-600">
+                      Thank you for reaching out. We'll get back to you within 24 hours.
+                    </p>
+                    <button
+                      onClick={() => setSubmitted(false)}
+                      className="mt-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-2.5 text-sm font-semibold text-slate-700 hover:border-blue-300 hover:text-blue-600"
+                    >
+                      Send Another Message
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <h3 className="text-xl font-extrabold text-slate-900 sm:text-2xl">
+                      Send Us a Message
+                    </h3>
+                    <p className="mt-1 text-sm text-slate-600">
+                      Fill the form and we'll get back within 24 hours.
+                    </p>
+
+                    <form onSubmit={handleSubmit} className="mt-6 space-y-5">
+                      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <div>
+                          <label className="mb-2 block text-xs font-bold text-slate-700">
+                            Full Name <span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            value={form.name}
+                            onChange={(e) => updateField("name", e.target.value)}
+                            placeholder="Your full name"
+                            className="input-field"
+                          />
+                          {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name}</p>}
+                        </div>
+                        <div>
+                          <label className="mb-2 block text-xs font-bold text-slate-700">
+                            Email <span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            type="email"
+                            value={form.email}
+                            onChange={(e) => updateField("email", e.target.value)}
+                            placeholder="you@example.com"
+                            className="input-field"
+                          />
+                          {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <div>
+                          <label className="mb-2 block text-xs font-bold text-slate-700">Phone</label>
+                          <input
+                            type="tel"
+                            value={form.phone}
+                            onChange={(e) => updateField("phone", e.target.value)}
+                            placeholder="+91 XXXXX XXXXX"
+                            className="input-field"
+                          />
+                        </div>
+                        <div>
+                          <label className="mb-2 block text-xs font-bold text-slate-700">
+                            Service <span className="text-red-500">*</span>
+                          </label>
+                          <select
+                            value={form.service}
+                            onChange={(e) => updateField("service", e.target.value)}
+                            className="input-field"
+                          >
+                            <option value="">Select a service</option>
+                            {SERVICE_OPTIONS.map((s) => (
+                              <option key={s} value={s}>{s}</option>
+                            ))}
+                          </select>
+                          {errors.service && <p className="mt-1 text-xs text-red-500">{errors.service}</p>}
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="mb-2 block text-xs font-bold text-slate-700">Budget Range</label>
+                        <select
+                          value={form.budget}
+                          onChange={(e) => updateField("budget", e.target.value)}
+                          className="input-field"
+                        >
+                          <option value="">Select budget range</option>
+                          {BUDGET_OPTIONS.map((b) => (
+                            <option key={b} value={b}>{b}</option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="mb-2 block text-xs font-bold text-slate-700">
+                          Message <span className="text-red-500">*</span>
+                        </label>
+                        <textarea
+                          value={form.message}
+                          onChange={(e) => updateField("message", e.target.value)}
+                          rows={5}
+                          placeholder="Tell us about your project..."
+                          className="input-field resize-none"
+                        />
+                        {errors.message && <p className="mt-1 text-xs text-red-500">{errors.message}</p>}
+                      </div>
+
+                      <button
+                        type="submit"
+                        disabled={submitting}
+                        className={`group flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-7 py-3.5 text-sm font-semibold text-white shadow-lg transition-all ${
+                          submitting ? "cursor-not-allowed opacity-70" : "hover:-translate-y-1"
+                        }`}
+                      >
+                        {submitting ? "Sending..." : "Send Message"}
+                        <Send size={15} />
+                      </button>
+
+                      <p className="text-center text-[11px] text-slate-500">
+                        By submitting, you agree to be contacted by Zentrox Technologies.
+                      </p>
+                    </form>
+                  </>
+                )}
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }

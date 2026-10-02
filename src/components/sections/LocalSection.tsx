@@ -2,18 +2,22 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { useLang } from "@/lib/providers";
-import ScrollTilt from "@/components/ui/ScrollTilt";
+import {
+  MapPin,
+  Globe2,
+  Building2,
+  Briefcase,
+  CheckCircle2,
+  TrendingUp,
+} from "lucide-react";
 
 const INDUSTRIES = [
-  "Startups",
-  "Healthcare",
-  "Real Estate",
-  "E-commerce",
-  "Education",
-  "Manufacturing",
-  "Professional Services",
-  "Growing Businesses",
+  { icon: Briefcase, label: "Startups", color: "#2563eb" },
+  { icon: Building2, label: "Local Businesses", color: "#7c3aed" },
+  { icon: TrendingUp, label: "Growing Enterprises", color: "#0891b2" },
+  { icon: Globe2, label: "Global Brands", color: "#ea580c" },
+  { icon: CheckCircle2, label: "Service Providers", color: "#059669" },
+  { icon: MapPin, label: "E-Commerce", color: "#dc2626" },
 ];
 
 const LOCATIONS = [
@@ -21,77 +25,158 @@ const LOCATIONS = [
   "Chandigarh",
   "Punjab",
   "Haryana",
-  "Himachal Pradesh",
   "Delhi NCR",
   "India",
   "USA",
   "UK",
   "Canada",
   "Australia",
-  "Worldwide",
+  "UAE",
+  "Singapore",
+];
+
+const TRUST_CARDS = [
+  {
+    icon: MapPin,
+    title: "India & Worldwide",
+    desc: "Serving businesses locally and globally.",
+    color: "#2563eb",
+  },
+  {
+    icon: Briefcase,
+    title: "Business-Focused Solutions",
+    desc: "Technology built around real business needs.",
+    color: "#7c3aed",
+  },
+  {
+    icon: CheckCircle2,
+    title: "Reliable Project Delivery",
+    desc: "On-time, on-budget, every time.",
+    color: "#0891b2",
+  },
 ];
 
 export default function LocalSection() {
-  const { t } = useLang();
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.2 });
-
-  const marqueeItems = [...LOCATIONS, ...INDUSTRIES];
-  const loopItems = [...marqueeItems, ...marqueeItems, ...marqueeItems];
+  const inView = useInView(ref, { once: true, amount: 0.15 });
 
   return (
-    <section id="industries" className="bg-[#FDF8F3] px-4 py-20 sm:py-24 md:px-6 md:py-28 lg:py-32">
+    <section
+      id="global"
+      aria-label="Industries and locations served by Zentrox Technologies"
+      className="relative bg-white px-4 py-20 sm:py-24 md:px-6 md:py-28"
+    >
       <div ref={ref} className="mx-auto max-w-7xl">
-        <div className="mx-auto mb-12 max-w-3xl text-center">
-          <span className="text-xs font-medium uppercase tracking-wider text-blue-600">
-            {t("global.badge")}
-          </span>
-          <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-            {t("global.title")}
+        {/* HEADER */}
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+          className="mb-14 max-w-3xl"
+        >
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-200/60 bg-cyan-50/60 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-cyan-700">
+            Industries
+          </div>
+
+          <h2 className="text-3xl font-extrabold leading-[1.1] tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+            Built for Different Industries
           </h2>
-          <p className="mt-3 text-base leading-relaxed text-slate-600 sm:text-lg">
-            {t("global.sub")}
+
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-slate-600 lg:text-lg">
+            Every industry has different workflows, customers and challenges. Our
+            approach starts by understanding the business before choosing the technology.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4">
-          {INDUSTRIES.map((industry) => (
-            <ScrollTilt key={industry} tiltIntensity={4} scaleRange={0.05}>
-              <div className="card-cream flex items-center justify-center px-4 py-3 text-center text-sm font-medium text-slate-700">
-                {industry}
-              </div>
-            </ScrollTilt>
-          ))}
-        </div>
-
-        <div className="relative mt-10 overflow-hidden rounded-xl border border-[#F0E6D8] bg-white py-4 shadow-sm">
-          <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-16 bg-gradient-to-r from-white to-transparent" />
-          <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-16 bg-gradient-to-l from-white to-transparent" />
-
-          <motion.div
-            className="flex w-max gap-6 px-4"
-            animate={{ x: ["0%", "-50%"] }}
-            transition={{
-              duration: 30,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-          >
-            {loopItems.map((item, index) => (
-              <span
-                key={`${item}-${index}`}
-                className="whitespace-nowrap text-sm font-medium text-slate-600"
+        {/* INDUSTRIES GRID */}
+        <div className="mb-16 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+          {INDUSTRIES.map((item, index) => {
+            const Icon = item.icon;
+            return (
+              <motion.div
+                key={item.label}
+                initial={{ opacity: 0, y: 20 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.5, delay: index * 0.08 }}
+                whileHover={{ y: -4 }}
+                className="group flex flex-col items-center gap-3 rounded-2xl border border-slate-200/70 bg-white p-5 text-center transition-all hover:border-blue-200 hover:shadow-lg"
               >
-                {item}
-              </span>
-            ))}
-          </motion.div>
+                <div
+                  className="flex h-11 w-11 items-center justify-center rounded-xl transition-transform group-hover:scale-110"
+                  style={{
+                    backgroundColor: `${item.color}10`,
+                    color: item.color,
+                  }}
+                >
+                  <Icon size={20} />
+                </div>
+                <p className="text-xs font-semibold text-slate-800">{item.label}</p>
+              </motion.div>
+            );
+          })}
         </div>
 
-        <p className="mt-6 text-center text-sm text-slate-600">
-          We work with businesses across India and international markets,
-          delivering solutions that are practical, reliable and built to last.
-        </p>
+        {/* TRUST CARDS */}
+        <div className="mb-16 grid grid-cols-1 gap-5 md:grid-cols-3">
+          {TRUST_CARDS.map((card, index) => {
+            const Icon = card.icon;
+            return (
+              <motion.div
+                key={card.title}
+                initial={{ opacity: 0, y: 25 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
+                whileHover={{ y: -6 }}
+                className="group rounded-2xl border border-slate-200/70 bg-white p-7 transition-all hover:border-blue-200 hover:shadow-[0_20px_50px_rgba(15,23,42,0.08)]"
+              >
+                <div
+                  className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl transition-transform group-hover:scale-110"
+                  style={{
+                    backgroundColor: `${card.color}10`,
+                    color: card.color,
+                  }}
+                >
+                  <Icon size={22} />
+                </div>
+
+                <h3 className="text-base font-bold text-slate-900">{card.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                  {card.desc}
+                </p>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* LOCATIONS STRIP */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="rounded-3xl border border-slate-200/70 bg-gradient-to-r from-blue-50/60 via-white to-purple-50/60 p-8 sm:p-10"
+        >
+          <div className="flex flex-col items-center gap-6 md:flex-row md:justify-between">
+            <div className="text-center md:text-left">
+              <h3 className="text-xl font-bold text-slate-900 sm:text-2xl">
+                Serving Businesses Worldwide
+              </h3>
+              <p className="mt-2 text-sm text-slate-600">
+                From Mohali to the world — we deliver technology that scales across borders.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              {LOCATIONS.map((loc) => (
+                <span
+                  key={loc}
+                  className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate-600 transition-colors hover:border-blue-300 hover:text-blue-600"
+                >
+                  {loc}
+                </span>
+              ))}
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

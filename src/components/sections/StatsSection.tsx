@@ -2,17 +2,15 @@
 
 import { useEffect, useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { CheckCircle2 } from "lucide-react";
-import { useLang } from "@/lib/providers";
-import api from "@/lib/api";
+import { Smile, Briefcase, Globe2, Calendar } from "lucide-react";
 
 interface StatItem {
   num?: number;
   suffix?: string;
   label: string;
-  labelKey: string;
   custom?: string;
-  settingKey?: string;
+  icon: typeof Smile;
+  accent: string;
 }
 
 function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: string }) {
@@ -24,7 +22,7 @@ function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: str
     if (!inView || target <= 0) return;
 
     let animationFrame: number;
-    const duration = 1600;
+    const duration = 1800;
     const startTime = performance.now();
 
     const animate = (currentTime: number) => {
@@ -53,90 +51,125 @@ function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: str
 }
 
 const DEFAULT_STATS: StatItem[] = [
-  { num: 200, suffix: "+", label: "Projects Delivered", labelKey: "stats.projects", settingKey: "stats_projects" },
-  { num: 150, suffix: "+", label: "Businesses Supported", labelKey: "stats.clients", settingKey: "stats_clients" },
-  { num: 3, suffix: "+", label: "Years Experience", labelKey: "stats.years", settingKey: "stats_years" },
-  { label: "Client Satisfaction", labelKey: "stats.rating", custom: "4.9★", settingKey: "stats_rating" },
+  {
+    num: 50,
+    suffix: "+",
+    label: "Happy Clients",
+    icon: Smile,
+    accent: "#2563eb",
+  },
+  {
+    num: 100,
+    suffix: "+",
+    label: "Projects Delivered",
+    icon: Briefcase,
+    accent: "#7c3aed",
+  },
+  {
+    num: 5,
+    suffix: "+",
+    label: "Countries Served",
+    icon: Globe2,
+    accent: "#0891b2",
+  },
+  {
+    label: "Founded",
+    custom: "2023",
+    icon: Calendar,
+    accent: "#ea580c",
+  },
 ];
 
 export default function StatsSection() {
-  const { t } = useLang();
-  const [stats, setStats] = useState<StatItem[]>(DEFAULT_STATS);
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.2 });
-
-  useEffect(() => {
-    let mounted = true;
-    const loadStats = async () => {
-      try {
-        const { data } = await api.get("/cms/settings");
-        if (!mounted || !data?.data) return;
-        const cms = data.data;
-        const updatedStats = DEFAULT_STATS.map((stat) => {
-          if (!stat.settingKey || cms[stat.settingKey] === undefined || cms[stat.settingKey] === null) return stat;
-          const value = cms[stat.settingKey];
-          if (stat.custom !== undefined) {
-            const rating = String(value).trim();
-            if (!rating) return stat;
-            return { ...stat, custom: rating.includes("★") ? rating : `${rating}★` };
-          }
-          const numericValue = Number(value);
-          if (Number.isFinite(numericValue) && numericValue > 0) return { ...stat, num: numericValue };
-          return stat;
-        });
-        if (mounted) setStats(updatedStats);
-      } catch {}
-    };
-    loadStats();
-    return () => { mounted = false; };
-  }, []);
-
-  const locations = ["India", "USA", "UK", "Canada", "Australia", "UAE", "Singapore"];
+  const [stats] = useState<StatItem[]>(DEFAULT_STATS);
 
   return (
-    <section id="about" className="bg-[#FDF8F3] px-4 py-20 sm:py-24 md:px-6 md:py-28 lg:py-32">
+    <section
+      id="stats"
+      aria-label="Zentrox Technologies achievements"
+      className="relative bg-white px-4 py-20 sm:py-24 md:px-6 md:py-28"
+    >
       <div ref={ref} className="mx-auto max-w-7xl">
-        <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-12">
-          <div>
-            <span className="text-xs font-medium uppercase tracking-wider text-blue-600">
-              {t("stats.trust")}
-            </span>
-            <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-              {t("stats.title")}
-            </h2>
-            <p className="mt-3 text-base leading-relaxed text-slate-600">
-              {t("stats.description")}
-            </p>
-
-            <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm text-slate-600">
-              {locations.map((loc) => (
-                <span key={loc} className="flex items-center gap-1.5">
-                  <span className="h-1.5 w-1.5 rounded-full bg-blue-600" />
-                  {loc}
-                </span>
-              ))}
-            </div>
+        {/* HEADER */}
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+          className="mb-12 max-w-3xl md:mb-16"
+        >
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-blue-50/60 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-blue-700">
+            Our Impact
           </div>
 
-          <div className="grid grid-cols-2 gap-4 sm:gap-5">
-            {stats.map((stat, index) => (
+          <h2 className="text-3xl font-extrabold leading-[1.1] tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+            Numbers That Tell Our Story
+          </h2>
+
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-slate-600 lg:text-lg">
+            We're proud of the trust our clients place in us and the results we deliver.
+          </p>
+        </motion.div>
+
+        {/* STATS GRID */}
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
+          {stats.map((stat, index) => {
+            const Icon = stat.icon;
+            return (
               <motion.div
-                key={stat.labelKey}
-                initial={{ opacity: 0, y: 20 }}
+                key={stat.label}
+                initial={{ opacity: 0, y: 25 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.4, delay: index * 0.08 }}
-                className="card-cream p-6"
+                transition={{
+                  duration: 0.5,
+                  delay: index * 0.1,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                whileHover={{ y: -6 }}
+                className="group relative flex flex-col items-center rounded-2xl border border-slate-200/70 bg-white p-6 text-center transition-all hover:border-blue-200 hover:shadow-[0_20px_50px_rgba(15,23,42,0.08)] md:p-8"
               >
-                <div className="text-3xl font-semibold text-slate-900 sm:text-4xl">
-                  {stat.custom ? stat.custom : <AnimatedCounter target={stat.num ?? 0} suffix={stat.suffix} />}
+                <div
+                  className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl transition-transform group-hover:scale-110"
+                  style={{
+                    backgroundColor: `${stat.accent}10`,
+                    color: stat.accent,
+                  }}
+                >
+                  <Icon size={22} />
                 </div>
-                <p className="mt-1.5 text-sm text-slate-600">
-                  {t(stat.labelKey, stat.label)}
+
+                <div className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-[44px]">
+                  {stat.custom ? (
+                    stat.custom
+                  ) : (
+                    <AnimatedCounter target={stat.num ?? 0} suffix={stat.suffix} />
+                  )}
+                </div>
+
+                <p className="mt-2 text-xs font-semibold uppercase tracking-[0.08em] text-slate-500 sm:text-sm">
+                  {stat.label}
                 </p>
+
+                <div
+                  className="absolute bottom-0 left-1/2 h-[3px] w-0 -translate-x-1/2 rounded-t-full transition-all duration-500 group-hover:w-3/4"
+                  style={{ backgroundColor: stat.accent }}
+                />
               </motion.div>
-            ))}
-          </div>
+            );
+          })}
         </div>
+
+        {/* FOOTER LINE */}
+        <motion.p
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="mt-12 text-center text-sm text-slate-500 md:mt-14"
+        >
+          Trusted by businesses across India, USA, UK, Canada, Australia, UAE & Singapore.
+        </motion.p>
       </div>
     </section>
   );
