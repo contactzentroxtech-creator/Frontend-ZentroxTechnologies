@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import {
   Mail,
   Phone,
@@ -32,26 +33,49 @@ const quickLinks = [
 ];
 
 const socialLinks = [
-  { label: "LinkedIn", icon: Linkedin, href: "#" },
-  { label: "Instagram", icon: Instagram, href: "#" },
-  { label: "Facebook", icon: Facebook, href: "#" },
-  { label: "YouTube", icon: Youtube, href: "#" },
-  { label: "Twitter", icon: Twitter, href: "#" },
+  {
+    label: "Instagram",
+    icon: Instagram,
+    href: "https://www.instagram.com/zentrox.technologies/",
+  },
+  {
+    label: "Facebook",
+    icon: Facebook,
+    href: "https://www.facebook.com/profile.php?id=61572221829545",
+  },
+  {
+    label: "LinkedIn",
+    icon: Linkedin,
+    href: "https://www.linkedin.com/in/zentrox-technologies-b763573bb/",
+  },
+  {
+    label: "YouTube",
+    icon: Youtube,
+    href: "https://www.youtube.com/@ZentroxTechOfficial",
+  },
+  {
+    label: "Twitter / X",
+    icon: Twitter,
+    href: "https://x.com/Zentrox_tech",
+  },
 ];
 
 export default function Footer() {
   return (
     <footer className="bg-[#0f172a] text-slate-300">
       <div className="mx-auto max-w-7xl px-4 pt-16 pb-8 md:px-6 lg:px-8">
-        {/* ═══════ MAIN GRID ═══════ */}
         <div className="mb-12 grid grid-cols-2 gap-8 md:grid-cols-4 lg:grid-cols-5 lg:gap-10">
-          {/* ═══════ BRAND COLUMN ═══════ */}
+          {/* ═══════ BRAND COLUMN — ORIGINAL LOGO ═══════ */}
           <div className="col-span-2 lg:col-span-2">
             <Link href="/" className="mb-5 flex items-center gap-2.5">
-              {/* CSS Logo */}
-              <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 shadow-md shadow-blue-500/30">
-                <span className="text-lg font-black text-white">Z</span>
-                <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-[#0f172a] bg-gradient-to-br from-blue-300 to-purple-300" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white p-1">
+                <Image
+                  src="/Zentrox-Logo1.png"
+                  alt="Zentrox Technologies Logo"
+                  width={44}
+                  height={44}
+                  className="h-10 w-10 object-contain"
+                />
               </div>
               <span className="flex flex-col leading-none">
                 <span className="text-base font-extrabold text-white">
@@ -72,29 +96,47 @@ export default function Footer() {
               solutions for businesses in India and worldwide.
             </p>
 
-            {/* Contact Info */}
+            {/* ═══════ CONTACT INFO — 2 EMAILS, 2 PHONES ═══════ */}
             <div className="mb-6 flex flex-col gap-2.5 text-sm">
               <a
                 href="mailto:contact.zentroxtech@gmail.com"
-                className="flex items-center gap-3 text-slate-400 transition-colors hover:text-white"
+                className="flex items-start gap-3 text-slate-400 transition-colors hover:text-white"
               >
-                <Mail size={15} className="text-blue-400" />
-                contact.zentroxtech@gmail.com
+                <Mail size={15} className="mt-0.5 flex-shrink-0 text-blue-400" />
+                <span className="break-all">
+                  contact.zentroxtech@gmail.com
+                </span>
+              </a>
+              <a
+                href="mailto:info.zentroxtechnologies@gmail.com"
+                className="flex items-start gap-3 text-slate-400 transition-colors hover:text-white"
+              >
+                <Mail size={15} className="mt-0.5 flex-shrink-0 text-blue-400" />
+                <span className="break-all">
+                  info.zentroxtechnologies@gmail.com
+                </span>
               </a>
               <a
                 href="tel:+918988183513"
                 className="flex items-center gap-3 text-slate-400 transition-colors hover:text-white"
               >
-                <Phone size={15} className="text-blue-400" />
+                <Phone size={15} className="flex-shrink-0 text-blue-400" />
                 +91 89881 83513
               </a>
-              <span className="flex items-center gap-3 text-slate-400">
-                <MapPin size={15} className="text-blue-400" />
+              <a
+                href="tel:+919459285513"
+                className="flex items-center gap-3 text-slate-400 transition-colors hover:text-white"
+              >
+                <Phone size={15} className="flex-shrink-0 text-blue-400" />
+                +91 94592 85513
+              </a>
+              <span className="flex items-start gap-3 text-slate-400">
+                <MapPin size={15} className="mt-0.5 flex-shrink-0 text-blue-400" />
                 Mohali &amp; Chandigarh, Punjab
               </span>
             </div>
 
-            {/* Social Icons */}
+            {/* ═══════ SOCIAL ICONS ═══════ */}
             <div className="flex items-center gap-2.5">
               {socialLinks.map((s) => {
                 const Icon = s.icon;
@@ -167,7 +209,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* ═══════ BOTTOM BAR ═══════ */}
+        {/* ═══════ BOTTOM BAR — FULL NAME ═══════ */}
         <div className="flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 md:flex-row">
           <p className="text-center text-xs text-slate-500 md:text-left">
             &copy; {new Date().getFullYear()} Zentrox Technologies. All rights
