@@ -21,37 +21,56 @@ export const metadata: Metadata = {
   description:
     "Explore Zentrox Technologies portfolio — websites, mobile apps, custom software and digital solutions we've built for businesses in India and worldwide.",
   alternates: { canonical: "https://zentroxtechnologies.com/portfolio" },
+  openGraph: {
+    title: "Portfolio | Zentrox Technologies",
+    description:
+      "Real projects. Real businesses. Real results. Explore websites we've built.",
+    url: "https://zentroxtechnologies.com/portfolio",
+    type: "website",
+  },
 };
 
 const PROJECTS = [
-  // REAL PROJECTS
+  // ─── REAL PROJECTS ────────────────────────────
   {
     title: "The Tipsy Bar",
     category: "Website Development",
-    desc: "Premium bartender service website with online booking, service showcase and Google reviews integration for a Tri-City based bar services company.",
+    description:
+      "Premium bartender service website with online booking, service showcase and Google reviews integration for a Tri-City based bar services company.",
     url: "https://thetipsybar.in/",
     icon: Wine,
     color: "#7c3aed",
-    results: ["+140% online bookings", "Google Reviews integration", "Mobile-first design"],
+    results: [
+      "+140% online bookings",
+      "Google Reviews integration",
+      "Mobile-first design",
+    ],
     tags: ["Next.js", "Responsive", "SEO"],
     real: true,
   },
   {
     title: "Mehra Driving School",
     category: "Website Development",
-    desc: "Chandigarh's trusted driving academy website with course listings, instructor profiles, home pickup information and online booking system.",
+    description:
+      "Chandigarh's trusted driving academy website with course listings, instructor profiles, home pickup information and online booking system.",
     url: "https://www.mehradrivingschool.com/",
     icon: Car,
     color: "#0891b2",
-    results: ["3000+ drivers trained", "Course booking system", "Location-based SEO"],
+    results: [
+      "3000+ drivers trained",
+      "Course booking system",
+      "Location-based SEO",
+    ],
     tags: ["Next.js", "Booking System", "Local SEO"],
     real: true,
   },
-  // PORTFOLIO PROJECTS (Showcase)
+
+  // ─── SHOWCASE PROJECTS ────────────────────────
   {
     title: "MediCare Plus",
     category: "Mobile App",
-    desc: "Healthcare mobile app for appointment booking, patient records and doctor consultation with secure video calling.",
+    description:
+      "Healthcare mobile app for appointment booking, patient records and doctor consultation with secure video calling.",
     url: "#",
     icon: Smartphone,
     color: "#be185d",
@@ -62,7 +81,8 @@ const PROJECTS = [
   {
     title: "TechVista CRM",
     category: "Custom Software",
-    desc: "Custom CRM system for a growing IT services company with sales pipeline tracking and automated follow-ups.",
+    description:
+      "Custom CRM system for a growing IT services company with sales pipeline tracking and automated follow-ups.",
     url: "#",
     icon: Code2,
     color: "#0f766e",
@@ -73,7 +93,8 @@ const PROJECTS = [
   {
     title: "Bloom Retail",
     category: "E-Commerce",
-    desc: "Complete e-commerce platform with product catalog, cart, payment gateway and order management system.",
+    description:
+      "Complete e-commerce platform with product catalog, cart, payment gateway and order management system.",
     url: "#",
     icon: ShoppingBag,
     color: "#ea580c",
@@ -84,7 +105,8 @@ const PROJECTS = [
   {
     title: "FitZone Gym",
     category: "Website + App",
-    desc: "Gym membership platform with online registration, class booking, trainer profiles and diet plan tracking.",
+    description:
+      "Gym membership platform with online registration, class booking, trainer profiles and diet plan tracking.",
     url: "#",
     icon: Dumbbell,
     color: "#059669",
@@ -95,7 +117,8 @@ const PROJECTS = [
   {
     title: "Spice Garden",
     category: "Restaurant Website",
-    desc: "Restaurant website with online menu, table reservation, food ordering and delivery integration.",
+    description:
+      "Restaurant website with online menu, table reservation, food ordering and delivery integration.",
     url: "#",
     icon: Utensils,
     color: "#dc2626",
@@ -106,7 +129,8 @@ const PROJECTS = [
   {
     title: "DesignHub Studio",
     category: "UI/UX Design",
-    desc: "Complete brand identity, design system and marketing website for a creative design agency.",
+    description:
+      "Complete brand identity, design system and marketing website for a creative design agency.",
     url: "#",
     icon: Palette,
     color: "#7c3aed",
@@ -208,7 +232,9 @@ function StarRating({ rating = 5 }: { rating?: number }) {
           key={i}
           size={14}
           className={
-            i < rating ? "fill-amber-400 text-amber-400" : "fill-slate-200 text-slate-200"
+            i < rating
+              ? "fill-amber-400 text-amber-400"
+              : "fill-slate-200 text-slate-200"
           }
         />
       ))}
@@ -219,7 +245,9 @@ function StarRating({ rating = 5 }: { rating?: number }) {
 export default function PortfolioPage() {
   return (
     <main className="bg-white">
-      {/* HERO */}
+      {/* ═══════════════════════════════════════════════
+          HERO
+      ═══════════════════════════════════════════════ */}
       <section className="relative overflow-hidden bg-[#FDF8F3] pt-12 pb-16 md:pt-16 md:pb-20">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0">
           <div className="absolute -left-40 top-0 h-[400px] w-[400px] rounded-full bg-blue-100/60 blur-[120px]" />
@@ -242,7 +270,9 @@ export default function PortfolioPage() {
         </div>
       </section>
 
-      {/* PROJECTS GRID */}
+      {/* ═══════════════════════════════════════════════
+          PROJECTS GRID
+      ═══════════════════════════════════════════════ */}
       <section className="relative bg-white px-4 py-16 md:px-6 md:py-24">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -282,8 +312,9 @@ export default function PortfolioPage() {
                       {project.category}
                     </span>
                     {project.real && (
-                      <span className="absolute right-3 top-3 rounded-full bg-emerald-500 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm">
-                        ● Live
+                      <span className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-emerald-500 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm">
+                        <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white" />
+                        Live
                       </span>
                     )}
                   </div>
@@ -295,21 +326,26 @@ export default function PortfolioPage() {
                     </h3>
 
                     <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-600 line-clamp-3">
-                      {project.desc}
+                      {project.description}
                     </p>
 
+                    {/* Results */}
                     <div className="mt-4 space-y-1.5">
                       {project.results.slice(0, 2).map((r) => (
                         <div
                           key={r}
                           className="flex items-center gap-2 text-xs font-medium text-slate-700"
                         >
-                          <TrendingUp size={12} className="flex-shrink-0 text-emerald-500" />
+                          <TrendingUp
+                            size={12}
+                            className="flex-shrink-0 text-emerald-500"
+                          />
                           {r}
                         </div>
                       ))}
                     </div>
 
+                    {/* Tags */}
                     <div className="mt-4 flex flex-wrap gap-1.5">
                       {project.tags.map((tag) => (
                         <span
@@ -321,6 +357,7 @@ export default function PortfolioPage() {
                       ))}
                     </div>
 
+                    {/* CTA */}
                     {project.real ? (
                       <a
                         href={project.url}
@@ -329,7 +366,10 @@ export default function PortfolioPage() {
                         className="group/btn mt-5 inline-flex items-center gap-2 rounded-full bg-slate-900 px-5 py-2.5 text-xs font-semibold text-white transition-all hover:-translate-y-1 hover:bg-slate-800"
                       >
                         Visit Live Website
-                        <ExternalLink size={12} />
+                        <ExternalLink
+                          size={12}
+                          className="transition-transform group-hover/btn:translate-x-0.5"
+                        />
                       </a>
                     ) : (
                       <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-5 py-2.5 text-xs font-semibold text-slate-500">
@@ -344,7 +384,9 @@ export default function PortfolioPage() {
         </div>
       </section>
 
-      {/* REVIEWS SECTION */}
+      {/* ═══════════════════════════════════════════════
+          REVIEWS SECTION (Masonry Flow)
+      ═══════════════════════════════════════════════ */}
       <section className="relative bg-[#FDF8F3] px-4 py-20 md:px-6 md:py-24">
         <div className="mx-auto max-w-7xl">
           <div className="mb-14 text-center">
@@ -356,11 +398,12 @@ export default function PortfolioPage() {
               What Our Clients Say
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-base text-slate-600">
-              Real feedback from real clients. These reviews come directly from Google Reviews.
+              Real feedback from real clients. These reviews come directly from
+              Google Reviews.
             </p>
           </div>
 
-          {/* Reviews Grid - masonry-ish flow */}
+          {/* Masonry Columns */}
           <div className="columns-1 gap-5 sm:columns-2 lg:columns-3">
             {REVIEWS.map((review, index) => (
               <div
@@ -398,10 +441,24 @@ export default function PortfolioPage() {
         </div>
       </section>
 
-      {/* CTA */}
+      {/* ═══════════════════════════════════════════════
+          CTA
+      ═══════════════════════════════════════════════ */}
       <section className="relative bg-white px-4 py-16 md:px-6 md:py-24">
         <div className="mx-auto max-w-5xl">
           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] px-8 py-14 text-center shadow-2xl sm:px-12">
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 opacity-[0.04]"
+              style={{
+                backgroundImage: `
+                  linear-gradient(rgba(255,255,255,.6) 1px, transparent 1px),
+                  linear-gradient(90deg, rgba(255,255,255,.6) 1px, transparent 1px)
+                `,
+                backgroundSize: "48px 48px",
+              }}
+            />
+
             <div className="relative z-10 mx-auto max-w-2xl">
               <h2 className="text-2xl font-extrabold leading-tight text-white sm:text-3xl lg:text-4xl">
                 Ready to Start Your Project?
@@ -417,11 +474,14 @@ export default function PortfolioPage() {
                   className="group inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-slate-900 transition-all hover:-translate-y-1"
                 >
                   Start Your Project
-                  <ArrowRight size={16} />
+                  <ArrowRight
+                    size={16}
+                    className="transition-transform group-hover:translate-x-1"
+                  />
                 </Link>
                 <Link
                   href="/services"
-                  className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white transition-all hover:-translate-y-1"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white transition-all hover:-translate-y-1 hover:bg-white/10"
                 >
                   View Our Services
                 </Link>
