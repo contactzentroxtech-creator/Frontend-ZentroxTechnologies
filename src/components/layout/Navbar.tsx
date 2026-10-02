@@ -41,7 +41,7 @@ export default function Navbar() {
             : "shadow-[0_4px_20px_rgba(15,23,42,0.05)]"
         }`}
       >
-        {/* Logo */}
+        {/* ═══════ CSS LOGO ═══════ */}
         <Link href="/" className="flex flex-shrink-0 items-center gap-2.5">
           <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 via-purple-600 to-pink-500 shadow-md shadow-blue-600/25 md:h-10 md:w-10">
             <span className="text-lg font-black text-white md:text-xl">Z</span>
@@ -57,7 +57,7 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Desktop Nav */}
+        {/* ═══════ DESKTOP NAV ═══════ */}
         <div className="hidden items-center gap-1 lg:flex">
           {navLinks.map((link) => (
             <Link
@@ -80,7 +80,7 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* CTA */}
+        {/* ═══════ CTA BUTTON ═══════ */}
         <div className="hidden items-center gap-2 lg:flex">
           <Link
             href="/contact"
@@ -94,45 +94,51 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Mobile toggle */}
+        {/* ═══════ MOBILE MENU BUTTON ═══════ */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-700 lg:hidden"
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-700 transition-colors hover:bg-slate-200 lg:hidden"
           aria-label="Toggle menu"
         >
           {mobileOpen ? <X size={18} /> : <Menu size={18} />}
         </button>
       </nav>
 
-      {/* Mobile Menu */}
+      {/* ═══════ MOBILE MENU ═══════ */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
             className="mx-auto mt-3 max-w-7xl overflow-hidden rounded-3xl border border-slate-200/70 bg-white shadow-xl lg:hidden"
           >
             <div className="px-5 py-5">
-              {navLinks.map((link) => (
+              <div className="flex flex-col gap-1">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`block rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
+                      isActive(link.href)
+                        ? "bg-blue-50 text-blue-600"
+                        : "text-slate-700 hover:bg-slate-50"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+
+              <div className="mt-5 border-t border-slate-100 pt-5">
                 <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`block rounded-xl px-4 py-3 text-sm font-medium ${
-                    isActive(link.href)
-                      ? "bg-blue-50 text-blue-600"
-                      : "text-slate-700 hover:bg-slate-50"
-                  }`}
+                  href="/contact"
+                  className="flex w-full items-center justify-center gap-2 rounded-full bg-blue-600 py-3 text-sm font-semibold text-white shadow-md shadow-blue-600/20"
                 >
-                  {link.label}
+                  Get Started <ArrowRight size={14} />
                 </Link>
-              ))}
-              <Link
-                href="/contact"
-                className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-blue-600 py-3 text-sm font-semibold text-white"
-              >
-                Get Started <ArrowRight size={14} />
-              </Link>
+              </div>
             </div>
           </motion.div>
         )}
