@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard,
@@ -17,7 +18,7 @@ import {
   Menu,
   MessageSquare,
   Layers,
-  Image,
+  Image as ImageIcon,
   ChevronRight,
   Megaphone,
   Globe,
@@ -30,20 +31,16 @@ const NAV_ITEMS = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/admin/leads", label: "Leads / CRM", icon: MessageSquare },
   { href: "/admin/users", label: "Users", icon: Users },
-  { href: "/admin/courses", label: "Courses", icon: BookOpen },
   { href: "/admin/blog", label: "Blog Posts", icon: FileText },
+  { href: "/admin/portfolio", label: "Portfolio", icon: Layers },
   { href: "/admin/internship", label: "Internship", icon: Briefcase },
-  {
-    href: "/admin/certificate-portal",
-    label: "Certificate Portal",
-    icon: Award,
-  },
+  { href: "/admin/certificate-portal", label: "Certificate Portal", icon: Award },
   { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/admin/cms", label: "CMS / Content", icon: Layers },
   { href: "/admin/translations", label: "Translations", icon: Languages },
   { href: "/admin/pricing", label: "Pricing Manager", icon: Calculator },
   { href: "/admin/popups", label: "Popups & Offers", icon: Megaphone },
-  { href: "/admin/media", label: "Media Manager", icon: Image },
+  { href: "/admin/media", label: "Media Manager", icon: ImageIcon },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
@@ -61,7 +58,6 @@ export default function AdminLayout({
   const [authError, setAuthError] = useState("");
 
   useEffect(() => {
-    // FIX: Wrap in try/catch, show meaningful error if backend is unreachable
     (async () => {
       try {
         await fetchMe();
@@ -77,7 +73,7 @@ export default function AdminLayout({
         setAuthChecked(true);
       } catch {
         setAuthError(
-          "Could not connect to server. Is the backend running on port 5000?"
+          "Could not connect to server. Please check your connection."
         );
       }
     })();
@@ -92,21 +88,17 @@ export default function AdminLayout({
   const isActive = (item: (typeof NAV_ITEMS)[0]) =>
     item.exact ? pathname === item.href : pathname.startsWith(item.href);
 
-  // Show error state if backend unreachable
   if (authError) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-z-dark gap-4 px-4 text-center">
-        <div className="w-12 h-12 rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-400 text-xl">
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-slate-50 px-4 text-center">
+        <div className="w-12 h-12 rounded-full bg-red-50 border border-red-200 flex items-center justify-center text-red-600 text-xl">
           !
         </div>
-        <h2 className="text-lg font-bold text-z-text">Backend Unreachable</h2>
-        <p className="text-sm text-z-muted max-w-sm">{authError}</p>
-        <code className="text-xs bg-z-dark3 px-3 py-1.5 rounded-lg text-z-accent border border-z-border">
-          cd zentrox/backend && npm run dev
-        </code>
+        <h2 className="text-lg font-bold text-slate-900">Connection Error</h2>
+        <p className="text-sm text-slate-600 max-w-sm">{authError}</p>
         <button
           onClick={() => window.location.reload()}
-          className="mt-2 px-5 py-2 rounded-full bg-z-accent text-white text-sm font-semibold hover:bg-blue-500 transition-colors"
+          className="mt-2 px-5 py-2 rounded-full bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors"
         >
           Retry
         </button>
@@ -116,10 +108,10 @@ export default function AdminLayout({
 
   if (!authChecked) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-z-dark">
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 border-2 border-z-accent/30 border-t-z-accent rounded-full animate-spin" />
-          <p className="text-xs text-z-muted">Verifying access…</p>
+          <div className="w-8 h-8 border-2 border-blue-600/30 border-t-blue-600 rounded-full animate-spin" />
+          <p className="text-xs text-slate-500">Verifying access…</p>
         </div>
       </div>
     );
@@ -128,13 +120,16 @@ export default function AdminLayout({
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className="flex items-center gap-3 px-5 py-5 border-b border-z-border">
-        {/* Replaced ZT box with Logo Image */}
-        <img
-          src="/Zentrox-Logo1.png" /* Replace with your actual image path */
-          alt="Zentrox Technologies Logo"
-          className="w-8 h-8 object-contain rounded-lg flex-shrink-0"
-        />
+      <div className="flex items-center gap-3 px-5 py-5 border-b border-slate-200">
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white p-1 flex-shrink-0">
+          <Image
+            src="/Zentrox-Logo1.png"
+            alt="Zentrox Technologies"
+            width={32}
+            height={32}
+            className="h-7 w-7 object-contain"
+          />
+        </div>
         <AnimatePresence>
           {sidebarOpen && (
             <motion.div
@@ -143,10 +138,10 @@ export default function AdminLayout({
               exit={{ opacity: 0, width: 0 }}
               className="overflow-hidden"
             >
-              <div className="font-extrabold text-sm text-z-text whitespace-nowrap">
-                Admin
+              <div className="font-extrabold text-sm text-slate-900 whitespace-nowrap">
+                Admin Panel
               </div>
-              <div className="text-[10px] text-z-muted whitespace-nowrap">
+              <div className="text-[10px] text-slate-500 whitespace-nowrap">
                 Zentrox Technologies
               </div>
             </motion.div>
@@ -167,16 +162,16 @@ export default function AdminLayout({
                 onClick={() => setMobileOpen(false)}
                 className={`group flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ${
                   active
-                    ? "bg-z-accent/15 border border-z-accent/30 text-z-text"
-                    : "text-z-muted hover:text-z-text hover:bg-white/5 border border-transparent"
+                    ? "bg-blue-50 border border-blue-200 text-blue-700"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-transparent"
                 }`}
               >
                 <Icon
                   size={17}
                   className={
                     active
-                      ? "text-z-accent"
-                      : "text-z-muted group-hover:text-z-text"
+                      ? "text-blue-600"
+                      : "text-slate-500 group-hover:text-slate-900"
                   }
                 />
                 <AnimatePresence>
@@ -192,7 +187,7 @@ export default function AdminLayout({
                   )}
                 </AnimatePresence>
                 {active && sidebarOpen && (
-                  <ChevronRight size={13} className="ml-auto text-z-accent" />
+                  <ChevronRight size={13} className="ml-auto text-blue-600" />
                 )}
               </Link>
             );
@@ -201,13 +196,13 @@ export default function AdminLayout({
       </nav>
 
       {/* User + Logout */}
-      <div className="border-t border-z-border p-3">
+      <div className="border-t border-slate-200 p-3">
         <div
           className={`flex items-center gap-3 px-2 py-2 mb-1 ${
             !sidebarOpen ? "justify-center" : ""
           }`}
         >
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-z-accent to-z-accent2 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
             {user?.name?.[0]?.toUpperCase() || "A"}
           </div>
           <AnimatePresence>
@@ -218,10 +213,10 @@ export default function AdminLayout({
                 exit={{ opacity: 0 }}
                 className="overflow-hidden flex-1 min-w-0"
               >
-                <div className="text-sm font-semibold text-z-text truncate">
+                <div className="text-sm font-semibold text-slate-900 truncate">
                   {user?.name}
                 </div>
-                <div className="text-[10px] text-z-accent capitalize">
+                <div className="text-[10px] text-blue-600 capitalize">
                   {user?.role}
                 </div>
               </motion.div>
@@ -230,7 +225,7 @@ export default function AdminLayout({
         </div>
         <button
           onClick={handleLogout}
-          className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-z-muted hover:text-red-400 hover:bg-red-500/5 transition-all duration-200 ${
+          className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-slate-500 hover:text-red-600 hover:bg-red-50 transition-all duration-200 ${
             !sidebarOpen ? "justify-center" : ""
           }`}
         >
@@ -242,12 +237,12 @@ export default function AdminLayout({
   );
 
   return (
-    <div className="flex h-screen bg-z-dark overflow-hidden">
+    <div className="flex h-screen bg-slate-50 overflow-hidden">
       {/* Desktop Sidebar */}
       <motion.aside
         animate={{ width: sidebarOpen ? 240 : 64 }}
         transition={{ duration: 0.25, ease: "easeInOut" }}
-        className="hidden md:flex flex-col border-r border-z-border bg-z-dark2 flex-shrink-0 overflow-hidden"
+        className="hidden md:flex flex-col border-r border-slate-200 bg-white flex-shrink-0 overflow-hidden"
       >
         <SidebarContent />
       </motion.aside>
@@ -268,7 +263,7 @@ export default function AdminLayout({
               animate={{ x: 0 }}
               exit={{ x: -280 }}
               transition={{ type: "spring", damping: 25 }}
-              className="fixed left-0 top-0 bottom-0 w-64 bg-z-dark2 border-r border-z-border z-50 md:hidden flex flex-col"
+              className="fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-slate-200 z-50 md:hidden flex flex-col"
             >
               <SidebarContent />
             </motion.aside>
@@ -278,21 +273,21 @@ export default function AdminLayout({
 
       {/* Main */}
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
-        <header className="flex items-center justify-between px-4 md:px-6 h-14 border-b border-z-border bg-z-dark2 flex-shrink-0">
+        <header className="flex items-center justify-between px-4 md:px-6 h-14 border-b border-slate-200 bg-white flex-shrink-0">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileOpen(true)}
-              className="md:hidden text-z-muted hover:text-z-text"
+              className="md:hidden text-slate-500 hover:text-slate-900"
             >
               <Menu size={20} />
             </button>
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="hidden md:block text-z-muted hover:text-z-text transition-colors"
+              className="hidden md:block text-slate-500 hover:text-slate-900 transition-colors"
             >
               <Menu size={18} />
             </button>
-            <div className="text-sm font-semibold text-z-text">
+            <div className="text-sm font-semibold text-slate-900">
               {NAV_ITEMS.find((i) => isActive(i))?.label || "Admin"}
             </div>
           </div>
@@ -300,17 +295,19 @@ export default function AdminLayout({
             <Link
               href="/"
               target="_blank"
-              className="flex items-center gap-1.5 text-xs text-z-muted hover:text-z-text transition-colors"
+              className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-900 transition-colors"
             >
               <Globe size={14} /> View Site
             </Link>
-            <div className="text-xs font-medium px-2.5 py-1 rounded-full bg-z-accent/15 text-z-accent border border-z-accent/25">
+            <div className="text-xs font-medium px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
               {user?.role === "admin" ? "Super Admin" : "Admin"}
             </div>
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto">{children}</main>
+        <main className="flex-1 overflow-y-auto bg-slate-50">
+          <div className="text-slate-900">{children}</div>
+        </main>
       </div>
     </div>
   );
