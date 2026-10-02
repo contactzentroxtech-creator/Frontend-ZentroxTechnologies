@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, useInView } from "framer-motion";
 import {
   ArrowRight,
@@ -19,9 +20,6 @@ import {
   Globe2,
 } from "lucide-react";
 
-/* ═══════════════════════════════════════════════════════════════
-   DATA
-═══════════════════════════════════════════════════════════════ */
 const VALUES = [
   {
     icon: Heart,
@@ -81,15 +79,6 @@ const STATS = [
   { num: "100+", label: "Projects Delivered", icon: Rocket, color: "#7c3aed" },
   { num: "5+", label: "Countries Served", icon: Globe2, color: "#0891b2" },
   { num: "2023", label: "Founded", icon: Building2, color: "#ea580c" },
-];
-
-const SERVICES_GRID = [
-  { t: "Web Development", c: "blue" },
-  { t: "Mobile Apps", c: "purple" },
-  { t: "Custom Software", c: "emerald" },
-  { t: "UI/UX Design", c: "cyan" },
-  { t: "SEO & Marketing", c: "orange" },
-  { t: "AI Integration", c: "indigo" },
 ];
 
 export default function AboutClient() {
@@ -170,87 +159,75 @@ export default function AboutClient() {
               </div>
             </motion.div>
 
-            {/* Right — CSS Services Grid */}
+            {/* Right — Team Image */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.2 }}
               className="relative lg:col-span-6"
             >
-              <div className="overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-slate-50 via-white to-blue-50/40 p-6 shadow-2xl">
-                {/* Header */}
-                <div className="mb-4 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-purple-600">
-                      <span className="text-xs font-black text-white">Z</span>
+              <div className="relative">
+                <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl shadow-slate-200/60">
+                  <Image
+                    src="/about-team.png"
+                    alt="Zentrox Technologies Team Collaboration"
+                    width={700}
+                    height={500}
+                    className="h-auto w-full object-cover"
+                    priority
+                  />
+                </div>
+
+                {/* Floating badge — Founded */}
+                <motion.div
+                  animate={{ y: [0, -10, 0] }}
+                  transition={{
+                    duration: 5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                  className="absolute -bottom-6 -left-6 z-10 hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-xl sm:block"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                      <Building2 size={18} />
                     </div>
                     <div>
-                      <p className="text-[11px] font-extrabold text-slate-900">
-                        Zentrox Technologies
+                      <p className="text-[10px] font-medium text-slate-500">
+                        Founded
                       </p>
-                      <p className="text-[9px] text-slate-500">
-                        Building digital products since 2023
+                      <p className="text-lg font-extrabold text-slate-900">
+                        2023
                       </p>
                     </div>
                   </div>
-                  <span className="flex items-center gap-1.5 rounded-full bg-emerald-50 px-2 py-1 text-[9px] font-bold text-emerald-600">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                    Active
-                  </span>
-                </div>
+                </motion.div>
 
-                {/* Services grid */}
-                <div className="grid grid-cols-2 gap-3">
-                  {SERVICES_GRID.map((s) => (
-                    <div
-                      key={s.t}
-                      className="rounded-xl border border-slate-100 bg-white p-3"
-                    >
-                      <div
-                        className={`mb-2 flex h-8 w-8 items-center justify-center rounded-lg ${
-                          s.c === "blue"
-                            ? "bg-blue-50 text-blue-600"
-                            : s.c === "purple"
-                            ? "bg-purple-50 text-purple-600"
-                            : s.c === "emerald"
-                            ? "bg-emerald-50 text-emerald-600"
-                            : s.c === "cyan"
-                            ? "bg-cyan-50 text-cyan-600"
-                            : s.c === "orange"
-                            ? "bg-orange-50 text-orange-600"
-                            : "bg-indigo-50 text-indigo-600"
-                        }`}
-                      >
-                        <span className="text-xs font-black">
-                          {s.t.charAt(0)}
-                        </span>
-                      </div>
-                      <p className="text-[11px] font-bold text-slate-900">
-                        {s.t}
-                      </p>
-                      <div className="mt-2 flex gap-1">
-                        <div className="h-1 flex-1 rounded-full bg-slate-100" />
-                        <div className="h-1 w-8 rounded-full bg-gradient-to-r from-blue-400 to-purple-400" />
-                      </div>
+                {/* Floating badge — Clients */}
+                <motion.div
+                  animate={{ y: [0, 10, 0] }}
+                  transition={{
+                    duration: 6,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 1,
+                  }}
+                  className="absolute -right-6 -top-6 z-10 hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-xl sm:block"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+                      <Users size={18} />
                     </div>
-                  ))}
-                </div>
-
-                {/* Bottom stats */}
-                <div className="mt-4 grid grid-cols-3 gap-2 rounded-xl border border-slate-100 bg-white p-3">
-                  {[
-                    { v: "100+", l: "Projects" },
-                    { v: "50+", l: "Clients" },
-                    { v: "5+", l: "Countries" },
-                  ].map((s) => (
-                    <div key={s.l} className="text-center">
-                      <p className="text-sm font-extrabold text-slate-900">
-                        {s.v}
+                    <div>
+                      <p className="text-[10px] font-medium text-slate-500">
+                        Happy Clients
                       </p>
-                      <p className="text-[9px] text-slate-500">{s.l}</p>
+                      <p className="text-lg font-extrabold text-slate-900">
+                        50+
+                      </p>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                </motion.div>
               </div>
             </motion.div>
           </div>
@@ -263,7 +240,6 @@ export default function AboutClient() {
       <section className="relative bg-white px-4 py-20 md:px-6 md:py-24">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
-            {/* Left — Story */}
             <motion.div
               initial={{ opacity: 0, y: 25 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -315,7 +291,6 @@ export default function AboutClient() {
               </ul>
             </motion.div>
 
-            {/* Right — Values grid */}
             <motion.div
               initial={{ opacity: 0, y: 25 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -412,99 +387,7 @@ export default function AboutClient() {
       </section>
 
       {/* ═══════════════════════════════════════════
-          STATS STRIP
+          STATS
       ═══════════════════════════════════════════ */}
       <section className="relative bg-white px-4 py-16 md:px-6 md:py-20">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
-            {STATS.map((stat, i) => {
-              const Icon = stat.icon;
-              return (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="flex flex-col items-center rounded-2xl border border-slate-200/70 bg-white p-6 text-center transition-all hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg"
-                >
-                  <div
-                    className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl"
-                    style={{
-                      backgroundColor: `${stat.color}12`,
-                      color: stat.color,
-                    }}
-                  >
-                    <Icon size={20} />
-                  </div>
-                  <p className="text-2xl font-extrabold text-slate-900 sm:text-3xl">
-                    {stat.num}
-                  </p>
-                  <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-slate-500">
-                    {stat.label}
-                  </p>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════
-          CTA
-      ═══════════════════════════════════════════ */}
-      <section className="relative bg-white px-4 py-16 md:px-6 md:py-24">
-        <div className="mx-auto max-w-5xl">
-          <motion.div
-            initial={{ opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-            className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] px-8 py-14 text-center shadow-2xl sm:px-12"
-          >
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 opacity-[0.04]"
-              style={{
-                backgroundImage: `
-                  linear-gradient(rgba(255,255,255,.6) 1px, transparent 1px),
-                  linear-gradient(90deg, rgba(255,255,255,.6) 1px, transparent 1px)
-                `,
-                backgroundSize: "48px 48px",
-              }}
-            />
-
-            <div className="relative z-10 mx-auto max-w-2xl">
-              <h2 className="text-2xl font-extrabold leading-tight text-white sm:text-3xl lg:text-4xl">
-                Let's Build Something Great Together
-              </h2>
-              <p className="mx-auto mt-4 max-w-xl text-sm text-slate-300 sm:text-base">
-                Have a project in mind? Let's discuss how we can bring your
-                ideas to life.
-              </p>
-
-              <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                <Link
-                  href="/contact"
-                  className="group inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-slate-900 transition-all hover:-translate-y-1"
-                >
-                  Start Your Project
-                  <ArrowRight
-                    size={16}
-                    className="transition-transform group-hover:translate-x-1"
-                  />
-                </Link>
-                <Link
-                  href="/services"
-                  className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white transition-all hover:-translate-y-1 hover:bg-white/10"
-                >
-                  View Our Services
-                </Link>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-    </main>
-  );
-}
+        <div className="mx-auto max
