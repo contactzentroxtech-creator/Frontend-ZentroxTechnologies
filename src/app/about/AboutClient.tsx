@@ -19,6 +19,9 @@ import {
   Globe2,
 } from "lucide-react";
 
+/* ═══════════════════════════════════════════════════════════════
+   DATA
+═══════════════════════════════════════════════════════════════ */
 const VALUES = [
   {
     icon: Heart,
@@ -95,7 +98,9 @@ export default function AboutClient() {
 
   return (
     <main className="bg-white">
-      {/* HERO */}
+      {/* ═══════════════════════════════════════════
+          HERO
+      ═══════════════════════════════════════════ */}
       <section className="relative overflow-hidden bg-[#FDF8F3] pt-12 pb-16 md:pt-16 md:pb-20">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0">
           <div className="absolute -left-40 top-0 h-[400px] w-[400px] rounded-full bg-blue-100/60 blur-[120px]" />
@@ -104,6 +109,7 @@ export default function AboutClient() {
 
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
+            {/* Left content */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -164,7 +170,7 @@ export default function AboutClient() {
               </div>
             </motion.div>
 
-            {/* CSS Services Grid */}
+            {/* Right — CSS Services Grid */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -172,6 +178,7 @@ export default function AboutClient() {
               className="relative lg:col-span-6"
             >
               <div className="overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-slate-50 via-white to-blue-50/40 p-6 shadow-2xl">
+                {/* Header */}
                 <div className="mb-4 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-purple-600">
@@ -186,8 +193,13 @@ export default function AboutClient() {
                       </p>
                     </div>
                   </div>
+                  <span className="flex items-center gap-1.5 rounded-full bg-emerald-50 px-2 py-1 text-[9px] font-bold text-emerald-600">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                    Active
+                  </span>
                 </div>
 
+                {/* Services grid */}
                 <div className="grid grid-cols-2 gap-3">
                   {SERVICES_GRID.map((s) => (
                     <div
@@ -224,6 +236,7 @@ export default function AboutClient() {
                   ))}
                 </div>
 
+                {/* Bottom stats */}
                 <div className="mt-4 grid grid-cols-3 gap-2 rounded-xl border border-slate-100 bg-white p-3">
                   {[
                     { v: "100+", l: "Projects" },
@@ -244,11 +257,20 @@ export default function AboutClient() {
         </div>
       </section>
 
-      {/* STORY */}
-      <section className="relative bg-white px-4 py-20 md:px-6">
+      {/* ═══════════════════════════════════════════
+          OUR STORY
+      ═══════════════════════════════════════════ */}
+      <section className="relative bg-white px-4 py-20 md:px-6 md:py-24">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
-            <div className="lg:col-span-6">
+            {/* Left — Story */}
+            <motion.div
+              initial={{ opacity: 0, y: 25 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="lg:col-span-6"
+            >
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-blue-50/60 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-blue-700">
                 <Target size={12} />
                 Our Story
@@ -262,7 +284,14 @@ export default function AboutClient() {
                 Zentrox Technologies was founded in 2023 with a single vision —
                 to help businesses grow through technology. Today, we work with
                 clients across India and worldwide, delivering high-quality
-                digital solutions.
+                digital solutions that make a real impact.
+              </p>
+
+              <p className="mt-4 text-base leading-relaxed text-slate-600">
+                From startups and local businesses to growing enterprises, we
+                build practical digital products that solve real business
+                problems. Every project starts by understanding the business
+                first, then choosing the right technology.
               </p>
 
               <ul className="mt-6 space-y-3">
@@ -284,9 +313,16 @@ export default function AboutClient() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </motion.div>
 
-            <div className="lg:col-span-6">
+            {/* Right — Values grid */}
+            <motion.div
+              initial={{ opacity: 0, y: 25 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.15 }}
+              className="lg:col-span-6"
+            >
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 {VALUES.map((value) => {
                   const Icon = value.icon;
@@ -296,7 +332,7 @@ export default function AboutClient() {
                       className="group rounded-2xl border border-slate-200/70 bg-white p-6 transition-all hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg"
                     >
                       <div
-                        className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl"
+                        className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110"
                         style={{
                           backgroundColor: `${value.color}12`,
                           color: value.color,
@@ -314,37 +350,47 @@ export default function AboutClient() {
                   );
                 })}
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* WHY */}
+      {/* ═══════════════════════════════════════════
+          WHY CHOOSE US
+      ═══════════════════════════════════════════ */}
       <section
         ref={ref}
-        className="relative bg-[#FDF8F3] px-4 py-20 md:px-6"
+        className="relative bg-[#FDF8F3] px-4 py-20 md:px-6 md:py-24"
       >
         <div className="mx-auto max-w-7xl">
-          <div className="mb-14 max-w-3xl">
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+            className="mb-14 max-w-3xl"
+          >
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-purple-200/60 bg-purple-50/60 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-purple-700">
-              Why Zentrox
+              Why Zentrox Technologies
             </div>
 
             <h2 className="text-3xl font-extrabold leading-tight text-slate-900 sm:text-4xl lg:text-5xl">
               What Makes Us Different
             </h2>
-          </div>
+          </motion.div>
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {POINTS.map((point) => {
+            {POINTS.map((point, i) => {
               const Icon = point.icon;
               return (
-                <div
+                <motion.div
                   key={point.title}
+                  initial={{ opacity: 0, y: 25 }}
+                  animate={inView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
                   className="group flex flex-col items-center rounded-2xl border border-slate-200/70 bg-white p-6 text-center transition-all hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg"
                 >
                   <div
-                    className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl"
+                    className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110"
                     style={{
                       backgroundColor: `${point.color}12`,
                       color: point.color,
@@ -358,23 +404,29 @@ export default function AboutClient() {
                   <p className="mt-2 text-xs leading-relaxed text-slate-600">
                     {point.desc}
                   </p>
-                </div>
+                </motion.div>
               );
             })}
           </div>
         </div>
       </section>
 
-      {/* STATS */}
-      <section className="relative bg-white px-4 py-16 md:px-6">
+      {/* ═══════════════════════════════════════════
+          STATS STRIP
+      ═══════════════════════════════════════════ */}
+      <section className="relative bg-white px-4 py-16 md:px-6 md:py-20">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
-            {STATS.map((stat) => {
+            {STATS.map((stat, i) => {
               const Icon = stat.icon;
               return (
-                <div
+                <motion.div
                   key={stat.label}
-                  className="flex flex-col items-center rounded-2xl border border-slate-200/70 bg-white p-6 text-center"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  className="flex flex-col items-center rounded-2xl border border-slate-200/70 bg-white p-6 text-center transition-all hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg"
                 >
                   <div
                     className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl"
@@ -391,17 +443,37 @@ export default function AboutClient() {
                   <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-slate-500">
                     {stat.label}
                   </p>
-                </div>
+                </motion.div>
               );
             })}
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="relative bg-white px-4 py-16 md:px-6">
+      {/* ═══════════════════════════════════════════
+          CTA
+      ═══════════════════════════════════════════ */}
+      <section className="relative bg-white px-4 py-16 md:px-6 md:py-24">
         <div className="mx-auto max-w-5xl">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] px-8 py-14 text-center shadow-2xl sm:px-12">
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] px-8 py-14 text-center shadow-2xl sm:px-12"
+          >
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 opacity-[0.04]"
+              style={{
+                backgroundImage: `
+                  linear-gradient(rgba(255,255,255,.6) 1px, transparent 1px),
+                  linear-gradient(90deg, rgba(255,255,255,.6) 1px, transparent 1px)
+                `,
+                backgroundSize: "48px 48px",
+              }}
+            />
+
             <div className="relative z-10 mx-auto max-w-2xl">
               <h2 className="text-2xl font-extrabold leading-tight text-white sm:text-3xl lg:text-4xl">
                 Let's Build Something Great Together
@@ -417,17 +489,20 @@ export default function AboutClient() {
                   className="group inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-slate-900 transition-all hover:-translate-y-1"
                 >
                   Start Your Project
-                  <ArrowRight size={16} />
+                  <ArrowRight
+                    size={16}
+                    className="transition-transform group-hover:translate-x-1"
+                  />
                 </Link>
                 <Link
                   href="/services"
-                  className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white transition-all hover:-translate-y-1"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white transition-all hover:-translate-y-1 hover:bg-white/10"
                 >
                   View Our Services
                 </Link>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
     </main>
