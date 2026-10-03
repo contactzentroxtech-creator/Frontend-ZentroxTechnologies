@@ -14,7 +14,6 @@ import {
   Calculator,
   Zap,
   ShieldCheck,
-  Heart,
   Users,
   AlertCircle,
   Mail,
@@ -24,140 +23,440 @@ import {
   TrendingUp,
   X,
   Sparkles,
+  Loader2,
 } from "lucide-react";
 import api from "@/lib/api";
+import { generatePDF } from "@/lib/pdf-utils";
 
-const SERVICE_CATEGORIES = [
-  {
-    id: "web",
+/* ═══════════════════════════════════════════════════════════════
+   SERVICE CONFIGURATIONS — Each service has its own logic
+═══════════════════════════════════════════════════════════════ */
+const SERVICE_CONFIGS = {
+  web: {
     label: "Website Development",
     icon: Globe,
     color: "#2563eb",
-    services: [
-      { id: "starter", label: "Starter Website", desc: "1-5 pages, mobile responsive", basePrice: 7999 },
-      { id: "business", label: "Business Website", desc: "5-15 pages, CMS, blog", basePrice: 15999 },
-      { id: "premium", label: "Premium Website", desc: "15-30 pages, custom design", basePrice: 29999 },
-      { id: "ecommerce", label: "E-Commerce Store", desc: "Unlimited products, payment", basePrice: 49999 },
-      { id: "webapp", label: "Custom Web App", desc: "Dashboards, integrations", basePrice: 79999 },
+    basePrice: 7999,
+    priceType: "onetime",
+    fields: [
+      {
+        id: "pages",
+        label: "Number of Pages",
+        type: "select",
+        options: [
+          { value: "1-5", label: "1-5 pages", multiplier: 1.0 },
+          { value: "5-10", label: "5-10 pages", multiplier: 1.5 },
+          { value: "10-25", label: "10-25 pages", multiplier: 2.2 },
+          { value: "25-50", label: "25-50 pages", multiplier: 3.5 },
+          { value: "50+", label: "50+ pages", multiplier: 5.0 },
+        ],
+      },
+      {
+        id: "type",
+        label: "Website Type",
+        type: "select",
+        options: [
+          { value: "static", label: "Static / Business", multiplier: 1.0 },
+          { value: "dynamic", label: "Dynamic / CMS", multiplier: 1.4 },
+          { value: "ecommerce", label: "E-Commerce", multiplier: 2.5 },
+          { value: "webapp", label: "Custom Web App", multiplier: 4.0 },
+        ],
+      },
+      {
+        id: "design",
+        label: "Design Complexity",
+        type: "select",
+        options: [
+          { value: "basic", label: "Basic (Template)", multiplier: 1.0 },
+          { value: "custom", label: "Custom Design", multiplier: 1.4 },
+          { value: "premium", label: "Premium UI/UX", multiplier: 2.0 },
+        ],
+      },
+    ],
+    addOns: [
+      { id: "payment", label: "Payment Gateway", price: 4999 },
+      { id: "login", label: "User Login System", price: 7999 },
+      { id: "dashboard", label: "Admin Dashboard", price: 9999 },
+      { id: "api", label: "API Integration", price: 5999 },
+      { id: "multilang", label: "Multi-Language", price: 5999 },
+      { id: "seo", label: "On-Page SEO Setup", price: 3999 },
     ],
   },
-  {
-    id: "mobile",
-    label: "Mobile App",
+
+  mobile: {
+    label: "Mobile App Development",
     icon: Smartphone,
     color: "#7c3aed",
-    services: [
-      { id: "android", label: "Android App", desc: "Native Android", basePrice: 79999 },
-      { id: "ios", label: "iOS App", desc: "Native iOS", basePrice: 89999 },
-      { id: "cross", label: "Cross-Platform App", desc: "iOS + Android (React Native)", basePrice: 89999 },
+    basePrice: 79999,
+    priceType: "onetime",
+    fields: [
+      {
+        id: "platform",
+        label: "Platform",
+        type: "select",
+        options: [
+          { value: "android", label: "Android Only", multiplier: 1.0 },
+          { value: "ios", label: "iOS Only", multiplier: 1.15 },
+          { value: "both", label: "Android + iOS (Native)", multiplier: 1.8 },
+          { value: "cross", label: "Cross-Platform (React Native)", multiplier: 1.3 },
+        ],
+      },
+      {
+        id: "screens",
+        label: "Number of Screens",
+        type: "select",
+        options: [
+          { value: "5-10", label: "5-10 screens", multiplier: 1.0 },
+          { value: "10-20", label: "10-20 screens", multiplier: 1.5 },
+          { value: "20-40", label: "20-40 screens", multiplier: 2.2 },
+          { value: "40+", label: "40+ screens", multiplier: 3.5 },
+        ],
+      },
+      {
+        id: "features",
+        label: "Feature Set",
+        type: "select",
+        options: [
+          { value: "basic", label: "Basic (CRUD)", multiplier: 1.0 },
+          { value: "standard", label: "Standard (Auth, APIs)", multiplier: 1.4 },
+          { value: "advanced", label: "Advanced (Payment, Chat)", multiplier: 2.0 },
+          { value: "complex", label: "Complex (Real-time)", multiplier: 3.0 },
+        ],
+      },
+    ],
+    addOns: [
+      { id: "push", label: "Push Notifications", price: 5999 },
+      { id: "payment", label: "In-App Payments", price: 9999 },
+      { id: "chat", label: "Chat / Messaging", price: 14999 },
+      { id: "analytics", label: "Analytics Integration", price: 4999 },
+      { id: "admin", label: "Admin Panel", price: 14999 },
+      { id: "store", label: "App Store Submission", price: 4999 },
     ],
   },
-  {
-    id: "software",
+
+  software: {
     label: "Custom Software",
     icon: Code2,
     color: "#0891b2",
-    services: [
-      { id: "crm", label: "CRM System", desc: "Sales pipeline, leads", basePrice: 99999 },
-      { id: "erp", label: "ERP System", desc: "Business management", basePrice: 149999 },
-      { id: "saas", label: "SaaS Platform", desc: "Multi-tenant, subscriptions", basePrice: 199999 },
+    basePrice: 99999,
+    priceType: "onetime",
+    fields: [
+      {
+        id: "type",
+        label: "Software Type",
+        type: "select",
+        options: [
+          { value: "crm", label: "CRM System", multiplier: 1.0 },
+          { value: "erp", label: "ERP System", multiplier: 1.5 },
+          { value: "saas", label: "SaaS Platform", multiplier: 2.0 },
+          { value: "custom", label: "Custom Software", multiplier: 1.3 },
+        ],
+      },
+      {
+        id: "users",
+        label: "Expected Users",
+        type: "select",
+        options: [
+          { value: "1-50", label: "1-50 users", multiplier: 1.0 },
+          { value: "50-500", label: "50-500 users", multiplier: 1.4 },
+          { value: "500-5000", label: "500-5000 users", multiplier: 2.0 },
+          { value: "5000+", label: "5000+ users (Enterprise)", multiplier: 3.0 },
+        ],
+      },
+      {
+        id: "modules",
+        label: "Number of Modules",
+        type: "select",
+        options: [
+          { value: "3-5", label: "3-5 modules", multiplier: 1.0 },
+          { value: "5-10", label: "5-10 modules", multiplier: 1.5 },
+          { value: "10-20", label: "10-20 modules", multiplier: 2.2 },
+          { value: "20+", label: "20+ modules", multiplier: 3.0 },
+        ],
+      },
+    ],
+    addOns: [
+      { id: "reports", label: "Advanced Reports", price: 14999 },
+      { id: "api", label: "API Integration", price: 9999 },
+      { id: "mobile", label: "Mobile App Access", price: 29999 },
+      { id: "ai", label: "AI-Powered Insights", price: 24999 },
+      { id: "multiuser", label: "Multi-Role Access", price: 12999 },
+      { id: "backup", label: "Auto Backup System", price: 7999 },
     ],
   },
-  {
-    id: "design",
-    label: "UI/UX Design",
-    icon: Palette,
-    color: "#ea580c",
-    services: [
-      { id: "wireframe", label: "Wireframes", desc: "Basic layout design", basePrice: 9999 },
-      { id: "design-system", label: "Design System", desc: "Complete design system", basePrice: 19999 },
-      { id: "prototype", label: "Interactive Prototype", desc: "Clickable prototype", basePrice: 14999 },
-    ],
-  },
-  {
-    id: "seo",
+
+  seo: {
     label: "SEO Services",
     icon: Search,
     color: "#059669",
-    services: [
-      { id: "seo-starter", label: "SEO Starter", desc: "Basic on-page + 10 keywords", basePrice: 7999, monthly: true },
-      { id: "seo-growth", label: "SEO Growth", desc: "Advanced + 25 keywords", basePrice: 15999, monthly: true },
-      { id: "seo-enterprise", label: "SEO Enterprise", desc: "Full SEO + 50+ keywords", basePrice: 29999, monthly: true },
+    basePrice: 7999,
+    priceType: "monthly",
+    fields: [
+      {
+        id: "keywords",
+        label: "Target Keywords",
+        type: "select",
+        options: [
+          { value: "10", label: "Up to 10 keywords", multiplier: 1.0 },
+          { value: "25", label: "10-25 keywords", multiplier: 1.5 },
+          { value: "50", label: "25-50 keywords", multiplier: 2.2 },
+          { value: "100+", label: "50+ keywords", multiplier: 3.5 },
+        ],
+      },
+      {
+        id: "competition",
+        label: "Keyword Competition",
+        type: "select",
+        options: [
+          { value: "low", label: "Low (Local)", multiplier: 1.0 },
+          { value: "medium", label: "Medium (City-Level)", multiplier: 1.4 },
+          { value: "high", label: "High (National)", multiplier: 2.0 },
+          { value: "very-high", label: "Very High (Competitive)", multiplier: 3.0 },
+        ],
+      },
+      {
+        id: "scope",
+        label: "SEO Scope",
+        type: "select",
+        options: [
+          { value: "onpage", label: "On-Page SEO Only", multiplier: 1.0 },
+          { value: "technical", label: "On-Page + Technical", multiplier: 1.5 },
+          { value: "full", label: "Full SEO (On + Off Page)", multiplier: 2.0 },
+          { value: "enterprise", label: "Enterprise SEO + Content", multiplier: 3.0 },
+        ],
+      },
+    ],
+    addOns: [
+      { id: "content", label: "Content Writing (4 blogs)", price: 7999 },
+      { id: "backlinks", label: "Backlink Building", price: 9999 },
+      { id: "local", label: "Local SEO + GMB", price: 4999 },
+      { id: "gmb", label: "Google My Business Setup", price: 2999 },
+      { id: "audit", label: "Monthly Technical Audit", price: 4999 },
+      { id: "reporting", label: "Custom Reporting", price: 3999 },
     ],
   },
-  {
-    id: "digital",
+
+  marketing: {
     label: "Digital Marketing",
     icon: Megaphone,
     color: "#dc2626",
-    services: [
-      { id: "social", label: "Social Media Marketing", desc: "Content + posting", basePrice: 9999, monthly: true },
-      { id: "content", label: "Content Marketing", desc: "Blogs, articles, videos", basePrice: 9999, monthly: true },
-      { id: "email", label: "Email Marketing", desc: "Campaigns + automation", basePrice: 7999, monthly: true },
-      { id: "full-marketing", label: "Full Digital Marketing", desc: "Complete package", basePrice: 24999, monthly: true },
+    basePrice: 9999,
+    priceType: "monthly",
+    fields: [
+      {
+        id: "channels",
+        label: "Marketing Channels",
+        type: "select",
+        options: [
+          { value: "1", label: "1 Channel", multiplier: 1.0 },
+          { value: "2", label: "2 Channels", multiplier: 1.6 },
+          { value: "3", label: "3 Channels", multiplier: 2.2 },
+          { value: "4+", label: "4+ Channels", multiplier: 3.0 },
+        ],
+      },
+      {
+        id: "posts",
+        label: "Content Volume (Posts/Month)",
+        type: "select",
+        options: [
+          { value: "12", label: "12 posts", multiplier: 1.0 },
+          { value: "20", label: "20 posts", multiplier: 1.4 },
+          { value: "30", label: "30 posts", multiplier: 1.8 },
+          { value: "60+", label: "60+ posts", multiplier: 2.5 },
+        ],
+      },
+      {
+        id: "platforms",
+        label: "Social Platforms",
+        type: "select",
+        options: [
+          { value: "1", label: "1 Platform", multiplier: 1.0 },
+          { value: "2-3", label: "2-3 Platforms", multiplier: 1.5 },
+          { value: "4-5", label: "4-5 Platforms", multiplier: 2.0 },
+          { value: "6+", label: "6+ Platforms", multiplier: 2.5 },
+        ],
+      },
+    ],
+    addOns: [
+      { id: "design", label: "Graphic Design", price: 4999 },
+      { id: "video", label: "Video Content", price: 9999 },
+      { id: "email", label: "Email Marketing", price: 7999 },
+      { id: "influencer", label: "Influencer Marketing", price: 14999 },
+      { id: "ads-mgmt", label: "Ad Campaign Management", price: 9999 },
+      { id: "analytics", label: "Advanced Analytics", price: 4999 },
     ],
   },
-  {
-    id: "ads",
-    label: "Paid Ads",
+
+  google_ads: {
+    label: "Google Ads Management",
     icon: TrendingUp,
-    color: "#7c3aed",
-    services: [
-      { id: "google-ads", label: "Google Ads", desc: "Search + Display campaigns", basePrice: 9999, monthly: true, adSpendSeparate: true },
-      { id: "meta-ads", label: "Meta Ads (FB + Insta)", desc: "Facebook + Instagram ads", basePrice: 9999, monthly: true, adSpendSeparate: true },
-      { id: "linkedin-ads", label: "LinkedIn Ads", desc: "B2B campaigns", basePrice: 11999, monthly: true, adSpendSeparate: true },
-      { id: "ads-full", label: "Full Ads Management", desc: "Google + Meta + More", basePrice: 24999, monthly: true, adSpendSeparate: true },
+    color: "#ea580c",
+    basePrice: 9999,
+    priceType: "monthly",
+    fields: [
+      {
+        id: "adSpend",
+        label: "Monthly Ad Spend Budget",
+        type: "select",
+        options: [
+          { value: "25k", label: "₹25,000/month", multiplier: 1.0, adSpend: 25000 },
+          { value: "50k", label: "₹50,000/month", multiplier: 1.3, adSpend: 50000 },
+          { value: "1l", label: "₹1,00,000/month", multiplier: 1.7, adSpend: 100000 },
+          { value: "3l", label: "₹3,00,000/month", multiplier: 2.5, adSpend: 300000 },
+          { value: "5l+", label: "₹5,00,000+/month", multiplier: 3.5, adSpend: 500000 },
+        ],
+      },
+      {
+        id: "campaigns",
+        label: "Number of Campaigns",
+        type: "select",
+        options: [
+          { value: "1", label: "1 Campaign", multiplier: 1.0 },
+          { value: "2-3", label: "2-3 Campaigns", multiplier: 1.4 },
+          { value: "4-6", label: "4-6 Campaigns", multiplier: 1.8 },
+          { value: "6+", label: "6+ Campaigns", multiplier: 2.5 },
+        ],
+      },
+      {
+        id: "types",
+        label: "Ad Types",
+        type: "select",
+        options: [
+          { value: "search", label: "Search Ads Only", multiplier: 1.0 },
+          { value: "search-display", label: "Search + Display", multiplier: 1.4 },
+          { value: "shopping", label: "Shopping + Search", multiplier: 1.8 },
+          { value: "full", label: "Full (Search + Display + Shopping + Video)", multiplier: 2.5 },
+        ],
+      },
+    ],
+    addOns: [
+      { id: "landing", label: "Landing Page Design", price: 9999 },
+      { id: "conversion", label: "Conversion Tracking Setup", price: 4999 },
+      { id: "remarketing", label: "Remarketing Campaigns", price: 5999 },
+      { id: "video", label: "YouTube Video Ads", price: 8999 },
+      { id: "shopping", label: "Google Shopping Setup", price: 7999 },
+      { id: "reporting", label: "Custom Reporting", price: 3999 },
     ],
   },
-  {
-    id: "ai",
+
+  meta_ads: {
+    label: "Meta Ads (Facebook + Instagram)",
+    icon: TrendingUp,
+    color: "#be185d",
+    basePrice: 9999,
+    priceType: "monthly",
+    fields: [
+      {
+        id: "adSpend",
+        label: "Monthly Ad Spend Budget",
+        type: "select",
+        options: [
+          { value: "25k", label: "₹25,000/month", multiplier: 1.0, adSpend: 25000 },
+          { value: "50k", label: "₹50,000/month", multiplier: 1.3, adSpend: 50000 },
+          { value: "1l", label: "₹1,00,000/month", multiplier: 1.7, adSpend: 100000 },
+          { value: "3l", label: "₹3,00,000/month", multiplier: 2.5, adSpend: 300000 },
+          { value: "5l+", label: "₹5,00,000+/month", multiplier: 3.5, adSpend: 500000 },
+        ],
+      },
+      {
+        id: "placements",
+        label: "Ad Placements",
+        type: "select",
+        options: [
+          { value: "fb-feed", label: "Facebook Feed Only", multiplier: 1.0 },
+          { value: "fb-ig", label: "Facebook + Instagram Feed", multiplier: 1.3 },
+          { value: "full", label: "Feed + Stories + Reels", multiplier: 1.7 },
+          { value: "all", label: "All Placements + Audience Network", multiplier: 2.2 },
+        ],
+      },
+      {
+        id: "creatives",
+        label: "Creative Requirements",
+        type: "select",
+        options: [
+          { value: "static", label: "Static Images Only", multiplier: 1.0 },
+          { value: "carousel", label: "Static + Carousel", multiplier: 1.3 },
+          { value: "video", label: "Static + Video", multiplier: 1.7 },
+          { value: "full", label: "Full (Static + Video + Reels)", multiplier: 2.2 },
+        ],
+      },
+    ],
+    addOns: [
+      { id: "landing", label: "Landing Page Design", price: 9999 },
+      { id: "video", label: "Video Production", price: 14999 },
+      { id: "pixel", label: "Pixel + Conversion Setup", price: 4999 },
+      { id: "catalog", label: "Product Catalog Setup", price: 6999 },
+      { id: "remarketing", label: "Remarketing Campaigns", price: 5999 },
+      { id: "reporting", label: "Custom Reporting", price: 3999 },
+    ],
+  },
+
+  ai: {
     label: "AI Integration",
     icon: Sparkles,
-    color: "#be185d",
-    services: [
-      { id: "chatbot", label: "AI Chatbot", desc: "Customer support bot", basePrice: 29999 },
-      { id: "automation", label: "Workflow Automation", desc: "Business automation", basePrice: 39999 },
-      { id: "analytics", label: "AI Analytics", desc: "Predictive analytics", basePrice: 49999 },
+    color: "#4f46e5",
+    basePrice: 29999,
+    priceType: "onetime",
+    fields: [
+      {
+        id: "type",
+        label: "AI Solution Type",
+        type: "select",
+        options: [
+          { value: "chatbot", label: "AI Chatbot", multiplier: 1.0 },
+          { value: "automation", label: "Workflow Automation", multiplier: 1.5 },
+          { value: "analytics", label: "AI Analytics", multiplier: 1.8 },
+          { value: "custom", label: "Custom AI Model", multiplier: 3.0 },
+        ],
+      },
+      {
+        id: "volume",
+        label: "Expected Volume (Requests/Month)",
+        type: "select",
+        options: [
+          { value: "1k", label: "Up to 1,000", multiplier: 1.0 },
+          { value: "10k", label: "1,000 - 10,000", multiplier: 1.4 },
+          { value: "100k", label: "10,000 - 100,000", multiplier: 2.0 },
+          { value: "1m+", label: "100,000+", multiplier: 3.0 },
+        ],
+      },
+      {
+        id: "integration",
+        label: "Integration Complexity",
+        type: "select",
+        options: [
+          { value: "standalone", label: "Standalone Tool", multiplier: 1.0 },
+          { value: "api", label: "API Integration", multiplier: 1.4 },
+          { value: "existing", label: "Into Existing System", multiplier: 1.8 },
+          { value: "enterprise", label: "Enterprise Integration", multiplier: 2.5 },
+        ],
+      },
+    ],
+    addOns: [
+      { id: "training", label: "AI Model Training", price: 19999 },
+      { id: "dashboard", label: "Analytics Dashboard", price: 12999 },
+      { id: "api", label: "API Integration", price: 8999 },
+      { id: "multilang", label: "Multi-Language Support", price: 7999 },
+      { id: "voice", label: "Voice Integration", price: 14999 },
+      { id: "support", label: "6 Months Support", price: 9999 },
     ],
   },
-];
-
-const ADD_ONS = [
-  { id: "extra-pages", label: "Extra Pages (5-10)", price: 4999 },
-  { id: "payment", label: "Payment Gateway Integration", price: 4999 },
-  { id: "login", label: "User Login System", price: 7999 },
-  { id: "dashboard", label: "Admin/User Dashboard", price: 9999 },
-  { id: "api", label: "API Integration", price: 5999 },
-  { id: "multilang", label: "Multi-Language", price: 5999 },
-  { id: "speed", label: "Speed Optimization", price: 2999 },
-];
-
-const COMPLEXITY_OPTIONS = [
-  { value: "basic", label: "Basic", multiplier: 0.9 },
-  { value: "standard", label: "Standard", multiplier: 1.0 },
-  { value: "advanced", label: "Advanced", multiplier: 1.4 },
-  { value: "enterprise", label: "Enterprise", multiplier: 2.0 },
-];
-
-const TIMELINE_OPTIONS = [
-  { value: "flexible", label: "Flexible", multiplier: 0.9 },
-  { value: "standard", label: "Standard (1-2 months)", multiplier: 1.0 },
-  { value: "fast", label: "Fast-Track (2-4 weeks)", multiplier: 1.3 },
-  { value: "urgent", label: "Urgent (ASAP)", multiplier: 1.6 },
-];
+};
 
 function formatPrice(n: number) {
   return "₹" + Math.round(n).toLocaleString("en-IN");
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   MAIN COMPONENT
+═══════════════════════════════════════════════════════════════ */
 export default function PricingWizard() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.05 });
 
-  const [categoryId, setCategoryId] = useState("web");
-  const [serviceId, setServiceId] = useState("starter");
+  const [serviceId, setServiceId] = useState<keyof typeof SERVICE_CONFIGS>("web");
+  const [fieldValues, setFieldValues] = useState<Record<string, string>>({});
   const [addOns, setAddOns] = useState<string[]>([]);
-  const [complexity, setComplexity] = useState("standard");
   const [timeline, setTimeline] = useState("standard");
 
   const [name, setName] = useState("");
@@ -168,7 +467,6 @@ export default function PricingWizard() {
   const [referralCode, setReferralCode] = useState("");
   const [referralApplied, setReferralApplied] = useState(false);
   const [referralDiscount, setReferralDiscount] = useState(0);
-  const [referralMessage, setReferralMessage] = useState("");
   const [verifyingReferral, setVerifyingReferral] = useState(false);
   const [referralError, setReferralError] = useState("");
 
@@ -176,74 +474,92 @@ export default function PricingWizard() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
+  const [downloadingPDF, setDownloadingPDF] = useState(false);
 
-  const currentCategory = SERVICE_CATEGORIES.find((c) => c.id === categoryId);
-  const currentService = currentCategory?.services.find((s) => s.id === serviceId);
+  const config = SERVICE_CONFIGS[serviceId];
 
   useEffect(() => {
-    if (currentCategory && !currentCategory.services.find((s) => s.id === serviceId)) {
-      setServiceId(currentCategory.services[0].id);
-    }
-  }, [categoryId, currentCategory, serviceId]);
+    const initial: Record<string, string> = {};
+    config.fields.forEach((f) => {
+      initial[f.id] = f.options[0].value;
+    });
+    setFieldValues(initial);
+    setAddOns([]);
+  }, [serviceId, config]);
 
+  /* ─── CALCULATE ESTIMATE ──────────────────────── */
   const calculateEstimate = () => {
-    if (!currentService) return { base: 0, addOnsTotal: 0, subtotal: 0, discounted: 0, low: 0, high: 0 };
+    let basePrice = config.basePrice;
+    let adSpend = 0;
 
-    const basePrice = currentService.basePrice;
+    config.fields.forEach((field) => {
+      const val = fieldValues[field.id];
+      const option = field.options.find((o) => o.value === val);
+      if (option) {
+        basePrice *= option.multiplier;
+        if ("adSpend" in option && option.adSpend) {
+          adSpend = option.adSpend;
+        }
+      }
+    });
+
     const addOnsTotal = addOns.reduce((sum, id) => {
-      const addon = ADD_ONS.find((a) => a.id === id);
+      const addon = config.addOns.find((a) => a.id === id);
       return sum + (addon?.price || 0);
     }, 0);
 
-    const complexityMult = COMPLEXITY_OPTIONS.find((c) => c.value === complexity)?.multiplier || 1;
-    const timelineMult = TIMELINE_OPTIONS.find((t) => t.value === timeline)?.multiplier || 1;
+    const timelineMult =
+      timeline === "flexible" ? 0.9 :
+      timeline === "fast" ? 1.3 :
+      timeline === "urgent" ? 1.6 : 1.0;
 
-    const subtotal = (basePrice + addOnsTotal) * complexityMult * timelineMult;
+    let subtotal = (basePrice + addOnsTotal) * timelineMult;
 
-    let discounted = subtotal;
+    let discount = 0;
     if (referralApplied && referralDiscount > 0) {
-      const discountAmount = subtotal * (referralDiscount / 100);
-      discounted = subtotal - discountAmount;
-      const floor = subtotal * 0.85;
-      discounted = Math.max(discounted, floor);
+      discount = subtotal * (referralDiscount / 100);
+      subtotal -= discount;
+      const floor = (basePrice + addOnsTotal) * 0.85;
+      subtotal = Math.max(subtotal, floor);
     }
 
-    const low = Math.round(discounted * 0.9);
-    const high = Math.round(discounted * 1.15);
+    const totalWithAdSpend = subtotal + adSpend;
 
-    return { base: basePrice, addOnsTotal, subtotal, discounted, low, high };
+    return {
+      base: config.basePrice,
+      addOns: addOnsTotal,
+      subtotal: (basePrice + addOnsTotal) * timelineMult,
+      discount,
+      adSpend,
+      final: subtotal,
+      totalWithAdSpend,
+      low: Math.round(totalWithAdSpend * 0.9),
+      high: Math.round(totalWithAdSpend * 1.15),
+    };
   };
 
   const estimate = calculateEstimate();
 
+  /* ─── VERIFY REFERRAL ─────────────────────────── */
   const verifyReferral = async () => {
     if (!referralCode.trim()) {
       setReferralError("Please enter a referral code");
       return;
     }
-
     setVerifyingReferral(true);
     setReferralError("");
-    setReferralMessage("");
-
     try {
       const { data } = await api.post("/referrals/verify", {
         code: referralCode.trim().toUpperCase(),
       });
-
       if (data?.valid) {
         setReferralApplied(true);
         setReferralDiscount(data.discountPercent);
-        setReferralMessage(data.message);
         setReferralError("");
       } else {
-        setReferralApplied(false);
-        setReferralDiscount(0);
         setReferralError(data?.message || "Invalid referral code");
       }
     } catch (err: any) {
-      setReferralApplied(false);
-      setReferralDiscount(0);
       setReferralError(err?.response?.data?.message || "Invalid referral code");
     } finally {
       setVerifyingReferral(false);
@@ -254,7 +570,6 @@ export default function PricingWizard() {
     setReferralCode("");
     setReferralApplied(false);
     setReferralDiscount(0);
-    setReferralMessage("");
     setReferralError("");
   };
 
@@ -264,6 +579,7 @@ export default function PricingWizard() {
     );
   };
 
+  /* ─── SUBMIT ──────────────────────────────────── */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -288,25 +604,37 @@ export default function PricingWizard() {
     setError("");
 
     try {
+      const fieldDetails = Object.entries(fieldValues)
+        .map(([key, val]) => {
+          const field = config.fields.find((f) => f.id === key);
+          const option = field?.options.find((o) => o.value === val);
+          return `${field?.label}: ${option?.label || val}`;
+        })
+        .join("\n");
+
+      const selectedAddOns = addOns
+        .map((id) => config.addOns.find((a) => a.id === id)?.label)
+        .filter(Boolean)
+        .join(", ");
+
       const payload = {
         name: name.trim(),
         email: email.trim(),
         phone: phone.trim(),
-        service: currentService?.label || "Budget Calculator",
-        message: `📋 PROJECT ESTIMATE REQUEST\n\nCategory: ${currentCategory?.label}\nService: ${currentService?.label}\nDescription: ${projectDesc || "Not provided"}\nComplexity: ${complexity}\nTimeline: ${timeline}\nAdd-Ons: ${addOns.length > 0 ? addOns.map(id => ADD_ONS.find(a => a.id === id)?.label).join(", ") : "None"}\n\nBase: ${formatPrice(estimate.base)}\nAdd-Ons: ${formatPrice(estimate.addOnsTotal)}\nSubtotal: ${formatPrice(estimate.subtotal)}\n${referralApplied ? `Referral Discount: -${referralDiscount}% (₹${Math.round(estimate.subtotal - estimate.discounted).toLocaleString("en-IN")})\n` : ""}Final Range: ${formatPrice(estimate.low)} - ${formatPrice(estimate.high)}`,
+        service: config.label,
+        message: `📋 PROJECT ESTIMATE REQUEST\n\nService: ${config.label}\n\n--- Requirements ---\n${fieldDetails}\n\n--- Add-Ons ---\n${selectedAddOns || "None"}\n\n--- Timeline ---\n${timeline}\n\n--- Price Breakdown ---\nBase: ${formatPrice(estimate.base)}\nAdd-Ons: ${formatPrice(estimate.addOns)}\n${estimate.discount > 0 ? `Discount: -${formatPrice(estimate.discount)}\n` : ""}${estimate.adSpend > 0 ? `Ad Spend (separate): ${formatPrice(estimate.adSpend)}\n` : ""}Final Estimate: ${formatPrice(estimate.final)}\n\nRange: ${formatPrice(estimate.low)} - ${formatPrice(estimate.high)}`,
         source: "budget-calculator",
         priority: "high",
         referralCode: referralApplied ? referralCode.toUpperCase() : "",
         baseEstimate: estimate.subtotal,
-        finalEstimate: estimate.discounted,
-        projectType: currentService?.label,
+        finalEstimate: estimate.final,
+        projectType: config.label,
         projectDetails: {
-          category: currentCategory?.label,
-          service: currentService?.label,
-          complexity,
-          timeline,
+          serviceId,
+          service: config.label,
+          fields: fieldValues,
           addOns,
-          description: projectDesc,
+          timeline,
         },
       };
 
@@ -318,460 +646,378 @@ export default function PricingWizard() {
         setError(data?.message || "Failed to submit. Please try again.");
       }
     } catch (err: any) {
-      setError(err?.response?.data?.message || "Failed to submit. Please try again.");
+      setError(err?.response?.data?.message || "Failed to submit.");
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleDownloadQuote = () => {
-    const content = `
-═══════════════════════════════════════════════════════════
-                ZENTROX TECHNOLOGIES
-              Project Estimate & Quote
-═══════════════════════════════════════════════════════════
-
-DATE: ${new Date().toLocaleDateString("en-IN")}
-QUOTE ID: ZT-${Date.now().toString().slice(-8)}
-
-─────────────────────────────────────────────────────────
-CLIENT DETAILS
-─────────────────────────────────────────────────────────
-Name:     ${name || "Not provided"}
-Email:    ${email || "Not provided"}
-Phone:    ${phone || "Not provided"}
-
-─────────────────────────────────────────────────────────
-PROJECT DETAILS
-─────────────────────────────────────────────────────────
-Category:     ${currentCategory?.label}
-Service:      ${currentService?.label}
-Description:  ${projectDesc || "Not provided"}
-Complexity:   ${complexity}
-Timeline:     ${timeline}
-Add-Ons:      ${addOns.length > 0 ? addOns.map(id => ADD_ONS.find(a => a.id === id)?.label).join(", ") : "None"}
-
-─────────────────────────────────────────────────────────
-PRICE BREAKDOWN
-─────────────────────────────────────────────────────────
-Base Price:           ${formatPrice(estimate.base)}
-Add-Ons Total:        ${formatPrice(estimate.addOnsTotal)}
-Complexity Multiplier: ${COMPLEXITY_OPTIONS.find(c => c.value === complexity)?.multiplier}x
-Timeline Multiplier:  ${TIMELINE_OPTIONS.find(t => t.value === timeline)?.multiplier}x
-Subtotal:             ${formatPrice(estimate.subtotal)}
-
-${referralApplied ? `Referral Discount:    -${referralDiscount}% (₹${Math.round(estimate.subtotal - estimate.discounted).toLocaleString("en-IN")})\nFinal Amount:         ${formatPrice(estimate.discounted)}` : `Final Amount:         ${formatPrice(estimate.subtotal)}`}
-
-─────────────────────────────────────────────────────────
-ESTIMATED RANGE
-─────────────────────────────────────────────────────────
-${formatPrice(estimate.low)}  –  ${formatPrice(estimate.high)}
-
-Note: Domain & hosting charges are separate.
-Final quote may vary based on detailed requirements.
-
-─────────────────────────────────────────────────────────
-CONTACT ZENTROX TECHNOLOGIES
-─────────────────────────────────────────────────────────
-📧 contact.zentroxtech@gmail.com
-📧 info.zentroxtechnologies@gmail.com
-📞 +91 89881 83513
-📞 +91 94592 85513
-🌐 zentroxtechnologies.com
-
-Thank you for choosing Zentrox Technologies!
-═══════════════════════════════════════════════════════════
-    `.trim();
-
-    const blob = new Blob([content], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `Zentrox-Estimate-${Date.now()}.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
+  /* ─── DOWNLOAD PDF ────────────────────────────── */
+  const handleDownloadPDF = async () => {
+    setDownloadingPDF(true);
+    try {
+      await generatePDF({
+        clientName: name,
+        clientEmail: email,
+        clientPhone: phone,
+        service: config.label,
+        serviceId,
+        fieldDetails: Object.entries(fieldValues).map(([key, val]) => {
+          const field = config.fields.find((f) => f.id === key);
+          const option = field?.options.find((o) => o.value === val);
+          return {
+            label: field?.label || key,
+            value: option?.label || val,
+          };
+        }),
+        addOns: addOns.map((id) => {
+          const addon = config.addOns.find((a) => a.id === id);
+          return { label: addon?.label || "", price: addon?.price || 0 };
+        }),
+        timeline,
+        estimate,
+        referralApplied,
+        referralCode: referralApplied ? referralCode : "",
+        referralDiscount,
+      });
+    } catch (err) {
+      console.error("PDF generation failed:", err);
+    } finally {
+      setDownloadingPDF(false);
+    }
   };
 
   return (
-    <section
-      id="budget-calculator"
-      aria-label="Project budget calculator"
-      className="relative overflow-hidden bg-white px-4 py-20 sm:py-24 md:px-6 md:py-28"
-    >
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-40 top-20 h-[500px] w-[500px] rounded-full bg-blue-100/50 blur-[120px]" />
-        <div className="absolute -right-40 top-60 h-[500px] w-[500px] rounded-full bg-purple-100/40 blur-[120px]" />
-      </div>
-
+    <section id="budget-calculator" className="relative overflow-hidden bg-white px-4 py-20 sm:py-24 md:px-6 md:py-28">
       <div ref={ref} className="relative mx-auto max-w-7xl">
-        {/* HEADER */}
-        <div className="mb-12 text-center">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-blue-50/60 px-4 py-1.5 text-xs font-semibold text-blue-700">
-            <Zap size={13} />
-            Instant Estimate
-            <span className="text-slate-300">|</span>
-            <span className="text-slate-600">Transparent Pricing</span>
+        {submitted ? (
+          /* SUCCESS STATE */
+          <div className="mx-auto max-w-2xl rounded-3xl border border-emerald-200 bg-gradient-to-br from-emerald-50 via-white to-blue-50 p-8 text-center shadow-xl sm:p-12">
+            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-lg">
+              <CheckCircle2 size={36} />
+            </div>
+            <h3 className="text-2xl font-extrabold text-slate-900 sm:text-3xl">
+              Estimate Sent to Team!
+            </h3>
+            <p className="mx-auto mt-4 max-w-md text-sm text-slate-600 sm:text-base">
+              Thank you, <strong>{name}</strong>. Your project estimate has been
+              sent to the Zentrox Technologies team.
+            </p>
+            <div className="mx-auto mt-6 max-w-md rounded-xl bg-white p-5 text-left shadow-sm">
+              <p className="text-sm font-bold text-slate-900">What happens next:</p>
+              <ul className="mt-3 space-y-2 text-sm text-slate-600">
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={16} className="mt-0.5 flex-shrink-0 text-emerald-500" />
+                  Our team will review your requirements
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={16} className="mt-0.5 flex-shrink-0 text-emerald-500" />
+                  We&apos;ll contact you within 24 hours
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={16} className="mt-0.5 flex-shrink-0 text-emerald-500" />
+                  You&apos;ll receive a detailed proposal
+                </li>
+              </ul>
+            </div>
+            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <button
+                onClick={handleDownloadPDF}
+                disabled={downloadingPDF}
+                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all hover:-translate-y-1 disabled:opacity-60"
+              >
+                {downloadingPDF ? (
+                  <>
+                    <Loader2 size={16} className="animate-spin" />
+                    Generating PDF...
+                  </>
+                ) : (
+                  <>
+                    <Download size={16} />
+                    Download PDF Quote
+                  </>
+                )}
+              </button>
+              <button
+                onClick={() => {
+                  setSubmitted(false);
+                  setName("");
+                  setEmail("");
+                  setPhone("");
+                  setAgreed(false);
+                  removeReferral();
+                }}
+                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-7 py-3.5 text-sm font-semibold text-slate-700 transition-all hover:border-blue-300 hover:text-blue-600"
+              >
+                New Estimate
+              </button>
+            </div>
           </div>
-
-          <h2 className="text-4xl font-extrabold leading-[1.05] tracking-tight text-slate-900 sm:text-5xl lg:text-[56px]">
-            Website &amp; App
-            <br />
-            <span className="gradient-text">Budget Calculator</span>
-          </h2>
-
-          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-600 lg:text-lg">
-            Get an instant estimate for your project. Tell us your requirements
-            and get a tailored proposal from Zentrox Technologies within 24 hours.
-          </p>
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, delay: 0.2 }}
-          className="overflow-hidden rounded-3xl border border-slate-200/70 bg-white shadow-[0_20px_60px_rgba(15,23,42,0.08)]"
-        >
-          <div className="grid grid-cols-1 lg:grid-cols-12">
+        ) : (
+          /* CALCULATOR FORM */
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
             {/* LEFT FORM */}
-            <div className="border-b border-slate-100 p-6 sm:p-8 lg:col-span-8 lg:border-b-0 lg:border-r lg:p-10">
-              {submitted ? (
-                <div className="py-8 text-center">
-                  <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-lg shadow-emerald-600/25">
-                    <CheckCircle2 size={28} />
-                  </div>
-                  <h3 className="text-2xl font-extrabold text-slate-900">
-                    Estimate Sent to Team!
+            <div className="rounded-3xl border border-slate-200/70 bg-white p-6 shadow-[0_20px_60px_rgba(15,23,42,0.08)] sm:p-8 lg:col-span-8 lg:p-10">
+              <div className="mb-6 flex items-center gap-3">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                  <Calculator size={20} />
+                </div>
+                <div>
+                  <h3 className="text-lg font-extrabold text-slate-900 sm:text-xl">
+                    Calculate Your Project Budget
                   </h3>
-                  <p className="mx-auto mt-3 max-w-md text-sm text-slate-600">
-                    Thank you, <strong>{name}</strong>. Your project estimate
-                    has been sent to the Zentrox Technologies team.
+                  <p className="text-xs text-slate-500 sm:text-sm">
+                    Select a service and get instant pricing
                   </p>
-                  <div className="mx-auto mt-4 max-w-md rounded-xl bg-blue-50 p-4 text-left">
-                    <p className="text-xs font-bold text-slate-700">What happens next:</p>
-                    <ul className="mt-2 space-y-1 text-xs text-slate-600">
-                      <li>✓ Our team will review your requirements</li>
-                      <li>✓ We'll contact you within 24 hours</li>
-                      <li>✓ You'll receive a detailed proposal</li>
-                    </ul>
-                  </div>
-                  <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-                    <button
-                      onClick={handleDownloadQuote}
-                      className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white"
-                    >
-                      <Download size={15} />
-                      Download PDF
-                    </button>
-                    <button
-                      onClick={() => {
-                        setSubmitted(false);
-                        setName("");
-                        setEmail("");
-                        setPhone("");
-                        setAgreed(false);
-                        removeReferral();
-                      }}
-                      className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-2.5 text-sm font-semibold text-slate-700"
-                    >
-                      New Estimate
-                    </button>
+                </div>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Service Selection */}
+                <div>
+                  <label className="mb-3 block text-xs font-bold uppercase tracking-wider text-slate-700">
+                    Select Service
+                  </label>
+                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                    {Object.entries(SERVICE_CONFIGS).map(([id, cfg]) => {
+                      const Icon = cfg.icon;
+                      const active = serviceId === id;
+                      return (
+                        <button
+                          key={id}
+                          type="button"
+                          onClick={() => setServiceId(id as keyof typeof SERVICE_CONFIGS)}
+                          className={`flex flex-col items-center gap-2 rounded-xl border p-3 text-center transition-all ${
+                            active
+                              ? "border-blue-500 bg-blue-50 shadow-sm"
+                              : "border-slate-200 bg-white hover:border-blue-200"
+                          }`}
+                        >
+                          <div
+                            className="flex h-9 w-9 items-center justify-center rounded-lg"
+                            style={{
+                              backgroundColor: active ? `${cfg.color}20` : `${cfg.color}10`,
+                              color: cfg.color,
+                            }}
+                          >
+                            <Icon size={16} />
+                          </div>
+                          <p className="text-[11px] font-semibold leading-tight text-slate-900">
+                            {cfg.label.split(" ").slice(0, 2).join(" ")}
+                          </p>
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* STEP 1: Category */}
-                  <div>
-                    <label className="mb-3 block text-xs font-bold uppercase tracking-wider text-slate-700">
-                      Step 1 — Service Category
-                    </label>
-                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                      {SERVICE_CATEGORIES.map((cat) => {
-                        const Icon = cat.icon;
-                        const active = categoryId === cat.id;
-                        return (
-                          <button
-                            key={cat.id}
-                            type="button"
-                            onClick={() => setCategoryId(cat.id)}
-                            className={`flex flex-col items-center gap-2 rounded-xl border p-3 text-center transition-all ${
-                              active
-                                ? "border-blue-500 bg-blue-50 shadow-sm"
-                                : "border-slate-200 bg-white hover:border-blue-200"
-                            }`}
-                          >
-                            <div
-                              className="flex h-9 w-9 items-center justify-center rounded-lg"
-                              style={{
-                                backgroundColor: active ? `${cat.color}20` : `${cat.color}10`,
-                                color: cat.color,
-                              }}
-                            >
-                              <Icon size={16} />
-                            </div>
-                            <p className="text-[11px] font-semibold text-slate-900 leading-tight">
-                              {cat.label}
-                            </p>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
 
-                  {/* STEP 2: Service */}
-                  <div>
-                    <label className="mb-3 block text-xs font-bold uppercase tracking-wider text-slate-700">
-                      Step 2 — Select Service
+                {/* Dynamic Fields */}
+                {config.fields.map((field) => (
+                  <div key={field.id}>
+                    <label className="mb-2 block text-xs font-bold text-slate-700">
+                      {field.label}
                     </label>
-                    <div className="space-y-2">
-                      {currentCategory?.services.map((svc) => {
-                        const active = serviceId === svc.id;
-                        return (
-                          <button
-                            key={svc.id}
-                            type="button"
-                            onClick={() => setServiceId(svc.id)}
-                            className={`flex w-full items-start gap-3 rounded-xl border p-3 text-left transition-all ${
-                              active
-                                ? "border-blue-500 bg-blue-50 shadow-sm"
-                                : "border-slate-200 bg-white hover:border-blue-200"
-                            }`}
-                          >
+                    <select
+                      value={fieldValues[field.id] || ""}
+                      onChange={(e) =>
+                        setFieldValues({ ...fieldValues, [field.id]: e.target.value })
+                      }
+                      className="input-field"
+                    >
+                      {field.options.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                ))}
+
+                {/* Timeline */}
+                <div>
+                  <label className="mb-2 block text-xs font-bold text-slate-700">
+                    Timeline
+                  </label>
+                  <select
+                    value={timeline}
+                    onChange={(e) => setTimeline(e.target.value)}
+                    className="input-field"
+                  >
+                    <option value="flexible">Flexible (No rush)</option>
+                    <option value="standard">Standard</option>
+                    <option value="fast">Fast-Track</option>
+                    <option value="urgent">Urgent (ASAP)</option>
+                  </select>
+                </div>
+
+                {/* Add-Ons */}
+                <div>
+                  <label className="mb-3 block text-xs font-bold uppercase tracking-wider text-slate-700">
+                    Add-Ons (Optional)
+                  </label>
+                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                    {config.addOns.map((addon) => {
+                      const active = addOns.includes(addon.id);
+                      return (
+                        <button
+                          key={addon.id}
+                          type="button"
+                          onClick={() => toggleAddOn(addon.id)}
+                          className={`flex items-center justify-between gap-2 rounded-xl border p-3 text-left transition-all ${
+                            active
+                              ? "border-blue-500 bg-blue-50"
+                              : "border-slate-200 bg-white hover:border-blue-200"
+                          }`}
+                        >
+                          <div className="flex items-center gap-2">
                             <div
-                              className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border-2 ${
+                              className={`flex h-4 w-4 items-center justify-center rounded border-2 ${
                                 active ? "border-blue-600 bg-blue-600" : "border-slate-300"
                               }`}
                             >
-                              {active && <CheckCircle2 size={12} className="text-white" />}
+                              {active && <CheckCircle2 size={10} className="text-white" />}
                             </div>
-                            <div className="flex-1">
-                              <div className="flex flex-wrap items-center justify-between gap-2">
-                                <p className="text-sm font-bold text-slate-900">{svc.label}</p>
-                                <p className="text-sm font-extrabold text-blue-600">
-                                  {formatPrice(svc.basePrice)}
-                                  {(svc as any).monthly && <span className="text-xs text-slate-500">/mo</span>}
-                                </p>
-                              </div>
-                              <p className="mt-0.5 text-xs text-slate-500">{svc.desc}</p>
-                              {(svc as any).adSpendSeparate && (
-                                <p className="mt-1 text-[10px] text-amber-600">
-                                  ⚡ Ad spend (Google/Meta) charged separately
-                                </p>
-                              )}
-                            </div>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* STEP 3: Add-Ons */}
-                  <div>
-                    <label className="mb-3 block text-xs font-bold uppercase tracking-wider text-slate-700">
-                      Step 3 — Add-Ons (Optional)
-                    </label>
-                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                      {ADD_ONS.map((addon) => {
-                        const active = addOns.includes(addon.id);
-                        return (
-                          <button
-                            key={addon.id}
-                            type="button"
-                            onClick={() => toggleAddOn(addon.id)}
-                            className={`flex items-center justify-between gap-2 rounded-xl border p-3 text-left transition-all ${
-                              active
-                                ? "border-blue-500 bg-blue-50"
-                                : "border-slate-200 bg-white hover:border-blue-200"
-                            }`}
-                          >
-                            <div className="flex items-center gap-2">
-                              <div
-                                className={`flex h-4 w-4 items-center justify-center rounded border-2 ${
-                                  active ? "border-blue-600 bg-blue-600" : "border-slate-300"
-                                }`}
-                              >
-                                {active && <CheckCircle2 size={10} className="text-white" />}
-                              </div>
-                              <span className="text-xs font-medium text-slate-900">
-                                {addon.label}
-                              </span>
-                            </div>
-                            <span className="text-xs font-bold text-blue-600">
-                              +{formatPrice(addon.price)}
+                            <span className="text-xs font-medium text-slate-900">
+                              {addon.label}
                             </span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* STEP 4: Complexity + Timeline */}
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div>
-                      <label className="mb-2 block text-xs font-bold text-slate-700">
-                        Project Complexity
-                      </label>
-                      <select
-                        value={complexity}
-                        onChange={(e) => setComplexity(e.target.value)}
-                        className="input-field"
-                      >
-                        {COMPLEXITY_OPTIONS.map((c) => (
-                          <option key={c.value} value={c.value}>{c.label}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="mb-2 block text-xs font-bold text-slate-700">
-                        Timeline
-                      </label>
-                      <select
-                        value={timeline}
-                        onChange={(e) => setTimeline(e.target.value)}
-                        className="input-field"
-                      >
-                        {TIMELINE_OPTIONS.map((t) => (
-                          <option key={t.value} value={t.value}>{t.label}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* STEP 5: Referral */}
-                  <div>
-                    <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-700">
-                      Step 5 — Referral Code (Optional)
-                    </label>
-                    {referralApplied ? (
-                      <div className="flex items-center justify-between gap-2 rounded-xl border border-emerald-200 bg-emerald-50 p-3">
-                        <div className="flex items-center gap-2">
-                          <CheckCircle2 size={18} className="text-emerald-600" />
-                          <div>
-                            <p className="text-sm font-bold text-emerald-700">
-                              {referralCode.toUpperCase()} — {referralDiscount}% OFF
-                            </p>
-                            <p className="text-[10px] text-emerald-600">{referralMessage}</p>
                           </div>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={removeReferral}
-                          className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-emerald-600 hover:bg-emerald-100"
-                        >
-                          <X size={14} />
+                          <span className="text-xs font-bold text-blue-600">
+                            +{formatPrice(addon.price)}
+                          </span>
                         </button>
-                      </div>
-                    ) : (
-                      <div className="flex gap-2">
-                        <input
-                          type="text"
-                          value={referralCode}
-                          onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
-                          placeholder="Enter referral code"
-                          className="input-field flex-1 font-mono uppercase"
-                        />
-                        <button
-                          type="button"
-                          onClick={verifyReferral}
-                          disabled={verifyingReferral || !referralCode.trim()}
-                          className="rounded-xl bg-blue-600 px-5 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
-                        >
-                          {verifyingReferral ? "Verifying..." : "Apply"}
-                        </button>
-                      </div>
-                    )}
-                    {referralError && (
-                      <p className="mt-2 flex items-center gap-1 text-xs text-red-600">
-                        <AlertCircle size={12} /> {referralError}
-                      </p>
-                    )}
-                    <p className="mt-2 text-[10px] text-slate-500">
-                      💡 Have a referral code? Apply it to get up to 20% off!
-                    </p>
+                      );
+                    })}
                   </div>
+                </div>
 
-                  {/* STEP 6: Contact */}
-                  <div>
-                    <label className="mb-3 block text-xs font-bold uppercase tracking-wider text-slate-700">
-                      Step 6 — Your Details
-                    </label>
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                      <input
-                        type="text"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        placeholder="Your full name *"
-                        className="input-field"
-                        required
-                      />
-                      <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Email address *"
-                        className="input-field"
-                        required
-                      />
-                    </div>
-                    <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                      <input
-                        type="tel"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        placeholder="Phone / WhatsApp *"
-                        className="input-field"
-                        required
-                      />
-                      <input
-                        type="text"
-                        value={projectDesc}
-                        onChange={(e) => setProjectDesc(e.target.value)}
-                        placeholder="Project description (optional)"
-                        className="input-field"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Agreement */}
-                  <label className="flex cursor-pointer items-start gap-2.5">
-                    <input
-                      type="checkbox"
-                      checked={agreed}
-                      onChange={(e) => setAgreed(e.target.checked)}
-                      className="mt-0.5 h-4 w-4 rounded border-slate-300 text-blue-600"
-                      required
-                    />
-                    <span className="text-xs text-slate-600">
-                      I agree to be contacted by Zentrox Technologies regarding this estimate.
-                    </span>
+                {/* Referral */}
+                <div>
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-700">
+                    Referral Code (Optional)
                   </label>
-
-                  {/* Error */}
-                  {error && (
-                    <div className="flex items-start gap-2 rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
-                      <AlertCircle size={16} className="mt-0.5 flex-shrink-0" />
-                      <span>{error}</span>
+                  {referralApplied ? (
+                    <div className="flex items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50 p-3">
+                      <div className="flex items-center gap-2">
+                        <CheckCircle2 size={18} className="text-emerald-600" />
+                        <div>
+                          <p className="text-sm font-bold text-emerald-700">
+                            {referralCode.toUpperCase()} — {referralDiscount}% OFF
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={removeReferral}
+                        className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-emerald-600"
+                      >
+                        <X size={14} />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={referralCode}
+                        onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+                        placeholder="Enter referral code"
+                        className="input-field flex-1 font-mono uppercase"
+                      />
+                      <button
+                        type="button"
+                        onClick={verifyReferral}
+                        disabled={verifyingReferral || !referralCode.trim()}
+                        className="rounded-xl bg-blue-600 px-5 py-2 text-sm font-semibold text-white disabled:opacity-50"
+                      >
+                        {verifyingReferral ? "Verifying..." : "Apply"}
+                      </button>
                     </div>
                   )}
+                  {referralError && (
+                    <p className="mt-2 flex items-center gap-1 text-xs text-red-600">
+                      <AlertCircle size={12} /> {referralError}
+                    </p>
+                  )}
+                </div>
 
-                  {/* Submit */}
-                  <button
-                    type="submit"
-                    disabled={!agreed || submitting}
-                    className={`group flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all ${
-                      !agreed || submitting
-                        ? "cursor-not-allowed opacity-60"
-                        : "hover:-translate-y-1 hover:shadow-xl"
-                    }`}
-                  >
-                    {submitting ? "Sending to Team..." : "Get My Estimate"}
-                    <ArrowRight size={16} />
-                  </button>
-                </form>
-              )}
+                {/* Contact Info */}
+                <div>
+                  <label className="mb-3 block text-xs font-bold uppercase tracking-wider text-slate-700">
+                    Your Details
+                  </label>
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Your full name *"
+                      className="input-field"
+                      required
+                    />
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="Email address *"
+                      className="input-field"
+                      required
+                    />
+                  </div>
+                  <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <input
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="Phone / WhatsApp *"
+                      className="input-field"
+                      required
+                    />
+                    <input
+                      type="text"
+                      value={projectDesc}
+                      onChange={(e) => setProjectDesc(e.target.value)}
+                      placeholder="Project description (optional)"
+                      className="input-field"
+                    />
+                  </div>
+                </div>
+
+                {/* Agreement */}
+                <label className="flex cursor-pointer items-start gap-2.5">
+                  <input
+                    type="checkbox"
+                    checked={agreed}
+                    onChange={(e) => setAgreed(e.target.checked)}
+                    className="mt-0.5 h-4 w-4 rounded border-slate-300 text-blue-600"
+                  />
+                  <span className="text-xs text-slate-600">
+                    I agree to be contacted by Zentrox Technologies regarding this estimate.
+                  </span>
+                </label>
+
+                {error && (
+                  <div className="flex items-start gap-2 rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+                    <AlertCircle size={16} className="mt-0.5 flex-shrink-0" />
+                    <span>{error}</span>
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={!agreed || submitting}
+                  className={`flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all ${
+                    !agreed || submitting
+                      ? "cursor-not-allowed opacity-60"
+                      : "hover:-translate-y-1 hover:shadow-xl"
+                  }`}
+                >
+                  {submitting ? "Sending to Team..." : "Get My Estimate"}
+                  <ArrowRight size={16} />
+                </button>
+              </form>
             </div>
 
             {/* RIGHT ESTIMATE PANEL */}
-            <div className="bg-gradient-to-br from-blue-50/40 via-white to-purple-50/40 p-6 sm:p-8 lg:col-span-4 lg:p-10">
+            <div className="rounded-3xl border border-slate-200/70 bg-gradient-to-br from-blue-50/40 via-white to-purple-50/40 p-6 shadow-[0_20px_60px_rgba(15,23,42,0.08)] sm:p-8 lg:col-span-4">
               <div className="lg:sticky lg:top-24">
                 <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-white px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-blue-700 shadow-sm">
                   <Calculator size={11} />
@@ -779,9 +1025,11 @@ Thank you for choosing Zentrox Technologies!
                 </div>
 
                 <h3 className="text-2xl font-extrabold leading-tight text-slate-900 sm:text-3xl">
-                  Your Project Estimate
+                  {config.label}
                 </h3>
-                <p className="mt-1 text-sm text-slate-600">Based on your selections</p>
+                <p className="mt-1 text-sm text-slate-600">
+                  {config.priceType === "monthly" ? "Monthly estimate" : "One-time estimate"}
+                </p>
 
                 <div className="my-6 rounded-2xl border border-blue-200/60 bg-white p-6 shadow-sm">
                   <p className="text-3xl font-extrabold leading-tight text-slate-900 sm:text-4xl">
@@ -792,6 +1040,11 @@ Thank you for choosing Zentrox Technologies!
                   <p className="mt-2 text-xs text-slate-500">
                     (May vary based on final requirements)
                   </p>
+                  {estimate.adSpend > 0 && (
+                    <div className="mt-3 rounded-lg bg-amber-50 p-2 text-center text-xs font-bold text-amber-700">
+                      ⚡ Ad spend {formatPrice(estimate.adSpend)} separately
+                    </div>
+                  )}
                   {referralApplied && (
                     <div className="mt-3 rounded-lg bg-emerald-50 p-2 text-center text-xs font-bold text-emerald-700">
                       🎁 {referralDiscount}% Referral Discount Applied!
@@ -802,7 +1055,7 @@ Thank you for choosing Zentrox Technologies!
                 <ul className="mb-6 space-y-3">
                   {[
                     "Professional development team",
-                    "Clean, modern & responsive design",
+                    "Clean, modern & responsive",
                     "SEO friendly structure",
                     "Post-launch support",
                     "On-time delivery",
@@ -821,49 +1074,26 @@ Thank you for choosing Zentrox Technologies!
                   >
                     <Mail size={15} />
                     Talk to Our Experts
-                    <ArrowRight size={16} />
                   </Link>
-
-                  <button
-                    type="button"
-                    onClick={handleDownloadQuote}
-                    className="group flex w-full items-center justify-center gap-2 rounded-full border border-blue-300 bg-white px-6 py-3.5 text-sm font-semibold text-blue-700 transition-all hover:-translate-y-1 hover:bg-blue-50"
-                  >
-                    <Download size={15} />
-                    Download Detailed Quote
-                  </button>
                 </div>
 
                 <div className="mt-6 rounded-xl border border-slate-200 bg-white/60 p-4">
                   <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
                     Direct Contact
                   </p>
-                  <a
-                    href="tel:+918988183513"
-                    className="mt-2 flex items-center gap-2 text-xs font-semibold text-slate-700 hover:text-blue-600"
-                  >
+                  <a href="tel:+918988183513" className="mt-2 flex items-center gap-2 text-xs font-semibold text-slate-700 hover:text-blue-600">
                     <Phone size={12} className="text-blue-600" />
                     +91 89881 83513
                   </a>
-                  <a
-                    href="tel:+919459285513"
-                    className="mt-1.5 flex items-center gap-2 text-xs font-semibold text-slate-700 hover:text-blue-600"
-                  >
+                  <a href="tel:+919459285513" className="mt-1.5 flex items-center gap-2 text-xs font-semibold text-slate-700 hover:text-blue-600">
                     <Phone size={12} className="text-blue-600" />
                     +91 94592 85513
-                  </a>
-                  <a
-                    href="mailto:contact.zentroxtech@gmail.com"
-                    className="mt-1.5 flex items-center gap-2 break-all text-xs font-semibold text-slate-700 hover:text-blue-600"
-                  >
-                    <Mail size={12} className="flex-shrink-0 text-blue-600" />
-                    contact.zentroxtech@gmail.com
                   </a>
                 </div>
               </div>
             </div>
           </div>
-        </motion.div>
+        )}
       </div>
     </section>
   );
