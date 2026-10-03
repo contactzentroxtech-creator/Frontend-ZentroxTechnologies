@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, useInView } from "framer-motion";
@@ -19,7 +19,11 @@ import {
   Handshake,
   Globe2,
 } from "lucide-react";
+import api from "@/lib/api";
 
+/* ═══════════════════════════════════════════════════════════════
+   CONSTANTS
+═══════════════════════════════════════════════════════════════ */
 const VALUES = [
   {
     icon: Heart,
@@ -81,9 +85,41 @@ const STATS = [
   { num: "2023", label: "Founded", icon: Building2, color: "#ea580c" },
 ];
 
+interface CMSData {
+  about_title?: string;
+  about_description?: string;
+  about_image?: string;
+}
+
 export default function AboutClient() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.05 });
+
+  /* ─── CMS State ─── */
+  const [cms, setCms] = useState<CMSData>({});
+  const [cmsLoaded, setCmsLoaded] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await api.get("/cms");
+        if (data?.success && data.data) {
+          setCms(data.data);
+        } else if (data && typeof data === "object") {
+          setCms(data);
+        }
+      } catch {
+        // Fallback — use default content
+      } finally {
+        setCmsLoaded(true);
+      }
+    })();
+  }, []);
+
+  /* ─── CMS values with fallbacks ─── */
+  const aboutImage = cms.about_image;
+  const aboutTitle = cms.about_title;
+  const aboutDescription = cms.about_description;
 
   return (
     <main className="bg-white">
@@ -111,15 +147,20 @@ export default function AboutClient() {
               </div>
 
               <h1 className="text-4xl font-extrabold leading-[1.05] tracking-tight text-slate-900 sm:text-5xl lg:text-[56px]">
-                More Than Just a
-                <br />
-                <span className="gradient-text">Tech Company</span>
+                {aboutTitle ? (
+                  aboutTitle
+                ) : (
+                  <>
+                    More Than Just a
+                    <br />
+                    <span className="gradient-text">Tech Company</span>
+                  </>
+                )}
               </h1>
 
               <p className="mt-6 max-w-xl text-base leading-relaxed text-slate-600 lg:text-lg">
-                Zentrox Technologies is a team of passionate developers,
-                designers and digital marketers dedicated to turning your ideas
-                into powerful digital experiences.
+                {aboutDescription ||
+                  "Zentrox Technologies is a team of passionate developers, designers and digital marketers dedicated to turning your ideas into powerful digital experiences."}
               </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-6">
@@ -159,7 +200,7 @@ export default function AboutClient() {
               </div>
             </motion.div>
 
-            {/* Right — Team Image */}
+            {/* Right — Team Image (CMS-powered with fallback) */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -168,14 +209,23 @@ export default function AboutClient() {
             >
               <div className="relative">
                 <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl shadow-slate-200/60">
-                  <Image
-                    src="/about-team.png"
-                    alt="Zentrox Technologies Team Collaboration"
-                    width={700}
-                    height={500}
-                    className="h-auto w-full object-cover"
-                    priority
-                  />
+                  {cmsLoaded && aboutImage ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                      src={aboutImage}
+                      alt="Zentrox Technologies Team"
+                      className="h-auto w-full object-cover"
+                    />
+                  ) : (
+                    <Image
+                      src="/about-team.png"
+                      alt="Zentrox Technologies Team Collaboration"
+                      width={700}
+                      height={500}
+                      className="h-auto w-full object-cover"
+                      priority
+                    />
+                  )}
                 </div>
 
                 {/* Floating badge — Founded */}
@@ -451,7 +501,7 @@ export default function AboutClient() {
 
             <div className="relative z-10 mx-auto max-w-2xl">
               <h2 className="text-2xl font-extrabold leading-tight text-white sm:text-3xl lg:text-4xl">
-                Let's Build Something Great Together
+                Let&apos;s Build Something Great Together
               </h2>
               <p className="mx-auto mt-4 max-w-xl text-sm text-slate-300 sm:text-base">
                 Have a project in mind? Zentrox Technologies is ready to bring
