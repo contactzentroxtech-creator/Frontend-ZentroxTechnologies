@@ -4,7 +4,6 @@
 
 /* ═══════════════════════════════════════════════════════════════
    ZENTROX TECHNOLOGIES — THEME VARIABLES
-   Light theme (website + admin + blog all pages)
 ═══════════════════════════════════════════════════════════════ */
 :root {
   --z-dark: #FDF8F3;
@@ -29,9 +28,6 @@
   --text-muted: #94a3b8;
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   GLOBAL RESET
-═══════════════════════════════════════════════════════════════ */
 * {
   box-sizing: border-box;
   padding: 0;
@@ -53,50 +49,136 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   FORCE VISIBILITY — Dark text everywhere
-   (Except dark button backgrounds)
+   DARK SECTION DETECTION
+   Dark backgrounds = white text (must be FIRST to override)
+   Light backgrounds = dark text (default)
 ═══════════════════════════════════════════════════════════════ */
 
-/* Admin panel — dark text */
-.admin-layout,
-.admin-layout h1, .admin-layout h2, .admin-layout h3, .admin-layout h4,
-.admin-layout h5, .admin-layout h6,
-.admin-layout th, .admin-layout td, .admin-layout label,
-.admin-layout strong, .admin-layout b {
+/* ─── DARK SECTIONS: #0f172a, slate-900, slate-800 ─── */
+section[class*="bg-[#0f172a]"],
+section[class*="bg-[#0f172a]"] *,
+section[class*="bg-slate-900"],
+section[class*="bg-slate-900"] *,
+section[class*="bg-slate-800"],
+section[class*="bg-slate-800"] *,
+div[class*="bg-[#0f172a]"],
+div[class*="bg-[#0f172a]"] * {
+  color: #ffffff;
+}
+
+section[class*="bg-[#0f172a]"] p,
+section[class*="bg-[#0f172a]"] span:not([class*="bg-"]),
+section[class*="bg-[#0f172a]"] li,
+section[class*="bg-[#0f172a]"] small,
+section[class*="bg-slate-900"] p,
+section[class*="bg-slate-900"] span:not([class*="bg-"]),
+section[class*="bg-slate-900"] li,
+div[class*="bg-[#0f172a]"] p,
+div[class*="bg-[#0f172a]"] span:not([class*="bg-"]) {
+  color: #cbd5e1;
+}
+
+/* ─── LIGHT SECTIONS: default dark text ─── */
+h1, h2, h3, h4, h5, h6 {
+  color: #0f172a;
+}
+
+p {
+  color: #475569;
+}
+
+/* Admin panel — always light theme with dark text */
+.admin-layout h1,
+.admin-layout h2,
+.admin-layout h3,
+.admin-layout h4,
+.admin-layout h5,
+.admin-layout h6,
+.admin-layout th,
+.admin-layout td,
+.admin-layout label,
+.admin-layout strong,
+.admin-layout b {
   color: #0f172a !important;
 }
 
-.admin-layout p, .admin-layout span, .admin-layout li,
-.admin-layout small, .admin-layout em, .admin-layout div {
-  color: inherit;
-}
-
-.admin-layout a:not([class*="bg-"]) {
-  color: #2563eb;
-}
-
-/* Main content — dark text */
-main h1, main h2, main h3, main h4, main h5, main h6,
-main th, main td, main label,
-main strong, main b {
-  color: #0f172a !important;
-}
-
-/* Paragraphs — dark slate */
-main p, main li, main small, main em {
+.admin-layout p,
+.admin-layout span,
+.admin-layout li {
   color: #475569 !important;
 }
 
-/* Blog content */
-article h1, article h2, article h3, article h4 {
+/* ═══════════════════════════════════════════════════════════════
+   BUTTONS — WHITE TEXT (solid dark backgrounds)
+═══════════════════════════════════════════════════════════════ */
+
+/* Solid blue */
+button.bg-blue-600, button.bg-blue-600 *,
+button.bg-blue-700, button.bg-blue-700 *,
+a.bg-blue-600, a.bg-blue-600 * {
+  color: #ffffff !important;
+}
+
+/* Solid purple */
+button.bg-purple-600, button.bg-purple-600 *,
+a.bg-purple-600, a.bg-purple-600 * {
+  color: #ffffff !important;
+}
+
+/* Solid slate dark */
+button.bg-slate-900, button.bg-slate-900 *,
+button.bg-slate-800, button.bg-slate-800 *,
+a.bg-slate-900, a.bg-slate-900 * {
+  color: #ffffff !important;
+}
+
+/* Solid red */
+button.bg-red-600, button.bg-red-600 *,
+button.bg-red-500, button.bg-red-500 *,
+a.bg-red-600, a.bg-red-600 * {
+  color: #ffffff !important;
+}
+
+/* Solid emerald */
+button.bg-emerald-600, button.bg-emerald-600 *,
+button.bg-emerald-500, button.bg-emerald-500 *,
+a.bg-emerald-600, a.bg-emerald-600 * {
+  color: #ffffff !important;
+}
+
+/* Solid white button (dark text) */
+button.bg-white, button.bg-white *,
+a.bg-white, a.bg-white * {
   color: #0f172a !important;
 }
 
-article p, article li {
-  color: #334155 !important;
+/* Gradient buttons */
+button[class*="from-blue-600"][class*="to-purple-600"],
+button[class*="from-blue-600"][class*="to-purple-600"] *,
+button[class*="from-emerald-500"][class*="to-emerald-600"],
+button[class*="from-emerald-500"][class*="to-emerald-600"] *,
+a[class*="from-blue-600"][class*="to-purple-600"],
+a[class*="from-blue-600"][class*="to-purple-600"] * {
+  color: #ffffff !important;
 }
 
-/* Inputs everywhere */
+/* ═══════════════════════════════════════════════════════════════
+   SELECTED STATES — dark text on light backgrounds
+═══════════════════════════════════════════════════════════════ */
+button.bg-blue-50, button.bg-blue-50 *,
+button.bg-blue-50 h3, button.bg-blue-50 p,
+button.bg-blue-50 span, button.bg-blue-50 div {
+  color: #0f172a !important;
+}
+
+button.bg-blue-50 p,
+button.bg-blue-50 span:not([class*="text-"]) {
+  color: #475569 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   INPUTS
+═══════════════════════════════════════════════════════════════ */
 input, textarea, select {
   color: #0f172a !important;
   background-color: #ffffff !important;
@@ -104,57 +186,6 @@ input, textarea, select {
 
 input::placeholder, textarea::placeholder {
   color: #94a3b8 !important;
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   WHITE TEXT ONLY ON SOLID DARK BUTTONS
-   Light backgrounds (blue-50, etc.) pe dark text rahega
-═══════════════════════════════════════════════════════════════ */
-
-/* Solid blue buttons */
-button.bg-blue-600, button.bg-blue-600 *,
-button.bg-blue-700, button.bg-blue-700 *,
-a.bg-blue-600, a.bg-blue-600 *,
-a.bg-blue-700, a.bg-blue-700 * {
-  color: #ffffff !important;
-}
-
-/* Solid purple buttons */
-button.bg-purple-600, button.bg-purple-600 *,
-button.bg-purple-700, button.bg-purple-700 *,
-a.bg-purple-600, a.bg-purple-600 * {
-  color: #ffffff !important;
-}
-
-/* Solid slate dark buttons */
-button.bg-slate-900, button.bg-slate-900 *,
-button.bg-slate-800, button.bg-slate-800 *,
-a.bg-slate-900, a.bg-slate-900 * {
-  color: #ffffff !important;
-}
-
-/* Solid red buttons */
-button.bg-red-600, button.bg-red-600 *,
-a.bg-red-600, a.bg-red-600 * {
-  color: #ffffff !important;
-}
-
-/* Solid emerald buttons */
-button.bg-emerald-600, button.bg-emerald-600 *,
-a.bg-emerald-600, a.bg-emerald-600 * {
-  color: #ffffff !important;
-}
-
-/* Gradient buttons — white text */
-button[class*="from-blue-600"][class*="to-purple-600"],
-button[class*="from-blue-600"][class*="to-purple-600"] *,
-button[class*="from-emerald-500"][class*="to-emerald-600"],
-button[class*="from-emerald-500"][class*="to-emerald-600"] *,
-a[class*="from-blue-600"][class*="to-purple-600"],
-a[class*="from-blue-600"][class*="to-purple-600"] *,
-a[class*="from-emerald-500"][class*="to-emerald-600"],
-a[class*="from-emerald-500"][class*="to-emerald-600"] * {
-  color: #ffffff !important;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -168,19 +199,19 @@ a[class*="from-emerald-500"][class*="to-emerald-600"] * {
 ::selection { background: #2563eb; color: white; }
 
 /* ═══════════════════════════════════════════════════════════════
-   CARD STYLES
+   CARDS
 ═══════════════════════════════════════════════════════════════ */
 .card-cream {
   background: #FFFFFF;
   border: 1px solid #F0E6D8;
   border-radius: 16px;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.02);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
   transition: all 0.3s ease;
 }
 
 .card-cream:hover {
   border-color: #E5D5B8;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06), 0 2px 6px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
   transform: translateY(-4px);
 }
 
@@ -199,7 +230,7 @@ a[class*="from-emerald-500"][class*="to-emerald-600"] * {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   BUTTONS (Utility classes)
+   BUTTONS (utility classes)
 ═══════════════════════════════════════════════════════════════ */
 .btn-primary {
   background-color: #2563eb;
@@ -297,7 +328,7 @@ a[class*="from-emerald-500"][class*="to-emerald-600"] * {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   BADGE STYLES
+   BADGES
 ═══════════════════════════════════════════════════════════════ */
 .badge-soft {
   display: inline-flex;
@@ -340,7 +371,7 @@ a[class*="from-emerald-500"][class*="to-emerald-600"] * {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   FOCUS STATES
+   FOCUS
 ═══════════════════════════════════════════════════════════════ */
 button:focus-visible,
 a:focus-visible,
