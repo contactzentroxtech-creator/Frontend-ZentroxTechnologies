@@ -6,6 +6,7 @@ interface PDFData {
   clientPhone: string;
   service: string;
   serviceId: string;
+  priceType: "onetime" | "monthly";
   fieldDetails: { label: string; value: string }[];
   addOns: { label: string; price: number }[];
   timeline: string;
@@ -25,8 +26,12 @@ interface PDFData {
   referralDiscount: number;
 }
 
-function formatPrice(n: number): string {
-  return "Rs. " + Math.round(n).toLocaleString("en-IN");
+/* ═══════════════════════════════════════════════════════════════
+   Format price — "Rs." use karo (₹ symbol jsPDF mein render nahi hota)
+═══════════════════════════════════════════════════════════════ */
+function formatPrice(n: number, monthly: boolean = false): string {
+  const base = "Rs. " + Math.round(n).toLocaleString("en-IN");
+  return monthly ? base + "/mo" : base;
 }
 
 export async function generatePDF(data: PDFData): Promise<void> {
@@ -36,6 +41,11 @@ export async function generatePDF(data: PDFData): Promise<void> {
   const margin = 15;
   const contentWidth = pageWidth - margin * 2;
 
+  /* ═══════════════════════════════════════════════════════════════
+     MONTHLY vs ONE-TIME — Dynamic from data.priceType
+  ═══════════════════════════════════════════════════════════════ */
+  const monthly = data.priceType === "monthly";
+
   const quoteId = `ZT-${Date.now().toString().slice(-8)}`;
   const date = new Date().toLocaleDateString("en-IN", {
     day: "2-digit",
@@ -43,7 +53,7 @@ export async function generatePDF(data: PDFData): Promise<void> {
     year: "numeric",
   });
 
-  // Advance payment discount (2%)
+  // 2% Advance Discount
   const advanceDiscountPercent = 2;
   const advanceDiscountAmount = Math.round(
     data.estimate.final * (advanceDiscountPercent / 100)
@@ -53,7 +63,7 @@ export async function generatePDF(data: PDFData): Promise<void> {
   let y = 0;
 
   /* ═══════════════════════════════════════════════════════════════
-     HEADER — DARK NAVY BAR
+     HEADER — DARK NAVY
   ═══════════════════════════════════════════════════════════════ */
   doc.setFillColor(15, 23, 42);
   doc.rect(0, 0, pageWidth, 42, "F");
@@ -111,9 +121,13 @@ export async function generatePDF(data: PDFData): Promise<void> {
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(100, 116, 139);
-  doc.text(`Quote ID: ${quoteId}    |    Date: ${date}`, pageWidth / 2, y, {
-    align: "center",
-  });
+  const billingText = monthly ? "Monthly Billing" : "One-Time Payment";
+  doc.text(
+    `Quote ID: ${quoteId}    |    Date: ${date}    |    ${billingText}`,
+    pageWidth / 2,
+    y,
+    { align: "center" }
+  );
 
   y += 12;
 
@@ -231,7 +245,7 @@ export async function generatePDF(data: PDFData): Promise<void> {
       doc.text(`• ${addon.label}`, margin + 3, y);
       doc.setFont("helvetica", "bold");
       doc.setTextColor(15, 23, 42);
-      doc.text(formatPrice(addon.price), pageWidth - margin - 3, y, {
+      doc.text(formatPrice(addon.price, monthly), pageWidth - margin - 3, y, {
         align: "right",
       });
       doc.setFont("helvetica", "normal");
@@ -254,6 +268,16 @@ export async function generatePDF(data: PDFData): Promise<void> {
   doc.setTextColor(37, 99, 235);
   doc.text("PRICE BREAKDOWN", margin + 5, y + 8);
 
+  // Monthly Badge
+  if (monthly) {
+    doc.setFillColor(251, 191, 36);
+    doc.roundedRect(pageWidth - margin - 32, y + 4, 27, 6, 2, 2, "F");
+    doc.setFontSize(7);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(120, 53, 15);
+    doc.text("MONTHLY", pageWidth - margin - 18.5, y + 8, { align: "center" });
+  }
+
   y += 16;
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
@@ -265,7 +289,7 @@ export async function generatePDF(data: PDFData): Promise<void> {
   doc.text("Base Price:", labelX, y);
   doc.setTextColor(15, 23, 42);
   doc.setFont("helvetica", "bold");
-  doc.text(formatPrice(data.estimate.base), valueX, y, { align: "right" });
+  doc.text(formatPrice(data.estimate.base, monthly), valueX, y, { align: "right" });
   doc.setFont("helvetica", "normal");
   doc.setTextColor(51, 65, 85);
   y += 6;
@@ -274,7 +298,7 @@ export async function generatePDF(data: PDFData): Promise<void> {
     doc.text("Add-Ons Total:", labelX, y);
     doc.setTextColor(15, 23, 42);
     doc.setFont("helvetica", "bold");
-    doc.text(formatPrice(data.estimate.addOns), valueX, y, { align: "right" });
+    doc.text(formatPrice(data.estimate.addOns, monthly), valueX, y, { align: "right" });
     doc.setFont("helvetica", "normal");
     doc.setTextColor(51, 65, 85);
     y += 6;
@@ -283,7 +307,7 @@ export async function generatePDF(data: PDFData): Promise<void> {
   doc.text("Subtotal:", labelX, y);
   doc.setTextColor(15, 23, 42);
   doc.setFont("helvetica", "bold");
-  doc.text(formatPrice(data.estimate.subtotal), valueX, y, { align: "right" });
+  doc.text(formatPrice(data.estimate.subtotal, monthly), valueX, y, { align: "right" });
   doc.setFont("helvetica", "normal");
   doc.setTextColor(51, 65, 85);
   y += 6;
@@ -292,7 +316,7 @@ export async function generatePDF(data: PDFData): Promise<void> {
     doc.setTextColor(5, 150, 105);
     doc.setFont("helvetica", "bold");
     doc.text(`Referral Discount (${data.referralDiscount}%):`, labelX, y);
-    doc.text(`-${formatPrice(data.estimate.discount)}`, valueX, y, {
+    doc.text(`-${formatPrice(data.estimate.discount, monthly)}`, valueX, y, {
       align: "right",
     });
     doc.setFont("helvetica", "normal");
@@ -311,7 +335,7 @@ export async function generatePDF(data: PDFData): Promise<void> {
   doc.text("Final Amount:", labelX, y);
   doc.setTextColor(37, 99, 235);
   doc.setFontSize(12);
-  doc.text(formatPrice(data.estimate.final), valueX, y, { align: "right" });
+  doc.text(formatPrice(data.estimate.final, monthly), valueX, y, { align: "right" });
 
   y += 8;
 
@@ -320,67 +344,96 @@ export async function generatePDF(data: PDFData): Promise<void> {
     doc.setFont("helvetica", "normal");
     doc.setTextColor(180, 83, 9);
     doc.text(
-      `Note: Ad spend of ${formatPrice(data.estimate.adSpend)} is separate`,
+      `Note: Ad spend of ${formatPrice(data.estimate.adSpend, monthly)} is separate (paid directly to platform)`,
       labelX,
       y
     );
     y += 6;
   }
 
-  y += 8;
+  y += 10;
 
   /* ═══════════════════════════════════════════════════════════════
-     ADVANCE DISCOUNT BOX
+     PAYMENT OPTIONS — 2 OPTIONS
   ═══════════════════════════════════════════════════════════════ */
-  const advanceBoxHeight = 22;
-  doc.setFillColor(5, 150, 105);
-  doc.roundedRect(margin, y, contentWidth, advanceBoxHeight, 3, 3, "F");
+  const paymentBoxHeight = 42;
+  doc.setFillColor(248, 250, 252);
+  doc.roundedRect(margin, y, contentWidth, paymentBoxHeight, 3, 3, "F");
+
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(37, 99, 235);
+  doc.text("PAYMENT OPTIONS", margin + 5, y + 8);
 
   doc.setFontSize(9);
   doc.setFont("helvetica", "bold");
-  doc.setTextColor(255, 255, 255);
+  doc.setTextColor(15, 23, 42);
   doc.text(
-    `Special Offer: Pay 100% Advance & Get ${advanceDiscountPercent}% Extra Discount!`,
+    monthly
+      ? "Option 1: Standard (50% Advance + 50% after first month)"
+      : "Option 1: Standard (50% Advance + 50% on Delivery)",
     margin + 5,
-    y + 8
+    y + 17
   );
 
   doc.setFontSize(8);
   doc.setFont("helvetica", "normal");
-  doc.setTextColor(220, 252, 231);
+  doc.setTextColor(51, 65, 85);
   doc.text(
-    `You save ${formatPrice(advanceDiscountAmount)} more — Final: ${formatPrice(finalAfterAdvance)}`,
-    margin + 5,
-    y + 15
+    `Total Amount: ${formatPrice(data.estimate.final, monthly)}`,
+    margin + 8,
+    y + 23
   );
 
-  y += advanceBoxHeight + 8;
+  doc.setFontSize(9);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(5, 150, 105);
+  doc.text(
+    "Option 2: Full Advance Payment — Get 2% Extra Discount!",
+    margin + 5,
+    y + 31
+  );
+
+  doc.setFontSize(8);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(51, 65, 85);
+  doc.text(
+    `You save: ${formatPrice(advanceDiscountAmount, monthly)} — Final: ${formatPrice(finalAfterAdvance, monthly)}`,
+    margin + 8,
+    y + 37
+  );
+
+  y += paymentBoxHeight + 10;
 
   /* ═══════════════════════════════════════════════════════════════
      ESTIMATED RANGE
   ═══════════════════════════════════════════════════════════════ */
-  const rangeBoxHeight = 26;
+  const rangeBoxHeight = 28;
   doc.setFillColor(15, 23, 42);
   doc.roundedRect(margin, y, contentWidth, rangeBoxHeight, 3, 3, "F");
 
-  doc.setFontSize(9);
+  doc.setFontSize(8);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(148, 163, 184);
-  doc.text("TOTAL ESTIMATED RANGE", margin + 5, y + 8);
+  doc.text(
+    monthly ? "TOTAL ESTIMATED RANGE (MONTHLY)" : "TOTAL ESTIMATED RANGE",
+    margin + 5,
+    y + 8
+  );
 
-  doc.setFontSize(16);
+  doc.setFontSize(14);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(255, 255, 255);
   doc.text(
-    `${formatPrice(data.estimate.low)}  -  ${formatPrice(data.estimate.high)}`,
+    `${formatPrice(data.estimate.low, monthly)}  -  ${formatPrice(data.estimate.high, monthly)}`,
     margin + 5,
-    y + 20
+    y + 21
   );
 
   y += rangeBoxHeight + 8;
 
   /* ═══════════════════════════════════════════════════════════════
-     WHY CHOOSE ZENTROX — NEW SECTION
+     WHY CHOOSE
   ═══════════════════════════════════════════════════════════════ */
   const whyBoxHeight = 38;
   doc.setFillColor(248, 250, 252);
@@ -391,7 +444,7 @@ export async function generatePDF(data: PDFData): Promise<void> {
   doc.setTextColor(37, 99, 235);
   doc.text("WHY CHOOSE ZENTROX TECHNOLOGIES?", margin + 5, y + 8);
 
-  doc.setFontSize(8.5);
+  doc.setFontSize(8);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(51, 65, 85);
 
@@ -406,13 +459,13 @@ export async function generatePDF(data: PDFData): Promise<void> {
   let whyY = y + 15;
   whyPoints.forEach((point) => {
     doc.text(`• ${point}`, margin + 5, whyY);
-    whyY += 5;
+    whyY += 4.5;
   });
 
   y += whyBoxHeight + 8;
 
   /* ═══════════════════════════════════════════════════════════════
-     NEXT STEPS — NEW SECTION
+     NEXT STEPS
   ═══════════════════════════════════════════════════════════════ */
   const nextBoxHeight = 32;
   doc.setFillColor(239, 246, 255);
@@ -423,7 +476,7 @@ export async function generatePDF(data: PDFData): Promise<void> {
   doc.setTextColor(37, 99, 235);
   doc.text("NEXT STEPS", margin + 5, y + 8);
 
-  doc.setFontSize(8.5);
+  doc.setFontSize(8);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(51, 65, 85);
 
@@ -437,13 +490,13 @@ export async function generatePDF(data: PDFData): Promise<void> {
   let nextY = y + 15;
   nextSteps.forEach((step) => {
     doc.text(step, margin + 5, nextY);
-    nextY += 5;
+    nextY += 4.5;
   });
 
   y += nextBoxHeight + 8;
 
   /* ═══════════════════════════════════════════════════════════════
-     THANK YOU NOTE — NEW SECTION
+     THANK YOU
   ═══════════════════════════════════════════════════════════════ */
   const thankyouHeight = 24;
   doc.setFillColor(15, 23, 42);
@@ -452,14 +505,11 @@ export async function generatePDF(data: PDFData): Promise<void> {
   doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(255, 255, 255);
-  doc.text(
-    `Thank you, ${data.clientName}!`,
-    pageWidth / 2,
-    y + 9,
-    { align: "center" }
-  );
+  doc.text(`Thank you, ${data.clientName}!`, pageWidth / 2, y + 9, {
+    align: "center",
+  });
 
-  doc.setFontSize(8.5);
+  doc.setFontSize(8);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(203, 213, 225);
   doc.text(
@@ -469,15 +519,12 @@ export async function generatePDF(data: PDFData): Promise<void> {
     { align: "center" }
   );
 
-  doc.setFontSize(8);
+  doc.setFontSize(7);
   doc.setFont("helvetica", "italic");
   doc.setTextColor(148, 163, 184);
-  doc.text(
-    "— Team Zentrox Technologies",
-    pageWidth / 2,
-    y + 21,
-    { align: "center" }
-  );
+  doc.text("— Team Zentrox Technologies", pageWidth / 2, y + 21, {
+    align: "center",
+  });
 
   y += thankyouHeight + 6;
 
@@ -495,12 +542,16 @@ export async function generatePDF(data: PDFData): Promise<void> {
   doc.setTextColor(100, 116, 139);
 
   const terms = [
-    "• This is a ballpark estimate. Final quote may vary based on detailed requirements.",
+    monthly
+      ? "• This is a monthly recurring estimate. Billing cycle: 30 days."
+      : "• This is a one-time project estimate. Final quote may vary based on detailed requirements.",
     "• Domain & hosting charges are separate and not included in this estimate.",
     "• Prices are valid for 30 days from the date of this quote.",
     "• Zentrox Technologies is an MSME Registered company. (Not GST applicable)",
-    "• Payment terms: 50% advance, 50% on delivery (unless agreed otherwise).",
-    "• Pay 100% advance and get 2% extra discount on total amount.",
+    monthly
+      ? "• Payment terms: 50% advance, 50% after first month (unless agreed otherwise)."
+      : "• Payment terms: 50% advance, 50% on delivery (unless agreed otherwise).",
+    "• 2% extra discount only if 100% advance payment is made.",
   ];
 
   terms.forEach((term) => {
