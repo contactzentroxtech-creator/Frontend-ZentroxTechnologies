@@ -429,4 +429,442 @@ Thank you for choosing Zentrox Technologies!
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="overflow-hidden rounded-3xl border border-slate-200
+          className="overflow-hidden rounded-3xl border border-slate-200/70 bg-white shadow-[0_20px_60px_rgba(15,23,42,0.08)]"
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-12">
+            {/* LEFT FORM */}
+            <div className="border-b border-slate-100 p-6 sm:p-8 lg:col-span-8 lg:border-b-0 lg:border-r lg:p-10">
+              {submitted ? (
+                <div className="py-8 text-center">
+                  <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-lg shadow-emerald-600/25">
+                    <CheckCircle2 size={28} />
+                  </div>
+                  <h3 className="text-2xl font-extrabold text-slate-900">
+                    Estimate Sent to Team!
+                  </h3>
+                  <p className="mx-auto mt-3 max-w-md text-sm text-slate-600">
+                    Thank you, <strong>{name}</strong>. Your project estimate
+                    has been sent to the Zentrox Technologies team.
+                  </p>
+                  <div className="mx-auto mt-4 max-w-md rounded-xl bg-blue-50 p-4 text-left">
+                    <p className="text-xs font-bold text-slate-700">What happens next:</p>
+                    <ul className="mt-2 space-y-1 text-xs text-slate-600">
+                      <li>✓ Our team will review your requirements</li>
+                      <li>✓ We'll contact you within 24 hours</li>
+                      <li>✓ You'll receive a detailed proposal</li>
+                    </ul>
+                  </div>
+                  <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+                    <button
+                      onClick={handleDownloadQuote}
+                      className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white"
+                    >
+                      <Download size={15} />
+                      Download PDF
+                    </button>
+                    <button
+                      onClick={() => {
+                        setSubmitted(false);
+                        setName("");
+                        setEmail("");
+                        setPhone("");
+                        setAgreed(false);
+                        removeReferral();
+                      }}
+                      className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-2.5 text-sm font-semibold text-slate-700"
+                    >
+                      New Estimate
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* STEP 1: Category */}
+                  <div>
+                    <label className="mb-3 block text-xs font-bold uppercase tracking-wider text-slate-700">
+                      Step 1 — Service Category
+                    </label>
+                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                      {SERVICE_CATEGORIES.map((cat) => {
+                        const Icon = cat.icon;
+                        const active = categoryId === cat.id;
+                        return (
+                          <button
+                            key={cat.id}
+                            type="button"
+                            onClick={() => setCategoryId(cat.id)}
+                            className={`flex flex-col items-center gap-2 rounded-xl border p-3 text-center transition-all ${
+                              active
+                                ? "border-blue-500 bg-blue-50 shadow-sm"
+                                : "border-slate-200 bg-white hover:border-blue-200"
+                            }`}
+                          >
+                            <div
+                              className="flex h-9 w-9 items-center justify-center rounded-lg"
+                              style={{
+                                backgroundColor: active ? `${cat.color}20` : `${cat.color}10`,
+                                color: cat.color,
+                              }}
+                            >
+                              <Icon size={16} />
+                            </div>
+                            <p className="text-[11px] font-semibold text-slate-900 leading-tight">
+                              {cat.label}
+                            </p>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* STEP 2: Service */}
+                  <div>
+                    <label className="mb-3 block text-xs font-bold uppercase tracking-wider text-slate-700">
+                      Step 2 — Select Service
+                    </label>
+                    <div className="space-y-2">
+                      {currentCategory?.services.map((svc) => {
+                        const active = serviceId === svc.id;
+                        return (
+                          <button
+                            key={svc.id}
+                            type="button"
+                            onClick={() => setServiceId(svc.id)}
+                            className={`flex w-full items-start gap-3 rounded-xl border p-3 text-left transition-all ${
+                              active
+                                ? "border-blue-500 bg-blue-50 shadow-sm"
+                                : "border-slate-200 bg-white hover:border-blue-200"
+                            }`}
+                          >
+                            <div
+                              className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border-2 ${
+                                active ? "border-blue-600 bg-blue-600" : "border-slate-300"
+                              }`}
+                            >
+                              {active && <CheckCircle2 size={12} className="text-white" />}
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex flex-wrap items-center justify-between gap-2">
+                                <p className="text-sm font-bold text-slate-900">{svc.label}</p>
+                                <p className="text-sm font-extrabold text-blue-600">
+                                  {formatPrice(svc.basePrice)}
+                                  {(svc as any).monthly && <span className="text-xs text-slate-500">/mo</span>}
+                                </p>
+                              </div>
+                              <p className="mt-0.5 text-xs text-slate-500">{svc.desc}</p>
+                              {(svc as any).adSpendSeparate && (
+                                <p className="mt-1 text-[10px] text-amber-600">
+                                  ⚡ Ad spend (Google/Meta) charged separately
+                                </p>
+                              )}
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* STEP 3: Add-Ons */}
+                  <div>
+                    <label className="mb-3 block text-xs font-bold uppercase tracking-wider text-slate-700">
+                      Step 3 — Add-Ons (Optional)
+                    </label>
+                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                      {ADD_ONS.map((addon) => {
+                        const active = addOns.includes(addon.id);
+                        return (
+                          <button
+                            key={addon.id}
+                            type="button"
+                            onClick={() => toggleAddOn(addon.id)}
+                            className={`flex items-center justify-between gap-2 rounded-xl border p-3 text-left transition-all ${
+                              active
+                                ? "border-blue-500 bg-blue-50"
+                                : "border-slate-200 bg-white hover:border-blue-200"
+                            }`}
+                          >
+                            <div className="flex items-center gap-2">
+                              <div
+                                className={`flex h-4 w-4 items-center justify-center rounded border-2 ${
+                                  active ? "border-blue-600 bg-blue-600" : "border-slate-300"
+                                }`}
+                              >
+                                {active && <CheckCircle2 size={10} className="text-white" />}
+                              </div>
+                              <span className="text-xs font-medium text-slate-900">
+                                {addon.label}
+                              </span>
+                            </div>
+                            <span className="text-xs font-bold text-blue-600">
+                              +{formatPrice(addon.price)}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* STEP 4: Complexity + Timeline */}
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                      <label className="mb-2 block text-xs font-bold text-slate-700">
+                        Project Complexity
+                      </label>
+                      <select
+                        value={complexity}
+                        onChange={(e) => setComplexity(e.target.value)}
+                        className="input-field"
+                      >
+                        {COMPLEXITY_OPTIONS.map((c) => (
+                          <option key={c.value} value={c.value}>{c.label}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="mb-2 block text-xs font-bold text-slate-700">
+                        Timeline
+                      </label>
+                      <select
+                        value={timeline}
+                        onChange={(e) => setTimeline(e.target.value)}
+                        className="input-field"
+                      >
+                        {TIMELINE_OPTIONS.map((t) => (
+                          <option key={t.value} value={t.value}>{t.label}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* STEP 5: Referral */}
+                  <div>
+                    <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-700">
+                      Step 5 — Referral Code (Optional)
+                    </label>
+                    {referralApplied ? (
+                      <div className="flex items-center justify-between gap-2 rounded-xl border border-emerald-200 bg-emerald-50 p-3">
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2 size={18} className="text-emerald-600" />
+                          <div>
+                            <p className="text-sm font-bold text-emerald-700">
+                              {referralCode.toUpperCase()} — {referralDiscount}% OFF
+                            </p>
+                            <p className="text-[10px] text-emerald-600">{referralMessage}</p>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={removeReferral}
+                          className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-emerald-600 hover:bg-emerald-100"
+                        >
+                          <X size={14} />
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={referralCode}
+                          onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+                          placeholder="Enter referral code"
+                          className="input-field flex-1 font-mono uppercase"
+                        />
+                        <button
+                          type="button"
+                          onClick={verifyReferral}
+                          disabled={verifyingReferral || !referralCode.trim()}
+                          className="rounded-xl bg-blue-600 px-5 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
+                        >
+                          {verifyingReferral ? "Verifying..." : "Apply"}
+                        </button>
+                      </div>
+                    )}
+                    {referralError && (
+                      <p className="mt-2 flex items-center gap-1 text-xs text-red-600">
+                        <AlertCircle size={12} /> {referralError}
+                      </p>
+                    )}
+                    <p className="mt-2 text-[10px] text-slate-500">
+                      💡 Have a referral code? Apply it to get up to 20% off!
+                    </p>
+                  </div>
+
+                  {/* STEP 6: Contact */}
+                  <div>
+                    <label className="mb-3 block text-xs font-bold uppercase tracking-wider text-slate-700">
+                      Step 6 — Your Details
+                    </label>
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                      <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="Your full name *"
+                        className="input-field"
+                        required
+                      />
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Email address *"
+                        className="input-field"
+                        required
+                      />
+                    </div>
+                    <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                      <input
+                        type="tel"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        placeholder="Phone / WhatsApp *"
+                        className="input-field"
+                        required
+                      />
+                      <input
+                        type="text"
+                        value={projectDesc}
+                        onChange={(e) => setProjectDesc(e.target.value)}
+                        placeholder="Project description (optional)"
+                        className="input-field"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Agreement */}
+                  <label className="flex cursor-pointer items-start gap-2.5">
+                    <input
+                      type="checkbox"
+                      checked={agreed}
+                      onChange={(e) => setAgreed(e.target.checked)}
+                      className="mt-0.5 h-4 w-4 rounded border-slate-300 text-blue-600"
+                      required
+                    />
+                    <span className="text-xs text-slate-600">
+                      I agree to be contacted by Zentrox Technologies regarding this estimate.
+                    </span>
+                  </label>
+
+                  {/* Error */}
+                  {error && (
+                    <div className="flex items-start gap-2 rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+                      <AlertCircle size={16} className="mt-0.5 flex-shrink-0" />
+                      <span>{error}</span>
+                    </div>
+                  )}
+
+                  {/* Submit */}
+                  <button
+                    type="submit"
+                    disabled={!agreed || submitting}
+                    className={`group flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all ${
+                      !agreed || submitting
+                        ? "cursor-not-allowed opacity-60"
+                        : "hover:-translate-y-1 hover:shadow-xl"
+                    }`}
+                  >
+                    {submitting ? "Sending to Team..." : "Get My Estimate"}
+                    <ArrowRight size={16} />
+                  </button>
+                </form>
+              )}
+            </div>
+
+            {/* RIGHT ESTIMATE PANEL */}
+            <div className="bg-gradient-to-br from-blue-50/40 via-white to-purple-50/40 p-6 sm:p-8 lg:col-span-4 lg:p-10">
+              <div className="lg:sticky lg:top-24">
+                <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-white px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-blue-700 shadow-sm">
+                  <Calculator size={11} />
+                  Estimated Budget
+                </div>
+
+                <h3 className="text-2xl font-extrabold leading-tight text-slate-900 sm:text-3xl">
+                  Your Project Estimate
+                </h3>
+                <p className="mt-1 text-sm text-slate-600">Based on your selections</p>
+
+                <div className="my-6 rounded-2xl border border-blue-200/60 bg-white p-6 shadow-sm">
+                  <p className="text-3xl font-extrabold leading-tight text-slate-900 sm:text-4xl">
+                    {formatPrice(estimate.low)}
+                    <span className="mx-1.5 text-slate-400">–</span>
+                    {formatPrice(estimate.high)}
+                  </p>
+                  <p className="mt-2 text-xs text-slate-500">
+                    (May vary based on final requirements)
+                  </p>
+                  {referralApplied && (
+                    <div className="mt-3 rounded-lg bg-emerald-50 p-2 text-center text-xs font-bold text-emerald-700">
+                      🎁 {referralDiscount}% Referral Discount Applied!
+                    </div>
+                  )}
+                </div>
+
+                <ul className="mb-6 space-y-3">
+                  {[
+                    "Professional development team",
+                    "Clean, modern & responsive design",
+                    "SEO friendly structure",
+                    "Post-launch support",
+                    "On-time delivery",
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-start gap-2.5 text-sm text-slate-700">
+                      <CheckCircle2 size={16} className="mt-0.5 flex-shrink-0 text-emerald-500" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="space-y-3">
+                  <Link
+                    href="/contact"
+                    className="group flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all hover:-translate-y-1"
+                  >
+                    <Mail size={15} />
+                    Talk to Our Experts
+                    <ArrowRight size={16} />
+                  </Link>
+
+                  <button
+                    type="button"
+                    onClick={handleDownloadQuote}
+                    className="group flex w-full items-center justify-center gap-2 rounded-full border border-blue-300 bg-white px-6 py-3.5 text-sm font-semibold text-blue-700 transition-all hover:-translate-y-1 hover:bg-blue-50"
+                  >
+                    <Download size={15} />
+                    Download Detailed Quote
+                  </button>
+                </div>
+
+                <div className="mt-6 rounded-xl border border-slate-200 bg-white/60 p-4">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                    Direct Contact
+                  </p>
+                  <a
+                    href="tel:+918988183513"
+                    className="mt-2 flex items-center gap-2 text-xs font-semibold text-slate-700 hover:text-blue-600"
+                  >
+                    <Phone size={12} className="text-blue-600" />
+                    +91 89881 83513
+                  </a>
+                  <a
+                    href="tel:+919459285513"
+                    className="mt-1.5 flex items-center gap-2 text-xs font-semibold text-slate-700 hover:text-blue-600"
+                  >
+                    <Phone size={12} className="text-blue-600" />
+                    +91 94592 85513
+                  </a>
+                  <a
+                    href="mailto:contact.zentroxtech@gmail.com"
+                    className="mt-1.5 flex items-center gap-2 break-all text-xs font-semibold text-slate-700 hover:text-blue-600"
+                  >
+                    <Mail size={12} className="flex-shrink-0 text-blue-600" />
+                    contact.zentroxtech@gmail.com
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
