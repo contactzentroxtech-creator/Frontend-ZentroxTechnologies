@@ -23,6 +23,7 @@ export default function Navbar() {
   const navLinks = [
     { label: "Home", href: "/" },
     { label: "Services", href: "/services" },
+    { label: "Calculator", href: "/calculator" },
     { label: "Portfolio", href: "/portfolio" },
     { label: "About", href: "/about" },
     { label: "Pricing", href: "/pricing" },
@@ -47,10 +48,10 @@ export default function Navbar() {
           <Image
             src="/Zentrox-Logo1.png"
             alt="Zentrox Technologies Logo"
-            width={44}
-            height={44}
+            width={40}
+            height={40}
             priority
-            className="h-10 w-auto object-contain md:h-11"
+            className="h-9 w-auto object-contain md:h-10"
           />
           <span className="hidden flex-col leading-none sm:flex">
             <span className="text-[14px] font-extrabold tracking-tight text-slate-900">
@@ -63,12 +64,12 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Nav */}
-        <div className="hidden items-center gap-1 lg:flex">
+        <div className="hidden items-center gap-0.5 lg:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className={`relative rounded-full px-3.5 py-2 text-[13px] font-medium transition-colors ${
+              className={`relative rounded-full px-3 py-2 text-[12.5px] font-medium transition-colors ${
                 isActive(link.href)
                   ? "text-blue-600"
                   : "text-slate-700 hover:text-blue-600"
