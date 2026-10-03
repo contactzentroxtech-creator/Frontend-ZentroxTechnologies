@@ -7,10 +7,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard,
-  Users,
   BookOpen,
-  Briefcase,
-  Award,
   FileText,
   BarChart3,
   Settings,
@@ -22,25 +19,27 @@ import {
   ChevronRight,
   Megaphone,
   Globe,
-  Languages,
   Calculator,
+  UserCheck,
 } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
 
+/* ═══════════════════════════════════════════════════════════════
+   ADMIN NAV ITEMS — Final List (11 items)
+   ❌ Removed: Users, Internship, Certificate Portal, Translations
+   ✅ Added: Referral Codes
+═══════════════════════════════════════════════════════════════ */
 const NAV_ITEMS = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/admin/leads", label: "Leads / CRM", icon: MessageSquare },
-  { href: "/admin/users", label: "Users", icon: Users },
   { href: "/admin/blog", label: "Blog Posts", icon: FileText },
   { href: "/admin/portfolio", label: "Portfolio", icon: Layers },
-  { href: "/admin/internship", label: "Internship", icon: Briefcase },
-  { href: "/admin/certificate-portal", label: "Certificate Portal", icon: Award },
   { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
-  { href: "/admin/cms", label: "CMS / Content", icon: Layers },
-  { href: "/admin/translations", label: "Translations", icon: Languages },
+  { href: "/admin/cms", label: "CMS / Content", icon: BookOpen },
   { href: "/admin/pricing", label: "Pricing Manager", icon: Calculator },
   { href: "/admin/popups", label: "Popups & Offers", icon: Megaphone },
   { href: "/admin/media", label: "Media Manager", icon: ImageIcon },
+  { href: "/admin/referrals", label: "Referral Codes", icon: UserCheck },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
@@ -88,10 +87,11 @@ export default function AdminLayout({
   const isActive = (item: (typeof NAV_ITEMS)[0]) =>
     item.exact ? pathname === item.href : pathname.startsWith(item.href);
 
+  /* ─── Auth Error Screen ─── */
   if (authError) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-slate-50 px-4 text-center">
-        <div className="w-12 h-12 rounded-full bg-red-50 border border-red-200 flex items-center justify-center text-red-600 text-xl">
+        <div className="w-12 h-12 rounded-full bg-red-50 border border-red-200 flex items-center justify-center text-red-600 text-xl font-bold">
           !
         </div>
         <h2 className="text-lg font-bold text-slate-900">Connection Error</h2>
@@ -106,6 +106,7 @@ export default function AdminLayout({
     );
   }
 
+  /* ─── Loading Screen ─── */
   if (!authChecked) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
@@ -117,8 +118,9 @@ export default function AdminLayout({
     );
   }
 
+  /* ─── Sidebar Content (Desktop + Mobile shared) ─── */
   const SidebarContent = () => (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full bg-white">
       {/* Logo */}
       <div className="flex items-center gap-3 px-5 py-5 border-b border-slate-200">
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white p-1 flex-shrink-0">
@@ -149,7 +151,7 @@ export default function AdminLayout({
         </AnimatePresence>
       </div>
 
-      {/* Nav */}
+      {/* Nav Items */}
       <nav className="flex-1 overflow-y-auto py-4 px-3">
         <div className="flex flex-col gap-0.5">
           {NAV_ITEMS.map((item) => {
@@ -238,7 +240,7 @@ export default function AdminLayout({
 
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden">
-      {/* Desktop Sidebar */}
+      {/* ─── Desktop Sidebar ─── */}
       <motion.aside
         animate={{ width: sidebarOpen ? 240 : 64 }}
         transition={{ duration: 0.25, ease: "easeInOut" }}
@@ -247,7 +249,7 @@ export default function AdminLayout({
         <SidebarContent />
       </motion.aside>
 
-      {/* Mobile Sidebar */}
+      {/* ─── Mobile Sidebar ─── */}
       <AnimatePresence>
         {mobileOpen && (
           <>
@@ -271,7 +273,7 @@ export default function AdminLayout({
         )}
       </AnimatePresence>
 
-      {/* Main */}
+      {/* ─── Main Content ─── */}
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         <header className="flex items-center justify-between px-4 md:px-6 h-14 border-b border-slate-200 bg-white flex-shrink-0">
           <div className="flex items-center gap-3">
