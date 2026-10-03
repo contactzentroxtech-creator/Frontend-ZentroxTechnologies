@@ -28,9 +28,6 @@ import {
 import api from "@/lib/api";
 import { generatePDF } from "@/lib/pdf-utils";
 
-/* ═══════════════════════════════════════════════════════════════
-   SERVICE CONFIGURATIONS — Each service has its own logic
-═══════════════════════════════════════════════════════════════ */
 const SERVICE_CONFIGS = {
   web: {
     label: "Website Development",
@@ -39,39 +36,24 @@ const SERVICE_CONFIGS = {
     basePrice: 7999,
     priceType: "onetime",
     fields: [
-      {
-        id: "pages",
-        label: "Number of Pages",
-        type: "select",
-        options: [
-          { value: "1-5", label: "1-5 pages", multiplier: 1.0 },
-          { value: "5-10", label: "5-10 pages", multiplier: 1.5 },
-          { value: "10-25", label: "10-25 pages", multiplier: 2.2 },
-          { value: "25-50", label: "25-50 pages", multiplier: 3.5 },
-          { value: "50+", label: "50+ pages", multiplier: 5.0 },
-        ],
-      },
-      {
-        id: "type",
-        label: "Website Type",
-        type: "select",
-        options: [
-          { value: "static", label: "Static / Business", multiplier: 1.0 },
-          { value: "dynamic", label: "Dynamic / CMS", multiplier: 1.4 },
-          { value: "ecommerce", label: "E-Commerce", multiplier: 2.5 },
-          { value: "webapp", label: "Custom Web App", multiplier: 4.0 },
-        ],
-      },
-      {
-        id: "design",
-        label: "Design Complexity",
-        type: "select",
-        options: [
-          { value: "basic", label: "Basic (Template)", multiplier: 1.0 },
-          { value: "custom", label: "Custom Design", multiplier: 1.4 },
-          { value: "premium", label: "Premium UI/UX", multiplier: 2.0 },
-        ],
-      },
+      { id: "pages", label: "Number of Pages", type: "select", options: [
+        { value: "1-5", label: "1-5 pages", multiplier: 1.0 },
+        { value: "5-10", label: "5-10 pages", multiplier: 1.5 },
+        { value: "10-25", label: "10-25 pages", multiplier: 2.2 },
+        { value: "25-50", label: "25-50 pages", multiplier: 3.5 },
+        { value: "50+", label: "50+ pages", multiplier: 5.0 },
+      ]},
+      { id: "type", label: "Website Type", type: "select", options: [
+        { value: "static", label: "Static / Business", multiplier: 1.0 },
+        { value: "dynamic", label: "Dynamic / CMS", multiplier: 1.4 },
+        { value: "ecommerce", label: "E-Commerce", multiplier: 2.5 },
+        { value: "webapp", label: "Custom Web App", multiplier: 4.0 },
+      ]},
+      { id: "design", label: "Design Complexity", type: "select", options: [
+        { value: "basic", label: "Basic (Template)", multiplier: 1.0 },
+        { value: "custom", label: "Custom Design", multiplier: 1.4 },
+        { value: "premium", label: "Premium UI/UX", multiplier: 2.0 },
+      ]},
     ],
     addOns: [
       { id: "payment", label: "Payment Gateway", price: 4999 },
@@ -82,7 +64,6 @@ const SERVICE_CONFIGS = {
       { id: "seo", label: "On-Page SEO Setup", price: 3999 },
     ],
   },
-
   mobile: {
     label: "Mobile App Development",
     icon: Smartphone,
@@ -90,39 +71,24 @@ const SERVICE_CONFIGS = {
     basePrice: 79999,
     priceType: "onetime",
     fields: [
-      {
-        id: "platform",
-        label: "Platform",
-        type: "select",
-        options: [
-          { value: "android", label: "Android Only", multiplier: 1.0 },
-          { value: "ios", label: "iOS Only", multiplier: 1.15 },
-          { value: "both", label: "Android + iOS (Native)", multiplier: 1.8 },
-          { value: "cross", label: "Cross-Platform (React Native)", multiplier: 1.3 },
-        ],
-      },
-      {
-        id: "screens",
-        label: "Number of Screens",
-        type: "select",
-        options: [
-          { value: "5-10", label: "5-10 screens", multiplier: 1.0 },
-          { value: "10-20", label: "10-20 screens", multiplier: 1.5 },
-          { value: "20-40", label: "20-40 screens", multiplier: 2.2 },
-          { value: "40+", label: "40+ screens", multiplier: 3.5 },
-        ],
-      },
-      {
-        id: "features",
-        label: "Feature Set",
-        type: "select",
-        options: [
-          { value: "basic", label: "Basic (CRUD)", multiplier: 1.0 },
-          { value: "standard", label: "Standard (Auth, APIs)", multiplier: 1.4 },
-          { value: "advanced", label: "Advanced (Payment, Chat)", multiplier: 2.0 },
-          { value: "complex", label: "Complex (Real-time)", multiplier: 3.0 },
-        ],
-      },
+      { id: "platform", label: "Platform", type: "select", options: [
+        { value: "android", label: "Android Only", multiplier: 1.0 },
+        { value: "ios", label: "iOS Only", multiplier: 1.15 },
+        { value: "both", label: "Android + iOS (Native)", multiplier: 1.8 },
+        { value: "cross", label: "Cross-Platform (React Native)", multiplier: 1.3 },
+      ]},
+      { id: "screens", label: "Number of Screens", type: "select", options: [
+        { value: "5-10", label: "5-10 screens", multiplier: 1.0 },
+        { value: "10-20", label: "10-20 screens", multiplier: 1.5 },
+        { value: "20-40", label: "20-40 screens", multiplier: 2.2 },
+        { value: "40+", label: "40+ screens", multiplier: 3.5 },
+      ]},
+      { id: "features", label: "Feature Set", type: "select", options: [
+        { value: "basic", label: "Basic (CRUD)", multiplier: 1.0 },
+        { value: "standard", label: "Standard (Auth, APIs)", multiplier: 1.4 },
+        { value: "advanced", label: "Advanced (Payment, Chat)", multiplier: 2.0 },
+        { value: "complex", label: "Complex (Real-time)", multiplier: 3.0 },
+      ]},
     ],
     addOns: [
       { id: "push", label: "Push Notifications", price: 5999 },
@@ -133,7 +99,6 @@ const SERVICE_CONFIGS = {
       { id: "store", label: "App Store Submission", price: 4999 },
     ],
   },
-
   software: {
     label: "Custom Software",
     icon: Code2,
@@ -141,39 +106,24 @@ const SERVICE_CONFIGS = {
     basePrice: 99999,
     priceType: "onetime",
     fields: [
-      {
-        id: "type",
-        label: "Software Type",
-        type: "select",
-        options: [
-          { value: "crm", label: "CRM System", multiplier: 1.0 },
-          { value: "erp", label: "ERP System", multiplier: 1.5 },
-          { value: "saas", label: "SaaS Platform", multiplier: 2.0 },
-          { value: "custom", label: "Custom Software", multiplier: 1.3 },
-        ],
-      },
-      {
-        id: "users",
-        label: "Expected Users",
-        type: "select",
-        options: [
-          { value: "1-50", label: "1-50 users", multiplier: 1.0 },
-          { value: "50-500", label: "50-500 users", multiplier: 1.4 },
-          { value: "500-5000", label: "500-5000 users", multiplier: 2.0 },
-          { value: "5000+", label: "5000+ users (Enterprise)", multiplier: 3.0 },
-        ],
-      },
-      {
-        id: "modules",
-        label: "Number of Modules",
-        type: "select",
-        options: [
-          { value: "3-5", label: "3-5 modules", multiplier: 1.0 },
-          { value: "5-10", label: "5-10 modules", multiplier: 1.5 },
-          { value: "10-20", label: "10-20 modules", multiplier: 2.2 },
-          { value: "20+", label: "20+ modules", multiplier: 3.0 },
-        ],
-      },
+      { id: "type", label: "Software Type", type: "select", options: [
+        { value: "crm", label: "CRM System", multiplier: 1.0 },
+        { value: "erp", label: "ERP System", multiplier: 1.5 },
+        { value: "saas", label: "SaaS Platform", multiplier: 2.0 },
+        { value: "custom", label: "Custom Software", multiplier: 1.3 },
+      ]},
+      { id: "users", label: "Expected Users", type: "select", options: [
+        { value: "1-50", label: "1-50 users", multiplier: 1.0 },
+        { value: "50-500", label: "50-500 users", multiplier: 1.4 },
+        { value: "500-5000", label: "500-5000 users", multiplier: 2.0 },
+        { value: "5000+", label: "5000+ users", multiplier: 3.0 },
+      ]},
+      { id: "modules", label: "Number of Modules", type: "select", options: [
+        { value: "3-5", label: "3-5 modules", multiplier: 1.0 },
+        { value: "5-10", label: "5-10 modules", multiplier: 1.5 },
+        { value: "10-20", label: "10-20 modules", multiplier: 2.2 },
+        { value: "20+", label: "20+ modules", multiplier: 3.0 },
+      ]},
     ],
     addOns: [
       { id: "reports", label: "Advanced Reports", price: 14999 },
@@ -184,7 +134,40 @@ const SERVICE_CONFIGS = {
       { id: "backup", label: "Auto Backup System", price: 7999 },
     ],
   },
-
+  design: {
+    label: "UI/UX Design",
+    icon: Palette,
+    color: "#ea580c",
+    basePrice: 9999,
+    priceType: "onetime",
+    fields: [
+      { id: "scope", label: "Design Scope", type: "select", options: [
+        { value: "wireframe", label: "Wireframes Only", multiplier: 1.0 },
+        { value: "ui", label: "UI Design", multiplier: 1.5 },
+        { value: "ux", label: "UX Research + Design", multiplier: 2.0 },
+        { value: "full", label: "Full UI/UX + Design System", multiplier: 3.0 },
+      ]},
+      { id: "pages", label: "Number of Screens/Pages", type: "select", options: [
+        { value: "1-5", label: "1-5 screens", multiplier: 1.0 },
+        { value: "5-15", label: "5-15 screens", multiplier: 1.8 },
+        { value: "15-30", label: "15-30 screens", multiplier: 2.8 },
+        { value: "30+", label: "30+ screens", multiplier: 4.0 },
+      ]},
+      { id: "revisions", label: "Revision Rounds", type: "select", options: [
+        { value: "2", label: "2 revisions", multiplier: 1.0 },
+        { value: "5", label: "5 revisions", multiplier: 1.3 },
+        { value: "unlimited", label: "Unlimited revisions", multiplier: 1.7 },
+      ]},
+    ],
+    addOns: [
+      { id: "prototype", label: "Interactive Prototype", price: 6999 },
+      { id: "design-system", label: "Design System", price: 9999 },
+      { id: "branding", label: "Brand Identity", price: 12999 },
+      { id: "icons", label: "Custom Icon Set", price: 4999 },
+      { id: "illustrations", label: "Custom Illustrations", price: 7999 },
+      { id: "handoff", label: "Developer Handoff", price: 2999 },
+    ],
+  },
   seo: {
     label: "SEO Services",
     icon: Search,
@@ -192,39 +175,24 @@ const SERVICE_CONFIGS = {
     basePrice: 7999,
     priceType: "monthly",
     fields: [
-      {
-        id: "keywords",
-        label: "Target Keywords",
-        type: "select",
-        options: [
-          { value: "10", label: "Up to 10 keywords", multiplier: 1.0 },
-          { value: "25", label: "10-25 keywords", multiplier: 1.5 },
-          { value: "50", label: "25-50 keywords", multiplier: 2.2 },
-          { value: "100+", label: "50+ keywords", multiplier: 3.5 },
-        ],
-      },
-      {
-        id: "competition",
-        label: "Keyword Competition",
-        type: "select",
-        options: [
-          { value: "low", label: "Low (Local)", multiplier: 1.0 },
-          { value: "medium", label: "Medium (City-Level)", multiplier: 1.4 },
-          { value: "high", label: "High (National)", multiplier: 2.0 },
-          { value: "very-high", label: "Very High (Competitive)", multiplier: 3.0 },
-        ],
-      },
-      {
-        id: "scope",
-        label: "SEO Scope",
-        type: "select",
-        options: [
-          { value: "onpage", label: "On-Page SEO Only", multiplier: 1.0 },
-          { value: "technical", label: "On-Page + Technical", multiplier: 1.5 },
-          { value: "full", label: "Full SEO (On + Off Page)", multiplier: 2.0 },
-          { value: "enterprise", label: "Enterprise SEO + Content", multiplier: 3.0 },
-        ],
-      },
+      { id: "keywords", label: "Target Keywords", type: "select", options: [
+        { value: "10", label: "Up to 10 keywords", multiplier: 1.0 },
+        { value: "25", label: "10-25 keywords", multiplier: 1.5 },
+        { value: "50", label: "25-50 keywords", multiplier: 2.2 },
+        { value: "100+", label: "50+ keywords", multiplier: 3.5 },
+      ]},
+      { id: "competition", label: "Keyword Competition", type: "select", options: [
+        { value: "low", label: "Low (Local)", multiplier: 1.0 },
+        { value: "medium", label: "Medium (City-Level)", multiplier: 1.4 },
+        { value: "high", label: "High (National)", multiplier: 2.0 },
+        { value: "very-high", label: "Very High (Competitive)", multiplier: 3.0 },
+      ]},
+      { id: "scope", label: "SEO Scope", type: "select", options: [
+        { value: "onpage", label: "On-Page SEO Only", multiplier: 1.0 },
+        { value: "technical", label: "On-Page + Technical", multiplier: 1.5 },
+        { value: "full", label: "Full SEO (On + Off Page)", multiplier: 2.0 },
+        { value: "enterprise", label: "Enterprise SEO + Content", multiplier: 3.0 },
+      ]},
     ],
     addOns: [
       { id: "content", label: "Content Writing (4 blogs)", price: 7999 },
@@ -235,47 +203,31 @@ const SERVICE_CONFIGS = {
       { id: "reporting", label: "Custom Reporting", price: 3999 },
     ],
   },
-
-  marketing: {
+  digital: {
     label: "Digital Marketing",
     icon: Megaphone,
     color: "#dc2626",
     basePrice: 9999,
     priceType: "monthly",
     fields: [
-      {
-        id: "channels",
-        label: "Marketing Channels",
-        type: "select",
-        options: [
-          { value: "1", label: "1 Channel", multiplier: 1.0 },
-          { value: "2", label: "2 Channels", multiplier: 1.6 },
-          { value: "3", label: "3 Channels", multiplier: 2.2 },
-          { value: "4+", label: "4+ Channels", multiplier: 3.0 },
-        ],
-      },
-      {
-        id: "posts",
-        label: "Content Volume (Posts/Month)",
-        type: "select",
-        options: [
-          { value: "12", label: "12 posts", multiplier: 1.0 },
-          { value: "20", label: "20 posts", multiplier: 1.4 },
-          { value: "30", label: "30 posts", multiplier: 1.8 },
-          { value: "60+", label: "60+ posts", multiplier: 2.5 },
-        ],
-      },
-      {
-        id: "platforms",
-        label: "Social Platforms",
-        type: "select",
-        options: [
-          { value: "1", label: "1 Platform", multiplier: 1.0 },
-          { value: "2-3", label: "2-3 Platforms", multiplier: 1.5 },
-          { value: "4-5", label: "4-5 Platforms", multiplier: 2.0 },
-          { value: "6+", label: "6+ Platforms", multiplier: 2.5 },
-        ],
-      },
+      { id: "channels", label: "Marketing Channels", type: "select", options: [
+        { value: "1", label: "1 Channel", multiplier: 1.0 },
+        { value: "2", label: "2 Channels", multiplier: 1.6 },
+        { value: "3", label: "3 Channels", multiplier: 2.2 },
+        { value: "4+", label: "4+ Channels", multiplier: 3.0 },
+      ]},
+      { id: "posts", label: "Content Volume (Posts/Month)", type: "select", options: [
+        { value: "12", label: "12 posts", multiplier: 1.0 },
+        { value: "20", label: "20 posts", multiplier: 1.4 },
+        { value: "30", label: "30 posts", multiplier: 1.8 },
+        { value: "60+", label: "60+ posts", multiplier: 2.5 },
+      ]},
+      { id: "platforms", label: "Social Platforms", type: "select", options: [
+        { value: "1", label: "1 Platform", multiplier: 1.0 },
+        { value: "2-3", label: "2-3 Platforms", multiplier: 1.5 },
+        { value: "4-5", label: "4-5 Platforms", multiplier: 2.0 },
+        { value: "6+", label: "6+ Platforms", multiplier: 2.5 },
+      ]},
     ],
     addOns: [
       { id: "design", label: "Graphic Design", price: 4999 },
@@ -286,48 +238,32 @@ const SERVICE_CONFIGS = {
       { id: "analytics", label: "Advanced Analytics", price: 4999 },
     ],
   },
-
-  google_ads: {
+  ads: {
     label: "Google Ads Management",
     icon: TrendingUp,
     color: "#ea580c",
     basePrice: 9999,
     priceType: "monthly",
     fields: [
-      {
-        id: "adSpend",
-        label: "Monthly Ad Spend Budget",
-        type: "select",
-        options: [
-          { value: "25k", label: "₹25,000/month", multiplier: 1.0, adSpend: 25000 },
-          { value: "50k", label: "₹50,000/month", multiplier: 1.3, adSpend: 50000 },
-          { value: "1l", label: "₹1,00,000/month", multiplier: 1.7, adSpend: 100000 },
-          { value: "3l", label: "₹3,00,000/month", multiplier: 2.5, adSpend: 300000 },
-          { value: "5l+", label: "₹5,00,000+/month", multiplier: 3.5, adSpend: 500000 },
-        ],
-      },
-      {
-        id: "campaigns",
-        label: "Number of Campaigns",
-        type: "select",
-        options: [
-          { value: "1", label: "1 Campaign", multiplier: 1.0 },
-          { value: "2-3", label: "2-3 Campaigns", multiplier: 1.4 },
-          { value: "4-6", label: "4-6 Campaigns", multiplier: 1.8 },
-          { value: "6+", label: "6+ Campaigns", multiplier: 2.5 },
-        ],
-      },
-      {
-        id: "types",
-        label: "Ad Types",
-        type: "select",
-        options: [
-          { value: "search", label: "Search Ads Only", multiplier: 1.0 },
-          { value: "search-display", label: "Search + Display", multiplier: 1.4 },
-          { value: "shopping", label: "Shopping + Search", multiplier: 1.8 },
-          { value: "full", label: "Full (Search + Display + Shopping + Video)", multiplier: 2.5 },
-        ],
-      },
+      { id: "adSpend", label: "Monthly Ad Spend Budget", type: "select", options: [
+        { value: "25k", label: "₹25,000/month", multiplier: 1.0 },
+        { value: "50k", label: "₹50,000/month", multiplier: 1.3 },
+        { value: "1l", label: "₹1,00,000/month", multiplier: 1.7 },
+        { value: "3l", label: "₹3,00,000/month", multiplier: 2.5 },
+        { value: "5l+", label: "₹5,00,000+/month", multiplier: 3.5 },
+      ]},
+      { id: "campaigns", label: "Number of Campaigns", type: "select", options: [
+        { value: "1", label: "1 Campaign", multiplier: 1.0 },
+        { value: "2-3", label: "2-3 Campaigns", multiplier: 1.4 },
+        { value: "4-6", label: "4-6 Campaigns", multiplier: 1.8 },
+        { value: "6+", label: "6+ Campaigns", multiplier: 2.5 },
+      ]},
+      { id: "types", label: "Ad Types", type: "select", options: [
+        { value: "search", label: "Search Ads Only", multiplier: 1.0 },
+        { value: "search-display", label: "Search + Display", multiplier: 1.4 },
+        { value: "shopping", label: "Shopping + Search", multiplier: 1.8 },
+        { value: "full", label: "Full (Search + Display + Shopping + Video)", multiplier: 2.5 },
+      ]},
     ],
     addOns: [
       { id: "landing", label: "Landing Page Design", price: 9999 },
@@ -338,48 +274,32 @@ const SERVICE_CONFIGS = {
       { id: "reporting", label: "Custom Reporting", price: 3999 },
     ],
   },
-
   meta_ads: {
-    label: "Meta Ads (Facebook + Instagram)",
+    label: "Meta Ads (FB + Insta)",
     icon: TrendingUp,
     color: "#be185d",
     basePrice: 9999,
     priceType: "monthly",
     fields: [
-      {
-        id: "adSpend",
-        label: "Monthly Ad Spend Budget",
-        type: "select",
-        options: [
-          { value: "25k", label: "₹25,000/month", multiplier: 1.0, adSpend: 25000 },
-          { value: "50k", label: "₹50,000/month", multiplier: 1.3, adSpend: 50000 },
-          { value: "1l", label: "₹1,00,000/month", multiplier: 1.7, adSpend: 100000 },
-          { value: "3l", label: "₹3,00,000/month", multiplier: 2.5, adSpend: 300000 },
-          { value: "5l+", label: "₹5,00,000+/month", multiplier: 3.5, adSpend: 500000 },
-        ],
-      },
-      {
-        id: "placements",
-        label: "Ad Placements",
-        type: "select",
-        options: [
-          { value: "fb-feed", label: "Facebook Feed Only", multiplier: 1.0 },
-          { value: "fb-ig", label: "Facebook + Instagram Feed", multiplier: 1.3 },
-          { value: "full", label: "Feed + Stories + Reels", multiplier: 1.7 },
-          { value: "all", label: "All Placements + Audience Network", multiplier: 2.2 },
-        ],
-      },
-      {
-        id: "creatives",
-        label: "Creative Requirements",
-        type: "select",
-        options: [
-          { value: "static", label: "Static Images Only", multiplier: 1.0 },
-          { value: "carousel", label: "Static + Carousel", multiplier: 1.3 },
-          { value: "video", label: "Static + Video", multiplier: 1.7 },
-          { value: "full", label: "Full (Static + Video + Reels)", multiplier: 2.2 },
-        ],
-      },
+      { id: "adSpend", label: "Monthly Ad Spend Budget", type: "select", options: [
+        { value: "25k", label: "₹25,000/month", multiplier: 1.0 },
+        { value: "50k", label: "₹50,000/month", multiplier: 1.3 },
+        { value: "1l", label: "₹1,00,000/month", multiplier: 1.7 },
+        { value: "3l", label: "₹3,00,000/month", multiplier: 2.5 },
+        { value: "5l+", label: "₹5,00,000+/month", multiplier: 3.5 },
+      ]},
+      { id: "placements", label: "Ad Placements", type: "select", options: [
+        { value: "fb-feed", label: "Facebook Feed Only", multiplier: 1.0 },
+        { value: "fb-ig", label: "Facebook + Instagram Feed", multiplier: 1.3 },
+        { value: "full", label: "Feed + Stories + Reels", multiplier: 1.7 },
+        { value: "all", label: "All Placements + Audience Network", multiplier: 2.2 },
+      ]},
+      { id: "creatives", label: "Creative Requirements", type: "select", options: [
+        { value: "static", label: "Static Images Only", multiplier: 1.0 },
+        { value: "carousel", label: "Static + Carousel", multiplier: 1.3 },
+        { value: "video", label: "Static + Video", multiplier: 1.7 },
+        { value: "full", label: "Full (Static + Video + Reels)", multiplier: 2.2 },
+      ]},
     ],
     addOns: [
       { id: "landing", label: "Landing Page Design", price: 9999 },
@@ -390,7 +310,6 @@ const SERVICE_CONFIGS = {
       { id: "reporting", label: "Custom Reporting", price: 3999 },
     ],
   },
-
   ai: {
     label: "AI Integration",
     icon: Sparkles,
@@ -398,39 +317,24 @@ const SERVICE_CONFIGS = {
     basePrice: 29999,
     priceType: "onetime",
     fields: [
-      {
-        id: "type",
-        label: "AI Solution Type",
-        type: "select",
-        options: [
-          { value: "chatbot", label: "AI Chatbot", multiplier: 1.0 },
-          { value: "automation", label: "Workflow Automation", multiplier: 1.5 },
-          { value: "analytics", label: "AI Analytics", multiplier: 1.8 },
-          { value: "custom", label: "Custom AI Model", multiplier: 3.0 },
-        ],
-      },
-      {
-        id: "volume",
-        label: "Expected Volume (Requests/Month)",
-        type: "select",
-        options: [
-          { value: "1k", label: "Up to 1,000", multiplier: 1.0 },
-          { value: "10k", label: "1,000 - 10,000", multiplier: 1.4 },
-          { value: "100k", label: "10,000 - 100,000", multiplier: 2.0 },
-          { value: "1m+", label: "100,000+", multiplier: 3.0 },
-        ],
-      },
-      {
-        id: "integration",
-        label: "Integration Complexity",
-        type: "select",
-        options: [
-          { value: "standalone", label: "Standalone Tool", multiplier: 1.0 },
-          { value: "api", label: "API Integration", multiplier: 1.4 },
-          { value: "existing", label: "Into Existing System", multiplier: 1.8 },
-          { value: "enterprise", label: "Enterprise Integration", multiplier: 2.5 },
-        ],
-      },
+      { id: "type", label: "AI Solution Type", type: "select", options: [
+        { value: "chatbot", label: "AI Chatbot", multiplier: 1.0 },
+        { value: "automation", label: "Workflow Automation", multiplier: 1.5 },
+        { value: "analytics", label: "AI Analytics", multiplier: 1.8 },
+        { value: "custom", label: "Custom AI Model", multiplier: 3.0 },
+      ]},
+      { id: "volume", label: "Expected Volume (Requests/Month)", type: "select", options: [
+        { value: "1k", label: "Up to 1,000", multiplier: 1.0 },
+        { value: "10k", label: "1,000 - 10,000", multiplier: 1.4 },
+        { value: "100k", label: "10,000 - 100,000", multiplier: 2.0 },
+        { value: "1m+", label: "100,000+", multiplier: 3.0 },
+      ]},
+      { id: "integration", label: "Integration Complexity", type: "select", options: [
+        { value: "standalone", label: "Standalone Tool", multiplier: 1.0 },
+        { value: "api", label: "API Integration", multiplier: 1.4 },
+        { value: "existing", label: "Into Existing System", multiplier: 1.8 },
+        { value: "enterprise", label: "Enterprise Integration", multiplier: 2.5 },
+      ]},
     ],
     addOns: [
       { id: "training", label: "AI Model Training", price: 19999 },
@@ -447,14 +351,11 @@ function formatPrice(n: number) {
   return "₹" + Math.round(n).toLocaleString("en-IN");
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   MAIN COMPONENT
-═══════════════════════════════════════════════════════════════ */
 export default function PricingWizard() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.05 });
 
-  const [serviceId, setServiceId] = useState<keyof typeof SERVICE_CONFIGS>("web");
+  const [serviceId, setServiceId] = useState<string>("web");
   const [fieldValues, setFieldValues] = useState<Record<string, string>>({});
   const [addOns, setAddOns] = useState<string[]>([]);
   const [timeline, setTimeline] = useState("standard");
@@ -476,9 +377,10 @@ export default function PricingWizard() {
   const [error, setError] = useState("");
   const [downloadingPDF, setDownloadingPDF] = useState(false);
 
-  const config = SERVICE_CONFIGS[serviceId];
+  const config = SERVICE_CONFIGS[serviceId as keyof typeof SERVICE_CONFIGS];
 
   useEffect(() => {
+    if (!config) return;
     const initial: Record<string, string> = {};
     config.fields.forEach((f) => {
       initial[f.id] = f.options[0].value;
@@ -487,8 +389,9 @@ export default function PricingWizard() {
     setAddOns([]);
   }, [serviceId, config]);
 
-  /* ─── CALCULATE ESTIMATE ──────────────────────── */
   const calculateEstimate = () => {
+    if (!config) return { base: 0, addOns: 0, subtotal: 0, discount: 0, adSpend: 0, final: 0, low: 0, high: 0 };
+
     let basePrice = config.basePrice;
     let adSpend = 0;
 
@@ -497,9 +400,6 @@ export default function PricingWizard() {
       const option = field.options.find((o) => o.value === val);
       if (option) {
         basePrice *= option.multiplier;
-        if ("adSpend" in option && option.adSpend) {
-          adSpend = option.adSpend;
-        }
       }
     });
 
@@ -514,8 +414,8 @@ export default function PricingWizard() {
       timeline === "urgent" ? 1.6 : 1.0;
 
     let subtotal = (basePrice + addOnsTotal) * timelineMult;
-
     let discount = 0;
+
     if (referralApplied && referralDiscount > 0) {
       discount = subtotal * (referralDiscount / 100);
       subtotal -= discount;
@@ -523,24 +423,20 @@ export default function PricingWizard() {
       subtotal = Math.max(subtotal, floor);
     }
 
-    const totalWithAdSpend = subtotal + adSpend;
-
     return {
-      base: config.basePrice,
+      base: Math.round(config.basePrice),
       addOns: addOnsTotal,
-      subtotal: (basePrice + addOnsTotal) * timelineMult,
-      discount,
-      adSpend,
-      final: subtotal,
-      totalWithAdSpend,
-      low: Math.round(totalWithAdSpend * 0.9),
-      high: Math.round(totalWithAdSpend * 1.15),
+      subtotal: Math.round((basePrice + addOnsTotal) * timelineMult),
+      discount: Math.round(discount),
+      adSpend: 0,
+      final: Math.round(subtotal),
+      low: Math.round(subtotal * 0.9),
+      high: Math.round(subtotal * 1.15),
     };
   };
 
   const estimate = calculateEstimate();
 
-  /* ─── VERIFY REFERRAL ─────────────────────────── */
   const verifyReferral = async () => {
     if (!referralCode.trim()) {
       setReferralError("Please enter a referral code");
@@ -579,7 +475,6 @@ export default function PricingWizard() {
     );
   };
 
-  /* ─── SUBMIT ──────────────────────────────────── */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -622,7 +517,7 @@ export default function PricingWizard() {
         email: email.trim(),
         phone: phone.trim(),
         service: config.label,
-        message: `📋 PROJECT ESTIMATE REQUEST\n\nService: ${config.label}\n\n--- Requirements ---\n${fieldDetails}\n\n--- Add-Ons ---\n${selectedAddOns || "None"}\n\n--- Timeline ---\n${timeline}\n\n--- Price Breakdown ---\nBase: ${formatPrice(estimate.base)}\nAdd-Ons: ${formatPrice(estimate.addOns)}\n${estimate.discount > 0 ? `Discount: -${formatPrice(estimate.discount)}\n` : ""}${estimate.adSpend > 0 ? `Ad Spend (separate): ${formatPrice(estimate.adSpend)}\n` : ""}Final Estimate: ${formatPrice(estimate.final)}\n\nRange: ${formatPrice(estimate.low)} - ${formatPrice(estimate.high)}`,
+        message: `📋 PROJECT ESTIMATE REQUEST\n\nService: ${config.label}\n\n--- Requirements ---\n${fieldDetails}\n\n--- Add-Ons ---\n${selectedAddOns || "None"}\n\n--- Timeline ---\n${timeline}\n\n--- Price Breakdown ---\nBase: ${formatPrice(estimate.base)}\nAdd-Ons: ${formatPrice(estimate.addOns)}\n${estimate.discount > 0 ? `Discount: -${formatPrice(estimate.discount)}\n` : ""}Final: ${formatPrice(estimate.final)}\nRange: ${formatPrice(estimate.low)} - ${formatPrice(estimate.high)}`,
         source: "budget-calculator",
         priority: "high",
         referralCode: referralApplied ? referralCode.toUpperCase() : "",
@@ -643,7 +538,7 @@ export default function PricingWizard() {
       if (data?.success !== false) {
         setSubmitted(true);
       } else {
-        setError(data?.message || "Failed to submit. Please try again.");
+        setError(data?.message || "Failed to submit.");
       }
     } catch (err: any) {
       setError(err?.response?.data?.message || "Failed to submit.");
@@ -652,7 +547,6 @@ export default function PricingWizard() {
     }
   };
 
-  /* ─── DOWNLOAD PDF ────────────────────────────── */
   const handleDownloadPDF = async () => {
     setDownloadingPDF(true);
     try {
@@ -665,10 +559,7 @@ export default function PricingWizard() {
         fieldDetails: Object.entries(fieldValues).map(([key, val]) => {
           const field = config.fields.find((f) => f.id === key);
           const option = field?.options.find((o) => o.value === val);
-          return {
-            label: field?.label || key,
-            value: option?.label || val,
-          };
+          return { label: field?.label || key, value: option?.label || val };
         }),
         addOns: addOns.map((id) => {
           const addon = config.addOns.find((a) => a.id === id);
@@ -681,17 +572,18 @@ export default function PricingWizard() {
         referralDiscount,
       });
     } catch (err) {
-      console.error("PDF generation failed:", err);
+      console.error("PDF failed:", err);
     } finally {
       setDownloadingPDF(false);
     }
   };
 
+  if (!config) return null;
+
   return (
     <section id="budget-calculator" className="relative overflow-hidden bg-white px-4 py-20 sm:py-24 md:px-6 md:py-28">
       <div ref={ref} className="relative mx-auto max-w-7xl">
         {submitted ? (
-          /* SUCCESS STATE */
           <div className="mx-auto max-w-2xl rounded-3xl border border-emerald-200 bg-gradient-to-br from-emerald-50 via-white to-blue-50 p-8 text-center shadow-xl sm:p-12">
             <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-lg">
               <CheckCircle2 size={36} />
@@ -724,18 +616,12 @@ export default function PricingWizard() {
               <button
                 onClick={handleDownloadPDF}
                 disabled={downloadingPDF}
-                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all hover:-translate-y-1 disabled:opacity-60"
+                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-7 py-3.5 text-sm font-semibold text-white shadow-lg disabled:opacity-60"
               >
                 {downloadingPDF ? (
-                  <>
-                    <Loader2 size={16} className="animate-spin" />
-                    Generating PDF...
-                  </>
+                  <><Loader2 size={16} className="animate-spin" /> Generating PDF...</>
                 ) : (
-                  <>
-                    <Download size={16} />
-                    Download PDF Quote
-                  </>
+                  <><Download size={16} /> Download PDF Quote</>
                 )}
               </button>
               <button
@@ -747,17 +633,15 @@ export default function PricingWizard() {
                   setAgreed(false);
                   removeReferral();
                 }}
-                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-7 py-3.5 text-sm font-semibold text-slate-700 transition-all hover:border-blue-300 hover:text-blue-600"
+                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-7 py-3.5 text-sm font-semibold text-slate-700"
               >
                 New Estimate
               </button>
             </div>
           </div>
         ) : (
-          /* CALCULATOR FORM */
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-            {/* LEFT FORM */}
-            <div className="rounded-3xl border border-slate-200/70 bg-white p-6 shadow-[0_20px_60px_rgba(15,23,42,0.08)] sm:p-8 lg:col-span-8 lg:p-10">
+            <div className="rounded-3xl border border-slate-200/70 bg-white p-6 shadow-lg sm:p-8 lg:col-span-8 lg:p-10">
               <div className="mb-6 flex items-center gap-3">
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
                   <Calculator size={20} />
@@ -773,12 +657,11 @@ export default function PricingWizard() {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Service Selection */}
                 <div>
                   <label className="mb-3 block text-xs font-bold uppercase tracking-wider text-slate-700">
-                    Select Service
+                    Step 1 — Select Service
                   </label>
-                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-5">
                     {Object.entries(SERVICE_CONFIGS).map(([id, cfg]) => {
                       const Icon = cfg.icon;
                       const active = serviceId === id;
@@ -786,7 +669,7 @@ export default function PricingWizard() {
                         <button
                           key={id}
                           type="button"
-                          onClick={() => setServiceId(id as keyof typeof SERVICE_CONFIGS)}
+                          onClick={() => setServiceId(id)}
                           className={`flex flex-col items-center gap-2 rounded-xl border p-3 text-center transition-all ${
                             active
                               ? "border-blue-500 bg-blue-50 shadow-sm"
@@ -802,8 +685,8 @@ export default function PricingWizard() {
                           >
                             <Icon size={16} />
                           </div>
-                          <p className="text-[11px] font-semibold leading-tight text-slate-900">
-                            {cfg.label.split(" ").slice(0, 2).join(" ")}
+                          <p className="text-[10px] font-semibold leading-tight text-slate-900">
+                            {cfg.label}
                           </p>
                         </button>
                       );
@@ -811,49 +694,37 @@ export default function PricingWizard() {
                   </div>
                 </div>
 
-                {/* Dynamic Fields */}
-                {config.fields.map((field) => (
-                  <div key={field.id}>
-                    <label className="mb-2 block text-xs font-bold text-slate-700">
-                      {field.label}
-                    </label>
-                    <select
-                      value={fieldValues[field.id] || ""}
-                      onChange={(e) =>
-                        setFieldValues({ ...fieldValues, [field.id]: e.target.value })
-                      }
-                      className="input-field"
-                    >
-                      {field.options.map((opt) => (
-                        <option key={opt.value} value={opt.value}>
-                          {opt.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                ))}
-
-                {/* Timeline */}
-                <div>
-                  <label className="mb-2 block text-xs font-bold text-slate-700">
-                    Timeline
-                  </label>
-                  <select
-                    value={timeline}
-                    onChange={(e) => setTimeline(e.target.value)}
-                    className="input-field"
-                  >
-                    <option value="flexible">Flexible (No rush)</option>
-                    <option value="standard">Standard</option>
-                    <option value="fast">Fast-Track</option>
-                    <option value="urgent">Urgent (ASAP)</option>
-                  </select>
-                </div>
-
-                {/* Add-Ons */}
                 <div>
                   <label className="mb-3 block text-xs font-bold uppercase tracking-wider text-slate-700">
-                    Add-Ons (Optional)
+                    Step 2 — Requirements
+                  </label>
+                  <div className="space-y-4">
+                    {config.fields.map((field) => (
+                      <div key={field.id}>
+                        <label className="mb-2 block text-xs font-bold text-slate-700">
+                          {field.label}
+                        </label>
+                        <select
+                          value={fieldValues[field.id] || ""}
+                          onChange={(e) =>
+                            setFieldValues({ ...fieldValues, [field.id]: e.target.value })
+                          }
+                          className="input-field"
+                        >
+                          {field.options.map((opt) => (
+                            <option key={opt.value} value={opt.value}>
+                              {opt.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="mb-3 block text-xs font-bold uppercase tracking-wider text-slate-700">
+                    Step 3 — Add-Ons (Optional)
                   </label>
                   <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                     {config.addOns.map((addon) => {
@@ -870,11 +741,7 @@ export default function PricingWizard() {
                           }`}
                         >
                           <div className="flex items-center gap-2">
-                            <div
-                              className={`flex h-4 w-4 items-center justify-center rounded border-2 ${
-                                active ? "border-blue-600 bg-blue-600" : "border-slate-300"
-                              }`}
-                            >
+                            <div className={`flex h-4 w-4 items-center justify-center rounded border-2 ${active ? "border-blue-600 bg-blue-600" : "border-slate-300"}`}>
                               {active && <CheckCircle2 size={10} className="text-white" />}
                             </div>
                             <span className="text-xs font-medium text-slate-900">
@@ -890,26 +757,35 @@ export default function PricingWizard() {
                   </div>
                 </div>
 
-                {/* Referral */}
+                <div>
+                  <label className="mb-2 block text-xs font-bold text-slate-700">
+                    Timeline
+                  </label>
+                  <select
+                    value={timeline}
+                    onChange={(e) => setTimeline(e.target.value)}
+                    className="input-field"
+                  >
+                    <option value="flexible">Flexible (No rush)</option>
+                    <option value="standard">Standard (1-2 months)</option>
+                    <option value="fast">Fast-Track (2-4 weeks)</option>
+                    <option value="urgent">Urgent (ASAP)</option>
+                  </select>
+                </div>
+
                 <div>
                   <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-700">
-                    Referral Code (Optional)
+                    Step 4 — Referral Code (Optional)
                   </label>
                   {referralApplied ? (
                     <div className="flex items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50 p-3">
                       <div className="flex items-center gap-2">
                         <CheckCircle2 size={18} className="text-emerald-600" />
-                        <div>
-                          <p className="text-sm font-bold text-emerald-700">
-                            {referralCode.toUpperCase()} — {referralDiscount}% OFF
-                          </p>
-                        </div>
+                        <p className="text-sm font-bold text-emerald-700">
+                          {referralCode.toUpperCase()} — {referralDiscount}% OFF
+                        </p>
                       </div>
-                      <button
-                        type="button"
-                        onClick={removeReferral}
-                        className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-emerald-600"
-                      >
+                      <button type="button" onClick={removeReferral} className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-emerald-600">
                         <X size={14} />
                       </button>
                     </div>
@@ -939,58 +815,24 @@ export default function PricingWizard() {
                   )}
                 </div>
 
-                {/* Contact Info */}
                 <div>
                   <label className="mb-3 block text-xs font-bold uppercase tracking-wider text-slate-700">
-                    Your Details
+                    Step 5 — Your Details
                   </label>
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <input
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="Your full name *"
-                      className="input-field"
-                      required
-                    />
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Email address *"
-                      className="input-field"
-                      required
-                    />
+                    <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Your full name *" className="input-field" required />
+                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email address *" className="input-field" required />
                   </div>
                   <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <input
-                      type="tel"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="Phone / WhatsApp *"
-                      className="input-field"
-                      required
-                    />
-                    <input
-                      type="text"
-                      value={projectDesc}
-                      onChange={(e) => setProjectDesc(e.target.value)}
-                      placeholder="Project description (optional)"
-                      className="input-field"
-                    />
+                    <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Phone / WhatsApp *" className="input-field" required />
+                    <input type="text" value={projectDesc} onChange={(e) => setProjectDesc(e.target.value)} placeholder="Project description (optional)" className="input-field" />
                   </div>
                 </div>
 
-                {/* Agreement */}
                 <label className="flex cursor-pointer items-start gap-2.5">
-                  <input
-                    type="checkbox"
-                    checked={agreed}
-                    onChange={(e) => setAgreed(e.target.checked)}
-                    className="mt-0.5 h-4 w-4 rounded border-slate-300 text-blue-600"
-                  />
+                  <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} className="mt-0.5 h-4 w-4 rounded border-slate-300 text-blue-600" />
                   <span className="text-xs text-slate-600">
-                    I agree to be contacted by Zentrox Technologies regarding this estimate.
+                    I agree to be contacted by Zentrox Technologies.
                   </span>
                 </label>
 
@@ -1004,20 +846,17 @@ export default function PricingWizard() {
                 <button
                   type="submit"
                   disabled={!agreed || submitting}
-                  className={`flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all ${
-                    !agreed || submitting
-                      ? "cursor-not-allowed opacity-60"
-                      : "hover:-translate-y-1 hover:shadow-xl"
+                  className={`flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-7 py-3.5 text-sm font-semibold text-white shadow-lg ${
+                    !agreed || submitting ? "cursor-not-allowed opacity-60" : "hover:-translate-y-1 hover:shadow-xl"
                   }`}
                 >
-                  {submitting ? "Sending to Team..." : "Get My Estimate"}
+                  {submitting ? "Sending..." : "Get My Estimate"}
                   <ArrowRight size={16} />
                 </button>
               </form>
             </div>
 
-            {/* RIGHT ESTIMATE PANEL */}
-            <div className="rounded-3xl border border-slate-200/70 bg-gradient-to-br from-blue-50/40 via-white to-purple-50/40 p-6 shadow-[0_20px_60px_rgba(15,23,42,0.08)] sm:p-8 lg:col-span-4">
+            <div className="rounded-3xl border border-slate-200/70 bg-gradient-to-br from-blue-50/40 via-white to-purple-50/40 p-6 shadow-lg sm:p-8 lg:col-span-4">
               <div className="lg:sticky lg:top-24">
                 <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-white px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-blue-700 shadow-sm">
                   <Calculator size={11} />
@@ -1040,11 +879,6 @@ export default function PricingWizard() {
                   <p className="mt-2 text-xs text-slate-500">
                     (May vary based on final requirements)
                   </p>
-                  {estimate.adSpend > 0 && (
-                    <div className="mt-3 rounded-lg bg-amber-50 p-2 text-center text-xs font-bold text-amber-700">
-                      ⚡ Ad spend {formatPrice(estimate.adSpend)} separately
-                    </div>
-                  )}
                   {referralApplied && (
                     <div className="mt-3 rounded-lg bg-emerald-50 p-2 text-center text-xs font-bold text-emerald-700">
                       🎁 {referralDiscount}% Referral Discount Applied!
@@ -1067,27 +901,26 @@ export default function PricingWizard() {
                   ))}
                 </ul>
 
-                <div className="space-y-3">
-                  <Link
-                    href="/contact"
-                    className="group flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all hover:-translate-y-1"
-                  >
-                    <Mail size={15} />
-                    Talk to Our Experts
-                  </Link>
-                </div>
+                <Link
+                  href="/contact"
+                  className="group flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3.5 text-sm font-semibold text-white shadow-lg"
+                >
+                  <Mail size={15} />
+                  Talk to Our Experts
+                </Link>
 
                 <div className="mt-6 rounded-xl border border-slate-200 bg-white/60 p-4">
                   <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
                     Direct Contact
                   </p>
                   <a href="tel:+918988183513" className="mt-2 flex items-center gap-2 text-xs font-semibold text-slate-700 hover:text-blue-600">
-                    <Phone size={12} className="text-blue-600" />
-                    +91 89881 83513
+                    <Phone size={12} className="text-blue-600" /> +91 89881 83513
                   </a>
                   <a href="tel:+919459285513" className="mt-1.5 flex items-center gap-2 text-xs font-semibold text-slate-700 hover:text-blue-600">
-                    <Phone size={12} className="text-blue-600" />
-                    +91 94592 85513
+                    <Phone size={12} className="text-blue-600" /> +91 94592 85513
+                  </a>
+                  <a href="mailto:contact.zentroxtech@gmail.com" className="mt-1.5 flex items-center gap-2 break-all text-xs font-semibold text-slate-700 hover:text-blue-600">
+                    <Mail size={12} className="flex-shrink-0 text-blue-600" /> contact.zentroxtech@gmail.com
                   </a>
                 </div>
               </div>
