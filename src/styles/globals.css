@@ -7,24 +7,18 @@
    Light theme (website + admin + blog all pages)
 ═══════════════════════════════════════════════════════════════ */
 :root {
-  /* ─── Z Variables (for z-* Tailwind classes) ─── */
   --z-dark: #FDF8F3;
   --z-dark2: #FFFFFF;
   --z-dark3: #F8FAFC;
   --z-dark4: #F1F5F9;
-
   --z-accent: #2563eb;
   --z-accent2: #7c3aed;
   --z-accent3: #ec4899;
   --z-gold: #f59e0b;
-
   --z-text: #0f172a;
   --z-muted: #64748b;
-
   --z-border: #E2E8F0;
   --z-glow: rgba(37, 99, 235, 0.15);
-
-  /* ─── Legacy Variables ─── */
   --cream-bg: #FDF8F3;
   --cream-border: #F0E6D8;
   --brand-blue: #2563eb;
@@ -59,62 +53,88 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   TEXT VISIBILITY FIXES
-   Ensures all text is visible even if z-* classes fail
+   FORCE VISIBILITY — Override ALL dark theme leftovers
+   Yeh sab kuch force visible kar dega
 ═══════════════════════════════════════════════════════════════ */
-h1, h2, h3, h4, h5, h6 {
-  color: #0f172a;
-}
 
-p, span, div, li {
-  color: inherit;
-}
-
-/* Blog post content */
-article,
-.blog-content,
-.prose {
-  color: #334155;
-}
-
-article h1,
-article h2,
-article h3 {
-  color: #0f172a;
-}
-
-/* Admin panel — force text visibility */
+/* Admin panel — force dark text */
 .admin-layout,
-.admin-layout * {
-  color: #0f172a;
+.admin-layout *,
+[class*="admin"] {
+  color: #0f172a !important;
 }
 
-.admin-layout p,
-.admin-layout span {
-  color: #475569;
+.admin-layout h1, .admin-layout h2, .admin-layout h3, .admin-layout h4,
+.admin-layout th, .admin-layout td, .admin-layout label,
+.admin-layout strong, .admin-layout b {
+  color: #0f172a !important;
+}
+
+.admin-layout p, .admin-layout span, .admin-layout li,
+.admin-layout small, .admin-layout em {
+  color: #475569 !important;
+}
+
+.admin-layout a {
+  color: #2563eb !important;
+}
+
+/* Main content — force dark text */
+main,
+main h1, main h2, main h3, main h4,
+main th, main td, main label,
+main strong, main b {
+  color: #0f172a !important;
+}
+
+main p, main span, main li,
+main small, main em {
+  color: #475569 !important;
+}
+
+/* Blog content */
+article, article p, article li {
+  color: #334155 !important;
+}
+
+article h1, article h2, article h3, article h4 {
+  color: #0f172a !important;
+}
+
+/* Inputs everywhere */
+input, textarea, select {
+  color: #0f172a !important;
+  background-color: #ffffff !important;
+}
+
+input::placeholder, textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* White text on colored buttons preserved */
+button[class*="bg-blue"] *,
+button[class*="bg-gradient"] *,
+button[class*="bg-purple"] *,
+a[class*="bg-blue"] *,
+a[class*="bg-gradient"] *,
+a[class*="bg-purple"] *,
+button[class*="bg-slate-9"] *,
+button[class*="bg-red"] *,
+button[class*="bg-emerald"] *,
+div[class*="bg-blue-600"] > *,
+div[class*="bg-gradient-to"] > * {
+  color: #ffffff !important;
 }
 
 /* ═══════════════════════════════════════════════════════════════
    SCROLLBAR
 ═══════════════════════════════════════════════════════════════ */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #FDF8F3;
-}
-::-webkit-scrollbar-thumb {
-  background: #d1c7b8;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #b8a990;
-}
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #FDF8F3; }
+::-webkit-scrollbar-thumb { background: #d1c7b8; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #b8a990; }
 
-::selection {
-  background: #2563eb;
-  color: white;
-}
+::selection { background: #2563eb; color: white; }
 
 /* ═══════════════════════════════════════════════════════════════
    CARD STYLES
@@ -235,20 +255,14 @@ article h3 {
 /* ═══════════════════════════════════════════════════════════════
    SECTION SPACING
 ═══════════════════════════════════════════════════════════════ */
-.section-padding {
-  padding: 80px 16px;
-}
+.section-padding { padding: 80px 16px; }
 
 @media (min-width: 768px) {
-  .section-padding {
-    padding: 96px 24px;
-  }
+  .section-padding { padding: 96px 24px; }
 }
 
 @media (min-width: 1024px) {
-  .section-padding {
-    padding: 112px 32px;
-  }
+  .section-padding { padding: 112px 32px; }
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -321,9 +335,7 @@ select:focus-visible {
   transition: all 0.2s ease;
 }
 
-.input-field::placeholder {
-  color: #94a3b8;
-}
+.input-field::placeholder { color: #94a3b8; }
 
 .input-field:focus {
   outline: none;
@@ -361,13 +373,8 @@ select:focus-visible {
   50% { opacity: 0.3; }
 }
 
-.animate-float {
-  animation: float 4s ease-in-out infinite;
-}
-
-.animate-pulse-slow {
-  animation: pulse-slow 3s ease-in-out infinite;
-}
+.animate-float { animation: float 4s ease-in-out infinite; }
+.animate-pulse-slow { animation: pulse-slow 3s ease-in-out infinite; }
 
 /* ═══════════════════════════════════════════════════════════════
    REDUCED MOTION
