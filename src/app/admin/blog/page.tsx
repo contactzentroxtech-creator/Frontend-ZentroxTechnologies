@@ -1,497 +1,441 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
 import {
   Plus,
-  Edit2,
+  Edit,
   Trash2,
-  X,
+  Eye,
+  Search,
+  Loader2,
+  AlertCircle,
   Check,
-  Link,
+  X,
   FileText,
-  Image,
-  Video,
+  RefreshCw,
+  Calendar,
+  User,
+  Tag,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 import api from "@/lib/api";
-import toast from "react-hot-toast";
-import { AdminTable } from "@/components/admin/AdminTable";
 
-// Interface for media structure
-interface MediaItem {
-  url: string;
-  type: "image" | "video" | "document" | "other";
-  caption?: string;
-}
-
-function BlogModal({
-  post,
-  onClose,
-  onSaved,
-}: {
-  post?: any;
-  onClose: () => void;
-  onSaved: () => void;
-}) {
-  const [form, setForm] = useState({
-    title: post?.title || "",
-    excerpt: post?.excerpt || "",
-    content: post?.content || "",
-    category: post?.category || "",
-    tags: (post?.tags || []).join(", "),
-    thumbnail: post?.thumbnail || "",
-    authorName: post?.authorName || "",
-    isPublished: post?.isPublished ?? false,
-    featured: post?.featured ?? false,
-    metaTitle: post?.metaTitle || "",
-    metaDesc: post?.metaDesc || "",
-    media: (post?.media || []) as MediaItem[], // Array to hold multiple types of media
-  });
-
-  const [saving, setSaving] = useState(false);
-
-  // Temporary state for adding a new media item to the array
-  const [newMedia, setNewMedia] = useState<MediaItem>({
-    url: "",
-    type: "image",
-    caption: "",
-  });
-
-  const addMediaItem = () => {
-    if (!newMedia.url.trim()) return toast.error("Media URL cannot be empty");
-    setForm((p) => ({ ...p, media: [...p.media, newMedia] }));
-    setNewMedia({ url: "", type: "image", caption: "" }); // Reset media inputs
-  };
-
-  const removeMediaItem = (index: number) => {
-    setForm((p) => ({ ...p, media: p.media.filter((_, i) => i !== index) }));
-  };
-
-  const save = async () => {
-    setSaving(true);
-    try {
-      // Safely handles splitting even if form.tags is empty, undefined, or not a string
-      const parsedTags =
-        typeof form.tags === "string"
-          ? form.tags
-              .split(",")
-              .map((t) => t.trim())
-              .filter(Boolean)
-          : [];
-
-      const payload = {
-        ...form,
-        tags: parsedTags,
-      };
-
-      if (post?._id) {
-        await api.patch(`/blog/${post._id}`, payload);
-        toast.success("Post updated");
-      } else {
-        await api.post("/blog", payload);
-        toast.success("Post created");
-      }
-      onSaved();
-      onClose();
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || "Save failed");
-    }
-    setSaving(false);
-  };
-
-  // Helper to render distinct icons based on media type selection
-  const getMediaIcon = (type: string) => {
-    if (type === "image") return <Image size={14} className="text-blue-400" />;
-    if (type === "video") return <Video size={14} className="text-red-400" />;
-    return <FileText size={14} className="text-amber-400" />;
-  };
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-        onClick={onClose}
-      />
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="glass-card w-full max-w-2xl p-6 relative z-10 max-h-[90vh] overflow-y-auto"
-      >
-        <div className="flex justify-between mb-5">
-          <h2 className="text-lg font-bold text-white">
-            {post ? "Edit Post" : "New Blog Post"}
-          </h2>
-          <button onClick={onClose}>
-            <X size={18} className="text-z-muted" />
-          </button>
-        </div>
-
-        <div className="flex flex-col gap-4">
-          <div>
-            <label className="text-xs text-z-muted mb-1 block">Title *</label>
-            <input
-              value={form.title}
-              onChange={(e) =>
-                setForm((p) => ({ ...p, title: e.target.value }))
-              }
-              className="z-input"
-            />
-          </div>
-          <div>
-            <label className="text-xs text-z-muted mb-1 block">Excerpt</label>
-            <input
-              value={form.excerpt}
-              onChange={(e) =>
-                setForm((p) => ({ ...p, excerpt: e.target.value }))
-              }
-              className="z-input"
-            />
-          </div>
-          <div>
-            <label className="text-xs text-z-muted mb-1 block">
-              Content (Markdown/HTML) *
-            </label>
-            <textarea
-              value={form.content}
-              onChange={(e) =>
-                setForm((p) => ({ ...p, content: e.target.value }))
-              }
-              rows={6}
-              className="z-input resize-none text-xs font-mono"
-            />
-          </div>
-
-          {/* --- MULTIPLE MEDIA MANAGEMENT SECTION --- */}
-          <div className="border border-z-border p-4 rounded-xl bg-black/20">
-            <label className="text-xs font-semibold text-white mb-2 block">
-              Blog Media Gallery
-            </label>
-
-            {/* List of currently added media items */}
-            {form.media.length > 0 && (
-              <div className="flex flex-col gap-2 mb-3 max-h-40 overflow-y-auto pr-1">
-                {form.media.map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="flex items-center justify-between bg-white/5 p-2 rounded-lg border border-z-border text-xs text-white"
-                  >
-                    <div className="flex items-center gap-2 truncate max-w-[85%]">
-                      {getMediaIcon(item.type)}
-                      <span className="truncate text-z-muted font-mono">
-                        {item.url}
-                      </span>
-                      {item.caption && (
-                        <span className="text-[10px] bg-white/10 px-1.5 py-0.5 rounded text-white">
-                          ({item.caption})
-                        </span>
-                      )}
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => removeMediaItem(idx)}
-                      className="text-red-400 hover:text-red-300"
-                    >
-                      <Trash2 size={12} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Form controls to insert a new media asset */}
-            <div className="flex flex-col md:flex-row gap-2 items-end">
-              <div className="flex-1 w-full">
-                <input
-                  placeholder="Media file URL (e.g. AWS S3, Cloudinary links)"
-                  value={newMedia.url}
-                  onChange={(e) =>
-                    setNewMedia((p) => ({ ...p, url: e.target.value }))
-                  }
-                  className="z-input text-xs"
-                />
-              </div>
-              <div className="w-full md:w-32">
-                <select
-                  value={newMedia.type}
-                  onChange={(e) =>
-                    setNewMedia((p) => ({ ...p, type: e.target.value as any }))
-                  }
-                  className="z-input text-xs bg-transparent text-white"
-                >
-                  <option value="image" className="bg-neutral-900 text-white">
-                    Image
-                  </option>
-                  <option value="video" className="bg-neutral-900 text-white">
-                    Video
-                  </option>
-                  <option
-                    value="document"
-                    className="bg-neutral-900 text-white"
-                  >
-                    Document
-                  </option>
-                  <option value="other" className="bg-neutral-900 text-white">
-                    Other
-                  </option>
-                </select>
-              </div>
-              <div className="w-full md:w-32">
-                <input
-                  placeholder="Caption"
-                  value={newMedia.caption}
-                  onChange={(e) =>
-                    setNewMedia((p) => ({ ...p, caption: e.target.value }))
-                  }
-                  className="z-input text-xs"
-                />
-              </div>
-              <button
-                type="button"
-                onClick={addMediaItem}
-                className="bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-lg text-xs h-[38px] flex items-center justify-center gap-1 border border-z-border shrink-0 w-full md:w-auto"
-              >
-                <Plus size={14} /> Add
-              </button>
-            </div>
-          </div>
-          {/* --- END OF MEDIA SECTION --- */}
-
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-xs text-z-muted mb-1 block">
-                Category
-              </label>
-              <input
-                value={form.category}
-                onChange={(e) =>
-                  setForm((p) => ({ ...p, category: e.target.value }))
-                }
-                className="z-input"
-                placeholder="e.g. website development"
-              />
-            </div>
-            <div>
-              <label className="text-xs text-z-muted mb-1 block">
-                Author Name
-              </label>
-              <input
-                value={form.authorName}
-                onChange={(e) =>
-                  setForm((p) => ({ ...p, authorName: e.target.value }))
-                }
-                className="z-input"
-              />
-            </div>
-            <div>
-              <label className="text-xs text-z-muted mb-1 block">
-                Tags (comma separated)
-              </label>
-              <input
-                value={form.tags}
-                onChange={(e) =>
-                  setForm((p) => ({ ...p, tags: e.target.value }))
-                }
-                className="z-input"
-              />
-            </div>
-            <div>
-              <label className="text-xs text-z-muted mb-1 block">
-                Thumbnail URL
-              </label>
-              <input
-                value={form.thumbnail}
-                onChange={(e) =>
-                  setForm((p) => ({ ...p, thumbnail: e.target.value }))
-                }
-                className="z-input"
-              />
-            </div>
-            <div>
-              <label className="text-xs text-z-muted mb-1 block">
-                Meta Title
-              </label>
-              <input
-                value={form.metaTitle}
-                onChange={(e) =>
-                  setForm((p) => ({ ...p, metaTitle: e.target.value }))
-                }
-                className="z-input"
-              />
-            </div>
-            <div>
-              <label className="text-xs text-z-muted mb-1 block">
-                Meta Description
-              </label>
-              <input
-                value={form.metaDesc}
-                onChange={(e) =>
-                  setForm((p) => ({ ...p, metaDesc: e.target.value }))
-                }
-                className="z-input"
-              />
-            </div>
-          </div>
-
-          <div className="flex gap-4">
-            {[
-              ["isPublished", "Published"],
-              ["featured", "Featured"],
-            ].map(([key, label]) => (
-              <label
-                key={key}
-                className="flex items-center gap-2 cursor-pointer"
-              >
-                <input
-                  type="checkbox"
-                  checked={(form as any)[key]}
-                  onChange={(e) =>
-                    setForm((p) => ({ ...p, [key]: e.target.checked }))
-                  }
-                  className="accent-z-accent w-4 h-4"
-                />
-                <span className="text-sm text-z-muted">{label}</span>
-              </label>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex gap-3 mt-5">
-          <button
-            onClick={onClose}
-            className="flex-1 py-2.5 rounded-xl border border-z-border text-z-muted text-sm"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={save}
-            disabled={saving}
-            className="flex-1 py-2.5 rounded-xl bg-z-accent text-white text-sm font-semibold disabled:opacity-50 flex items-center justify-center gap-2"
-          >
-            {saving ? (
-              <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            ) : (
-              <>
-                <Check size={14} /> Save
-              </>
-            )}
-          </button>
-        </div>
-      </motion.div>
-    </div>
-  );
+interface BlogPost {
+  _id: string;
+  title: string;
+  slug: string;
+  excerpt?: string;
+  content?: string;
+  author?: string;
+  category?: string;
+  tags?: string[];
+  image?: string;
+  status: "draft" | "published";
+  views?: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export default function AdminBlogPage() {
-  const [modal, setModal] = useState<{ open: boolean; post?: any }>({
-    open: false,
-  });
-  const [refetchKey, setRefetchKey] = useState(0);
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"all" | "published" | "draft">(
+    "all"
+  );
+  const [deleting, setDeleting] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<BlogPost | null>(null);
 
-  const COLUMNS = [
-    {
-      key: "title",
-      label: "Title",
-      render: (r: any) => (
-        <div>
-          <div className="font-medium text-white text-sm">{r.title}</div>
-          <div className="text-xs text-z-muted">
-            {r.category} · {r.readTime || 0} min read
-          </div>
-        </div>
-      ),
-    },
-    {
-      key: "viewCount",
-      label: "Views",
-      render: (r: any) => (
-        <span className="text-z-muted text-sm">{r.viewCount || 0}</span>
-      ),
-    },
-    {
-      key: "isPublished",
-      label: "Status",
-      render: (r: any) => (
-        <span
-          className={`text-xs font-semibold px-2 py-0.5 rounded-md ${
-            r.isPublished
-              ? "bg-green-500/15 text-green-400"
-              : "bg-amber-500/15 text-amber-400"
-          }`}
-        >
-          {r.isPublished ? "Published" : "Draft"}
-        </span>
-      ),
-    },
-    {
-      key: "featured",
-      label: "Featured",
-      render: (r: any) =>
-        r.featured ? (
-          <span className="text-xs text-z-gold font-semibold">Featured</span>
-        ) : null,
-    },
-    {
-      key: "createdAt",
-      label: "Date",
-      render: (r: any) => (
-        <span className="text-xs text-z-muted">
-          {new Date(r.createdAt).toLocaleDateString("en-IN")}
-        </span>
-      ),
-    },
-  ];
+  /* ─── Fetch Posts ─── */
+  const fetchPosts = useCallback(async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const { data } = await api.get("/blog?admin=true");
+      if (data?.success && Array.isArray(data.data)) {
+        setPosts(data.data);
+      } else if (Array.isArray(data)) {
+        setPosts(data);
+      } else {
+        setPosts([]);
+      }
+    } catch (err: any) {
+      setError(
+        err?.response?.data?.message ||
+          "Failed to load blog posts. Please check backend."
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
+
+  /* ─── Delete Post ─── */
+  const handleDelete = async (post: BlogPost) => {
+    setDeleting(post._id);
+    try {
+      await api.delete(`/blog/${post._id}`);
+      setPosts((prev) => prev.filter((p) => p._id !== post._id));
+      setSuccess(`"${post.title}" deleted successfully`);
+      setTimeout(() => setSuccess(""), 3000);
+      setConfirmDelete(null);
+    } catch (err: any) {
+      setError(err?.response?.data?.message || "Delete failed");
+    } finally {
+      setDeleting(null);
+    }
+  };
+
+  /* ─── Filtered Posts ─── */
+  const filteredPosts = posts.filter((post) => {
+    const matchesSearch =
+      post.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      post.category?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      post.author?.toLowerCase().includes(searchQuery.toLowerCase());
+
+    const matchesStatus =
+      statusFilter === "all" || post.status === statusFilter;
+
+    return matchesSearch && matchesStatus;
+  });
+
+  /* ─── Format Date ─── */
+  const formatDate = (dateString: string) => {
+    if (!dateString) return "N/A";
+    return new Date(dateString).toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
+  /* ─── Stats ─── */
+  const stats = {
+    total: posts.length,
+    published: posts.filter((p) => p.status === "published").length,
+    drafts: posts.filter((p) => p.status === "draft").length,
+    totalViews: posts.reduce((sum, p) => sum + (p.views || 0), 0),
+  };
 
   return (
-    <>
-      <AdminTable
-        key={refetchKey}
-        title="Blog Posts"
-        endpoint="/blog/admin/all"
-        searchable={false}
-        columns={COLUMNS}
-        headerActions={
+    <div className="admin-content p-4 md:p-6 lg:p-8 max-w-7xl mx-auto">
+      {/* ═══ Header ═══ */}
+      <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-extrabold text-slate-900 mb-1">
+            Blog Posts
+          </h1>
+          <p className="text-sm text-slate-600">
+            Create, edit, and manage all your blog articles.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
           <button
-            onClick={() => setModal({ open: true })}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-z-accent text-white text-sm font-semibold"
+            onClick={fetchPosts}
+            disabled={loading}
+            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+          >
+            <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
+            Refresh
+          </button>
+          <Link
+            href="/admin/blog/new"
+            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-5 py-2.5 text-sm font-bold text-white shadow-md hover:shadow-lg transition-all"
           >
             <Plus size={14} /> New Post
+          </Link>
+        </div>
+      </div>
+
+      {/* ═══ Stats ═══ */}
+      <div className="mb-6 grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            Total Posts
+          </p>
+          <p className="mt-1 text-2xl font-extrabold text-slate-900">
+            {stats.total}
+          </p>
+        </div>
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 shadow-sm">
+          <p className="text-xs font-semibold text-emerald-700 uppercase tracking-wider">
+            Published
+          </p>
+          <p className="mt-1 text-2xl font-extrabold text-emerald-700">
+            {stats.published}
+          </p>
+        </div>
+        <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 shadow-sm">
+          <p className="text-xs font-semibold text-amber-700 uppercase tracking-wider">
+            Drafts
+          </p>
+          <p className="mt-1 text-2xl font-extrabold text-amber-700">
+            {stats.drafts}
+          </p>
+        </div>
+        <div className="rounded-xl border border-blue-200 bg-blue-50 p-4 shadow-sm">
+          <p className="text-xs font-semibold text-blue-700 uppercase tracking-wider">
+            Total Views
+          </p>
+          <p className="mt-1 text-2xl font-extrabold text-blue-700">
+            {stats.totalViews.toLocaleString()}
+          </p>
+        </div>
+      </div>
+
+      {/* ═══ Alerts ═══ */}
+      {error && (
+        <div className="mb-4 flex items-start gap-2 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+          <AlertCircle size={16} className="mt-0.5 flex-shrink-0" />
+          <span className="flex-1">{error}</span>
+          <button onClick={() => setError("")} className="text-red-400">
+            <X size={14} />
           </button>
-        }
-        actions={(post, refetch) => (
-          <div className="flex gap-2">
-            <button
-              onClick={() => setModal({ open: true, post })}
-              className="text-z-muted hover:text-white transition-colors"
-            >
-              <Edit2 size={14} />
-            </button>
-            <button
-              onClick={async () => {
-                if (!confirm("Delete post?")) return;
-                try {
-                  await api.delete(`/blog/${post._id}`);
-                  toast.success("Deleted");
-                  refetch();
-                } catch {
-                  toast.error("Delete failed");
-                }
-              }}
-              className="text-z-muted hover:text-red-400 transition-colors"
-            >
-              <Trash2 size={14} />
-            </button>
-          </div>
-        )}
-      />
-      <AnimatePresence>
-        {modal.open && (
-          <BlogModal
-            post={modal.post}
-            onClose={() => setModal({ open: false })}
-            onSaved={() => setRefetchKey((k) => k + 1)}
+        </div>
+      )}
+
+      {success && (
+        <div className="mb-4 flex items-center gap-2 rounded-xl bg-emerald-50 border border-emerald-200 px-4 py-3 text-sm text-emerald-700">
+          <Check size={16} className="flex-shrink-0" />
+          <span>{success}</span>
+        </div>
+      )}
+
+      {/* ═══ Toolbar ═══ */}
+      <div className="mb-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+        <div className="relative flex-1">
+          <Search
+            size={16}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
           />
-        )}
-      </AnimatePresence>
-    </>
+          <input
+            type="text"
+            placeholder="Search by title, category, author..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 bg-white text-sm text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          {(["all", "published", "draft"] as const).map((status) => (
+            <button
+              key={status}
+              onClick={() => setStatusFilter(status)}
+              className={`px-3 py-2 rounded-lg text-xs font-bold capitalize transition-all ${
+                statusFilter === status
+                  ? "bg-blue-600 text-white"
+                  : "bg-white border border-slate-200 text-slate-700 hover:border-blue-300"
+              }`}
+            >
+              {status}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* ═══ Posts List ═══ */}
+      {loading ? (
+        <div className="flex flex-col items-center justify-center py-20">
+          <Loader2 size={32} className="text-blue-600 animate-spin" />
+          <p className="text-xs text-slate-500 mt-3">Loading posts...</p>
+        </div>
+      ) : filteredPosts.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-20 rounded-2xl border border-dashed border-slate-300 bg-white">
+          <FileText size={40} className="text-slate-300 mb-3" />
+          <p className="text-sm font-semibold text-slate-700">
+            {searchQuery || statusFilter !== "all"
+              ? "No posts match your filters"
+              : "No blog posts yet"}
+          </p>
+          <p className="text-xs text-slate-500 mt-1">
+            {searchQuery || statusFilter !== "all"
+              ? "Try different search or filter"
+              : "Create your first blog post to get started"}
+          </p>
+          {!searchQuery && statusFilter === "all" && (
+            <Link
+              href="/admin/blog/new"
+              className="mt-4 inline-flex items-center gap-2 rounded-full bg-blue-600 px-5 py-2 text-xs font-bold text-white hover:bg-blue-700"
+            >
+              <Plus size={13} /> Create First Post
+            </Link>
+          )}
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {filteredPosts.map((post) => (
+            <div
+              key={post._id}
+              className="rounded-2xl border border-slate-200 bg-white p-4 md:p-5 shadow-sm hover:shadow-md transition-all"
+            >
+              <div className="flex flex-col md:flex-row gap-4">
+                {/* Thumbnail */}
+                {post.image && (
+                  <div className="flex-shrink-0">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={post.image}
+                      alt={post.title}
+                      className="h-24 w-full md:w-32 object-cover rounded-xl border border-slate-200"
+                      loading="lazy"
+                    />
+                  </div>
+                )}
+
+                {/* Content */}
+                <div className="flex-1 min-w-0">
+                  {/* Status + Category */}
+                  <div className="flex flex-wrap items-center gap-2 mb-2">
+                    <span
+                      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                        post.status === "published"
+                          ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
+                          : "bg-amber-100 text-amber-700 border border-amber-200"
+                      }`}
+                    >
+                      <span
+                        className={`w-1.5 h-1.5 rounded-full ${
+                          post.status === "published"
+                            ? "bg-emerald-500"
+                            : "bg-amber-500"
+                        }`}
+                      />
+                      {post.status}
+                    </span>
+
+                    {post.category && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 text-blue-700 border border-blue-200 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+                        <Tag size={9} />
+                        {post.category}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* TITLE — force visible */}
+                  <h3 className="text-base md:text-lg font-extrabold text-slate-900 mb-1.5 line-clamp-2 leading-snug">
+                    {post.title || "Untitled Post"}
+                  </h3>
+
+                  {/* Excerpt */}
+                  {post.excerpt && (
+                    <p className="text-xs text-slate-600 line-clamp-2 mb-3">
+                      {post.excerpt}
+                    </p>
+                  )}
+
+                  {/* Meta */}
+                  <div className="flex flex-wrap items-center gap-3 text-[11px] text-slate-500">
+                    <span className="flex items-center gap-1">
+                      <User size={11} />
+                      {post.author || "Admin"}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Calendar size={11} />
+                      {formatDate(post.createdAt)}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Eye size={11} />
+                      {post.views || 0} views
+                    </span>
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="flex md:flex-col items-center gap-2 flex-shrink-0">
+                  <Link
+                    href={`/blog/${post.slug}`}
+                    target="_blank"
+                    className="flex items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
+                    title="View on site"
+                  >
+                    <Eye size={13} />
+                    <span className="hidden md:inline">View</span>
+                  </Link>
+                  <Link
+                    href={`/admin/blog/edit/${post._id}`}
+                    className="flex items-center justify-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-bold text-blue-700 hover:bg-blue-100 transition-colors"
+                    title="Edit post"
+                  >
+                    <Edit size={13} />
+                    <span className="hidden md:inline">Edit</span>
+                  </Link>
+                  <button
+                    onClick={() => setConfirmDelete(post)}
+                    className="flex items-center justify-center gap-1.5 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs font-bold text-red-600 hover:bg-red-100 transition-colors"
+                    title="Delete post"
+                  >
+                    <Trash2 size={13} />
+                    <span className="hidden md:inline">Delete</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* ═══ Delete Confirmation Modal ═══ */}
+      {confirmDelete && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+          onClick={() => !deleting && setConfirmDelete(null)}
+        >
+          <div
+            className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex flex-col items-center text-center">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-red-100 mb-4">
+                <Trash2 size={24} className="text-red-600" />
+              </div>
+              <h3 className="text-lg font-extrabold text-slate-900 mb-2">
+                Delete Blog Post?
+              </h3>
+              <p className="text-sm text-slate-600 mb-1">
+                You are about to delete:
+              </p>
+              <p className="text-sm font-bold text-slate-900 mb-4 line-clamp-2">
+                &ldquo;{confirmDelete.title}&rdquo;
+              </p>
+              <p className="text-xs text-red-600 mb-6">
+                This action cannot be undone.
+              </p>
+
+              <div className="flex w-full gap-3">
+                <button
+                  onClick={() => setConfirmDelete(null)}
+                  disabled={!!deleting}
+                  className="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => handleDelete(confirmDelete)}
+                  disabled={!!deleting}
+                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-red-700 disabled:opacity-50"
+                >
+                  {deleting === confirmDelete._id ? (
+                    <>
+                      <Loader2 size={14} className="animate-spin" />
+                      Deleting...
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 size={14} />
+                      Delete
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
