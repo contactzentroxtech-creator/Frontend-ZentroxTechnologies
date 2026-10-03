@@ -25,49 +25,79 @@ interface PDFData {
   referralDiscount: number;
 }
 
-function formatPrice(n: number) {
-  return "₹" + Math.round(n).toLocaleString("en-IN");
+/* ═══════════════════════════════════════════════════════════════
+   Format price — "Rs." use karo (₹ symbol jsPDF mein render nahi hota)
+═══════════════════════════════════════════════════════════════ */
+function formatPrice(n: number): string {
+  return "Rs. " + Math.round(n).toLocaleString("en-IN");
 }
 
-export async function generatePDF(data: PDFData) {
+export async function generatePDF(data: PDFData): Promise<void> {
   const doc = new jsPDF("p", "mm", "a4");
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
+  const margin = 15;
+  const contentWidth = pageWidth - margin * 2;
+
+  const quoteId = `ZT-${Date.now().toString().slice(-8)}`;
+  const date = new Date().toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+
   let y = 0;
 
-  // ═══════ HEADER — BRANDED ═══════
+  /* ═══════════════════════════════════════════════════════════════
+     HEADER — DARK NAVY BAR
+  ═══════════════════════════════════════════════════════════════ */
   doc.setFillColor(15, 23, 42);
-  doc.rect(0, 0, pageWidth, 45, "F");
+  doc.rect(0, 0, pageWidth, 42, "F");
 
-  // Logo
   try {
     const img = new Image();
+    img.crossOrigin = "anonymous";
     img.src = "/Zentrox-Logo1.png";
-    await new Promise((resolve, reject) => {
-      img.onload = resolve;
-      img.onerror = reject;
+
+    await new Promise<void>((resolve, reject) => {
+      img.onload = () => resolve();
+      img.onerror = () => reject();
+      setTimeout(() => reject(), 2000);
     });
-    doc.addImage(img, "PNG", 15, 10, 25, 25);
+
+    doc.setFillColor(255, 255, 255);
+    doc.roundedRect(margin, 8, 26, 26, 3, 3, "F");
+    doc.addImage(img, "PNG", margin + 2, 10, 22, 22);
   } catch {
-    // Logo fail — skip
+    doc.setFillColor(255, 255, 255);
+    doc.roundedRect(margin, 8, 26, 26, 3, 3, "F");
+    doc.setTextColor(37, 99, 235);
+    doc.setFontSize(22);
+    doc.setFont("helvetica", "bold");
+    doc.text("Z", margin + 13, 26, { align: "center" });
   }
 
-  // Company name
   doc.setTextColor(255, 255, 255);
-  doc.setFontSize(20);
+  doc.setFontSize(18);
   doc.setFont("helvetica", "bold");
-  doc.text("ZENTROX TECHNOLOGIES", 45, 20);
+  doc.text("ZENTROX TECHNOLOGIES", margin + 32, 18);
 
-  doc.setFontSize(9);
+  doc.setFontSize(8);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(203, 213, 225);
-  doc.text("Software & Digital Growth Partner", 45, 26);
-  doc.text("Mohali & Chandigarh, Punjab, India", 45, 31);
-  doc.text("contact.zentroxtech@gmail.com  |  +91 89881 83513", 45, 36);
+  doc.text("Software & Digital Growth Partner", margin + 32, 24);
+  doc.text(
+    "Mohali & Chandigarh, Punjab, India  |  contact.zentroxtech@gmail.com",
+    margin + 32,
+    29
+  );
+  doc.text("+91 89881 83513  |  +91 94592 85513", margin + 32, 34);
 
   y = 55;
 
-  // ═══════ DOCUMENT TITLE ═══════
+  /* ═══════════════════════════════════════════════════════════════
+     TITLE
+  ═══════════════════════════════════════════════════════════════ */
   doc.setTextColor(15, 23, 42);
   doc.setFontSize(18);
   doc.setFont("helvetica", "bold");
@@ -77,192 +107,300 @@ export async function generatePDF(data: PDFData) {
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(100, 116, 139);
-  const quoteId = `ZT-${Date.now().toString().slice(-8)}`;
-  doc.text(`Quote ID: ${quoteId}`, pageWidth / 2, y, { align: "center" });
-
-  y += 5;
-  const date = new Date().toLocaleDateString("en-IN", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
+  doc.text(`Quote ID: ${quoteId}    |    Date: ${date}`, pageWidth / 2, y, {
+    align: "center",
   });
-  doc.text(`Date: ${date}`, pageWidth / 2, y, { align: "center" });
 
   y += 12;
 
-  // ═══════ CLIENT DETAILS ═══════
+  /* ═══════════════════════════════════════════════════════════════
+     CLIENT DETAILS BOX
+  ═══════════════════════════════════════════════════════════════ */
+  const clientBoxHeight = 32;
   doc.setFillColor(248, 250, 252);
-  doc.rect(15, y, pageWidth - 30, 40, "F");
-
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(15, 23, 42);
-  doc.text("CLIENT DETAILS", 20, y + 8);
+  doc.roundedRect(margin, y, contentWidth, clientBoxHeight, 3, 3, "F");
 
   doc.setFontSize(10);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(37, 99, 235);
+  doc.text("CLIENT DETAILS", margin + 5, y + 7);
+
+  y += 12;
+  doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(51, 65, 85);
-  doc.text(`Name:  ${data.clientName}`, 20, y + 16);
-  doc.text(`Email:  ${data.clientEmail}`, 20, y + 23);
-  doc.text(`Phone:  ${data.clientPhone}`, 20, y + 30);
-  doc.text(`Service:  ${data.service}`, 20, y + 37);
 
-  y += 50;
+  const col1X = margin + 5;
+  const col2X = margin + contentWidth / 2 + 5;
 
-  // ═══════ PROJECT DETAILS ═══════
-  doc.setFontSize(11);
+  doc.text(`Name:`, col1X, y);
   doc.setFont("helvetica", "bold");
-  doc.setTextColor(15, 23, 42);
-  doc.text("PROJECT REQUIREMENTS", 15, y);
+  doc.text(data.clientName || "N/A", col1X + 14, y);
 
-  y += 8;
+  doc.setFont("helvetica", "normal");
+  doc.text(`Email:`, col2X, y);
+  doc.setFont("helvetica", "bold");
+  doc.text(data.clientEmail || "N/A", col2X + 14, y);
 
+  y += 6;
+  doc.setFont("helvetica", "normal");
+  doc.text(`Phone:`, col1X, y);
+  doc.setFont("helvetica", "bold");
+  doc.text(data.clientPhone || "N/A", col1X + 14, y);
+
+  doc.setFont("helvetica", "normal");
+  doc.text(`Service:`, col2X, y);
+  doc.setFont("helvetica", "bold");
+  doc.text(data.service, col2X + 17, y);
+
+  y += 6;
+  doc.setFont("helvetica", "normal");
+  doc.text(`Date:`, col1X, y);
+  doc.setFont("helvetica", "bold");
+  doc.text(date, col1X + 14, y);
+
+  y += 14;
+
+  /* ═══════════════════════════════════════════════════════════════
+     PROJECT REQUIREMENTS
+  ═══════════════════════════════════════════════════════════════ */
   doc.setFontSize(10);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(37, 99, 235);
+  doc.text("PROJECT REQUIREMENTS", margin, y);
+  y += 2;
+
+  doc.setDrawColor(226, 232, 240);
+  doc.setLineWidth(0.2);
+  doc.line(margin, y, pageWidth - margin, y);
+  y += 6;
+
+  doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(51, 65, 85);
 
   data.fieldDetails.forEach((field) => {
-    doc.text(`${field.label}:`, 20, y);
-    doc.setFont("helvetica", "bold");
-    doc.text(field.value, 90, y);
     doc.setFont("helvetica", "normal");
-    y += 7;
-  });
-
-  y += 5;
-
-  // ═══════ ADD-ONS ═══════
-  if (data.addOns.length > 0) {
-    doc.setFontSize(11);
+    doc.text(`${field.label}:`, margin + 3, y);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(15, 23, 42);
-    doc.text("ADD-ONS", 15, y);
-    y += 8;
+    doc.text(field.value, margin + 60, y);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(51, 65, 85);
+    y += 6;
+  });
 
+  doc.setFont("helvetica", "normal");
+  doc.text("Timeline:", margin + 3, y);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(15, 23, 42);
+  const timelineText =
+    data.timeline === "flexible"
+      ? "Flexible"
+      : data.timeline === "fast"
+      ? "Fast-Track"
+      : data.timeline === "urgent"
+      ? "Urgent (ASAP)"
+      : "Standard";
+  doc.text(timelineText, margin + 60, y);
+  y += 12;
+
+  /* ═══════════════════════════════════════════════════════════════
+     ADD-ONS
+  ═══════════════════════════════════════════════════════════════ */
+  if (data.addOns.length > 0) {
     doc.setFontSize(10);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(37, 99, 235);
+    doc.text("ADD-ONS", margin, y);
+    y += 2;
+
+    doc.setDrawColor(226, 232, 240);
+    doc.line(margin, y, pageWidth - margin, y);
+    y += 6;
+
+    doc.setFontSize(9);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(51, 65, 85);
 
     data.addOns.forEach((addon) => {
-      doc.text(`•  ${addon.label}`, 20, y);
+      doc.text(`• ${addon.label}`, margin + 3, y);
       doc.setFont("helvetica", "bold");
-      doc.text(formatPrice(addon.price), 160, y, { align: "right" });
+      doc.setTextColor(15, 23, 42);
+      doc.text(formatPrice(addon.price), pageWidth - margin - 3, y, {
+        align: "right",
+      });
       doc.setFont("helvetica", "normal");
-      y += 7;
+      doc.setTextColor(51, 65, 85);
+      y += 6;
     });
 
-    y += 5;
+    y += 6;
   }
 
-  // ═══════ TIMELINE ═══════
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(15, 23, 42);
-  doc.text(`Timeline:`, 20, y);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(51, 65, 85);
-  doc.text(data.timeline, 90, y);
-  y += 12;
-
-  // ═══════ PRICE BREAKDOWN ═══════
+  /* ═══════════════════════════════════════════════════════════════
+     PRICE BREAKDOWN BOX
+  ═══════════════════════════════════════════════════════════════ */
+  const priceBoxHeight = 58;
   doc.setFillColor(239, 246, 255);
-  doc.rect(15, y, pageWidth - 30, 55, "F");
+  doc.roundedRect(margin, y, contentWidth, priceBoxHeight, 3, 3, "F");
 
-  doc.setFontSize(11);
+  doc.setFontSize(10);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(37, 99, 235);
-  doc.text("PRICE BREAKDOWN", 20, y + 8);
+  doc.text("PRICE BREAKDOWN", margin + 5, y + 8);
 
   y += 16;
-  doc.setFontSize(10);
+  doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(51, 65, 85);
 
-  doc.text("Base Price:", 20, y);
-  doc.text(formatPrice(data.estimate.base), 160, y, { align: "right" });
-  y += 7;
+  const labelX = margin + 5;
+  const valueX = pageWidth - margin - 5;
+
+  doc.text("Base Price:", labelX, y);
+  doc.setTextColor(15, 23, 42);
+  doc.setFont("helvetica", "bold");
+  doc.text(formatPrice(data.estimate.base), valueX, y, { align: "right" });
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(51, 65, 85);
+  y += 6;
 
   if (data.estimate.addOns > 0) {
-    doc.text("Add-Ons:", 20, y);
-    doc.text(formatPrice(data.estimate.addOns), 160, y, { align: "right" });
-    y += 7;
+    doc.text("Add-Ons Total:", labelX, y);
+    doc.setTextColor(15, 23, 42);
+    doc.setFont("helvetica", "bold");
+    doc.text(formatPrice(data.estimate.addOns), valueX, y, { align: "right" });
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(51, 65, 85);
+    y += 6;
   }
 
-  doc.text("Subtotal:", 20, y);
-  doc.text(formatPrice(data.estimate.subtotal), 160, y, { align: "right" });
-  y += 7;
+  doc.text("Subtotal:", labelX, y);
+  doc.setTextColor(15, 23, 42);
+  doc.setFont("helvetica", "bold");
+  doc.text(formatPrice(data.estimate.subtotal), valueX, y, { align: "right" });
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(51, 65, 85);
+  y += 6;
 
   if (data.referralApplied && data.estimate.discount > 0) {
     doc.setTextColor(5, 150, 105);
-    doc.text(`Referral Discount (${data.referralDiscount}%):`, 20, y);
-    doc.text(`-${formatPrice(data.estimate.discount)}`, 160, y, { align: "right" });
+    doc.setFont("helvetica", "bold");
+    doc.text(`Referral Discount (${data.referralDiscount}%):`, labelX, y);
+    doc.text(`-${formatPrice(data.estimate.discount)}`, valueX, y, {
+      align: "right",
+    });
+    doc.setFont("helvetica", "normal");
     doc.setTextColor(51, 65, 85);
-    y += 7;
+    y += 6;
   }
 
+  doc.setDrawColor(37, 99, 235);
+  doc.setLineWidth(0.3);
+  doc.line(labelX, y, valueX, y);
+  y += 6;
+
+  doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(15, 23, 42);
-  doc.text("Final Amount:", 20, y);
-  doc.text(formatPrice(data.estimate.final), 160, y, { align: "right" });
-  y += 10;
+  doc.text("Final Amount:", labelX, y);
+  doc.setTextColor(37, 99, 235);
+  doc.setFontSize(12);
+  doc.text(formatPrice(data.estimate.final), valueX, y, { align: "right" });
+
+  y += 8;
 
   if (data.estimate.adSpend > 0) {
+    doc.setFontSize(8);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(180, 83, 9);
-    doc.text("Note: Ad spend is separate", 20, y);
-    doc.text(formatPrice(data.estimate.adSpend), 160, y, { align: "right" });
-    y += 7;
+    doc.text(
+      `Note: Ad spend of ${formatPrice(data.estimate.adSpend)} is separate`,
+      labelX,
+      y
+    );
+    y += 6;
   }
 
-  y += 12;
+  y += 6;
 
-  // ═══════ FINAL RANGE ═══════
+  /* ═══════════════════════════════════════════════════════════════
+     ESTIMATED RANGE
+  ═══════════════════════════════════════════════════════════════ */
+  const rangeBoxHeight = 26;
   doc.setFillColor(15, 23, 42);
-  doc.rect(15, y, pageWidth - 30, 25, "F");
+  doc.roundedRect(margin, y, contentWidth, rangeBoxHeight, 3, 3, "F");
 
-  doc.setFontSize(10);
+  doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
-  doc.setTextColor(203, 213, 225);
-  doc.text("ESTIMATED RANGE", 20, y + 9);
+  doc.setTextColor(148, 163, 184);
+  doc.text("TOTAL ESTIMATED RANGE", margin + 5, y + 8);
 
   doc.setFontSize(16);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(255, 255, 255);
   doc.text(
-    `${formatPrice(data.estimate.low)}  –  ${formatPrice(data.estimate.high)}`,
-    20,
-    y + 19
+    `${formatPrice(data.estimate.low)}  -  ${formatPrice(data.estimate.high)}`,
+    margin + 5,
+    y + 20
   );
 
-  y += 35;
+  y += rangeBoxHeight + 10;
 
-  // ═══════ TERMS ═══════
+  /* ═══════════════════════════════════════════════════════════════
+     TERMS
+  ═══════════════════════════════════════════════════════════════ */
+  doc.setFontSize(9);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(15, 23, 42);
+  doc.text("Terms & Conditions", margin, y);
+  y += 5;
+
+  doc.setFontSize(7.5);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(100, 116, 139);
+
+  const terms = [
+    "• This is a ballpark estimate. Final quote may vary based on detailed requirements.",
+    "• Domain & hosting charges are separate and not included in this estimate.",
+    "• Prices are valid for 30 days from the date of this quote.",
+    "• GST applicable as per government regulations.",
+    "• Payment terms: 50% advance, 50% on delivery (unless agreed otherwise).",
+  ];
+
+  terms.forEach((term) => {
+    doc.text(term, margin, y);
+    y += 4;
+  });
+
+  /* ═══════════════════════════════════════════════════════════════
+     FOOTER
+  ═══════════════════════════════════════════════════════════════ */
+  const footerY = pageHeight - 14;
+
+  doc.setFillColor(15, 23, 42);
+  doc.rect(0, footerY, pageWidth, 14, "F");
+
   doc.setFontSize(8);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(255, 255, 255);
+  doc.text("Zentrox Technologies", margin, footerY + 6);
+
   doc.setFont("helvetica", "normal");
   doc.setTextColor(148, 163, 184);
-  doc.text("Terms & Conditions:", 15, y);
-  y += 4;
-  doc.text("• This is a ballpark estimate. Final quote may vary based on detailed requirements.", 15, y);
-  y += 4;
-  doc.text("• Domain & hosting charges are separate and not included.", 15, y);
-  y += 4;
-  doc.text("• Prices are valid for 30 days from the date of this quote.", 15, y);
-  y += 4;
-  doc.text("• GST applicable as per government regulations.", 15, y);
-
-  // ═══════ FOOTER ═══════
-  doc.setFillColor(15, 23, 42);
-  doc.rect(0, pageHeight - 15, pageWidth, 15, "F");
-
-  doc.setFontSize(8);
-  doc.setTextColor(203, 213, 225);
   doc.text(
-    "Zentrox Technologies  |  zentroxtechnologies.com  |  contact.zentroxtech@gmail.com  |  +91 89881 83513",
-    pageWidth / 2,
-    pageHeight - 6,
-    { align: "center" }
+    "zentroxtechnologies.com  |  contact.zentroxtech@gmail.com  |  +91 89881 83513",
+    margin,
+    footerY + 10
   );
 
-  // ═══════ SAVE ═══════
+  doc.text("MSME Registered", pageWidth - margin, footerY + 8, {
+    align: "right",
+  });
+
+  /* ═══════════════════════════════════════════════════════════════
+     SAVE
+  ═══════════════════════════════════════════════════════════════ */
   doc.save(`Zentrox-Quote-${quoteId}.pdf`);
 }
