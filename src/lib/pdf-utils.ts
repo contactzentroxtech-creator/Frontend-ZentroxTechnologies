@@ -25,9 +25,6 @@ interface PDFData {
   referralDiscount: number;
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   Format price — "Rs." use karo (₹ symbol jsPDF mein render nahi hota)
-═══════════════════════════════════════════════════════════════ */
 function formatPrice(n: number): string {
   return "Rs. " + Math.round(n).toLocaleString("en-IN");
 }
@@ -45,6 +42,13 @@ export async function generatePDF(data: PDFData): Promise<void> {
     month: "long",
     year: "numeric",
   });
+
+  // Advance payment discount (2%)
+  const advanceDiscountPercent = 2;
+  const advanceDiscountAmount = Math.round(
+    data.estimate.final * (advanceDiscountPercent / 100)
+  );
+  const finalAfterAdvance = data.estimate.final - advanceDiscountAmount;
 
   let y = 0;
 
@@ -241,7 +245,7 @@ export async function generatePDF(data: PDFData): Promise<void> {
   /* ═══════════════════════════════════════════════════════════════
      PRICE BREAKDOWN BOX
   ═══════════════════════════════════════════════════════════════ */
-  const priceBoxHeight = 58;
+  const priceBoxHeight = data.referralApplied ? 70 : 58;
   doc.setFillColor(239, 246, 255);
   doc.roundedRect(margin, y, contentWidth, priceBoxHeight, 3, 3, "F");
 
@@ -323,7 +327,34 @@ export async function generatePDF(data: PDFData): Promise<void> {
     y += 6;
   }
 
-  y += 6;
+  y += 8;
+
+  /* ═══════════════════════════════════════════════════════════════
+     ADVANCE DISCOUNT BOX
+  ═══════════════════════════════════════════════════════════════ */
+  const advanceBoxHeight = 22;
+  doc.setFillColor(5, 150, 105);
+  doc.roundedRect(margin, y, contentWidth, advanceBoxHeight, 3, 3, "F");
+
+  doc.setFontSize(9);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(255, 255, 255);
+  doc.text(
+    `Special Offer: Pay 100% Advance & Get ${advanceDiscountPercent}% Extra Discount!`,
+    margin + 5,
+    y + 8
+  );
+
+  doc.setFontSize(8);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(220, 252, 231);
+  doc.text(
+    `You save ${formatPrice(advanceDiscountAmount)} more — Final: ${formatPrice(finalAfterAdvance)}`,
+    margin + 5,
+    y + 15
+  );
+
+  y += advanceBoxHeight + 8;
 
   /* ═══════════════════════════════════════════════════════════════
      ESTIMATED RANGE
@@ -346,10 +377,112 @@ export async function generatePDF(data: PDFData): Promise<void> {
     y + 20
   );
 
-  y += rangeBoxHeight + 10;
+  y += rangeBoxHeight + 8;
 
   /* ═══════════════════════════════════════════════════════════════
-     TERMS
+     WHY CHOOSE ZENTROX — NEW SECTION
+  ═══════════════════════════════════════════════════════════════ */
+  const whyBoxHeight = 38;
+  doc.setFillColor(248, 250, 252);
+  doc.roundedRect(margin, y, contentWidth, whyBoxHeight, 3, 3, "F");
+
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(37, 99, 235);
+  doc.text("WHY CHOOSE ZENTROX TECHNOLOGIES?", margin + 5, y + 8);
+
+  doc.setFontSize(8.5);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(51, 65, 85);
+
+  const whyPoints = [
+    "MSME Registered company based in Mohali & Chandigarh, India",
+    "100+ successful projects delivered for clients across India & worldwide",
+    "Transparent pricing — no hidden charges, clear deliverables",
+    "Post-launch support included with every project",
+    "On-time delivery with a 24-hour response guarantee",
+  ];
+
+  let whyY = y + 15;
+  whyPoints.forEach((point) => {
+    doc.text(`• ${point}`, margin + 5, whyY);
+    whyY += 5;
+  });
+
+  y += whyBoxHeight + 8;
+
+  /* ═══════════════════════════════════════════════════════════════
+     NEXT STEPS — NEW SECTION
+  ═══════════════════════════════════════════════════════════════ */
+  const nextBoxHeight = 32;
+  doc.setFillColor(239, 246, 255);
+  doc.roundedRect(margin, y, contentWidth, nextBoxHeight, 3, 3, "F");
+
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(37, 99, 235);
+  doc.text("NEXT STEPS", margin + 5, y + 8);
+
+  doc.setFontSize(8.5);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(51, 65, 85);
+
+  const nextSteps = [
+    "1. Review this quote and confirm the requirements",
+    "2. Our team will schedule a free consultation call within 24 hours",
+    "3. Finalize the project scope, timeline, and payment terms",
+    "4. Sign the agreement and kick-off the project!",
+  ];
+
+  let nextY = y + 15;
+  nextSteps.forEach((step) => {
+    doc.text(step, margin + 5, nextY);
+    nextY += 5;
+  });
+
+  y += nextBoxHeight + 8;
+
+  /* ═══════════════════════════════════════════════════════════════
+     THANK YOU NOTE — NEW SECTION
+  ═══════════════════════════════════════════════════════════════ */
+  const thankyouHeight = 24;
+  doc.setFillColor(15, 23, 42);
+  doc.roundedRect(margin, y, contentWidth, thankyouHeight, 3, 3, "F");
+
+  doc.setFontSize(11);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(255, 255, 255);
+  doc.text(
+    `Thank you, ${data.clientName}!`,
+    pageWidth / 2,
+    y + 9,
+    { align: "center" }
+  );
+
+  doc.setFontSize(8.5);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(203, 213, 225);
+  doc.text(
+    "We look forward to building something great together.",
+    pageWidth / 2,
+    y + 16,
+    { align: "center" }
+  );
+
+  doc.setFontSize(8);
+  doc.setFont("helvetica", "italic");
+  doc.setTextColor(148, 163, 184);
+  doc.text(
+    "— Team Zentrox Technologies",
+    pageWidth / 2,
+    y + 21,
+    { align: "center" }
+  );
+
+  y += thankyouHeight + 6;
+
+  /* ═══════════════════════════════════════════════════════════════
+     TERMS & CONDITIONS
   ═══════════════════════════════════════════════════════════════ */
   doc.setFontSize(9);
   doc.setFont("helvetica", "bold");
@@ -357,7 +490,7 @@ export async function generatePDF(data: PDFData): Promise<void> {
   doc.text("Terms & Conditions", margin, y);
   y += 5;
 
-  doc.setFontSize(7.5);
+  doc.setFontSize(7);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(100, 116, 139);
 
@@ -365,8 +498,9 @@ export async function generatePDF(data: PDFData): Promise<void> {
     "• This is a ballpark estimate. Final quote may vary based on detailed requirements.",
     "• Domain & hosting charges are separate and not included in this estimate.",
     "• Prices are valid for 30 days from the date of this quote.",
-    "• GST applicable as per government regulations.",
+    "• Zentrox Technologies is an MSME Registered company. (Not GST applicable)",
     "• Payment terms: 50% advance, 50% on delivery (unless agreed otherwise).",
+    "• Pay 100% advance and get 2% extra discount on total amount.",
   ];
 
   terms.forEach((term) => {
