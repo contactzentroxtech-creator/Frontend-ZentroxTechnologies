@@ -53,52 +53,47 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   FORCE VISIBILITY — Override ALL dark theme leftovers
-   Yeh sab kuch force visible kar dega
+   FORCE VISIBILITY — Dark text everywhere
+   (Except dark button backgrounds)
 ═══════════════════════════════════════════════════════════════ */
 
-/* Admin panel — force dark text */
+/* Admin panel — dark text */
 .admin-layout,
-.admin-layout *,
-[class*="admin"] {
-  color: #0f172a !important;
-}
-
 .admin-layout h1, .admin-layout h2, .admin-layout h3, .admin-layout h4,
+.admin-layout h5, .admin-layout h6,
 .admin-layout th, .admin-layout td, .admin-layout label,
 .admin-layout strong, .admin-layout b {
   color: #0f172a !important;
 }
 
 .admin-layout p, .admin-layout span, .admin-layout li,
-.admin-layout small, .admin-layout em {
-  color: #475569 !important;
+.admin-layout small, .admin-layout em, .admin-layout div {
+  color: inherit;
 }
 
-.admin-layout a {
-  color: #2563eb !important;
+.admin-layout a:not([class*="bg-"]) {
+  color: #2563eb;
 }
 
-/* Main content — force dark text */
-main,
-main h1, main h2, main h3, main h4,
+/* Main content — dark text */
+main h1, main h2, main h3, main h4, main h5, main h6,
 main th, main td, main label,
 main strong, main b {
   color: #0f172a !important;
 }
 
-main p, main span, main li,
-main small, main em {
+/* Paragraphs — dark slate */
+main p, main li, main small, main em {
   color: #475569 !important;
 }
 
 /* Blog content */
-article, article p, article li {
-  color: #334155 !important;
-}
-
 article h1, article h2, article h3, article h4 {
   color: #0f172a !important;
+}
+
+article p, article li {
+  color: #334155 !important;
 }
 
 /* Inputs everywhere */
@@ -111,18 +106,54 @@ input::placeholder, textarea::placeholder {
   color: #94a3b8 !important;
 }
 
-/* White text on colored buttons preserved */
-button[class*="bg-blue"] *,
-button[class*="bg-gradient"] *,
-button[class*="bg-purple"] *,
-a[class*="bg-blue"] *,
-a[class*="bg-gradient"] *,
-a[class*="bg-purple"] *,
-button[class*="bg-slate-9"] *,
-button[class*="bg-red"] *,
-button[class*="bg-emerald"] *,
-div[class*="bg-blue-600"] > *,
-div[class*="bg-gradient-to"] > * {
+/* ═══════════════════════════════════════════════════════════════
+   WHITE TEXT ONLY ON SOLID DARK BUTTONS
+   Light backgrounds (blue-50, etc.) pe dark text rahega
+═══════════════════════════════════════════════════════════════ */
+
+/* Solid blue buttons */
+button.bg-blue-600, button.bg-blue-600 *,
+button.bg-blue-700, button.bg-blue-700 *,
+a.bg-blue-600, a.bg-blue-600 *,
+a.bg-blue-700, a.bg-blue-700 * {
+  color: #ffffff !important;
+}
+
+/* Solid purple buttons */
+button.bg-purple-600, button.bg-purple-600 *,
+button.bg-purple-700, button.bg-purple-700 *,
+a.bg-purple-600, a.bg-purple-600 * {
+  color: #ffffff !important;
+}
+
+/* Solid slate dark buttons */
+button.bg-slate-900, button.bg-slate-900 *,
+button.bg-slate-800, button.bg-slate-800 *,
+a.bg-slate-900, a.bg-slate-900 * {
+  color: #ffffff !important;
+}
+
+/* Solid red buttons */
+button.bg-red-600, button.bg-red-600 *,
+a.bg-red-600, a.bg-red-600 * {
+  color: #ffffff !important;
+}
+
+/* Solid emerald buttons */
+button.bg-emerald-600, button.bg-emerald-600 *,
+a.bg-emerald-600, a.bg-emerald-600 * {
+  color: #ffffff !important;
+}
+
+/* Gradient buttons — white text */
+button[class*="from-blue-600"][class*="to-purple-600"],
+button[class*="from-blue-600"][class*="to-purple-600"] *,
+button[class*="from-emerald-500"][class*="to-emerald-600"],
+button[class*="from-emerald-500"][class*="to-emerald-600"] *,
+a[class*="from-blue-600"][class*="to-purple-600"],
+a[class*="from-blue-600"][class*="to-purple-600"] *,
+a[class*="from-emerald-500"][class*="to-emerald-600"],
+a[class*="from-emerald-500"][class*="to-emerald-600"] * {
   color: #ffffff !important;
 }
 
@@ -168,7 +199,7 @@ div[class*="bg-gradient-to"] > * {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   BUTTONS
+   BUTTONS (Utility classes)
 ═══════════════════════════════════════════════════════════════ */
 .btn-primary {
   background-color: #2563eb;
