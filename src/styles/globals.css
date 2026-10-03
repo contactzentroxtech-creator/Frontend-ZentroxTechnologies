@@ -49,12 +49,92 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   DARK SECTION DETECTION
-   Dark backgrounds = white text (must be FIRST to override)
-   Light backgrounds = dark text (default)
+   🔥 FORCE VISIBILITY — ADMIN PANEL (HIGHEST PRIORITY)
+   Yeh sab admin pages ke liye text ko visible karega
+   Fixes: Blog title, Analytics, CMS, Pricing, Popups, Media
 ═══════════════════════════════════════════════════════════════ */
 
-/* ─── DARK SECTIONS: #0f172a, slate-900, slate-800 ─── */
+/* Admin layout — ALL text dark */
+.admin-layout,
+.admin-layout * {
+  color: #0f172a !important;
+}
+
+.admin-layout h1,
+.admin-layout h2,
+.admin-layout h3,
+.admin-layout h4,
+.admin-layout h5,
+.admin-layout h6,
+.admin-layout th,
+.admin-layout td,
+.admin-layout label,
+.admin-layout strong,
+.admin-layout b {
+  color: #0f172a !important;
+  opacity: 1 !important;
+}
+
+.admin-layout p,
+.admin-layout li,
+.admin-layout small,
+.admin-layout em {
+  color: #334155 !important;
+  opacity: 1 !important;
+}
+
+/* Admin — blog title fix (specific) */
+.admin-layout h1,
+.admin-layout h2,
+.admin-layout h3,
+.admin-layout [class*="title"],
+.admin-layout [class*="heading"] {
+  color: #0f172a !important;
+  opacity: 1 !important;
+  font-weight: 700 !important;
+}
+
+/* Admin main content area — fallback */
+main .admin-content,
+main .admin-content *,
+[class*="admin"] h1,
+[class*="admin"] h2,
+[class*="admin"] h3,
+[class*="admin"] h4 {
+  color: #0f172a !important;
+  opacity: 1 !important;
+}
+
+/* Blog cards — title visible */
+article h1, article h2, article h3,
+article h4, article h5, article h6,
+[class*="blog"] h1, [class*="blog"] h2,
+[class*="blog"] h3, [class*="blog"] h4 {
+  color: #0f172a !important;
+  opacity: 1 !important;
+}
+
+/* Table cells — admin tables */
+table td, table th {
+  color: #0f172a !important;
+}
+
+/* Placeholder fade fix */
+.admin-layout [class*="text-slate"] {
+  color: #334155 !important;
+}
+
+/* Recharts — analytics charts */
+.admin-layout .recharts-wrapper,
+.admin-layout .recharts-wrapper *,
+.admin-layout [class*="recharts"] text {
+  fill: #0f172a !important;
+  color: #0f172a !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DARK SECTIONS — WHITE TEXT (CTA, Footer, etc.)
+═══════════════════════════════════════════════════════════════ */
 section[class*="bg-[#0f172a]"],
 section[class*="bg-[#0f172a]"] *,
 section[class*="bg-slate-900"],
@@ -69,115 +149,33 @@ div[class*="bg-[#0f172a]"] * {
 section[class*="bg-[#0f172a]"] p,
 section[class*="bg-[#0f172a]"] span:not([class*="bg-"]),
 section[class*="bg-[#0f172a]"] li,
-section[class*="bg-[#0f172a]"] small,
 section[class*="bg-slate-900"] p,
 section[class*="bg-slate-900"] span:not([class*="bg-"]),
-section[class*="bg-slate-900"] li,
-div[class*="bg-[#0f172a]"] p,
-div[class*="bg-[#0f172a]"] span:not([class*="bg-"]) {
+section[class*="bg-slate-900"] li {
   color: #cbd5e1;
 }
 
-/* ─── LIGHT SECTIONS: default dark text ─── */
-h1, h2, h3, h4, h5, h6 {
-  color: #0f172a;
-}
-
-p {
-  color: #475569;
-}
-
-/* Admin panel — always light theme with dark text */
-.admin-layout h1,
-.admin-layout h2,
-.admin-layout h3,
-.admin-layout h4,
-.admin-layout h5,
-.admin-layout h6,
-.admin-layout th,
-.admin-layout td,
-.admin-layout label,
-.admin-layout strong,
-.admin-layout b {
-  color: #0f172a !important;
-}
-
-.admin-layout p,
-.admin-layout span,
-.admin-layout li {
-  color: #475569 !important;
-}
-
 /* ═══════════════════════════════════════════════════════════════
-   BUTTONS — WHITE TEXT (solid dark backgrounds)
+   BUTTONS — WHITE TEXT ON DARK BACKGROUNDS
 ═══════════════════════════════════════════════════════════════ */
-
-/* Solid blue */
 button.bg-blue-600, button.bg-blue-600 *,
 button.bg-blue-700, button.bg-blue-700 *,
-a.bg-blue-600, a.bg-blue-600 * {
-  color: #ffffff !important;
-}
-
-/* Solid purple */
+a.bg-blue-600, a.bg-blue-600 *,
 button.bg-purple-600, button.bg-purple-600 *,
-a.bg-purple-600, a.bg-purple-600 * {
-  color: #ffffff !important;
-}
-
-/* Solid slate dark */
+a.bg-purple-600, a.bg-purple-600 *,
 button.bg-slate-900, button.bg-slate-900 *,
-button.bg-slate-800, button.bg-slate-800 *,
-a.bg-slate-900, a.bg-slate-900 * {
-  color: #ffffff !important;
-}
-
-/* Solid red */
+a.bg-slate-900, a.bg-slate-900 *,
 button.bg-red-600, button.bg-red-600 *,
-button.bg-red-500, button.bg-red-500 *,
-a.bg-red-600, a.bg-red-600 * {
-  color: #ffffff !important;
-}
-
-/* Solid emerald */
 button.bg-emerald-600, button.bg-emerald-600 *,
-button.bg-emerald-500, button.bg-emerald-500 *,
-a.bg-emerald-600, a.bg-emerald-600 * {
-  color: #ffffff !important;
-}
-
-/* Solid white button (dark text) */
-button.bg-white, button.bg-white *,
-a.bg-white, a.bg-white * {
-  color: #0f172a !important;
-}
-
-/* Gradient buttons */
 button[class*="from-blue-600"][class*="to-purple-600"],
 button[class*="from-blue-600"][class*="to-purple-600"] *,
-button[class*="from-emerald-500"][class*="to-emerald-600"],
-button[class*="from-emerald-500"][class*="to-emerald-600"] *,
 a[class*="from-blue-600"][class*="to-purple-600"],
 a[class*="from-blue-600"][class*="to-purple-600"] * {
   color: #ffffff !important;
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   SELECTED STATES — dark text on light backgrounds
-═══════════════════════════════════════════════════════════════ */
-button.bg-blue-50, button.bg-blue-50 *,
-button.bg-blue-50 h3, button.bg-blue-50 p,
-button.bg-blue-50 span, button.bg-blue-50 div {
-  color: #0f172a !important;
-}
-
-button.bg-blue-50 p,
-button.bg-blue-50 span:not([class*="text-"]) {
-  color: #475569 !important;
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   INPUTS
+   INPUTS — Always visible
 ═══════════════════════════════════════════════════════════════ */
 input, textarea, select {
   color: #0f172a !important;
@@ -186,6 +184,17 @@ input, textarea, select {
 
 input::placeholder, textarea::placeholder {
   color: #94a3b8 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GLOBAL HEADINGS
+═══════════════════════════════════════════════════════════════ */
+h1, h2, h3, h4, h5, h6 {
+  color: #0f172a;
+}
+
+p {
+  color: #475569;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -371,7 +380,7 @@ input::placeholder, textarea::placeholder {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   FOCUS
+   FOCUS STATES
 ═══════════════════════════════════════════════════════════════ */
 button:focus-visible,
 a:focus-visible,
