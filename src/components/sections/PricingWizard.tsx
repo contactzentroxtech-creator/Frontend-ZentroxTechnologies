@@ -65,7 +65,7 @@ const SERVICE_CONFIGS = {
     ],
   },
   mobile: {
-    label: "Mobile App Development",
+    label: "Mobile App",
     icon: Smartphone,
     color: "#7c3aed",
     basePrice: 79999,
@@ -239,7 +239,7 @@ const SERVICE_CONFIGS = {
     ],
   },
   ads: {
-    label: "Google Ads Management",
+    label: "Google Ads",
     icon: TrendingUp,
     color: "#ea580c",
     basePrice: 9999,
@@ -262,12 +262,12 @@ const SERVICE_CONFIGS = {
         { value: "search", label: "Search Ads Only", multiplier: 1.0 },
         { value: "search-display", label: "Search + Display", multiplier: 1.4 },
         { value: "shopping", label: "Shopping + Search", multiplier: 1.8 },
-        { value: "full", label: "Full (Search + Display + Shopping + Video)", multiplier: 2.5 },
+        { value: "full", label: "Full Campaigns", multiplier: 2.5 },
       ]},
     ],
     addOns: [
       { id: "landing", label: "Landing Page Design", price: 9999 },
-      { id: "conversion", label: "Conversion Tracking Setup", price: 4999 },
+      { id: "conversion", label: "Conversion Tracking", price: 4999 },
       { id: "remarketing", label: "Remarketing Campaigns", price: 5999 },
       { id: "video", label: "YouTube Video Ads", price: 8999 },
       { id: "shopping", label: "Google Shopping Setup", price: 7999 },
@@ -275,7 +275,7 @@ const SERVICE_CONFIGS = {
     ],
   },
   meta_ads: {
-    label: "Meta Ads (FB + Insta)",
+    label: "Meta Ads",
     icon: TrendingUp,
     color: "#be185d",
     basePrice: 9999,
@@ -290,7 +290,7 @@ const SERVICE_CONFIGS = {
       ]},
       { id: "placements", label: "Ad Placements", type: "select", options: [
         { value: "fb-feed", label: "Facebook Feed Only", multiplier: 1.0 },
-        { value: "fb-ig", label: "Facebook + Instagram Feed", multiplier: 1.3 },
+        { value: "fb-ig", label: "Facebook + Instagram", multiplier: 1.3 },
         { value: "full", label: "Feed + Stories + Reels", multiplier: 1.7 },
         { value: "all", label: "All Placements + Audience Network", multiplier: 2.2 },
       ]},
@@ -390,11 +390,21 @@ export default function PricingWizard() {
   }, [serviceId, config]);
 
   const calculateEstimate = () => {
-    if (!config) return { base: 0, addOns: 0, subtotal: 0, discount: 0, adSpend: 0, final: 0, low: 0, high: 0 };
+    if (!config) {
+      return {
+        base: 0,
+        addOns: 0,
+        subtotal: 0,
+        discount: 0,
+        adSpend: 0,
+        final: 0,
+        totalWithAdSpend: 0,
+        low: 0,
+        high: 0,
+      };
+    }
 
     let basePrice = config.basePrice;
-    let adSpend = 0;
-
     config.fields.forEach((field) => {
       const val = fieldValues[field.id];
       const option = field.options.find((o) => o.value === val);
@@ -430,6 +440,7 @@ export default function PricingWizard() {
       discount: Math.round(discount),
       adSpend: 0,
       final: Math.round(subtotal),
+      totalWithAdSpend: Math.round(subtotal),
       low: Math.round(subtotal * 0.9),
       high: Math.round(subtotal * 1.15),
     };
