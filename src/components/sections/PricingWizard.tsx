@@ -528,7 +528,7 @@ export default function PricingWizard() {
         email: email.trim(),
         phone: phone.trim(),
         service: config.label,
-        message: `📋 PROJECT ESTIMATE REQUEST\n\nService: ${config.label}\n\n--- Requirements ---\n${fieldDetails}\n\n--- Add-Ons ---\n${selectedAddOns || "None"}\n\n--- Timeline ---\n${timeline}\n\n--- Price Breakdown ---\nBase: ${formatPrice(estimate.base)}\nAdd-Ons: ${formatPrice(estimate.addOns)}\n${estimate.discount > 0 ? `Discount: -${formatPrice(estimate.discount)}\n` : ""}Final: ${formatPrice(estimate.final)}\nRange: ${formatPrice(estimate.low)} - ${formatPrice(estimate.high)}`,
+        message: `📋 PROJECT ESTIMATE REQUEST\n\nService: ${config.label}\nBilling: ${config.priceType === "monthly" ? "Monthly" : "One-Time"}\n\n--- Requirements ---\n${fieldDetails}\n\n--- Add-Ons ---\n${selectedAddOns || "None"}\n\n--- Timeline ---\n${timeline}\n\n--- Price Breakdown ---\nBase: ${formatPrice(estimate.base)}\nAdd-Ons: ${formatPrice(estimate.addOns)}\n${estimate.discount > 0 ? `Discount: -${formatPrice(estimate.discount)}\n` : ""}Final: ${formatPrice(estimate.final)}\nRange: ${formatPrice(estimate.low)} - ${formatPrice(estimate.high)}`,
         source: "budget-calculator",
         priority: "high",
         referralCode: referralApplied ? referralCode.toUpperCase() : "",
@@ -538,6 +538,7 @@ export default function PricingWizard() {
         projectDetails: {
           serviceId,
           service: config.label,
+          priceType: config.priceType,
           fields: fieldValues,
           addOns,
           timeline,
@@ -567,6 +568,7 @@ export default function PricingWizard() {
         clientPhone: phone,
         service: config.label,
         serviceId,
+        priceType: config.priceType as "onetime" | "monthly",
         fieldDetails: Object.entries(fieldValues).map(([key, val]) => {
           const field = config.fields.find((f) => f.id === key);
           const option = field?.options.find((o) => o.value === val);
