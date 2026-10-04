@@ -1,177 +1,317 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Edit2, Trash2, X, Check, Power } from 'lucide-react';
-import api from '@/lib/api';
-import toast from 'react-hot-toast';
+import { useState, useEffect, useCallback } from "react";
+import {
+  Plus,
+  Edit,
+  Trash2,
+  Loader2,
+  AlertCircle,
+  Check,
+  X,
+  Megaphone,
+  RefreshCw,
+  Eye,
+  EyeOff,
+} from "lucide-react";
+import api from "@/lib/api";
 
-const POPUP_TYPES = ['exit-intent', 'lead', 'newsletter', 'discount', 'whatsapp', 'internship', 'announcement'];
-const TRIGGERS = ['time', 'scroll', 'exit', 'click'];
+interface Popup {
+  _id: string;
+  title: string;
+  message: string;
+  ctaText?: string;
+  ctaLink?: string;
+  isActive: boolean;
+  createdAt: string;
+}
 
-function PopupModal({ popup, onClose, onSaved }: { popup?: any; onClose: () => void; onSaved: () => void }) {
+export default function PopupsPage() {
+  const [popups, setPopups] = useState<Popup[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [showForm, setShowForm] = useState(false);
+  const [editing, setEditing] = useState<Popup | null>(null);
   const [form, setForm] = useState({
-    name: popup?.name || '', type: popup?.type || 'lead', title: popup?.title || '',
-    content: popup?.content || '', ctaText: popup?.ctaText || '', ctaLink: popup?.ctaLink || '',
-    trigger: popup?.trigger || 'scroll', triggerValue: popup?.triggerValue || 30,
-    isActive: popup?.isActive ?? false, showOnce: popup?.showOnce ?? true,
+    title: "",
+    message: "",
+    ctaText: "",
+    ctaLink: "",
+    isActive: true,
   });
   const [saving, setSaving] = useState(false);
 
-  const save = async () => {
-    setSaving(true);
+  const fetchPopups = useCallback(async () => {
+    setLoading(true);
+    setError("");
     try {
-      if (popup?._id) { await api.patch(`/cms/popups/${popup._id}`, form); toast.success('Popup updated'); }
-      else { await api.post('/cms/popups', form); toast.success('Popup created'); }
-      onSaved(); onClose();
-    } catch { toast.error('Save failed'); }
-    setSaving(false);
+      const { data } = await api.get("/popups");
+      if (data?.success && Array.isArray(data.data)) setPopups(data.data);
+      else if (Array.isArray(data)) setPopups(data);
+      else setPopups([]);
+    } catch (err: any) {
+      // 404 → backend popups route nahi hai, empty list dikhao
+      if (err?.response?.status === 404) {
+        setPopups([]);
+      } else {
+        setError(err?.response?.data?.message || "Failed to load popups");
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchPopups();
+  }, [fetchPopups]);
+
+  const handleSave = async () => {
+    if (!form.title.trim() || !form.message.trim()) {
+      setError("Title aur message required hai");
+      return;
+    }
+    setSaving(true);
+    setError("");
+    try {
+      if (editing) {
+        await api.patch(`/popups/${editing._id}`, form);
+        setSuccess("Popup updated");
+      } else {
+        await api.post("/popups", form);
+        setSuccess("Popup created");
+      }
+      setShowForm(false);
+      setEditing(null);
+      setForm({ title: "", message: "", ctaText: "", ctaLink: "", isActive: true });
+      await fetchPopups();
+      setTimeout(() => setSuccess(""), 3000);
+    } catch (err: any) {
+      setError(err?.response?.data?.message || "Save failed");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Delete this popup?")) return;
+    try {
+      await api.delete(`/popups/${id}`);
+      setPopups((prev) => prev.filter((p) => p._id !== id));
+      setSuccess("Popup deleted");
+      setTimeout(() => setSuccess(""), 3000);
+    } catch (err: any) {
+      setError(err?.response?.data?.message || "Delete failed");
+    }
+  };
+
+  const handleEdit = (popup: Popup) => {
+    setEditing(popup);
+    setForm({
+      title: popup.title,
+      message: popup.message,
+      ctaText: popup.ctaText || "",
+      ctaLink: popup.ctaLink || "",
+      isActive: popup.isActive,
+    });
+    setShowForm(true);
+  };
+
+  const cancelForm = () => {
+    setShowForm(false);
+    setEditing(null);
+    setForm({ title: "", message: "", ctaText: "", ctaLink: "", isActive: true });
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-        className="glass-card w-full max-w-lg p-6 relative z-10 max-h-[90vh] overflow-y-auto">
-        <div className="flex justify-between mb-5">
-          <h2 className="text-lg font-bold text-white">{popup ? 'Edit Popup' : 'New Popup'}</h2>
-          <button onClick={onClose}><X size={18} className="text-z-muted" /></button>
+    <div className="admin-content p-4 md:p-6 lg:p-8 max-w-7xl mx-auto">
+      <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-extrabold text-slate-900 mb-1">
+            Popups & Offers
+          </h1>
+          <p className="text-sm text-slate-600">
+            Manage promotional popups shown to website visitors.
+          </p>
         </div>
-        <div className="flex flex-col gap-4">
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-xs text-z-muted mb-1 block">Internal Name</label>
-              <input value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} className="z-input text-sm" />
-            </div>
-            <div>
-              <label className="text-xs text-z-muted mb-1 block">Popup Type</label>
-              <select value={form.type} onChange={e => setForm(p => ({ ...p, type: e.target.value }))} className="z-input text-sm">
-                {POPUP_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-              </select>
-            </div>
-          </div>
-          <div>
-            <label className="text-xs text-z-muted mb-1 block">Title</label>
-            <input value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))} className="z-input text-sm" />
-          </div>
-          <div>
-            <label className="text-xs text-z-muted mb-1 block">Content</label>
-            <textarea value={form.content} onChange={e => setForm(p => ({ ...p, content: e.target.value }))} rows={3} className="z-input resize-none text-sm" />
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-xs text-z-muted mb-1 block">CTA Button Text</label>
-              <input value={form.ctaText} onChange={e => setForm(p => ({ ...p, ctaText: e.target.value }))} className="z-input text-sm" />
-            </div>
-            <div>
-              <label className="text-xs text-z-muted mb-1 block">CTA Link</label>
-              <input value={form.ctaLink} onChange={e => setForm(p => ({ ...p, ctaLink: e.target.value }))} className="z-input text-sm" placeholder="/contact" />
-            </div>
-            <div>
-              <label className="text-xs text-z-muted mb-1 block">Trigger</label>
-              <select value={form.trigger} onChange={e => setForm(p => ({ ...p, trigger: e.target.value }))} className="z-input text-sm">
-                {TRIGGERS.map(t => <option key={t} value={t}>{t}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="text-xs text-z-muted mb-1 block">Trigger Value (s or %)</label>
-              <input type="number" value={form.triggerValue} onChange={e => setForm(p => ({ ...p, triggerValue: Number(e.target.value) }))} className="z-input text-sm" />
-            </div>
-          </div>
-          <div className="flex gap-5">
-            {[['isActive', 'Active'], ['showOnce', 'Show Once per Session']].map(([key, label]) => (
-              <label key={key} className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={(form as any)[key]} onChange={e => setForm(p => ({ ...p, [key]: e.target.checked }))} className="accent-z-accent w-4 h-4" />
-                <span className="text-sm text-z-muted">{label}</span>
-              </label>
-            ))}
-          </div>
-        </div>
-        <div className="flex gap-3 mt-5">
-          <button onClick={onClose} className="flex-1 py-2.5 rounded-xl border border-z-border text-z-muted text-sm">Cancel</button>
-          <button onClick={save} disabled={saving} className="flex-1 py-2.5 rounded-xl bg-z-accent text-white text-sm font-semibold disabled:opacity-50 flex items-center justify-center gap-2">
-            {saving ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><Check size={14} /> Save</>}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={fetchPopups}
+            disabled={loading}
+            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+          >
+            <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
+            Refresh
+          </button>
+          <button
+            onClick={() => setShowForm(true)}
+            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-5 py-2.5 text-sm font-bold text-white shadow-md"
+          >
+            <Plus size={14} /> New Popup
           </button>
         </div>
-      </motion.div>
-    </div>
-  );
-}
-
-export default function AdminPopupsPage() {
-  const [popups, setPopups] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [modal, setModal] = useState<{ open: boolean; popup?: any }>({ open: false });
-
-  const fetch = async () => {
-    setLoading(true);
-    try { const { data } = await api.get('/cms/popups'); setPopups(data.data); } catch {}
-    setLoading(false);
-  };
-  useEffect(() => { fetch(); }, []);
-
-  const toggle = async (popup: any) => {
-    try {
-      await api.patch(`/cms/popups/${popup._id}`, { isActive: !popup.isActive });
-      toast.success(popup.isActive ? 'Popup deactivated' : 'Popup activated');
-      fetch();
-    } catch { toast.error('Failed'); }
-  };
-
-  const del = async (id: string) => {
-    if (!confirm('Delete this popup?')) return;
-    try { await api.delete(`/cms/popups/${id}`); toast.success('Deleted'); fetch(); } catch { toast.error('Failed'); }
-  };
-
-  return (
-    <div className="p-4 md:p-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-extrabold text-white">Popups & Offers</h1>
-          <p className="text-sm text-z-muted">Manage dynamic popup campaigns</p>
-        </div>
-        <button onClick={() => setModal({ open: true })}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-z-accent text-white text-sm font-semibold">
-          <Plus size={14} /> New Popup
-        </button>
       </div>
 
+      {error && (
+        <div className="mb-4 flex items-start gap-2 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+          <AlertCircle size={16} className="mt-0.5" />
+          <span className="flex-1">{error}</span>
+          <button onClick={() => setError("")}>
+            <X size={14} />
+          </button>
+        </div>
+      )}
+      {success && (
+        <div className="mb-4 flex items-center gap-2 rounded-xl bg-emerald-50 border border-emerald-200 px-4 py-3 text-sm text-emerald-700">
+          <Check size={16} /> <span>{success}</span>
+        </div>
+      )}
+
       {loading ? (
-        <div className="flex items-center justify-center h-48"><div className="w-8 h-8 border-2 border-z-accent/30 border-t-z-accent rounded-full animate-spin" /></div>
+        <div className="flex flex-col items-center justify-center py-20">
+          <Loader2 size={32} className="text-blue-600 animate-spin" />
+          <p className="text-xs text-slate-500 mt-3">Loading popups...</p>
+        </div>
+      ) : popups.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-20 rounded-2xl border border-dashed border-slate-300 bg-white">
+          <Megaphone size={40} className="text-slate-300 mb-3" />
+          <p className="text-sm font-semibold text-slate-900">No popups yet</p>
+          <p className="text-xs text-slate-500 mt-1">
+            Create your first promotional popup
+          </p>
+          <button
+            onClick={() => setShowForm(true)}
+            className="mt-4 inline-flex items-center gap-2 rounded-full bg-blue-600 px-5 py-2 text-xs font-bold text-white hover:bg-blue-700"
+          >
+            <Plus size={13} /> Create Popup
+          </button>
+        </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {popups.length === 0 && <p className="text-z-muted text-sm col-span-3">No popups yet. Create your first one.</p>}
-          {popups.map(popup => (
-            <motion.div key={popup._id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              className={`glass-card p-5 ${popup.isActive ? 'border-z-accent/30' : ''}`}>
-              <div className="flex items-start justify-between mb-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {popups.map((popup) => (
+            <div
+              key={popup._id}
+              className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm hover:shadow-md transition-all"
+            >
+              <div className="flex items-start justify-between gap-3 mb-3">
                 <div>
-                  <div className="text-sm font-bold text-white">{popup.name || popup.title}</div>
-                  <div className="text-xs text-z-muted mt-0.5">{popup.type} · {popup.trigger}</div>
+                  <h3 className="text-base font-extrabold text-slate-900 mb-1">
+                    {popup.title}
+                  </h3>
+                  <span
+                    className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
+                      popup.isActive
+                        ? "bg-emerald-100 text-emerald-700"
+                        : "bg-slate-100 text-slate-600"
+                    }`}
+                  >
+                    {popup.isActive ? <Eye size={10} /> : <EyeOff size={10} />}
+                    {popup.isActive ? "Active" : "Inactive"}
+                  </span>
                 </div>
-                <button onClick={() => toggle(popup)}
-                  className={`p-1.5 rounded-lg transition-colors ${popup.isActive ? 'text-green-400 hover:text-red-400' : 'text-z-muted hover:text-green-400'}`}>
-                  <Power size={15} />
+              </div>
+              <p className="text-xs text-slate-600 mb-4 line-clamp-2">
+                {popup.message}
+              </p>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => handleEdit(popup)}
+                  className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-bold text-blue-700 hover:bg-blue-100"
+                >
+                  <Edit size={12} /> Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(popup._id)}
+                  className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs font-bold text-red-600 hover:bg-red-100"
+                >
+                  <Trash2 size={12} />
                 </button>
               </div>
-              <p className="text-xs text-z-muted mb-4 line-clamp-2">{popup.content}</p>
-              <div className="flex items-center gap-2">
-                <span className={`text-xs font-semibold px-2 py-0.5 rounded-md ${popup.isActive ? 'bg-green-500/15 text-green-400' : 'bg-slate-500/15 text-slate-400'}`}>
-                  {popup.isActive ? 'Active' : 'Inactive'}
-                </span>
-                <div className="ml-auto flex gap-2">
-                  <button onClick={() => setModal({ open: true, popup })} className="text-z-muted hover:text-white transition-colors"><Edit2 size={14} /></button>
-                  <button onClick={() => del(popup._id)} className="text-z-muted hover:text-red-400 transition-colors"><Trash2 size={14} /></button>
-                </div>
-              </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       )}
 
-      <AnimatePresence>
-        {modal.open && <PopupModal popup={modal.popup} onClose={() => setModal({ open: false })} onSaved={fetch} />}
-      </AnimatePresence>
+      {showForm && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+          onClick={cancelForm}
+        >
+          <div
+            className="relative w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-lg font-extrabold text-slate-900 mb-4">
+              {editing ? "Edit Popup" : "Create Popup"}
+            </h3>
+
+            <div className="space-y-3 mb-5">
+              <input
+                type="text"
+                placeholder="Title *"
+                value={form.title}
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 focus:border-blue-500 focus:outline-none"
+              />
+              <textarea
+                placeholder="Message *"
+                rows={3}
+                value={form.message}
+                onChange={(e) => setForm({ ...form, message: e.target.value })}
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 focus:border-blue-500 focus:outline-none resize-y"
+              />
+              <input
+                type="text"
+                placeholder="Button text (optional)"
+                value={form.ctaText}
+                onChange={(e) => setForm({ ...form, ctaText: e.target.value })}
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 focus:border-blue-500 focus:outline-none"
+              />
+              <input
+                type="text"
+                placeholder="Button link (optional)"
+                value={form.ctaLink}
+                onChange={(e) => setForm({ ...form, ctaLink: e.target.value })}
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 focus:border-blue-500 focus:outline-none"
+              />
+              <label className="flex items-center gap-2 text-sm text-slate-700">
+                <input
+                  type="checkbox"
+                  checked={form.isActive}
+                  onChange={(e) => setForm({ ...form, isActive: e.target.checked })}
+                  className="h-4 w-4 rounded border-slate-300 text-blue-600"
+                />
+                Active (show to visitors)
+              </label>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <button
+                onClick={cancelForm}
+                disabled={saving}
+                className="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSave}
+                disabled={saving}
+                className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-2.5 text-sm font-bold text-white disabled:opacity-50"
+              >
+                {saving ? (
+                  <>
+                    <Loader2 size={14} className="animate-spin" /> Saving...
+                  </>
+                ) : (
+                  <>
+                    <Check size={14} /> {editing ? "Update" : "Create"}
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
