@@ -50,14 +50,13 @@ body {
 
 /* ═══════════════════════════════════════════════════════════════
    🔥 FORCE VISIBILITY — ADMIN PANEL (HIGHEST PRIORITY)
-   Yeh sab admin pages ke liye text ko visible karega
-   Fixes: Blog title, Analytics, CMS, Pricing, Popups, Media
 ═══════════════════════════════════════════════════════════════ */
 
-/* Admin layout — ALL text dark */
+/* Admin layout — ALL text dark, no opacity */
 .admin-layout,
 .admin-layout * {
   color: #0f172a !important;
+  opacity: 1 !important;
 }
 
 .admin-layout h1,
@@ -73,6 +72,7 @@ body {
 .admin-layout b {
   color: #0f172a !important;
   opacity: 1 !important;
+  font-weight: 700 !important;
 }
 
 .admin-layout p,
@@ -83,29 +83,76 @@ body {
   opacity: 1 !important;
 }
 
-/* Admin — blog title fix (specific) */
-.admin-layout h1,
-.admin-layout h2,
-.admin-layout h3,
-.admin-layout [class*="title"],
-.admin-layout [class*="heading"] {
-  color: #0f172a !important;
-  opacity: 1 !important;
-  font-weight: 700 !important;
-}
-
-/* Admin main content area — fallback */
-main .admin-content,
-main .admin-content *,
-[class*="admin"] h1,
-[class*="admin"] h2,
-[class*="admin"] h3,
-[class*="admin"] h4 {
+.admin-layout [class*="text-slate-300"],
+.admin-layout [class*="text-slate-400"],
+.admin-layout [class*="text-slate-200"],
+.admin-layout [class*="opacity-"] {
   color: #0f172a !important;
   opacity: 1 !important;
 }
 
-/* Blog cards — title visible */
+/* ─── Dashboard + Analytics specific fixes ─── */
+main h1, main h2, main h3, main h4, main h5, main h6 {
+  color: #0f172a !important;
+  opacity: 1 !important;
+}
+
+main p, main span, main div:not([class*="bg-"]) {
+  opacity: 1 !important;
+}
+
+/* KPI Cards — Total Leads, Leads Today, etc. */
+[class*="dashboard"] h1,
+[class*="dashboard"] h2,
+[class*="dashboard"] h3,
+[class*="dashboard"] h4,
+[class*="dashboard"] p,
+[class*="dashboard"] span,
+[class*="dashboard"] div {
+  color: #0f172a !important;
+  opacity: 1 !important;
+}
+
+/* Numbers in dashboard cards */
+[class*="dashboard"] .text-2xl,
+[class*="dashboard"] .text-3xl,
+[class*="dashboard"] .text-4xl {
+  color: #0f172a !important;
+  opacity: 1 !important;
+  font-weight: 800 !important;
+}
+
+/* ─── Recharts — Analytics charts ─── */
+.recharts-wrapper,
+.recharts-wrapper *,
+.recharts-wrapper text,
+.recharts-cartesian-axis-tick-value,
+.recharts-legend-item-text,
+.recharts-legend-item,
+.recharts-tooltip-wrapper,
+.recharts-tooltip-label,
+[class*="recharts"] text {
+  fill: #0f172a !important;
+  color: #0f172a !important;
+  opacity: 1 !important;
+}
+
+.recharts-cartesian-grid line {
+  stroke: #e2e8f0 !important;
+}
+
+/* ─── Analytics specific ─── */
+[class*="analytics"] h1,
+[class*="analytics"] h2,
+[class*="analytics"] h3,
+[class*="analytics"] h4,
+[class*="analytics"] p,
+[class*="analytics"] span:not([class*="bg-"]) {
+  color: #0f172a !important;
+  opacity: 1 !important;
+}
+
+/* ─── Blog page — title visibility ─── */
 article h1, article h2, article h3,
 article h4, article h5, article h6,
 [class*="blog"] h1, [class*="blog"] h2,
@@ -114,22 +161,10 @@ article h4, article h5, article h6,
   opacity: 1 !important;
 }
 
-/* Table cells — admin tables */
+/* Tables */
 table td, table th {
   color: #0f172a !important;
-}
-
-/* Placeholder fade fix */
-.admin-layout [class*="text-slate"] {
-  color: #334155 !important;
-}
-
-/* Recharts — analytics charts */
-.admin-layout .recharts-wrapper,
-.admin-layout .recharts-wrapper *,
-.admin-layout [class*="recharts"] text {
-  fill: #0f172a !important;
-  color: #0f172a !important;
+  opacity: 1 !important;
 }
 
 /* ═══════════════════════════════════════════════════════════════
