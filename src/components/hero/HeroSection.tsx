@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, useInView } from "framer-motion";
@@ -13,40 +13,11 @@ import {
   Bot,
   TrendingUp,
   Award,
-  Loader2,
 } from "lucide-react";
-import api from "@/lib/api";
 
 export default function HeroSection() {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.1 });
-
-  const [heroImage, setHeroImage] = useState<string>("/hero-image.png");
-  const [loading, setLoading] = useState(true);
-
-  // ─── Fetch Hero Image from CMS ────────────────
-  useEffect(() => {
-    let mounted = true;
-
-    const fetchHeroImage = async () => {
-      try {
-        const { data } = await api.get("/cms/settings");
-        if (mounted && data?.data?.hero_image) {
-          setHeroImage(data.data.hero_image);
-        }
-      } catch (error) {
-        console.log("Using default hero image");
-      } finally {
-        if (mounted) setLoading(false);
-      }
-    };
-
-    fetchHeroImage();
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
 
   const trustFlags = [
     "INDIA",
@@ -131,7 +102,7 @@ export default function HeroSection() {
             </div>
           </motion.div>
 
-          {/* ═══════ RIGHT VISUAL (Dynamic Hero Image) ═══════ */}
+          {/* ═══════ RIGHT VISUAL (Permanent Image) ═══════ */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={inView ? { opacity: 1, scale: 1 } : {}}
@@ -140,24 +111,16 @@ export default function HeroSection() {
           >
             <div className="relative mx-auto max-w-[560px]">
               
-              {/* Main Image Container */}
-              <div className="relative z-10 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl shadow-slate-200/60 min-h-[350px] flex items-center justify-center">
-                {loading ? (
-                  <div className="flex flex-col items-center justify-center py-20">
-                    <Loader2 size={32} className="animate-spin text-blue-600 mb-4" />
-                    <p className="text-sm text-slate-500">Loading image...</p>
-                  </div>
-                ) : (
-                  <Image
-                    src={heroImage}
-                    alt="Zentrox Technologies - Digital Solutions"
-                    width={800}
-                    height={600}
-                    className="h-auto w-full object-cover"
-                    priority
-                    unoptimized // Yeh Cloudinary images ke liye zaroori hai
-                  />
-                )}
+              {/* Permanent Image Container */}
+              <div className="relative z-10 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl shadow-slate-200/60">
+                <Image
+                  src="/hero-laptop.png" 
+                  alt="Zentrox Technologies - Digital Solutions"
+                  width={800}
+                  height={600}
+                  className="h-auto w-full object-cover"
+                  priority
+                />
               </div>
 
               {/* Floating Card 1 — Traffic */}
