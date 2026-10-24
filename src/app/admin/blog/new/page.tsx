@@ -17,6 +17,14 @@ export default function NewBlogPost() {
     published: true,
   });
 
+  // ⭐ Pukka Token Getter
+  const getToken = () => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("zt_access_token");
+    }
+    return null;
+  };
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -26,10 +34,13 @@ export default function NewBlogPost() {
     data.append("file", file);
 
     try {
-      const token = localStorage.getItem("token") || localStorage.getItem("accessToken");
+      const token = getToken();
+      // Native fetch use kar rahe hain taaki koi axios interceptor beech mein na aaye
       const res = await fetch("https://backend-zentroxtechnologies.onrender.com/api/upload", {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { 
+          Authorization: `Bearer ${token}` 
+        },
         body: data,
       });
       
@@ -51,7 +62,7 @@ export default function NewBlogPost() {
     setLoading(true);
 
     try {
-      const token = localStorage.getItem("token") || localStorage.getItem("accessToken");
+      const token = getToken();
       const res = await fetch("https://backend-zentroxtechnologies.onrender.com/api/blog", {
         method: "POST",
         headers: {
@@ -78,63 +89,29 @@ export default function NewBlogPost() {
   return (
     <div className="max-w-3xl mx-auto p-8 bg-white shadow-lg rounded-xl mt-10 mb-20">
       <h1 className="text-3xl font-bold mb-6 text-gray-800">Create New Blog Post</h1>
-
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
           <label className="block text-sm font-semibold mb-1">Title</label>
-          <input 
-            type="text" 
-            required 
-            className="w-full border p-3 rounded-lg" 
-            value={formData.title} 
-            onChange={(e) => setFormData({ ...formData, title: e.target.value })} 
-            placeholder="Blog title..." 
-          />
+          <input type="text" required className="w-full border p-3 rounded-lg" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} placeholder="Blog title..." />
         </div>
-
         <div>
           <label className="block text-sm font-semibold mb-1">Cover Image</label>
-          <input 
-            type="file" 
-            accept="image/*" 
-            onChange={handleImageUpload} 
-            className="w-full border p-2 rounded-lg bg-gray-50" 
-          />
+          <input type="file" accept="image/*" onChange={handleImageUpload} className="w-full border p-2 rounded-lg bg-gray-50" />
           {uploading && <p className="text-blue-500 text-sm mt-1">Uploading...</p>}
-          {formData.coverImage && (
-            <img src={formData.coverImage} alt="Preview" className="mt-3 h-40 object-cover rounded-lg" />
-          )}
+          {formData.coverImage && <img src={formData.coverImage} alt="Preview" className="mt-3 h-40 object-cover rounded-lg" />}
         </div>
-
         <div>
           <label className="block text-sm font-semibold mb-1">Excerpt (Short Summary)</label>
-          <textarea 
-            className="w-full border p-3 rounded-lg h-20" 
-            value={formData.excerpt} 
-            onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })} 
-            placeholder="Short summary..." 
-          />
+          <textarea className="w-full border p-3 rounded-lg h-20" value={formData.excerpt} onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })} placeholder="Short summary..." />
         </div>
-
         <div>
           <label className="block text-sm font-semibold mb-1">Main Content (HTML)</label>
-          <textarea 
-            required 
-            className="w-full border p-3 rounded-lg h-64 font-mono text-sm" 
-            value={formData.content} 
-            onChange={(e) => setFormData({ ...formData, content: e.target.value })} 
-            placeholder="<p>Write your content here...</p>" 
-          />
+          <textarea required className="w-full border p-3 rounded-lg h-64 font-mono text-sm" value={formData.content} onChange={(e) => setFormData({ ...formData, content: e.target.value })} placeholder="<p>Write your content here...</p>" />
         </div>
-
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-semibold mb-1">Category</label>
-            <select 
-              className="w-full border p-3 rounded-lg bg-white" 
-              value={formData.category} 
-              onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-            >
+            <select className="w-full border p-3 rounded-lg bg-white" value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })}>
               <option>Web Development</option>
               <option>Mobile Apps</option>
               <option>SEO</option>
@@ -143,22 +120,13 @@ export default function NewBlogPost() {
           </div>
           <div>
             <label className="block text-sm font-semibold mb-1">Status</label>
-            <select 
-              className="w-full border p-3 rounded-lg bg-white" 
-              value={formData.published ? "true" : "false"} 
-              onChange={(e) => setFormData({ ...formData, published: e.target.value === "true" })}
-            >
+            <select className="w-full border p-3 rounded-lg bg-white" value={formData.published ? "true" : "false"} onChange={(e) => setFormData({ ...formData, published: e.target.value === "true" })}>
               <option value="true">Published</option>
               <option value="false">Draft</option>
             </select>
           </div>
         </div>
-
-        <button 
-          type="submit" 
-          disabled={loading || uploading} 
-          className="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition"
-        >
+        <button type="submit" disabled={loading || uploading} className="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition">
           {loading ? "Publishing..." : "Publish Blog Post 🚀"}
         </button>
       </form>
