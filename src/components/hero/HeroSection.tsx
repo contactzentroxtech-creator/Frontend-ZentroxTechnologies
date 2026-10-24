@@ -1,238 +1,216 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import Image from "next/image";
+import { motion, useInView } from "framer-motion";
 import {
   ArrowRight,
-  Sparkles,
-  CheckCircle2,
-  Star,
-  Users,
-  Award,
+  Play,
+  Code2,
+  Globe2,
+  Smartphone,
+  Bot,
   TrendingUp,
+  Award,
+  Loader2,
 } from "lucide-react";
 import api from "@/lib/api";
 
-interface CMSData {
-  hero_title?: string;
-  hero_subtitle?: string;
-  hero_image?: string;
-  hero_cta_text?: string;
-}
-
 export default function HeroSection() {
-  const [cms, setCms] = useState<CMSData>({});
+  const ref = useRef<HTMLElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.1 });
+
+  const [heroImage, setHeroImage] = useState<string>("/hero-image.png");
   const [loading, setLoading] = useState(true);
 
-  /* ─── Fetch CMS ─── */
+  // ─── Fetch Hero Image from CMS ────────────────
   useEffect(() => {
-    (async () => {
+    let mounted = true;
+
+    const fetchHeroImage = async () => {
       try {
-        const { data } = await api.get("/cms");
-        if (data?.success && data.data) {
-          setCms(data.data);
-        } else if (data && typeof data === "object") {
-          setCms(data);
+        const { data } = await api.get("/cms/settings");
+        if (mounted && data?.data?.hero_image) {
+          setHeroImage(data.data.hero_image);
         }
-      } catch {
-        // Fallback — no CMS data, use defaults
+      } catch (error) {
+        console.log("Using default hero image");
       } finally {
-        setLoading(false);
+        if (mounted) setLoading(false);
       }
-    })();
+    };
+
+    fetchHeroImage();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
-  /* ─── Defaults (fallback) ─── */
-  const title =
-    cms.hero_title || "Build. Grow. Scale with Zentrox Technologies";
-  const subtitle =
-    cms.hero_subtitle ||
-    "From websites and mobile apps to AI-powered software and digital marketing — we deliver end-to-end solutions that move your business forward.";
-  const ctaText = cms.hero_cta_text || "Start Your Project";
-  const heroImage = cms.hero_image;
+  const trustFlags = [
+    "INDIA",
+    "USA",
+    "UK",
+    "CANADA",
+    "AUSTRALIA",
+    "UAE",
+    "SINGAPORE",
+  ];
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-[#FDF8F3] via-white to-[#EFF6FF] px-4 pt-24 pb-20 sm:pt-28 sm:pb-24 md:px-6 md:pt-32 md:pb-28">
-      {/* Background Blobs */}
-      <div className="pointer-events-none absolute -top-24 -left-24 h-96 w-96 rounded-full bg-blue-300/20 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-purple-300/20 blur-3xl" />
-      <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] rounded-full bg-pink-200/10 blur-3xl" />
+    <section
+      ref={ref}
+      className="relative overflow-hidden bg-white pt-12 pb-16 md:pt-16 md:pb-20 lg:pt-20 lg:pb-24"
+    >
+      {/* Background blobs */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -left-40 top-0 h-[500px] w-[500px] rounded-full bg-blue-100/60 blur-[120px]" />
+        <div className="absolute -right-40 top-40 h-[500px] w-[500px] rounded-full bg-purple-100/50 blur-[120px]" />
+      </div>
 
-      <div className="relative mx-auto max-w-7xl">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* ═══ Left — Content ═══ */}
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-8">
+          
+          {/* ═══════ LEFT CONTENT ═══════ */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6 }}
-            className="text-center lg:text-left"
+            className="lg:col-span-6"
           >
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/80 backdrop-blur px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-blue-700 shadow-sm mb-6">
-              <Sparkles size={13} />
-              MSME Registered • Trusted by 100+ Clients
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-4 py-1.5 text-xs font-medium text-slate-700 shadow-sm backdrop-blur-sm">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-100">
+                <span className="h-1.5 w-1.5 rounded-full bg-blue-600" />
+              </span>
+              Your Growth. Our Technology.
             </div>
 
-            {/* Title */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.1] tracking-tight text-slate-900 mb-6">
-              {title.includes("Zentrox") ? (
-                <>
-                  {title.split("Zentrox")[0]}
-                  <span className="gradient-text">Zentrox</span>
-                  {title.split("Zentrox")[1]}
-                </>
-              ) : (
-                title
-              )}
+            <h1 className="text-4xl font-extrabold leading-[1.05] tracking-tight text-slate-900 sm:text-5xl md:text-6xl lg:text-[68px]">
+              Build Better,
+              <br />
+              <span className="gradient-text">Grow Faster</span>
             </h1>
 
-            {/* Subtitle */}
-            <p className="text-base sm:text-lg text-slate-600 leading-relaxed mb-8 max-w-xl mx-auto lg:mx-0">
-              {subtitle}
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-slate-600 md:text-lg">
+              Zentrox Technologies builds modern websites, mobile apps and
+              custom software solutions that help businesses grow online and
+              reach their full potential. Remote-first, premium quality,
+              delivered worldwide from Mohali, India.
             </p>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-center gap-3 justify-center lg:justify-start mb-8">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
               <Link
                 href="/contact"
-                className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-7 py-3.5 text-sm font-bold text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all"
+                className="group inline-flex items-center justify-center gap-2 rounded-full bg-blue-600 px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all hover:-translate-y-1 hover:bg-blue-700 hover:shadow-xl"
               >
-                {ctaText}
-                <ArrowRight
-                  size={16}
-                  className="group-hover:translate-x-1 transition-transform"
-                />
+                Start Your Project
+                <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
               </Link>
+
               <Link
                 href="/calculator"
-                className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-7 py-3.5 text-sm font-bold text-slate-700 hover:bg-slate-50 hover:border-slate-400 transition-all"
+                className="group inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all hover:-translate-y-1 hover:shadow-xl"
               >
-                Get Instant Quote
+                Calculate Project Cost
+                <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
               </Link>
             </div>
 
-            {/* Trust Points */}
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 justify-center lg:justify-start">
-              {[
-                "Free Consultation",
-                "24hr Response",
-                "Post-Launch Support",
-              ].map((point, i) => (
-                <div
-                  key={i}
-                  className="flex items-center gap-1.5 text-xs font-semibold text-slate-600"
-                >
-                  <CheckCircle2 size={14} className="text-emerald-500" />
-                  {point}
-                </div>
-              ))}
-            </div>
-
-            {/* Stats */}
-            <div className="mt-10 grid grid-cols-3 gap-4 max-w-md mx-auto lg:mx-0">
-              {[
-                { icon: Users, value: "100+", label: "Clients" },
-                { icon: Award, value: "150+", label: "Projects" },
-                { icon: TrendingUp, value: "5+", label: "Years" },
-              ].map((stat, i) => {
-                const Icon = stat.icon;
-                return (
-                  <div
-                    key={i}
-                    className="rounded-xl border border-slate-200 bg-white/70 backdrop-blur p-3 text-center shadow-sm"
-                  >
-                    <Icon
-                      size={16}
-                      className="mx-auto text-blue-600 mb-1.5"
-                    />
-                    <p className="text-lg font-extrabold text-slate-900 leading-none">
-                      {stat.value}
-                    </p>
-                    <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 mt-1">
-                      {stat.label}
-                    </p>
-                  </div>
-                );
-              })}
+            <div className="mt-8">
+              <p className="mb-3 text-xs font-medium text-slate-500">
+                Trusted by businesses across India, USA, UK, Canada, Australia, UAE &amp; Singapore. Founded in 2023.
+              </p>
+              <div className="flex flex-wrap items-center gap-2">
+                {trustFlags.map((flag) => (
+                  <span key={flag} className="rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-600">
+                    {flag}
+                  </span>
+                ))}
+              </div>
             </div>
           </motion.div>
 
-          {/* ═══ Right — Hero Image / Visual ═══ */}
+          {/* ═══════ RIGHT VISUAL (Dynamic Hero Image) ═══════ */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="relative"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={inView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="relative lg:col-span-6"
           >
-            <div className="relative mx-auto max-w-lg lg:max-w-none">
-              {/* Decorative frame */}
-              <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 blur-2xl" />
-
-              {/* Image container */}
-              <div className="relative rounded-3xl border border-slate-200 bg-white p-3 shadow-2xl">
-                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100">
-                  {heroImage ? (
-                    <>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={heroImage}
-                        alt="Zentrox Technologies — Hero"
-                        className="w-full h-full object-cover"
-                      />
-                    </>
-                  ) : (
-                    /* Fallback visual — no CMS image yet */
-                    <div className="w-full h-full flex flex-col items-center justify-center gap-3 p-6">
-                      <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-white shadow-lg">
-                        <Sparkles size={36} className="text-blue-600" />
-                      </div>
-                      <p className="text-sm font-bold text-slate-700">
-                        Your Hero Image
-                      </p>
-                      <p className="text-xs text-slate-500 text-center max-w-[200px]">
-                        Upload an image via Media Manager and select it in CMS
-                        → Hero Section
-                      </p>
-                    </div>
-                  )}
-                </div>
-
-                {/* Floating badges */}
-                <div className="absolute -top-3 -left-3 rounded-xl border border-emerald-200 bg-white px-3 py-2 shadow-lg">
-                  <div className="flex items-center gap-1.5">
-                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100">
-                      <CheckCircle2 size={12} className="text-emerald-600" />
-                    </div>
-                    <div>
-                      <p className="text-[10px] font-bold text-slate-900 leading-none">
-                        Delivered
-                      </p>
-                      <p className="text-[9px] text-slate-500">
-                        150+ Projects
-                      </p>
-                    </div>
+            <div className="relative mx-auto max-w-[560px]">
+              
+              {/* Main Image Container */}
+              <div className="relative z-10 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl shadow-slate-200/60 min-h-[350px] flex items-center justify-center">
+                {loading ? (
+                  <div className="flex flex-col items-center justify-center py-20">
+                    <Loader2 size={32} className="animate-spin text-blue-600 mb-4" />
+                    <p className="text-sm text-slate-500">Loading image...</p>
                   </div>
-                </div>
-
-                <div className="absolute -bottom-3 -right-3 rounded-xl border border-blue-200 bg-white px-3 py-2 shadow-lg">
-                  <div className="flex items-center gap-1">
-                    {[1, 2, 3, 4, 5].map((i) => (
-                      <Star
-                        key={i}
-                        size={11}
-                        className="fill-amber-400 text-amber-400"
-                      />
-                    ))}
-                    <span className="text-[10px] font-bold text-slate-900 ml-1">
-                      4.9
-                    </span>
-                  </div>
-                  <p className="text-[9px] text-slate-500 mt-0.5">
-                    Client Rating
-                  </p>
-                </div>
+                ) : (
+                  <Image
+                    src={heroImage}
+                    alt="Zentrox Technologies - Digital Solutions"
+                    width={800}
+                    height={600}
+                    className="h-auto w-full object-cover"
+                    priority
+                    unoptimized // Yeh Cloudinary images ke liye zaroori hai
+                  />
+                )}
               </div>
+
+              {/* Floating Card 1 — Traffic */}
+              <motion.div
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -right-4 -top-6 z-20 hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-xl sm:block"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+                    <TrendingUp size={18} />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-medium text-slate-500">Traffic Growth</p>
+                    <p className="text-lg font-extrabold text-slate-900">+140%</p>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Floating Card 2 — Mobile */}
+              <motion.div
+                animate={{ y: [0, 10, 0] }}
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                className="absolute -left-6 top-1/3 z-20 hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-xl sm:block"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
+                    <Smartphone size={18} />
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-bold text-slate-900">Mobile App</p>
+                    <p className="text-[9px] text-slate-500">iOS · Android</p>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Floating Card 3 — Ranking */}
+              <motion.div
+                animate={{ y: [0, 12, 0] }}
+                transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
+                className="absolute -bottom-6 -right-6 z-20 hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-xl sm:block"
+              >
+                <div className="flex items-center gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
+                    <Award size={14} />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-slate-900">RANKING #1</p>
+                    <p className="text-[9px] text-slate-500">Best SEO Company</p>
+                  </div>
+                </div>
+              </motion.div>
+
             </div>
           </motion.div>
         </div>
