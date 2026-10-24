@@ -30,7 +30,9 @@ export default function AdminBlogList() {
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this blog?")) return;
     try {
-      const token = localStorage.getItem("token") || localStorage.getItem("accessToken");
+      // ⭐ Yahan token fix kiya hai
+      const token = localStorage.getItem("zt_access_token") || localStorage.getItem("token");
+      
       const res = await fetch(`https://backend-zentroxtechnologies.onrender.com/api/blog/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
@@ -40,7 +42,7 @@ export default function AdminBlogList() {
         alert("Blog deleted!");
         fetchBlogs(); // Refresh list
       } else {
-        alert("Failed to delete");
+        alert("Failed to delete: " + data.message);
       }
     } catch (error) {
       alert("Error deleting blog");
