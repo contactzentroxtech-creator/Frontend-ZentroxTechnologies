@@ -1,21 +1,11 @@
-import HeroSection from "@/components/hero/HeroSection";
-import ServicesSection from "@/components/sections/ServicesSection";
-import StatsSection from "@/components/sections/StatsSection";
-import WhyChooseUsSection from "@/components/sections/WhyChooseUsSection";
-import LocalSection from "@/components/sections/LocalSection";
-import TestimonialsSection from "@/components/sections/TestimonialsSection";
-import CTASection from "@/components/sections/CTASection";
+import HomeSections from "@/components/HomeSections";
 
-export default function HomePage() {
+export default function Home() {
   return (
-    <>
-      <HeroSection />
-      <ServicesSection />
-      <StatsSection />
-      <WhyChooseUsSection />
-      <LocalSection />
-      <TestimonialsSection />
-      <CTASection />
-    </>
+    <main className="min-h-screen bg-white">
+      {/* Agar tumhara Navbar component hai, toh usko yahan add karna */}
+      <HomeSections />
+      {/* Agar Footer component hai, toh usko yahan add karna */}
+    </main>
   );
 }
