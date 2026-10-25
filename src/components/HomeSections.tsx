@@ -11,7 +11,7 @@ import {
 import FloatingCard from "./ui/FloatingCard";
 
 /* ═══════════════════════════════════════════════════════
-   1. HERO SECTION (Rotating Text & Tags)
+   1. HERO SECTION
 ═══════════════════════════════════════════════════════ */
 const heroServices = [
   { title: "WEB DEV", color: "from-blue-600 to-cyan-400", tags: ["React", "Next.js", "Node", "MongoDB", "Tailwind", "AWS"] },
@@ -27,23 +27,18 @@ const tagPositions = [
 
 function HeroSection() {
   const [index, setIndex] = useState(0);
-
   useEffect(() => {
     const timer = setInterval(() => setIndex((prev) => (prev + 1) % heroServices.length), 4500);
     return () => clearInterval(timer);
   }, []);
-
   const active = heroServices[index];
 
   return (
     <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-white pt-20">
-      {/* Background Blobs */}
       <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-blue-100/50 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-purple-100/50 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        
-        {/* Left Content */}
         <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }}>
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 text-blue-700 font-semibold text-sm mb-6">
             <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
@@ -61,44 +56,25 @@ function HeroSection() {
           </Link>
         </motion.div>
 
-        {/* Right Visual */}
         <div className="relative h-[400px] flex items-center justify-center">
           <AnimatePresence mode="wait">
-            <motion.div 
-              key={index} 
-              initial={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }} 
-              animate={{ opacity: 0.15, scale: 1, filter: "blur(0px)" }} 
-              exit={{ opacity: 0, scale: 1.2, filter: "blur(10px)" }} 
-              transition={{ duration: 0.8 }} 
-              className={`absolute text-[90px] md:text-[120px] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br ${active.color} whitespace-nowrap`}
-            >
+            <motion.div key={index} initial={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }} animate={{ opacity: 0.15, scale: 1, filter: "blur(0px)" }} exit={{ opacity: 0, scale: 1.2, filter: "blur(10px)" }} transition={{ duration: 0.8 }} className={`absolute text-[90px] md:text-[120px] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br ${active.color} whitespace-nowrap`}>
               {active.title}
             </motion.div>
           </AnimatePresence>
-
           <AnimatePresence>
             {active.tags.map((tag, i) => (
-              <motion.div 
-                key={tag} 
-                initial={{ opacity: 0, scale: 0.5 }} 
-                animate={{ opacity: 1, scale: 1 }} 
-                exit={{ opacity: 0, scale: 0.5 }} 
-                transition={{ duration: 0.4, delay: i * 0.1 }} 
-                className="absolute bg-white/90 backdrop-blur-md border border-slate-200 px-4 py-2 rounded-full shadow-lg font-bold text-slate-700 text-sm" 
-                style={tagPositions[i]}
-              >
+              <motion.div key={tag} initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.5 }} transition={{ duration: 0.4, delay: i * 0.1 }} className="absolute bg-white/90 backdrop-blur-md border border-slate-200 px-4 py-2 rounded-full shadow-lg font-bold text-slate-700 text-sm" style={tagPositions[i]}>
                 {tag}
               </motion.div>
             ))}
           </AnimatePresence>
-
           <FloatingCard className="absolute top-0 right-10 p-4 w-40" delay={1}>
             <div className="flex items-center gap-3">
               <div className="p-2 bg-emerald-100 text-emerald-600 rounded-lg"><TrendingUp size={20} /></div>
               <div><p className="text-xs text-slate-500 font-medium">Growth</p><p className="text-xl font-black text-slate-800">+140%</p></div>
             </div>
           </FloatingCard>
-
           <FloatingCard className="absolute bottom-10 left-0 p-4 w-40" delay={2}>
             <div className="flex items-center gap-3">
               <div className="p-2 bg-amber-100 text-amber-600 rounded-lg"><Award size={20} /></div>
@@ -112,7 +88,7 @@ function HeroSection() {
 }
 
 /* ═══════════════════════════════════════════════════════
-   2. DIGITAL TRANSFORMATION (3D Laptop)
+   2. DIGITAL TRANSFORMATION (Filled Laptop Screen)
 ═══════════════════════════════════════════════════════ */
 const stats = [
   { label: "Views", value: "7,265", change: "+11.01%", icon: <Eye size={16} />, color: "bg-orange-500", pos: "top-10 -left-6 md:-left-10" },
@@ -145,12 +121,52 @@ function TransformationSection() {
             </FloatingCard>
           ))}
           <motion.div initial={{ rotateY: -20, rotateX: 10, opacity: 0 }} whileInView={{ rotateY: -15, rotateX: 5, opacity: 1 }} transition={{ duration: 1 }} className="relative transform-style-3d w-full">
+            
+            {/* Laptop Screen with fake UI */}
             <div className="w-full aspect-[16/10] bg-slate-900 rounded-t-xl border-[12px] border-slate-800 overflow-hidden shadow-2xl">
-              <div className="w-full h-full bg-slate-50 p-4 flex flex-col gap-3">
-                <div className="flex gap-3 h-1/3"><div className="flex-1 bg-white rounded-lg shadow-sm"></div><div className="flex-1 bg-white rounded-lg shadow-sm"></div><div className="flex-1 bg-white rounded-lg shadow-sm"></div></div>
-                <div className="flex-1 bg-white rounded-lg shadow-sm w-full"></div>
+              <div className="w-full h-full bg-[#f8fafc] p-4 flex flex-col gap-3">
+                {/* Dashboard Header */}
+                <div className="flex justify-between items-center pb-2 border-b border-slate-200">
+                  <div className="w-1/3 h-4 bg-slate-200 rounded-full"></div>
+                  <div className="flex gap-2">
+                    <div className="w-8 h-8 bg-slate-200 rounded-full"></div>
+                    <div className="w-8 h-8 bg-blue-500 rounded-full"></div>
+                  </div>
+                </div>
+                {/* Dashboard Content */}
+                <div className="flex gap-3 h-1/4">
+                  <div className="flex-1 bg-white border border-slate-100 rounded-lg shadow-sm p-2 flex flex-col justify-between">
+                    <div className="w-1/2 h-2 bg-slate-200 rounded-full"></div>
+                    <div className="w-2/3 h-4 bg-blue-100 rounded-md"></div>
+                  </div>
+                  <div className="flex-1 bg-white border border-slate-100 rounded-lg shadow-sm p-2 flex flex-col justify-between">
+                    <div className="w-1/2 h-2 bg-slate-200 rounded-full"></div>
+                    <div className="w-2/3 h-4 bg-emerald-100 rounded-md"></div>
+                  </div>
+                  <div className="flex-1 bg-white border border-slate-100 rounded-lg shadow-sm p-2 flex flex-col justify-between">
+                    <div className="w-1/2 h-2 bg-slate-200 rounded-full"></div>
+                    <div className="w-2/3 h-4 bg-orange-100 rounded-md"></div>
+                  </div>
+                </div>
+                {/* Charts */}
+                <div className="flex-1 flex gap-3">
+                  {/* Bar Chart */}
+                  <div className="flex-[2] bg-white border border-slate-100 rounded-lg shadow-sm p-3 flex items-end justify-between gap-1">
+                    {[40, 70, 45, 90, 65, 80, 50, 100, 60, 85].map((h, i) => (
+                      <div key={i} className="flex-1 bg-blue-100 rounded-t-sm relative group" style={{ height: `${h}%` }}>
+                        <div className="absolute bottom-0 w-full bg-blue-500 rounded-t-sm" style={{ height: '60%' }}></div>
+                      </div>
+                    ))}
+                  </div>
+                  {/* Pie Chart */}
+                  <div className="flex-1 bg-white border border-slate-100 rounded-lg shadow-sm p-3 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-full border-[6px] border-indigo-500 border-r-indigo-200 border-b-indigo-300"></div>
+                  </div>
+                </div>
               </div>
             </div>
+
+            {/* Keyboard Base */}
             <div className="w-[110%] h-6 bg-slate-300 rounded-b-2xl -ml-[5%] shadow-xl relative"><div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-2 bg-slate-400 rounded-b-lg"></div></div>
           </motion.div>
         </div>
@@ -160,7 +176,7 @@ function TransformationSection() {
 }
 
 /* ═══════════════════════════════════════════════════════
-   3. ADVANCED ESTIMATOR (Interactive Quote)
+   3. ADVANCED ESTIMATOR
 ═══════════════════════════════════════════════════════ */
 function EstimatorSection() {
   const [service, setService] = useState("Web Development");
@@ -243,15 +259,15 @@ function EstimatorSection() {
 }
 
 /* ═══════════════════════════════════════════════════════
-   4. SERVICES GRID
+   4. SERVICES GRID (Updated with colors)
 ═══════════════════════════════════════════════════════ */
 const servicesList = [
-  { title: "Custom App Development", icon: <Smartphone size={28} />, desc: "Enterprise mobile apps for iOS & Android." },
-  { title: "Web Development", icon: <Code2 size={28} />, desc: "High-performance scalable web applications." },
-  { title: "ERP Solutions", icon: <Cloud size={28} />, desc: "Custom ERP software to streamline operations." },
-  { title: "UI/UX Design", icon: <Palette size={28} />, desc: "Beautiful interfaces that users love." },
-  { title: "IoT Applications", icon: <Cpu size={28} />, desc: "Connected devices and smart solutions." },
-  { title: "Digital Marketing", icon: <Megaphone size={28} />, desc: "SEO, Ads, and growth strategies." }
+  { title: "Custom App Development", icon: <Smartphone size={28} />, desc: "Enterprise mobile apps for iOS & Android.", color: "from-blue-500 to-cyan-400", iconColor: "text-blue-500" },
+  { title: "Web Development", icon: <Code2 size={28} />, desc: "High-performance scalable web applications.", color: "from-purple-500 to-pink-400", iconColor: "text-purple-500" },
+  { title: "ERP Solutions", icon: <Cloud size={28} />, desc: "Custom ERP software to streamline operations.", color: "from-orange-500 to-amber-400", iconColor: "text-orange-500" },
+  { title: "UI/UX Design", icon: <Palette size={28} />, desc: "Beautiful interfaces that users love.", color: "from-emerald-500 to-teal-400", iconColor: "text-emerald-500" },
+  { title: "IoT Applications", icon: <Cpu size={28} />, desc: "Connected devices and smart solutions.", color: "from-indigo-500 to-blue-400", iconColor: "text-indigo-500" },
+  { title: "Digital Marketing", icon: <Megaphone size={28} />, desc: "SEO, Ads, and growth strategies.", color: "from-rose-500 to-red-400", iconColor: "text-rose-500" }
 ];
 
 function ServicesSection() {
@@ -264,15 +280,19 @@ function ServicesSection() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {servicesList.map((s, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="group relative p-8 bg-slate-50 rounded-3xl border border-slate-100 hover:bg-white hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 cursor-pointer">
-              <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-blue-600 shadow-sm mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+            <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="group relative p-8 bg-slate-50 rounded-3xl border border-slate-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 cursor-pointer overflow-hidden">
+              
+              {/* Hover Gradient Background */}
+              <div className={`absolute inset-0 bg-gradient-to-br ${s.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}></div>
+              
+              <div className={`relative z-10 w-14 h-14 bg-white rounded-2xl flex items-center justify-center ${s.iconColor} shadow-sm mb-6 group-hover:scale-110 transition-transform`}>
                 {s.icon}
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">{s.title}</h3>
-              <p className="text-slate-600 text-sm leading-relaxed mb-6">{s.desc}</p>
-              <div className="flex justify-end">
-                <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center group-hover:bg-blue-100 transition-colors">
-                  <ArrowRight size={18} className="text-slate-500 group-hover:text-blue-600" />
+              <h3 className="relative z-10 text-xl font-bold text-slate-900 mb-3">{s.title}</h3>
+              <p className="relative z-10 text-slate-600 text-sm leading-relaxed mb-6">{s.desc}</p>
+              <div className="relative z-10 flex justify-end">
+                <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center group-hover:bg-blue-600 transition-colors">
+                  <ArrowRight size={18} className="text-slate-500 group-hover:text-white transition-colors" />
                 </div>
               </div>
             </motion.div>
