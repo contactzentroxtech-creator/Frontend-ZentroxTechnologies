@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Code2, Smartphone, Megaphone, Palette } from "lucide-react";
+import { ArrowRight, Code2, Smartphone, Megaphone, Palette, Cloud, Cpu } from "lucide-react";
 
 const serviceData = {
   web: {
@@ -28,11 +28,29 @@ const serviceData = {
     icon: <Megaphone size={32} />,
     desc: "Data-driven marketing strategies to grow your brand, reach your audience, and increase revenue.",
     features: ["SEO Optimization", "Social Media Ads", "Content Strategy", "Email Marketing"],
+  },
+  erp: {
+    title: "ERP Solutions",
+    icon: <Cloud size={32} />,
+    desc: "Custom ERP software to streamline operations, manage resources, and improve business efficiency.",
+    features: ["Inventory Management", "HR & Payroll", "Finance & Accounting", "CRM Integration"],
+  },
+  iot: {
+    title: "IoT Applications",
+    icon: <Cpu size={32} />,
+    desc: "Connected devices and smart solutions to automate processes and gather real-time data.",
+    features: ["Smart Home Devices", "Industrial IoT", "Wearable Tech", "Cloud Connectivity"],
+  },
+  custom: {
+    title: "Custom Software",
+    icon: <Code2 size={32} />,
+    desc: "Tailor-made software solutions built from scratch to address your unique business challenges.",
+    features: ["SaaS Platforms", "Enterprise Software", "API Development", "Legacy Upgrades"],
   }
 };
 
 export default function ServicesPage() {
-  const [active, setActive] = useState<"web" | "app" | "uiux" | "marketing">("web");
+  const [active, setActive] = useState<keyof typeof serviceData>("web");
   const current = serviceData[active];
 
   return (
