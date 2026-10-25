@@ -21,17 +21,24 @@ export default function EditBlogPost() {
     published: true,
   });
 
+  // ⭐ Yahan bhi Token Fix kar diya hai
+  const getToken = () => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("zt_access_token") || localStorage.getItem("token");
+    }
+    return null;
+  };
+
   useEffect(() => {
-    // Fetch all and find by ID (temporary fix since we don't have a single admin GET route)
     const fetchBlog = async () => {
       try {
-        const token = localStorage.getItem("token") || localStorage.getItem("accessToken");
+        // Direct public route se data fetch kar rahe hain (no token needed)
+        // Kyunki humare paas admin/id ka direct route nahi hai abhi backend mein
         const res = await fetch("https://backend-zentroxtechnologies.onrender.com/api/blog?admin=true");
         const data = await res.json();
         if (data.success) {
           const blog = data.data.find((b: any) => b._id === id);
           if (blog) {
-            // We need to fetch the full content separately
             const fullRes = await fetch(`https://backend-zentroxtechnologies.onrender.com/api/blog/${blog.slug}`);
             const fullData = await fullRes.json();
             if (fullData.success) {
@@ -64,7 +71,7 @@ export default function EditBlogPost() {
     data.append("file", file);
 
     try {
-      const token = localStorage.getItem("token") || localStorage.getItem("accessToken");
+      const token = getToken();
       const res = await fetch("https://backend-zentroxtechnologies.onrender.com/api/upload", {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
@@ -85,7 +92,7 @@ export default function EditBlogPost() {
     setSaving(true);
 
     try {
-      const token = localStorage.getItem("token") || localStorage.getItem("accessToken");
+      const token = getToken();
       const res = await fetch(`https://backend-zentroxtechnologies.onrender.com/api/blog/${id}`, {
         method: "PUT",
         headers: {
